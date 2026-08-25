@@ -122,6 +122,70 @@ def probar_cli():
     return casos
 
 
+def probar_diagnosticos():
+    """Casos con aserción exacta de línea, columna y contenido del mensaje."""
+    casos = []
+
+    def diagnosticar(texto):
+        _, _, errores = analizar(texto)
+        return errores
+
+    # 1. Error léxico: posición exacta del símbolo inválido
+    errores = diagnosticar("quihubo\nx = 1 @ 2\nchao\n")
+    assert len(errores) >= 1
+    primero = errores[0]
+    assert primero["tipo"] == "léxico"
+    assert primero["linea"] == 2 and primero["columna"] == 6
+    assert "@" in primero["mensaje"] and "no hace parte" in primero["mensaje"]
+    casos.append(("diagnóstico: error léxico con línea y columna exactas", True))
+
+    # 2. Error sintáctico en una línea avanzada se reporta en su línea
+    errores = diagnosticar("quihubo\na = 1\nb = 2\nc = = 3\nchao\n")
+    assert len(errores) >= 1
+    assert errores[0]["linea"] == 4, "el error de la línea 4 se reportó en otra línea"
+    casos.append(("diagnóstico: error en la línea 4 se reporta en la línea 4", True))
+
+    # 3. Cadena sin cerrar: mensaje comprensible, no el texto técnico
+    errores = diagnosticar('quihubo\nx = "sin cerrar\nchao\n')
+    assert any("no hace parte" in e["mensaje"] for e in errores)
+    assert not any("token recognition error" in e["mensaje"] for e in errores)
+    casos.append(("diagnóstico: cadena sin cerrar en español", True))
+
+    # 4. Palabra reservada usada como variable: el mensaje da una pista
+    errores = diagnosticar("quihubo\nno = 5\nchao\n")
+    assert any("palabra reservada" in e["mensaje"] for e in errores)
+    casos.append(("diagnóstico: reservada como variable explica el problema", True))
+
+    # 5. Delimitador faltante: el mensaje señala el '(' esperado
+    errores = diagnosticar("quihubo\nfijese_si x > 1 { }\nchao\n")
+    assert any("'('" in e["mensaje"] and "se esperaba" in e["mensaje"] for e in errores)
+    casos.append(("diagnóstico: delimitador faltante señala el '(' esperado", True))
+
+    # 6. 'chao' con basura después se rechaza (cierre incorrecto)
+    errores = diagnosticar("quihubo\nx = 1\nchao chao\n")
+    assert len(errores) >= 1
+    casos.append(("diagnóstico: 'chao' con contenido extra se rechaza", True))
+
+    # 7. Robustez: entradas malformadas no deben lanzar excepciones
+    malformados = [
+        "",
+        "   ",
+        "quihubo",
+        "quihubo\n",
+        "quihubo\nx =\nchao\n",
+        "quihubo\nx = (((\nchao\n",
+        "quihubo\npinte\nchao\n",
+        "quihubo\nr = t |> escoja [\nchao\n",
+        "quihubo\nfijese_si (obvio) { \nchao\n",
+        'quihubo\nx = "abc\ny = \'def\nchao\n',
+    ]
+    for texto in malformados:
+        _, _, errores = analizar(texto)  # no debe lanzar
+    casos.append(("diagnóstico: 10 entradas malformadas sin excepciones", True))
+
+    return casos
+
+
 def main():
     casos = []
     for ruta in sorted(glob.glob(os.path.join(RAIZ, "pruebas", "positivos", "*.arepa"))):
@@ -158,6 +222,27 @@ def main():
 
         print("{0}[{1}]{2} ({3}) {4}: {5}".format(color, marca, NEUTRO, clase, nombre, detalle))
 
+    # --- Pruebas de diagnóstico (línea, columna y mensajes) ------------
+    print("-" * 78)
+    print(" Pruebas de diagnóstico")
+    print("-" * 78)
+    try:
+        casos_diag = probar_diagnosticos()
+    except AssertionError as problema:
+        casos_diag = [("diagnóstico: suite completa", False)]
+        print("fallo de diagnóstico: {0}".format(problema))
+    except Exception as problema:
+        casos_diag = [("diagnóstico: suite completa", False)]
+        print("excepción inesperada en diagnósticos: {0}".format(problema))
+
+    for nombre, ok in casos_diag:
+        if ok:
+            pasaron += 1
+            print("{0}[PASÓ ]{1} {2}".format(VERDE, NEUTRO, nombre))
+        else:
+            fallaron += 1
+            print("{0}[FALLÓ]{1} {2}".format(ROJO, NEUTRO, nombre))
+
     # --- Pruebas de la interfaz de línea de comandos -------------------
     print("-" * 78)
     print(" Pruebas de la interfaz (CLI)")
@@ -169,7 +254,6 @@ def main():
         print("excepción inesperada en la suite CLI: {0}".format(problema))
 
     for nombre, ok in casos_cli:
-        total = pasaron + fallaron + 1
         if ok:
             pasaron += 1
             print("{0}[PASÓ ]{1} {2}".format(VERDE, NEUTRO, nombre))
@@ -181,9 +265,9 @@ def main():
     print("-" * 78)
     print(
         "Resultado: {0}{1} de {2} pruebas pasaron{3} "
-        "({4} positivas + {5} negativas + {6} de CLI)".format(
+        "({4} positivas + {5} negativas + {6} de diagnóstico + {7} de CLI)".format(
             color_total, pasaron, pasaron + fallaron, NEUTRO,
-            positivas, negativas, len(casos_cli),
+            positivas, negativas, len(casos_diag), len(casos_cli),
         )
     )
     if fallaron == 0:

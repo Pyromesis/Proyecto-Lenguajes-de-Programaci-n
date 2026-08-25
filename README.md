@@ -1,23 +1,26 @@
 # AREPA
 
+## Qué es AREPA
+
 AREPA significa **A**nálisis **R**eproducible de datos **E**scrito con
-**P**alabras **A**utóctonas. Es un DSL cuyo vocabulario sale del español que
-se habla a diario en Colombia, pensado para tareas de ciencia de datos y
-visualización.
+**P**alabras **A**utóctonas: un lenguaje de dominio específico (DSL) cuyo
+vocabulario sale del español hablado en Colombia, para describir flujos de
+ciencia de datos (cargar CSV, filtrar, calcular, resumir y graficar) en un
+solo programa legible.
 
-Este es el proyecto de la materia *Lenguajes de Programación y Transducción*
+Proyecto de la materia *Lenguajes de Programación y Transducción*
 (Universidad Sergio Arboleda, 2026-2). El front-end se genera con **ANTLR4**
-(herramienta autorizada por el curso) y **toda la biblioteca del lenguaje —
-estructuras de datos, lector CSV, evaluador de expresiones, tabla de
-símbolos y sistema de errores — está implementada desde cero por el
-equipo**, sin pandas, NumPy, Matplotlib ni bibliotecas equivalentes.
+(herramienta exigida por el curso) y la biblioteca del lenguaje está
+implementada desde cero por el equipo.
 
-## Un programa de ejemplo
+## Qué problema resuelve
+
+Un analista que no programa en Python tiene que escribir scripts completos
+para hacer el mismo flujo una y otra vez: leer un CSV, limpiarlo, calcular
+columnas, resumir y graficar. AREPA describe ese flujo como una receta
+declarativa:
 
 ```text
-# demo.arepa
-quihubo
-
 ventas = monte "datos/ventas.csv" con encabezado, separador ","
 
 limpias = ventas
@@ -39,102 +42,204 @@ guarde resumen como "salidas/resumen.csv"
 chao
 ```
 
-## Cómo probarlo
+## Estado exacto del Primer Corte
+
+**Implementado y verificado (Corte 1 — Especificación y front-end):**
+
+* especificación completa: alcance, usuarios, casos de uso, catálogo de
+  instrucciones, gramática BNF/EBNF;
+* gramática ANTLR4 (`gramatica/Arepa.g4`) con lexer, parser y Visitor
+  generados para Python;
+* reconocimiento de programas `.arepa`: asignaciones, expresiones con
+  precedencia, carga CSV (`monte`), selección (`escoja`), filtros
+  (`deje donde`), visualización (`pinte ...`), condicionales y funciones;
+* árbol de análisis legible (`--arbol`) y tabla de tokens (`--tokens`);
+* diagnóstico de errores léxicos y sintácticos en español con línea y
+  columna;
+* CLI con códigos de salida 0/1/2 y 150 pruebas en 6 suites.
+
+**Solamente sintáctico en esta fase:** `pinte` y `guardela`/`muestrela` se
+reconocen y se validan (tabla y columnas existentes) pero **no generan
+imágenes**. Con `--ejecutar`, el programa corre sobre la biblioteca propia
+(Tabla, lector CSV, evaluador, símbolos), lo que sirve de evidencia de que
+el front-end reconoce de verdad; el procesamiento completo y las gráficas
+PNG corresponden a los cortes 2 y 3.
+
+**No pertenece a esta fase:** motor de gráficas, exportación PNG,
+estadísticas avanzadas y producto final.
+
+## Instalación
 
 ```bash
-pip install -r requirements.txt
+# 1. Python 3.11 o superior (probado con 3.13)
+python --version
 
-# Validar un programa (análisis léxico y sintáctico)
+# 2. Instalar el único runtime necesario
+pip install -r requirements.txt
+```
+
+## Dependencias
+
+| Dependencia | Versión | Uso |
+|---|---|---|
+| Python | 3.11+ (probado 3.13) | lenguaje anfitrión |
+| `antlr4-python3-runtime` | 4.13.2 | ejecutar el lexer/parser generados |
+
+ANTLR4 es la única dependencia y está permitida explícitamente por el
+curso. Toda la lógica del DSL (Tabla, CSV, expresiones, símbolos, errores)
+es propia: sin pandas, NumPy, Matplotlib ni equivalentes.
+
+## Ejecución
+
+```bash
+# Validar un programa (front-end: léxico + sintáctico)
 python src/cli/main.py ejemplos/demo.arepa
 
-# Ejecutarlo con la biblioteca propia (carga CSV, pipeline, agregaciones)
+# Ejecutarlo con la biblioteca propia
 python src/cli/main.py ejemplos/demo.arepa --ejecutar
 
-# Ver el árbol de análisis o los tokens
+# Ver el árbol de análisis
 python src/cli/main.py ejemplos/demo.arepa --arbol
+
+# Ver la tabla de tokens
 python src/cli/main.py ejemplos/demo.arepa --tokens
 
-# Correr TODAS las suites (127 pruebas)
+# Códigos de salida: 0 = válido, 1 = con errores, 2 = archivo no encontrado
+```
+
+## Tokens importantes
+
+* **Estructura**: `quihubo` abre el programa, `chao` lo cierra; el salto de
+  línea separa sentencias.
+* **Datos**: `monte` (cargar CSV), `guarde ... como ...` (exportar),
+  `escoja [...]`, `deje donde`, `cree`, `acomode`, `limpie`, `convierta`,
+  `junte por`, `resuma`.
+* **Visualización**: `pinte barras|lineas|histograma|dispersion|cajas`,
+  cláusulas `titulo`, `ejex`, `ejey`, `leyenda` y cierre `guardela` /
+  `muestrela`.
+* **Operadores**: `+ - * / % ^`, comparaciones `== != < <= > >=`, lógicos
+  `y`, `o`, `no`, pipeline `|>`, flecha `->`, asignación `=`.
+* **Literales**: enteros (`42`), decimales (`3.14`), cadenas con escapes
+  (`"dice \"hola\""`), booleanos (`obvio`/`falso`) y faltante (`nada`).
+* **Comentarios**: `#` hasta fin de línea, permitidos en cualquier posición.
+
+Lista completa: `docs/02_catalogo_instrucciones.md` (51 reservadas y 22
+símbolos) y tabla de tokens con `--tokens`.
+
+## Gramática
+
+La fuente única es `gramatica/Arepa.g4` (gramática combinada lexer+parser).
+La especificación formal equivalente está en `docs/03_gramatica_ebnf.md`.
+Para regenerar:
+
+```bash
+antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
+```
+
+Requiere Java 11+ y `antlr-4.13.2-complete.jar`. En Windows también sirve
+`generar_gramatica.bat` (busca el jar en `%USERPROFILE%\antlr\` o usa
+`ANTLR_JAR`). El código generado vive en `generado/` y no se edita a mano.
+
+## Árbol de análisis
+
+```bash
+python src/cli/main.py ejemplos/demo.arepa --arbol
+```
+
+Salida (extracto real):
+
+```text
+Árbol de análisis:
+`-- programa
+    |-- 'quihubo'
+    |-- sentencias
+    |   |-- sentencia
+    |   |   `-- asignacion
+    |   |       |-- identificador
+    |   |       |   `-- 'ventas'
+    |   |       |-- '='
+    |   |       `-- expresion
+```
+
+## Pruebas
+
+```bash
 python pruebas/test_proyecto.py
 ```
 
-La salida al ejecutar el demo se ve así:
+Ejecuta las 6 suites (150 pruebas): front-end (36: 8 positivos, 14
+negativos, 7 de diagnóstico, 7 de CLI), estructura del árbol (15), datos
+(42), expresiones (14), símbolos y contexto (15) y runtime (28). Cada
+suite también corre sola, por ejemplo `python pruebas/test_front.py`.
+
+## Errores (ejemplos reales)
+
+Programa con `@` y con una variable llamada `y`:
 
 ```text
-==============================================================
- AREPA v0.2 (Fase 1 - front-end + biblioteca propia)
-==============================================================
-Archivo : ejemplos/demo.arepa
-Análisis léxico   : OK (166 tokens)
-Análisis sintáctico: OK
-¡Quihubo pues! Programa bien escrito: 9 sentencia(s) reconocida(s).
-
---------------------------------------------------------------
- Ejecución con la biblioteca propia
---------------------------------------------------------------
-[guarde] La tabla 'resumen' quedó escrita en 'salidas/resumen.csv' (3 filas).
-
-¡De una! El programa corrió completo sin tropiezos.
+Encontré 2 problema(s), revisá esto:
+  [léxico] Línea 2, Columna 6: Hay un símbolo '@' que no hace parte del lenguaje AREPA
+  [sintáctico] Línea 2, Columna 0: No esperaba 'y' por ahí; revisá si sobra. En esa posición se esperaba 'chao', 'guarde', 'pinte', 'invente', 'devuelva', 'fijese_si', entre otras opciones. Ojo: el operador lógico 'y' (conjunción) es una palabra reservada, no puede usarse como nombre de variable; escogé otro nombre.
 ```
 
-## Qué hay en cada carpeta
+Programa con un tipo de gráfica inválido:
 
-| Ruta | Contenido |
-|---|---|
-| `gramatica/Arepa.g4` | la gramática ANTLR4 del lenguaje (fuente única) |
-| `generado/` | lexer y parser en Python que produce ANTLR |
-| `src/lenguaje/` | orquestación del front-end, árbol y diagnóstico |
-| `src/datos/` | biblioteca propia: Tabla, Columna, Fila, lector y escritor CSV, tipos |
-| `src/expresiones/` | biblioteca propia: operadores y evaluador de expresiones |
-| `src/runtime/` | biblioteca propia: símbolos, contexto y ejecutor del DSL |
-| `src/cli/main.py` | interfaz de línea de comandos |
-| `datos/` | CSV de ejemplo que consumen los programas |
-| `pruebas/` | 5 suites de pruebas y programas positivos/negativos |
-| `ejemplos/` | demo completo y ejemplos cortos por componente |
-| `docs/` | alcance, catálogo, EBNF, informe y arquitectura |
+```text
+  [sintáctico] Línea 5, Columna 6: Hace falta 'barras', 'lineas', 'histograma', 'dispersion', 'cajas' cerca de 'pastel'
+```
 
-## Implementaciones propias
+## Estructura del repositorio
 
-Todo esto está escrito desde cero por el equipo (ver `docs/05_arquitectura.md`
-para los algoritmos):
+```text
+proyecto/
+├── gramatica/Arepa.g4        gramática ANTLR4 (fuente única)
+├── generado/                 lexer, parser y Visitor generados (no editar)
+├── src/
+│   ├── lenguaje/             analizador, árbol y diagnóstico del front-end
+│   ├── datos/                propia: Tabla, Columna, Fila, CSV, tipos
+│   ├── expresiones/          propia: operadores y evaluador
+│   ├── runtime/              propia: símbolos, contexto y ejecutor
+│   ├── errores_base.py       jerarquía propia de errores
+│   └── cli/main.py           CLI (validar y --ejecutar)
+├── datos/                    CSV de ejemplo para los programas
+├── ejemplos/                 demo + filtros + graficas + funciones
+├── pruebas/                  6 suites (150) + programas positivos/negativos
+├── docs/                     alcance, catálogo, EBNF, informe, arquitectura
+├── generar_gramatica.bat     regeneración en Windows
+└── requirements.txt          antlr4-python3-runtime==4.13.2
+```
 
-* **Estructura de datos `Tabla`** con `Columna` y `Fila` propias:
-  selección, filtrado, ordenamiento por mezcla (merge sort propio),
-  creación y renombre de columnas, eliminación de duplicados, tratamiento
-  de `nada`, conversión de tipos, agrupamiento y formato en texto.
-* **Lector CSV propio**: máquina de estados carácter a carácter con
-  comillas, escape `""`, separador configurable, encabezados opcionales,
-  líneas vacías, campos faltantes y errores con número de línea.
-* **Escritor CSV propio** para `guarde ... como ...`.
-* **Sistema de tipos propio**: detección, conversión y validación
-  (incluye calendario propio para fechas AAAA-MM-DD con bisiestos).
-* **Evaluador de expresiones propio** que recorre el árbol de ANTLR:
-  aritmética, relacionales, lógicos, precedencia, paréntesis, cadenas con
-  escapes y propagación del valor faltante `nada`.
-* **Operadores propios** con validación de tipos y errores comprensibles.
-* **Tabla de símbolos propia** con ámbitos encadenados y funciones
-  `invente` como closures (admiten recursión).
-* **Contexto de ejecución propio** con salida formateada sin `tabulate`.
-* **Sistema de errores propio** (`errores_base.py`): semánticos, de
-  tipos, columnas, variables, archivos, CSV y ejecución, con línea,
-  columna, contexto y mensaje en español.
-* **Agregaciones propias**: `cuente`, `sume`, `promedie`, `mediana`
-  (orden por inserción propio), `minimo`, `maximo`, `desviacion`
-  (estándar poblacional).
-* **Diagnóstico del front-end propio**: listener que traduce los
-  mensajes técnicos de ANTLR a español con pistas útiles.
+## Implementaciones desarrolladas desde cero
 
-Lo único que NO es propio es el runtime de ANTLR4, autorizado por el
-enunciado del curso para el lexer y el parser.
+Detalle completo en `docs/05_arquitectura.md` (incluye matriz de
+trazabilidad funcionalidad → archivo → función → prueba):
+
+* estructura de datos `Tabla` con `Columna` y `Fila` (selección, filtrado,
+  ordenamiento por mezcla propio, inserción/eliminación, duplicados,
+  vacíos, conversiones, agrupamiento, formato legible);
+* lector CSV propio (máquina de estados: comillas, escape `""`,
+  separador configurable, errores con línea del archivo);
+* escritor CSV propio;
+* sistema de tipos propio (conversiones y calendario de fechas propio);
+* evaluador de expresiones propio (precedencia, paréntesis, `nada`);
+* operadores propios con validación de tipos;
+* tabla de símbolos propia (ámbitos, closures con recursión);
+* contexto de ejecución propio (salida formateada, registro de errores);
+* sistema de errores propio (léxicos, sintácticos, semánticos, de datos);
+* agregaciones propias (`cuente`, `sume`, `promedie`, `mediana`, `minimo`,
+  `maximo`, `desviacion`) usadas solo como evidencia de reconocimiento.
 
 ## Ejemplos
 
-* `ejemplos/demo.arepa` — flujo completo: carga, preparación, resumen, gráfica y exportación.
-* `ejemplos/filtros.arepa` — carga, selección, filtros, limpieza y orden.
-* `ejemplos/graficas.arepa` — los cinco tipos de gráfica con sus cláusulas.
-* `ejemplos/funciones.arepa` — funciones con `invente`, condicionales y `cuenteme`.
+| Ejemplo | Qué demuestra |
+|---|---|
+| `ejemplos/demo.arepa` | flujo completo del lenguaje |
+| `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden |
+| `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) |
+| `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` |
 
-Todos se ejecutan con `python src/cli/main.py ejemplos/<nombre>.arepa --ejecutar`.
+Todos validan con `python src/cli/main.py ejemplos/<nombre>.arepa` y corren
+con `--ejecutar`.
 
 ## Documentación
 
@@ -143,14 +248,4 @@ Todos se ejecutan con `python src/cli/main.py ejemplos/<nombre>.arepa --ejecutar
 * [Gramática BNF/EBNF](docs/03_gramatica_ebnf.md)
 * [Informe de la Fase 1](docs/04_informe_fase1.md)
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
-
-## Regenerar la gramática (opcional)
-
-```bash
-antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
-```
-
-Hace falta Java 11 y el jar `antlr-4.13.2-complete.jar`.
-Otra opción es `pip install antlr4-tools` y dejar que descargue lo necesario.
-En Windows también sirve el script `generar_gramatica.bat`, que busca el jar
-en `%USERPROFILE%\antlr\` o toma la ruta de la variable `ANTLR_JAR`.
+* [Guía de sustentación](docs/06_guia_sustentacion.md)

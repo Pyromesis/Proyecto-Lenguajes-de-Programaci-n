@@ -54,6 +54,23 @@ tildes, ñ y letras Unicode (`[\p{L}_][\p{L}\p{N}_]*`).
 **Decisión D2 — minúscula estricta.** Las palabras reservadas son minúsculas;
 los identificadores distinguen mayúsculas.
 
+### 1.1 Colisiones léxicas: reservada vs identificador vs columna
+
+La regla de precedencia léxica es: **si un lexema coincide con una palabra
+reservada, el lexer produce el token reservado; solo si no coincide produce
+`ID`**. De ahí salen tres reglas de nombres:
+
+| Nombre | ¿Puede ser reservada? | Ejemplo | Resultado |
+|---|---|---|---|
+| Variable del programa | NO | `y = 5` | rechazado con pista ("'y' es una palabra reservada") |
+| Identificador parecido | SÍ (si el lexema completo no es reservado) | `numerito = 1`, `y2 = 3` | válido: `numerito` y `y2` son `ID` |
+| Columna de datos | SÍ | `escoja [fecha, ciudad]` | válido: las columnas vienen de CSV externos (decisión D5), la regla `nombre_columna` las acepta |
+
+Ejemplos verificables: `pruebas/positivos/03_seleccion_filtro.arepa` (columna
+`fecha`, que también es tipo reservado), `pruebas/positivos/08_casos_borde.arepa`
+(identificadores con tilde y ñ) y `pruebas/negativos/n11_reservada_como_variable.arepa`
+(variable `y` rechazada con explicación).
+
 ---
 
 ## 2. Estructura obligatoria de un programa

@@ -240,26 +240,47 @@ del dato sí es exacta.
 
 ## 8. Pruebas
 
-`python pruebas/test_proyecto.py` ejecuta las cinco suites:
+`python pruebas/test_proyecto.py` ejecuta las seis suites:
 
 | Suite | Archivo | Pruebas |
 |---|---|---|
-| Front-end (léxico y sintáctico) | `test_front.py` | 28 |
+| Front-end (léxico y sintáctico) | `test_front.py` | 36 |
+| Estructura del árbol de análisis | `test_arbol.py` | 15 |
 | Biblioteca propia de datos | `test_datos.py` | 42 |
 | Evaluador de expresiones propio | `test_expresiones.py` | 14 |
 | Tabla de símbolos y contexto propios | `test_simbolos.py` | 15 |
 | Runtime propio (programas completos) | `test_runtime.py` | 28 |
 
-Total: **127 pruebas**. Cubren: CSV válido, vacío, con encabezados, con
-faltantes, con comillas y separadores raros; selección, filtrado,
-inserción y eliminación de filas y columnas, orden (incluido el caso
-`nada`), duplicados, vacíos, conversiones; expresiones aritméticas con
-precedencia y asociatividad, lógicos, `nada`, errores de tipos y de
-operación; tabla de símbolos (declarar, consultar, actualizar, ámbitos,
-sombra, validación de identificadores), contexto (salida, tablas,
-registro de errores); funciones con recursión, condicionales,
-agregaciones, guardado y programas válidos/inválidos. Ninguna prueba usa
-bibliotecas externas para el trabajo que se prueba.
+Total: **150 pruebas**. Las 36 de front-end desglosan en: 8 programas
+positivos, 14 negativos, 7 de diagnóstico (línea/columna exactas y
+robustez) y 7 de CLI. Las 15 de árbol verifican la estructura jerárquica
+y la precedencia recorriendo el árbol programáticamente. Ninguna prueba
+usa bibliotecas externas para el trabajo que se prueba.
+
+### Matriz de cobertura del primer corte
+
+| Requisito del corte | Evidencia positiva | Evidencia negativa | Resultado |
+|---|---|---|---|
+| Programa mínimo (`quihubo`/`chao`) | `test_arbol.py::arbol_programa_minimo` | `n01_falta_chao`, `n14_chao_incorrecto` | OK |
+| Asignaciones | `01_asignaciones_expresiones.arepa` | `n06_asignacion_incompleta` | OK |
+| Expresiones aritméticas y booleanas | `01` + `08_casos_borde.arepa` | `n08_operador_colgante` | OK |
+| Comparaciones sencillas | `03_seleccion_filtro.arepa` | `test_expresiones.py::comparacion_numero_con_texto_rechazada` | OK |
+| Precedencia y asociatividad | `test_arbol.py` (4 casos de estructura) | `n08` | OK |
+| Carga de CSV (`monte`) | `02_carga_y_guardado.arepa` | `test_runtime.py::monte_con_archivo_inexistente` | OK |
+| Selección de columnas | `03` + `test_arbol.py::arbol_de_seleccion` | `n04_corchete_sin_cerrar` | OK |
+| Filtros (`deje donde`) | `03` + `test_arbol.py::arbol_de_filtro` | `n05_deje_sin_donde` | OK |
+| Visualización (solo sintáctica) | `05_graficas.arepa` + `test_arbol.py::arbol_de_visualizacion` | `n09_pinte_tipo_invalido`, `n13_pinte_sin_tabla` | OK |
+| Árbol de análisis | `test_arbol.py` (15 casos) + CLI `--arbol` | — (siempre generable) | OK |
+| Errores con línea y columna | `test_front.py` sección diagnóstico (7) | los 14 negativos validan posición | OK |
+| Tokens (`--tokens`) | `test_front.py` CLI | — | OK |
+| Comentarios | `08_casos_borde.arepa` (entre sentencias) | — (siempre válidos) | OK |
+| Identificadores (tildes, ñ) | `08_casos_borde.arepa` | `n10_identificador_invalido` | OK |
+| Colisiones reservada/ID/columna | `08_casos_borde.arepa` (`numerito`, `y2`) | `n11_reservada_como_variable` | OK |
+| Cadenas y escapes | `08_casos_borde.arepa` | `n02_cadena_sin_cerrar` | OK |
+| Números (enteros/decimales) | `01` (`15000.5`) | `test_expresiones.py` (`.5` y `3.` fallan) | OK |
+| Booleanos (`obvio`/`falso`) | `01` | `test_expresiones.py::logico_con_numero_rechazado` | OK |
+| Condicionales y funciones (sintaxis) | `06_funciones_condicional.arepa` | `n07_fijese_sin_parentesis` | OK |
+| CLI (códigos 0/1/2, `--arbol`, `--tokens`) | `test_front.py` CLI (7) | código 1 y 2 verificados | OK |
 
 ---
 

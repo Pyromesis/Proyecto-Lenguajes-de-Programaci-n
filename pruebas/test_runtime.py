@@ -21,13 +21,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from datos.tabla import Tabla  # noqa: E402
 from datos.tipos import NADA  # noqa: E402
-from errores_base import (  # noqa: E402
-    ErrorArepa,
-    ErrorColumna,
-    ErrorSemantico,
-    ErrorTipos,
-    ErrorVariable,
-)
+from errores_base import ErrorArepa  # noqa: E402
 from lenguaje.analizador import analizar  # noqa: E402
 from runtime.ejecutor import EjecutorArepa  # noqa: E402
 

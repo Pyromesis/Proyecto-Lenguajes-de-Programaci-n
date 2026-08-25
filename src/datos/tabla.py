@@ -26,7 +26,7 @@ Limitaciones:
 from datos.columna import Columna
 from datos.fila import Fila
 from errores_base import ErrorColumna, ErrorEjecucion
-from datos.tipos import es_nada, nombre_tipo
+from datos.tipos import es_nada
 
 
 class Tabla:
@@ -384,8 +384,3 @@ def _visible(valor):
     if isinstance(valor, float) and valor.is_integer():
         return str(int(valor))
     return str(valor)
-
-
-# 'nombre_tipo' se reexporta para que los mensajes de la tabla usen el
-# vocabulario del DSL sin repetir la importación en cada módulo cliente.
-__all__ = ["Tabla", "Fila", "Columna", "nombre_tipo"]

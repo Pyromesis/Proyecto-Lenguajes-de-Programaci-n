@@ -17,6 +17,15 @@ pot = 2 ^ 3 ^ 2
 negpot = 2 ^ -3
 doble_negacion = no no obvio
 
+# identificadores con tilde y ñ (regla propia de nombres)
+valor_año = 2026
+piña_dulce = obvio
+
+# identificadores parecidos a reservadas pero no iguales (colisiones léxicas)
+numerito = 1
+y2 = 3
+obviamente = falso
+
 # paréntesis anidados y todos los operadores
 compleja = ((a + 2) * (b - 3)) % 4 / 5 ^ 1
 logica = no (a > 1) o b == 3 y compleja != 0

@@ -1,0 +1,5 @@
+# 'chaoo' no es la palabra reservada de cierre: queda como identificador
+# suelto y el programa queda abierto sin 'chao' real
+quihubo
+x = 1
+chaoo

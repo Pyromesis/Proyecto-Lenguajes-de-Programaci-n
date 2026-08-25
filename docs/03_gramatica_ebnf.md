@@ -35,16 +35,22 @@ cierre comparten línea con otras sentencias.
 
 ```ebnf
 <sentencia>         ::= <asignacion>
-                      | "guarde" <identificador> "como" <cadena>
+                      | <instruccion_guarde>
                       | <instruccion_grafica>
                       | <condicional>
                       | <definicion_funcion>
-                      | "devuelva" [ <expresion> ]
-                      | "cuenteme" [ <lista_argumentos> ]
-                      | "describa" <identificador>
-                      | <llamada_funcion>
+                      | <instruccion_devolver>
+                      | <instruccion_cuenteme>
+                      | <instruccion_describa>
+                      | <instruccion_llamada>
 
 <asignacion>        ::= <identificador> "=" <expresion>
+
+<instruccion_guarde>  ::= "guarde" <identificador> "como" <cadena>
+<instruccion_devolver> ::= "devuelva" [ <expresion> ]
+<instruccion_cuenteme> ::= "cuenteme" [ <lista_argumentos> ]
+<instruccion_describa> ::= "describa" <identificador>
+<instruccion_llamada> ::= <llamada_funcion>
 
 <condicional>       ::= "fijese_si" [NL] "(" [NL] <expresion_logica> [NL] ")"
                         [NL] <bloque>
@@ -57,6 +63,12 @@ cierre comparten línea con otras sentencias.
 <parametros>        ::= <identificador> { "," [NL] <identificador> }
 ```
 
+Nota de correspondencia: en el `.g4` la alternativa de llamada es la regla
+envoltorio `<instruccion_llamada>`, que solo contiene a `<llamada_funcion>`;
+se creó para que una expresión suelta (por ejemplo `x + 1` sola en una
+línea) no sea sentencia y las cláusulas de `pinte` no se confundan con
+sentencias nuevas.
+
 ## 3. Expresiones y pipeline
 
 ```ebnf
@@ -68,7 +80,9 @@ cierre comparten línea con otras sentencias.
 <conjuncion>         ::= <negacion> { "y" [NL] <negacion> }
 <negacion>           ::= "no" [NL] <negacion> | <comparacion>
 
-<comparacion>        ::= <aritmetica> [ ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) [NL] <aritmetica> ]
+<comparacion>        ::= <aritmetica> [ <operador_relacional> [NL] <aritmetica> ]
+
+<operador_relacional> ::= "==" | "!=" | "<=" | ">=" | "<" | ">"
 
 <aritmetica>         ::= <termino> { ( "+" | "-" ) [NL] <termino> }
 <termino>            ::= <factor> { ( "*" | "/" | "%" ) [NL] <factor> }
@@ -95,7 +109,7 @@ pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
 ## 4. Operaciones sobre datos
 
 ```ebnf
-<operacion_datos>    ::= "monte" <cadena> [ <opciones_archivo> ]
+<operacion_datos>    ::= <instruccion_monte>
                        | "escoja" <lista_columnas>
                        | "deje" "donde" <expresion_logica>
                        | "acomode" [ "por" ] <lista_columnas> [ <direccion> ]
@@ -105,6 +119,8 @@ pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
                        | "convierta" <nombre_columna> "->" <tipo_dato>
                        | "junte" "por" <lista_columnas>
                        | "resuma" [NL] <item_resumen> { "," [NL] <item_resumen> }
+
+<instruccion_monte>  ::= "monte" <cadena> [ <opciones_archivo> ]
 
 <opciones_archivo>   ::= "con" [NL] <opcion_archivo> { "," [NL] <opcion_archivo> }
 <opcion_archivo>     ::= "encabezado" [ ( "obvio" | "falso" ) ] | "separador" [NL] <cadena>
@@ -119,7 +135,9 @@ pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
 ```ebnf
 <instruccion_grafica> ::= "pinte" <tipo_grafica> <identificador>
                           { [NL] <clausula_estetica> }
-                          [ [NL] ( "guardela" [NL] <cadena> | "muestrela" ) ]
+                          [ [NL] <final_grafica> ]
+
+<final_grafica>       ::= "guardela" [NL] <cadena> | "muestrela"
 
 <tipo_grafica>        ::= "barras" | "lineas" | "histograma" | "dispersion" | "cajas"
 
@@ -153,6 +171,26 @@ PALABRA_RESERVADA ::= "quihubo" | "chao" | "monte" | "guarde" | "como" | "con"
 
 Son 51 palabras reservadas en total. Los comentarios pueden aparecer en
 cualquier línea del programa.
+
+Símbolos y operadores del léxico (tokens de una sola pieza):
+
+| Token | Texto | Token | Texto | Token | Texto |
+|---|---|---|---|---|---|
+| `PIPE` | `\|>` | `IGUAL_IGUAL` | `==` | `MAS` | `+` |
+| `FLECHA` | `->` | `DIFERENTE` | `!=` | `MENOS` | `-` |
+| `ASIGNACION` | `=` | `MENOR_IGUAL` | `<=` | `POR_OP` | `*` |
+| `PAREN_I` / `PAREN_D` | `(` / `)` | `MAYOR_IGUAL` | `>=` | `DIVISION` | `/` |
+| `CORCHETE_I` / `CORCHETE_D` | `[` / `]` | `MENOR` | `<` | `MODULO` | `%` |
+| `LLAVE_I` / `LLAVE_D` | `{` / `}` | `MAYOR` | `>` | `POTENCIA` | `^` |
+| `COMA` | `,` | | | | |
+
+Identificadores: en el `.g4` la regla es `ID : [\p{L}_] [\p{L}\p{N}_]*`, es
+decir, una letra Unicode (incluye ñ y tildes) o guion bajo al inicio, y
+después letras, dígitos Unicode o guion bajo. En esta EBNF eso equivale a:
+
+```ebnf
+<identificador> ::= LETRA_UNICODE | "_" , { LETRA_UNICODE | DÍGITO_UNICODE | "_" }
+```
 
 Precedencia léxica: las palabras reservadas se listan antes que la regla de
 identificadores; `DECIMAL` antes que `ENTERO`; `|>` y `->` antes que los

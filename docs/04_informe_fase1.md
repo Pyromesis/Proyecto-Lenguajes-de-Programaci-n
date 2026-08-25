@@ -48,9 +48,10 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
    `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
    bibliotecas equivalentes.
-8. **Suite de pruebas** `pruebas/test_proyecto.py`: 5 suites con 127
-   pruebas en total (28 de front-end, 42 de datos, 14 de expresiones,
-   15 de símbolos y contexto, y 28 de runtime); todas pasan.
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: 6 suites con 150
+   pruebas en total (36 de front-end, 15 de estructura del árbol, 42 de
+   datos, 14 de expresiones, 15 de símbolos y contexto, y 28 de
+   runtime); todas pasan.
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -89,12 +90,13 @@ proyecto/
 ├── pruebas/
 │   ├── positivos/*.arepa     deben aceptarse
 │   ├── negativos/*.arepa     deben rechazarse con diagnóstico
-│   ├── test_front.py         suite del front-end (28)
+│   ├── test_front.py         suite del front-end (36: 8 pos + 14 neg + 7 diag + 7 CLI)
+│   ├── test_arbol.py         suite de estructura del árbol (15)
 │   ├── test_datos.py         suite de la biblioteca de datos (42)
 │   ├── test_expresiones.py   suite del evaluador (14)
 │   ├── test_simbolos.py      suite de símbolos y contexto (15)
 │   ├── test_runtime.py       suite del runtime (28)
-│   └── test_proyecto.py      corredor maestro (127)
+│   └── test_proyecto.py      corredor maestro (150)
 ├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
 └── requirements.txt          dependencias (solo ANTLR4)
@@ -122,14 +124,14 @@ python src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
 python src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
 python src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas (127)
+# 4. Suite completa de pruebas (150)
 python pruebas/test_proyecto.py
 ```
 
 ## 5. Resultados de las pruebas
 
-Ejecutando `python pruebas/test_front.py` pasan las 28 pruebas
-(8 positivas + 13 negativas + 7 de la interfaz):
+Ejecutando `python pruebas/test_front.py` pasan las 36 pruebas
+(8 positivas + 14 negativas + 7 de diagnóstico + 7 de la interfaz):
 
 | Prueba | Clase | Resultado |
 |---|---|---|
@@ -154,6 +156,14 @@ Ejecutando `python pruebas/test_front.py` pasan las 28 pruebas
 | n11_reservada_como_variable | negativa | PASÓ (L3,C0, explica que `y` es reservada) |
 | n12_quihubo_chao_misma_linea | negativa | PASÓ (L2,C8) |
 | n13_pinte_sin_tabla | negativa | PASÓ (L4,C12) |
+| n14_chao_incorrecto | negativa | PASÓ (L5,C5, 'chaoo' no es el cierre) |
+| Diagnóstico: léxico con línea/columna exactas | diagnóstico | PASÓ |
+| Diagnóstico: error de la línea 4 reportado en la línea 4 | diagnóstico | PASÓ |
+| Diagnóstico: cadena sin cerrar en español | diagnóstico | PASÓ |
+| Diagnóstico: reservada como variable con pista | diagnóstico | PASÓ |
+| Diagnóstico: delimitador faltante señala el '(' | diagnóstico | PASÓ |
+| Diagnóstico: 'chao' con contenido extra se rechaza | diagnóstico | PASÓ |
+| Diagnóstico: 10 entradas malformadas sin excepciones | diagnóstico | PASÓ |
 | CLI: código 0 en programa válido | interfaz | PASÓ |
 | CLI: mensaje de programa bien escrito | interfaz | PASÓ |
 | CLI: `--arbol` imprime el árbol | interfaz | PASÓ |

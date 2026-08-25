@@ -22,6 +22,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 SUITES = (
     ("Front-end (léxico y sintáctico)", "test_front.py"),
+    ("Estructura del árbol de análisis", "test_arbol.py"),
     ("Biblioteca propia de datos", "test_datos.py"),
     ("Evaluador de expresiones propio", "test_expresiones.py"),
     ("Tabla de símbolos y contexto propios", "test_simbolos.py"),
