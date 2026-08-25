@@ -23,10 +23,13 @@ y tabuladores (se descartan); `COMENTARIO` = `#` hasta fin de línea (se descart
 ## 1. Programa
 
 ```ebnf
-<programa>      ::= { NL } "quihubo" { NL } [ <sentencias> ] { NL } "chao" { NL } EOF
+<programa>      ::= { NL } "quihubo" NL+ [ <sentencias> ] { NL } "chao" { NL } EOF
 
 <sentencias>    ::= <sentencia> { NL+ <sentencia> }
 ```
+
+El salto de línea después de `"quihubo"` es obligatorio: ni la apertura ni el
+cierre comparten línea con otras sentencias.
 
 ## 2. Sentencias
 
@@ -49,7 +52,7 @@ y tabuladores (se descartan); `COMENTARIO` = `#` hasta fin de línea (se descart
 
 <bloque>            ::= "{" [ NL ] [ <sentencias> ] [ NL ] "}"
 
-<definicion_funcion ::= "invente" <identificador> "(" [ <parametros> ] ")" <bloque>
+<definicion_funcion> ::= "invente" <identificador> "(" [ <parametros> ] ")" <bloque>
 
 <parametros>        ::= <identificador> { "," [NL] <identificador> }
 ```
@@ -85,9 +88,9 @@ y tabuladores (se descartan); `COMENTARIO` = `#` hasta fin de línea (se descart
 <nombre_columna>     ::= <identificador> | PALABRA_RESERVADA
 ```
 
-`nombre_columna` acepta además cualquier palabra reservada: los nombres de las
-columnas provienen de archivos externos y pueden coincidir con el vocabulario
-del lenguaje (decisión D5 del catálogo).
+`nombre_columna` acepta además cualquier palabra reservada (las 51 de la
+sección 6): los nombres de las columnas provienen de archivos externos y
+pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
 
 ## 4. Operaciones sobre datos
 
@@ -135,7 +138,21 @@ CADENA     ::= '"' { ESCAPE | CARACTER } '"'        donde CARACTER ≠ '"' '\' C
 ESCAPE     ::= "\" ( "b" | "t" | "n" | "r" | '"' | "\" )
 COMENTARIO ::= "#" { CARACTER } FIN_DE_LÍNEA        (descartado)
 ESPACIO    ::= " " | TAB | FF                        (descartado)
+
+PALABRA_RESERVADA ::= "quihubo" | "chao" | "monte" | "guarde" | "como" | "con"
+                    | "encabezado" | "separador" | "escoja" | "deje" | "donde"
+                    | "acomode" | "por" | "pa_arriba" | "pa_abajo" | "cree"
+                    | "renombre" | "limpie" | "duplicados" | "vacios"
+                    | "convierta" | "junte" | "resuma" | "numero" | "texto"
+                    | "logico" | "fecha" | "pinte" | "barras" | "lineas"
+                    | "histograma" | "dispersion" | "cajas" | "titulo" | "ejex"
+                    | "ejey" | "leyenda" | "guardela" | "muestrela" | "invente"
+                    | "devuelva" | "fijese_si" | "sino" | "cuenteme" | "describa"
+                    | "obvio" | "falso" | "nada" | "y" | "o" | "no"
 ```
+
+Son 51 palabras reservadas en total. Los comentarios pueden aparecer en
+cualquier línea del programa.
 
 Precedencia léxica: las palabras reservadas se listan antes que la regla de
 identificadores; `DECIMAL` antes que `ENTERO`; `|>` y `->` antes que los

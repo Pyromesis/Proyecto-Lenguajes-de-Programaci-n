@@ -1,0 +1,5 @@
+# 'pinte' exige el nombre de la tabla
+quihubo
+t = monte "a.csv"
+pinte barras
+chao

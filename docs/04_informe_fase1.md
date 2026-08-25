@@ -8,35 +8,43 @@
 
 ## 1. Qué se implementó
 
-Se diseñó e implementó el **front-end completo** del DSL AREPA (*Análisis
-Reproducible de datos Escrito con Palabras Autóctonas*), un lenguaje con
-vocabulario colombiano para flujos reproducibles de datos:
+En este primer corte quedo listo el **front-end completo** del DSL AREPA
+(*Análisis Reproducible de datos Escrito con Palabras Autóctonas*), el
+lenguaje con vocabulario colombiano para flujos de datos reproducibles:
 
 1. **Especificación del lenguaje**
-   - Documento de alcance: dominio, usuarios, casos de uso, entradas,
+   - Documento de alcance con dominio, usuarios, casos de uso, entradas,
      salidas y restricciones (`docs/01_documento_alcance.md`).
-   - Catálogo completo de instrucciones con justificación de cada decisión
-     de diseño (`docs/02_catalogo_instrucciones.md`).
-   - Gramática formal BNF/EBNF (`docs/03_gramatica_ebnf.md`).
+   - Catálogo de instrucciones con la justificación de cada decisión de
+     diseño (`docs/02_catalogo_instrucciones.md`).
+   - Gramática formal en BNF/EBNF (`docs/03_gramatica_ebnf.md`).
 2. **Gramática ANTLR4 combinada (lexer + parser)** en `gramatica/Arepa.g4`
-   (~330 líneas documentadas): 45 palabras reservadas, 20 símbolos/operadores,
-   literales enteros, decimales, cadenas con escapes, comentarios `#`,
-   saltos de línea significativos e identificadores Unicode.
+   (~330 líneas de código, 410 con comentarios y blancos): 51 palabras
+   reservadas (45 instrucciones y estructuras, 3 literales especiales y 3
+   operadores lógicos), 22 símbolos y operadores, literales enteros y
+   decimales, cadenas con escapes, comentarios con `#`, saltos de línea
+   significativos e identificadores Unicode.
 3. **Código generado por ANTLR4** para Python 3 en `generado/`:
-   `ArepaLexer.py`, `ArepaParser.py`, `ArepaVisitor.py`, tablas `.tokens/.interp`.
-   Generado con: `antlr4 -Dlanguage=Python3 -visitor -no-listener Arepa.g4`.
+   `ArepaLexer.py`, `ArepaParser.py`, `ArepaVisitor.py` y las tablas
+   `.tokens/.interp`. Se generó con
+   `antlr4 -Dlanguage=Python3 -visitor -no-listener Arepa.g4`.
 4. **Interfaz de línea de comandos** `src/main.py`:
-   - `python src/main.py <archivo.arepa>` → valida el programa.
-   - `--tokens` → vuelca la tabla de tokens (tipo, texto, línea, columna).
-   - `--arbol` → imprime el árbol de análisis jerárquico.
+   - `python src/main.py <archivo.arepa>` valida el programa.
+   - `--tokens` muestra la tabla de tokens (tipo, texto, línea, columna).
+   - `--arbol` imprime el árbol de análisis jerárquico.
    - Códigos de salida: `0` válido, `1` inválido, `2` archivo no encontrado.
-5. **Manejo de errores** `src/errores.py`: listener propio que captura todos
-   los errores sin interrumpir el análisis y traduce los mensajes técnicos de
-   ANTLR a español comprensible, conservando **línea y columna**.
+5. **Manejo de errores** `src/errores.py`: un listener propio que atrapa
+   todos los errores sin detener el análisis y pasa los mensajes técnicos de
+   ANTLR a español, conservando **línea y columna**. Los conjuntos de tokens
+   esperados se traducen y se limitan a 6 opciones ("entre otras opciones"),
+   y si se usa una palabra reservada como variable el mensaje lo explica.
 6. **Árbol de análisis legible** `src/arbol.py`: impresión jerárquica con
    ramas ASCII y conteo de sentencias reconocidas.
 7. **Suite de pruebas léxicas y sintácticas** `pruebas/test_front.py`:
-   6 programas positivos + 10 negativos = **16 pruebas, 16 pasaron**.
+   8 programas positivos, 13 negativos y 7 verificaciones de la interfaz
+   (códigos de salida y opciones `--tokens`/`--arbol`); las 28 pruebas pasan.
+   La suite también comprueba la calidad de los mensajes: ninguno puede
+   contener saltos de línea crudos ni superar los 300 caracteres.
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -48,30 +56,37 @@ vocabulario colombiano para flujos reproducibles de datos:
 | Pipelines completos con agregaciones | `pruebas/positivos/04_pipeline_completo.arepa` |
 | Reconocimiento sintáctico de visualización | `pruebas/positivos/05_graficas.arepa` |
 | Funciones y condicionales | `pruebas/positivos/06_funciones_condicional.arepa` |
+| Preparación completa (renombre, limpie, convierta, acomode) | `pruebas/positivos/07_preparacion_completa.arepa` |
+| Casos borde (escapes, unarios, continuación, bloques vacíos) | `pruebas/positivos/08_casos_borde.arepa` |
 | Programa integrador | `ejemplos/demo.arepa` |
+| Ejemplos por componente | `ejemplos/filtros.arepa`, `ejemplos/graficas.arepa`, `ejemplos/funciones.arepa` |
 
-## 3. Arquitectura de archivos
+## 3. Organización de los archivos
 
 ```text
 proyecto/
-├── gramatica/Arepa.g4        ← gramática única fuente (lexer + parser)
-├── generado/                 ← código Python generado por ANTLR4
+├── gramatica/Arepa.g4        gramática única fuente (lexer + parser)
+├── generado/                 código Python generado por ANTLR4
 ├── src/
-│   ├── main.py               ← CLI: orquesta lexer/parser/reportes
-│   ├── errores.py            ← listener de errores + traducción de mensajes
-│   └── arbol.py              ← impresión del árbol + conteo de sentencias
-├── ejemplos/demo.arepa       ← programa de referencia
+│   ├── main.py               CLI: orquesta lexer/parser/reportes
+│   ├── errores.py            listener de errores + traducción de mensajes
+│   └── arbol.py              impresión del árbol + conteo de sentencias
+├── ejemplos/                 demo + ejemplos por componente
+│   ├── demo.arepa            programa de referencia (flujo completo)
+│   ├── filtros.arepa         carga, selección, filtros y preparación
+│   ├── graficas.arepa        los cinco tipos de gráfica
+│   └── funciones.arepa       invente, fijese_si/sino y cuenteme
 ├── pruebas/
-│   ├── positivos/*.arepa     ← deben aceptarse
-│   ├── negativos/*.arepa     ← deben rechazarse con diagnóstico
-│   └── test_front.py         ← corredor de pruebas
-├── docs/                     ← alcance, catálogo, EBNF e informe
-├── README.md                 ← guía rápida
-└── requirements.txt          ← dependencias
+│   ├── positivos/*.arepa     deben aceptarse
+│   ├── negativos/*.arepa     deben rechazarse con diagnóstico
+│   └── test_front.py         corredor de pruebas
+├── docs/                     alcance, catálogo, EBNF e informe
+├── README.md                 guía rápida
+└── requirements.txt          dependencias
 ```
 
-Separación lograda según lo exigido: gramática / generación / errores /
-interfaz / pruebas / ejemplos / documentación.
+Con esta organización se cumplió la separación pedida: gramática /
+generación / errores / interfaz / pruebas / ejemplos / documentación.
 
 ## 4. Cómo reproducir el entorno
 
@@ -82,6 +97,8 @@ pip install -r requirements.txt        # antlr4-python3-runtime==4.13.2
 # 2. Regenerar lexer/parser (requiere Java 11+ y antlr-4.13.2-complete.jar)
 antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 # Alternativa sin instalar nada global: pip install antlr4-tools && antlr4 ...
+# En Windows también sirve el script generar_gramatica.bat (busca el jar
+# en %USERPROFILE%\antlr o usa la variable ANTLR_JAR).
 
 # 3. Validar un programa
 python src/main.py ejemplos/demo.arepa
@@ -94,7 +111,8 @@ python pruebas/test_front.py
 
 ## 5. Resultados de las pruebas
 
-Ejecución de `python pruebas/test_front.py` (16/16):
+Ejecutando `python pruebas/test_front.py` pasan las 28 pruebas
+(8 positivas + 13 negativas + 7 de la interfaz):
 
 | Prueba | Clase | Resultado |
 |---|---|---|
@@ -104,6 +122,8 @@ Ejecución de `python pruebas/test_front.py` (16/16):
 | 04_pipeline_completo | positiva | PASÓ |
 | 05_graficas | positiva | PASÓ |
 | 06_funciones_condicional | positiva | PASÓ |
+| 07_preparacion_completa | positiva | PASÓ |
+| 08_casos_borde | positiva | PASÓ |
 | n01_falta_chao | negativa | PASÓ (rechazado, L7,C0) |
 | n02_cadena_sin_cerrar | negativa | PASÓ (error léxico, L2,C9) |
 | n03_simbolo_raro (`@`) | negativa | PASÓ (error léxico, L4,C7) |
@@ -114,9 +134,20 @@ Ejecución de `python pruebas/test_front.py` (16/16):
 | n08_operador_colgante | negativa | PASÓ (L2,C0) |
 | n09_pinte_tipo_invalido | negativa | PASÓ (sugiere tipos válidos) |
 | n10_identificador_invalido | negativa | PASÓ (L2,C0) |
+| n11_reservada_como_variable | negativa | PASÓ (L3,C0, explica que `y` es reservada) |
+| n12_quihubo_chao_misma_linea | negativa | PASÓ (L2,C8) |
+| n13_pinte_sin_tabla | negativa | PASÓ (L4,C12) |
+| CLI: código 0 en programa válido | interfaz | PASÓ |
+| CLI: mensaje de programa bien escrito | interfaz | PASÓ |
+| CLI: `--arbol` imprime el árbol | interfaz | PASÓ |
+| CLI: `--tokens` imprime la tabla | interfaz | PASÓ |
+| CLI: código 1 en programa inválido | interfaz | PASÓ |
+| CLI: reporta la línea del error | interfaz | PASÓ |
+| CLI: código 2 con archivo inexistente | interfaz | PASÓ |
 
-Las pruebas negativas verifican además que **todo error reporte línea ≥ 1 y
-columna ≥ 0**.
+Las negativas comprueban además que **todo error reporte línea mayor o igual
+a 1 y columna mayor o igual a 0**, que ningún mensaje contenga saltos de
+línea crudos y que ninguno sea un volcado de más de 300 caracteres.
 
 ## 6. Problemas encontrados y cómo se resolvieron
 
@@ -129,39 +160,53 @@ columna ≥ 0**.
 | P5 | Alias `dispersion` en `resuma` fallaba | Mismo choque palabra reservada vs. nombre externo | `item_resumen` usa `nombre_columna` |
 | P6 | Cláusulas de `pinte` se interpretaban como sentencias nuevas | Ambigüedad: cualquier expresión podía iniciar sentencia | Las sentencias-expresión se restringen a llamadas (`instruccion_llamada`) y las cláusulas admiten `[NL]` antes |
 | P7 | BOM UTF-8 provocaba error fantasma al inicio | PowerShell guarda UTF-8 con BOM | Lectura con `utf-8-sig` |
-| P8 | Consola Windows (cp1252) rompía tildes/emojis | Codificación heredada | `sys.stdout.reconfigure(encoding="utf-8")` |
+| P8 | Consola Windows (cp1252) rompía tildes y caracteres especiales | Codificación heredada del sistema | `sys.stdout.reconfigure(encoding="utf-8")` en `main.py` y en el corredor de pruebas |
+| P9 | `quihubo chao` en una misma línea se aceptaba | La regla `programa` permitía cero saltos tras la apertura | `NL+` obligatorio después de `quihubo`; cubierto por la negativa n12 |
+| P10 | Mensajes como `Esa construcción '\\ny' no cuadra…` confundían | ANTLR incluye saltos crudos y conjuntos de 50+ tokens en sus mensajes | Traducción de tokens, límite de 6 opciones por conjunto y pista cuando se usa una reservada como variable |
 
 ## 7. Decisiones técnicas de implementación
 
-* **Gramática combinada** (no separada lexer/parser) para mantener una sola
-  fuente coherente en Fase 1; puede dividirse en `ArepaLexer.g4`/`ArepaParser.g4` más adelante.
-* **Errores sin interrupciones**: se retiran los listeners por defecto de ANTLR
-  y se instala uno propio; así se reportan *todos* los problemas de una vez.
+* **Gramática combinada** (no separada en lexer/parser) para conservar una
+  sola fuente coherente en la Fase 1; más adelante puede dividirse en
+  `ArepaLexer.g4` y `ArepaParser.g4` si hace falta.
+* **Errores sin interrupciones**: se retiran los listeners por defecto de
+  ANTLR y se instala uno propio, de modo que se reportan *todos* los
+  problemas de una sola pasada.
 * **Traducción de mensajes**: patrones sobre los mensajes de ANTLR
   (`missing…`, `extraneous input…`, `mismatched input…`, `token recognition error…`)
-  convertidos a frases en español con sugerencias (p. ej., n09 lista los tipos de gráfica válidos).
-* **Salida del árbol sin ruido**: se ocultan los tokens `NL` para que la
-  estructura sea legible.
+  convertidos a frases en español con sugerencias: los nombres simbólicos se
+  traducen (`NL` es "un salto de línea", `ID` es "un identificador"), los
+  conjuntos esperados se limitan a 6 opciones y, si el error viene de usar
+  `y`, `o`, `no`, `obvio`, `falso` o `nada` como variable, el mensaje lo
+  explica (p. ej., n09 lista los tipos de gráfica válidos y n11 la pista de
+  palabra reservada).
+* **Salida del árbol sin ruido**: los tokens `NL` se ocultan para que la
+  estructura se pueda leer.
 
 ## 8. Limitaciones conocidas (aceptadas en esta fase)
 
-1. No hay ejecución semántica: `monte` aún no lee CSV ni `pinte` dibuja
-   (corresponde a las fases 2 y 3).
+1. No hay ejecución semántica: `monte` todavía no lee CSV ni `pinte` dibuja
+   (eso va para las fases 2 y 3).
 2. No hay tabla de símbolos: usar una variable sin definir pasa el análisis
    sintáctico; se detectará con el Visitor semántico.
 3. Los nombres de variables no pueden coincidir con palabras reservadas;
    sí pueden hacerlo los de columnas y alias (decisión D5).
-4. Una misma línea solo contiene una sentencia; no existe separador `;`.
+4. Una línea contiene una sola sentencia; no existe separador `;`.
+5. Por la decisión D5, una expresión puede contener cualquier reservada en
+   posición de columna, de modo que un typo como `x = unidades * pinte` pasa
+   el análisis sin aviso (la columna podría existir realmente). Detectar
+   esos casos exige la tabla de símbolos de la Fase 2, que validará contra
+   las columnas reales del CSV.
 
 ## 9. Plan hacia las siguientes fases
 
-* **Fase 2:** Visitor en Python (`ArepaVisitor` ya generado), tabla de
+* **Fase 2:** Visitor en Python (`ArepaVisitor` ya queda generado), tabla de
   símbolos, ejecución real con `pandas` (monte/escoja/deje/cree/junte/resuma/guarde),
   validaciones semánticas (columnas inexistentes, tipos incompatibles,
-  variables no declaradas) y pruebas unitarias/de integración.
+  variables no declaradas) y pruebas unitarias y de integración.
 * **Fase 3:** motor de gráficas con `matplotlib` (barras, líneas, histograma,
-  dispersión, cajas), exportación PNG, mejoras de diagnóstico y caso de
+  dispersión, cajas), exportación a PNG, mejoras de diagnóstico y un caso de
   estudio completo con datos reales.
 
-La gramática de la Fase 1 ya reconoce todo el vocabulario previsto, por lo que
-las fases siguientes agregan semántica **sin romper la sintaxis**.
+Como la gramática de la Fase 1 ya reconoce todo el vocabulario previsto, las
+fases siguientes agregan la semántica **sin tener que tocar la sintaxis**.

@@ -1,0 +1,29 @@
+# ============================================================
+#  filtros.arepa - Carga, selección y preparación de datos
+#  Demuestra: monte, escoja, deje donde, cree, renombre,
+#  acomode, limpie y convierta.
+# ============================================================
+
+quihubo
+
+# Cargar el archivo original
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+
+# Quedarse solo con las columnas útiles
+base = encuesta
+|> escoja [id, ciudad, edad, ingreso]
+|> renombre id -> identificacion
+
+# Filtrar registros válidos y crear una columna calculada
+validos = base
+|> deje donde edad >= 18 y ingreso > 0
+|> cree ingreso_mensual = ingreso / 12
+
+# Limpiar y ordenar
+listos = validos
+|> limpie duplicados
+|> limpie vacios con 0
+|> convierta edad -> numero
+|> acomode por [ingreso_mensual] pa_abajo
+
+chao

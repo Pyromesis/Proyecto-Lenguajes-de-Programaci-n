@@ -1,0 +1,56 @@
+# Casos borde del léxico y la sintaxis
+quihubo
+
+# comentario entre sentencias
+a = 1
+# otro comentario
+b = a + 2
+
+# cadena con comillas escapadas y saltos escapados
+frase = "dijo \"hola\" y se fue"
+ruta = "C:\\datos\\archivo.csv"
+salto = "linea1\nlinea2"
+
+# unarios y potencia asociativa a derecha
+neg = -5 + -b
+pot = 2 ^ 3 ^ 2
+negpot = 2 ^ -3
+doble_negacion = no no obvio
+
+# paréntesis anidados y todos los operadores
+compleja = ((a + 2) * (b - 3)) % 4 / 5 ^ 1
+logica = no (a > 1) o b == 3 y compleja != 0
+
+# continuación de línea tras coma y dentro de corchetes
+r = b
+|> resuma total = sume(a),
+   cuenta = cuente(),
+   prom = promedie(a)
+
+t = r
+|> escoja [
+    total,
+    cuenta
+]
+
+# bloque vacío y condicionales encadenados
+fijese_si (logica) { } sino { }
+
+invente clasificar(x) {
+    fijese_si (x > 10) {
+        devuelva "alto"
+    } sino fijese_si (x > 5) {
+        devuelva "medio"
+    } sino {
+        devuelva "bajo"
+    }
+}
+
+# función sin valor de retorno explícito
+invente nada_que_hacer() {
+    devuelva
+}
+
+cuenteme "fin de los casos borde"
+
+chao

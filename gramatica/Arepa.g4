@@ -12,10 +12,13 @@
  *
  *  Convenciones de diseño:
  *   - Las palabras reservadas se escriben en minúscula, sin tildes.
+ *   - "quihubo" (apertura) y "chao" (cierre) van cada uno en su propia
+ *     línea: el salto de línea después de "quihubo" es obligatorio.
  *   - El salto de línea (NL) separa sentencias; se permite continuación
  *     de línea después de "|>", ",", operadores binarios y dentro de
  *     paréntesis, corchetes.
- *   - Los comentarios inician con "#" y llegan al final de la línea.
+ *   - Los comentarios inician con "#" y llegan al final de la línea;
+ *     pueden aparecer en cualquier posición del programa.
  *
  *  Para generar el front-end en Python:
  *    antlr4 -Dlanguage=Python3 -visitor -no-listener Arepa.g4
@@ -29,9 +32,11 @@ grammar Arepa;
 // ============================================================================
 
 // --- Programa ---------------------------------------------------------------
+// El salto tras "quihubo" es obligatorio: ni "quihubo" ni "chao" comparten
+// línea con otras sentencias.
 
 programa
-    : NL* QUIHUBO NL* sentencias? NL* CHAO NL* EOF
+    : NL* QUIHUBO NL+ sentencias? NL* CHAO NL* EOF
     ;
 
 sentencias

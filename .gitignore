@@ -1,0 +1,14 @@
+# Bytecode de Python
+__pycache__/
+*.py[cod]
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Salidas de ejecución (gráficas y CSV generados)
+salidas/
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store

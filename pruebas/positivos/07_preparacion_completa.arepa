@@ -1,0 +1,22 @@
+# Preparación completa: renombre, limpie, convierta y orden
+quihubo
+
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+
+base = encuesta
+|> escoja [id, ciudad, edad, ingreso]
+|> renombre id -> identificacion
+
+listos = base
+|> deje donde edad >= 18 y ingreso > 0
+|> cree ingreso_mensual = ingreso / 12
+|> limpie duplicados
+|> limpie vacios con 0
+|> convierta edad -> numero
+|> convierta fecha_ingreso -> fecha
+|> acomode [ingreso_mensual] pa_abajo
+|> acomode por [ciudad, edad] pa_arriba
+
+guarde listos como "salidas/listos.csv"
+
+chao

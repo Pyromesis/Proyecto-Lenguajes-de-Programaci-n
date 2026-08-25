@@ -1,0 +1,45 @@
+# ============================================================
+#  graficas.arepa - Las cinco visualizaciones del lenguaje
+#  Demuestra: pinte con barras, lineas, histograma,
+#  dispersion y cajas, con sus cláusulas de estética.
+# ============================================================
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+# Gráfica de barras exportada a PNG
+pinte barras ventas
+titulo "Ventas por mes"
+ejex mes
+ejey total
+guardela "salidas/barras.png"
+
+# Gráfica de líneas mostrada en pantalla
+pinte lineas ventas
+titulo "Tendencia mensual"
+ejex mes
+ejey total
+muestrela
+
+# Histograma de una columna
+pinte histograma ventas
+titulo "Distribución de totales"
+ejey total
+guardela "salidas/histograma.png"
+
+# Dispersión
+pinte dispersion ventas
+titulo "Precio frente a unidades"
+ejex precio
+ejey unidades
+guardela "salidas/dispersion.png"
+
+# Cajas
+pinte cajas ventas
+titulo "Rango de precios por región"
+ejex region
+ejey precio
+guardela "salidas/cajas.png"
+
+chao

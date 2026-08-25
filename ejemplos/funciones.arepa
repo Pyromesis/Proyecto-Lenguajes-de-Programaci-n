@@ -1,0 +1,38 @@
+# ============================================================
+#  funciones.arepa - Abstracción y control
+#  Demuestra: invente, devuelva, fijese_si/sino encadenados,
+#  cuenteme y describa.
+# ============================================================
+
+quihubo
+
+datos = monte "datos/empleados.csv" con encabezado
+
+# Función que convierte pesos a dólares
+invente dolares(valor) {
+    devuelva valor / 4000
+}
+
+# Función que clasifica un salario
+invente clasificar(salario) {
+    fijese_si (salario > 5000000) {
+        devuelva "alto"
+    } sino fijese_si (salario > 2000000) {
+        devuelva "medio"
+    } sino {
+        devuelva "bajo"
+    }
+}
+
+# Bloque vacío permitido: nada por hacer
+fijese_si (obvio) { } sino { }
+
+# Uso de las funciones
+cuenteme "2500000 pesos son:", dolares(2500000)
+cuenteme "Clasificación:", clasificar(3000000)
+cuenteme "Doble negación:", no no obvio
+
+# Resumen estadístico de la tabla
+describa datos
+
+chao

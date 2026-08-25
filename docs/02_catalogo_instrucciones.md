@@ -1,16 +1,16 @@
 # AREPA — Catálogo de instrucciones y decisiones de diseño (Fase 1)
 
-Este documento define el vocabulario completo del lenguaje AREPA: palabras
-reservadas, operadores, literales, sentencias y las justificaciones de cada
-decisión. La gramática ejecutable está en `gramatica/Arepa.g4`.
+Aquí está el vocabulario completo de AREPA: palabras reservadas, operadores,
+literales, sentencias y la razón de cada decisión que tomamos. La gramática
+ejecutable correspondiente está en `gramatica/Arepa.g4`.
 
 ---
 
 ## 1. Filosofía del vocabulario
 
-AREPA usa **español hablado en Colombia** como base de sus palabras reservadas.
-Cada palabra se eligió por ser coloquial, corta y memorable, y porque su
-significado cotidiano sugiere la operación que realiza:
+Las palabras reservadas de AREPA salen del **español hablado en Colombia**.
+Escogimos cada palabra por ser coloquial, corta y fácil de recordar, y porque
+lo que significa en el día a día se parece a lo que hace la instrucción:
 
 | Palabra | Uso coloquial colombiano | Instrucción en AREPA |
 |---|---|---|
@@ -28,7 +28,7 @@ significado cotidiano sugiere la operación que realiza:
 | `convierta` | convertir | conversión de tipos |
 | `junte por` | "júntelos por ciudad" | agrupamiento |
 | `resuma` | "resuma" | agregaciones |
-| `cuente_me` → `cuenteme` | "cuénteme, ¿qué salió?" | imprime valores |
+| `cuenteme` | "cuénteme, ¿qué salió?" | imprime valores |
 | `describa` | "descríbame la tabla" | resumen estadístico |
 | `pinte` | "pínteme esa gráfica" | visualización |
 | `invente` | "invente una función" | define funciones |
@@ -38,11 +38,18 @@ significado cotidiano sugiere la operación que realiza:
 | `obvio` | "¡obvio!" | verdadero |
 | `falso` | negación absoluta | falso |
 | `nada` | "no hay nada" | valor faltante |
+| `y` | "a y b" | conjunción lógica |
+| `o` | "a o b" | disyunción lógica |
+| `no` | "no pasa" | negación lógica |
+
+Con estas últimas, el vocabulario reservado queda en **51 palabras**: 45
+instrucciones y estructuras, 3 literales especiales (`obvio`, `falso`,
+`nada`) y 3 operadores lógicos (`y`, `o`, `no`).
 
 **Decisión D1 — sin tildes en palabras reservadas.** Se escriben sin tilde
-(`numero`, `lineas`, `titulo`) para evitar problemas de codificación y para
-acercarse a como se escribe en chat. Los **identificadores** sí admiten tildes,
-ñ y letras Unicode (`[\p{L}_][\p{L}\p{N}_]*`).
+(`numero`, `lineas`, `titulo`) para no pelear con la codificación y porque así
+es como se escribe normalmente en un chat. Los **identificadores** sí admiten
+tildes, ñ y letras Unicode (`[\p{L}_][\p{L}\p{N}_]*`).
 
 **Decisión D2 — minúscula estricta.** Las palabras reservadas son minúsculas;
 los identificadores distinguen mayúsculas.
@@ -58,7 +65,10 @@ quihubo
 chao
 ```
 
-* Comentarios con `#` hasta fin de línea (se permiten antes de `quihubo`).
+* `quihubo` y `chao` van cada uno en su propia línea; el salto después de
+  `quihubo` es obligatorio.
+* Comentarios con `#` hasta fin de línea; se permiten en cualquier posición
+  del programa (antes de `quihubo`, entre sentencias y antes de `chao`).
 * Cada sentencia termina en salto de línea.
 * Continuación de línea permitida tras `|>`, tras coma, tras operador binario
   y dentro de `( )` y `[ ]`.
@@ -171,8 +181,8 @@ guardela "salidas/ingresos.png"
 ## 6. El pipeline `|>`
 
 **Decisión D3 — estilo declarativo de encadenamiento.** Siguiendo la propuesta
-del enunciado del curso, cada operación recibe una tabla y produce otra sin
-modificar la anterior:
+del enunciado del curso, cada operación recibe una tabla y devuelve otra
+nueva, sin modificar la que entra:
 
 ```text
 limpias = ventas
@@ -181,7 +191,8 @@ limpias = ventas
 |> cree total = unidades * precio
 ```
 
-El `|>` puede abrir línea para que el programa se lea como una receta.
+El `|>` puede abrir línea para que el programa se lea como una receta de
+cocina: una etapa por línea.
 
 ---
 
