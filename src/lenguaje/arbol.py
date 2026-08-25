@@ -1,8 +1,11 @@
 """
-AREPA - Impresión del árbol de análisis (Fase 1)
-------------------------------------------------
+AREPA - Impresión del árbol de análisis (src/lenguaje/arbol.py)
+---------------------------------------------------------------
 Convierte el árbol de análisis generado por ANTLR4 en una
 representación jerárquica legible en consola.
+
+El recorrido usa la interfaz de nodos de ANTLR4 (uso autorizado); el
+formato de ramas ASCII y el conteo de sentencias son propios.
 """
 
 from antlr4 import TerminalNode
@@ -11,6 +14,7 @@ RAMA_MEDIA = "|-- "
 RAMA_ULTIMA = "`-- "
 PREFIJO_MEDIO = "|   "
 PREFIJO_ULTIMO = "    "
+
 
 def _es_salto(texto):
     """True si el texto del token consiste solo de caracteres de salto."""

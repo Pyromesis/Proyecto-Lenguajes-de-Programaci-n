@@ -57,8 +57,12 @@ orientada a objetos o acceso a redes.
 * La lista de tokens, si se pide con `--tokens`.
 * El **árbol de análisis**, si se pide con `--arbol`.
 * Diagnósticos de error léxico y sintáctico que dicen **línea y columna**.
+* (Adicional, con `--ejecutar`) la ejecución del programa con la
+  biblioteca propia: carga CSV, pipeline de datos, agregaciones y
+  exportación, sin usar bibliotecas externas.
 
-**Fases 2 y 3:** tablas procesadas, CSV exportados, estadísticas y gráficas PNG.
+**Fases 2 y 3:** consolidación semántica, estadísticas ampliadas y
+gráficas PNG generadas con un motor propio.
 
 ## 6. Restricciones
 
@@ -71,8 +75,11 @@ orientada a objetos o acceso a redes.
    permiten en cualquier posición del programa.
 5. Las variables del programa no pueden llamarse igual que una palabra
    reservada; los nombres de columnas sí pueden (vienen de archivos externos).
-6. La Fase 1 reconoce programas pero **no los ejecuta**: no hay Visitor
-   semántico, ni lectura real de CSV, ni generación de gráficas.
+6. La entrega del Corte 1 es el **front-end**: reconoce programas, arma
+   el árbol y reporta errores. Como demostración de la biblioteca propia
+   (Tabla, lector CSV, evaluador y símbolos hechos por el equipo), el
+   modo `--ejecutar` corre programas reales sin bibliotecas externas;
+   `pinte` se valida pero no genera imágenes todavía.
 
 ## 7. Alcance funcional de esta fase (Corte 1)
 
@@ -86,8 +93,9 @@ orientada a objetos o acceso a redes.
 | Gramática BNF/EBNF documentada | lista, en `docs/03_gramatica_ebnf.md` |
 | Gramática implementada en ANTLR4 (lexer + parser Python) | lista, en `gramatica/Arepa.g4` y `generado/` |
 | Pruebas léxicas y sintácticas positivas y negativas | 28 de 28 pasan (`pruebas/`, incluye 7 verificaciones de la CLI) |
-| Reporte de errores comprensibles con línea y columna | listo, en `src/errores.py` |
-| Interfaz de línea de comandos | lista, en `src/main.py` |
+| Pruebas de la biblioteca propia (datos, expresiones, runtime) | 77 de 77 pasan (`pruebas/test_proyecto.py`: 105 en total) |
+| Reporte de errores comprensibles con línea y columna | listo, en `src/lenguaje/errores.py` y `src/errores_base.py` |
+| Interfaz de línea de comandos | lista, en `src/cli/main.py` |
 
 ## 8. Criterios de éxito
 

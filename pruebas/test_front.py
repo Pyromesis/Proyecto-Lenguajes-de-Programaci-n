@@ -27,7 +27,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 os.system("")  # habilita los colores ANSI en la consola de Windows
 
-from main import analizar  # noqa: E402
+from lenguaje.analizador import analizar  # noqa: E402
 
 VERDE = "\033[92m"
 ROJO = "\033[91m"
@@ -86,7 +86,7 @@ def probar_ruta(ruta, debe_fallar):
 
 def probar_cli():
     """Pruebas de integración sobre src/main.py (códigos de salida y flags)."""
-    main_py = os.path.join(RAIZ, "src", "main.py")
+    main_py = os.path.join(RAIZ, "src", "cli", "main.py")
     demo = os.path.join(RAIZ, "ejemplos", "demo.arepa")
     negativo = os.path.join(RAIZ, "pruebas", "negativos", "n01_falta_chao.arepa")
     casos = []

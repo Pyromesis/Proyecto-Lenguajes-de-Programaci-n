@@ -1,5 +1,19 @@
-# Runtime de ANTLR4 necesario para ejecutar el front-end
-antlr4-python3-runtime==4.13.2
+# =====================================================================
+# Dependencias del proyecto - solo lo estrictamente necesario
+# =====================================================================
+# Regla del curso: toda la lógica del DSL (estructuras de datos, CSV,
+# expresiones, símbolos, errores) se implementa desde cero en src/.
+# ANTLR4 es la única excepción autorizada por el enunciado.
 
-# Opcional (solo para regenerar lexer/parser desde Arepa.g4):
-#   pip install antlr4-tools     (requiere Java 11+; descarga el jar automáticamente)
+antlr4-python3-runtime==4.13.2
+# Nombre: antlr4-python3-runtime
+# Versión: 4.13.2 (misma con la que se generó el lexer/parser)
+# Uso: ejecutar el lexer y el parser generados desde gramatica/Arepa.g4
+# Por qué está permitida: la herramienta ANTLR4 la especifica el curso
+#   para construir el front-end; no implementa lógica del DSL.
+# Qué reemplazaría si la elimináramos: todo el reconocimiento léxico y
+#   sintáctico (reconstruirlo a mano está prohibido sin instrucción
+#   adicional del profesor).
+
+# Opcional (solo para REGENERAR lexer/parser desde Arepa.g4, no para
+# ejecutar el proyecto): pip install antlr4-tools (requiere Java 11+).

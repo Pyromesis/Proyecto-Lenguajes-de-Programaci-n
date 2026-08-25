@@ -1,9 +1,12 @@
 """
-AREPA - Manejo de errores y diagnóstico (Fase 1)
-------------------------------------------------
+AREPA - Manejo de errores del front-end (src/lenguaje/errores.py)
+-----------------------------------------------------------------
 Listener personalizado de ANTLR4 que captura los errores léxicos y
 sintácticos sin interrumpir el análisis, los traduce a mensajes
 comprensibles en español y conserva su ubicación (línea y columna).
+
+La traducción de mensajes es código propio del equipo; la captura se
+apoya en la interfaz de listeners de ANTLR4 (uso autorizado).
 """
 
 import re

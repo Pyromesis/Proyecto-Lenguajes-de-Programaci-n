@@ -28,23 +28,29 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    `ArepaLexer.py`, `ArepaParser.py`, `ArepaVisitor.py` y las tablas
    `.tokens/.interp`. Se generó con
    `antlr4 -Dlanguage=Python3 -visitor -no-listener Arepa.g4`.
-4. **Interfaz de línea de comandos** `src/main.py`:
-   - `python src/main.py <archivo.arepa>` valida el programa.
+4. **Interfaz de línea de comandos** `src/cli/main.py`:
+   - `python src/cli/main.py <archivo.arepa>` valida el programa.
    - `--tokens` muestra la tabla de tokens (tipo, texto, línea, columna).
    - `--arbol` imprime el árbol de análisis jerárquico.
+   - `--ejecutar` corre el programa con la biblioteca propia del equipo.
    - Códigos de salida: `0` válido, `1` inválido, `2` archivo no encontrado.
-5. **Manejo de errores** `src/errores.py`: un listener propio que atrapa
+5. **Manejo de errores** `src/lenguaje/errores.py`: un listener propio que atrapa
    todos los errores sin detener el análisis y pasa los mensajes técnicos de
    ANTLR a español, conservando **línea y columna**. Los conjuntos de tokens
    esperados se traducen y se limitan a 6 opciones ("entre otras opciones"),
    y si se usa una palabra reservada como variable el mensaje lo explica.
-6. **Árbol de análisis legible** `src/arbol.py`: impresión jerárquica con
+   Los errores semánticos y de ejecución usan la jerarquía propia de
+   `src/errores_base.py`.
+6. **Árbol de análisis legible** `src/lenguaje/arbol.py`: impresión jerárquica con
    ramas ASCII y conteo de sentencias reconocidas.
-7. **Suite de pruebas léxicas y sintácticas** `pruebas/test_front.py`:
-   8 programas positivos, 13 negativos y 7 verificaciones de la interfaz
-   (códigos de salida y opciones `--tokens`/`--arbol`); las 28 pruebas pasan.
-   La suite también comprueba la calidad de los mensajes: ninguno puede
-   contener saltos de línea crudos ni superar los 300 caracteres.
+7. **Biblioteca propia del lenguaje** (implementada desde cero, ver
+   `docs/05_arquitectura.md`): `src/datos/` (Tabla, Columna, Fila, lector
+   y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
+   `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
+   bibliotecas equivalentes.
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: 4 suites con 105
+   pruebas en total (28 de front-end, 35 de datos, 14 de expresiones y
+   28 de runtime); todas pasan.
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -68,9 +74,13 @@ proyecto/
 ├── gramatica/Arepa.g4        gramática única fuente (lexer + parser)
 ├── generado/                 código Python generado por ANTLR4
 ├── src/
-│   ├── main.py               CLI: orquesta lexer/parser/reportes
-│   ├── errores.py            listener de errores + traducción de mensajes
-│   └── arbol.py              impresión del árbol + conteo de sentencias
+│   ├── lenguaje/             front-end: analizador, árbol y diagnóstico
+│   ├── datos/                propia: Tabla, Columna, Fila, CSV, tipos
+│   ├── expresiones/          propia: operadores y evaluador
+│   ├── runtime/              propia: símbolos, contexto y ejecutor
+│   ├── errores_base.py       jerarquía propia de errores
+│   └── cli/main.py           CLI: valida y (--ejecutar) corre programas
+├── datos/                    CSV de ejemplo para los programas
 ├── ejemplos/                 demo + ejemplos por componente
 │   ├── demo.arepa            programa de referencia (flujo completo)
 │   ├── filtros.arepa         carga, selección, filtros y preparación
@@ -79,14 +89,19 @@ proyecto/
 ├── pruebas/
 │   ├── positivos/*.arepa     deben aceptarse
 │   ├── negativos/*.arepa     deben rechazarse con diagnóstico
-│   └── test_front.py         corredor de pruebas
-├── docs/                     alcance, catálogo, EBNF e informe
+│   ├── test_front.py         suite del front-end (28)
+│   ├── test_datos.py         suite de la biblioteca de datos (35)
+│   ├── test_expresiones.py   suite del evaluador (14)
+│   ├── test_runtime.py       suite del runtime (28)
+│   └── test_proyecto.py      corredor maestro (105)
+├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
-└── requirements.txt          dependencias
+└── requirements.txt          dependencias (solo ANTLR4)
 ```
 
 Con esta organización se cumplió la separación pedida: gramática /
-generación / errores / interfaz / pruebas / ejemplos / documentación.
+generación / lenguaje / datos / expresiones / runtime / interfaz /
+pruebas / ejemplos / documentación.
 
 ## 4. Cómo reproducir el entorno
 
@@ -101,12 +116,13 @@ antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 # en %USERPROFILE%\antlr o usa la variable ANTLR_JAR).
 
 # 3. Validar un programa
-python src/main.py ejemplos/demo.arepa
-python src/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
-python src/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
+python src/cli/main.py ejemplos/demo.arepa
+python src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
+python src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
+python src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas
-python pruebas/test_front.py
+# 4. Suite completa de pruebas (105)
+python pruebas/test_proyecto.py
 ```
 
 ## 5. Resultados de las pruebas
@@ -200,13 +216,15 @@ línea crudos y que ninguno sea un volcado de más de 300 caracteres.
 
 ## 9. Plan hacia las siguientes fases
 
-* **Fase 2:** Visitor en Python (`ArepaVisitor` ya queda generado), tabla de
-  símbolos, ejecución real con `pandas` (monte/escoja/deje/cree/junte/resuma/guarde),
-  validaciones semánticas (columnas inexistentes, tipos incompatibles,
-  variables no declaradas) y pruebas unitarias y de integración.
-* **Fase 3:** motor de gráficas con `matplotlib` (barras, líneas, histograma,
-  dispersión, cajas), exportación a PNG, mejoras de diagnóstico y un caso de
-  estudio completo con datos reales.
+* **Fase 2:** consolidar la semántica sobre la biblioteca propia ya
+  construida: tabla de símbolos con validaciones más finas (columnas
+  inexistentes en tiempo de análisis, tipos incompatibles, variables no
+  declaradas), más pruebas de integración y mensajes aún más claros.
+  Todo sobre `Tabla`, el lector CSV propio y el evaluador propio; sin
+  pandas ni bibliotecas externas.
+* **Fase 3:** motor de gráficas **propio** (barras, líneas, histograma,
+  dispersión, cajas) que genere imágenes sin matplotlib, exportación
+  PNG y un caso de estudio completo con datos reales.
 
-Como la gramática de la Fase 1 ya reconoce todo el vocabulario previsto, las
-fases siguientes agregan la semántica **sin tener que tocar la sintaxis**.
+Como la gramática de la Fase 1 ya reconoce todo el vocabulario previsto,
+las fases siguientes agregan la semántica **sin tener que tocar la sintaxis**.
