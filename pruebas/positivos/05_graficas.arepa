@@ -1,0 +1,40 @@
+# Las cinco instrucciones de visualización reconocidas por AREPA
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+resumen = ventas
+|> junte por [ciudad]
+|> resuma ingreso = sume(total), registros = cuente()
+
+# Gráfica de barras exportada a PNG
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/barras.png"
+
+# Gráfica de líneas que se muestra en pantalla
+pinte lineas ventas
+ejex fecha
+ejey total
+leyenda "Ventas diarias"
+muestrela
+
+# Histograma de una columna
+pinte histograma ventas
+ejex total
+titulo "Distribución de totales"
+
+# Dispersión
+pinte dispersion ventas
+ejex unidades
+ejey precio
+leyenda "Unidades vs precio"
+
+# Diagrama de cajas
+pinte cajas resumen
+ejex ciudad
+ejey ingreso
+
+chao

@@ -1,0 +1,15 @@
+# Selección de columnas y filtros sencillos
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+pocas = ventas |> escoja [ciudad, unidades, precio]
+caras = ventas |> deje donde precio > 50000
+activas = ventas |> deje donde unidades > 0
+bogota = ventas |> deje donde ciudad == "Bogotá"
+mezcla = ventas |> deje donde precio >= 10000 y unidades <= 50 o ciudad == "Cali"
+
+ordenadas = ventas |> acomode por [precio] pa_abajo
+alfabetico = ventas |> acomode por [ciudad] pa_arriba
+
+chao

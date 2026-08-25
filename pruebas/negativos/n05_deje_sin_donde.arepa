@@ -1,0 +1,5 @@
+﻿quihubo
+v = monte "d.csv"
+f = v |> deje unidades > 0
+chao
+

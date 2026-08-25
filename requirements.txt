@@ -1,0 +1,5 @@
+# Runtime de ANTLR4 necesario para ejecutar el front-end
+antlr4-python3-runtime==4.13.2
+
+# Opcional (solo para regenerar lexer/parser desde Arepa.g4):
+#   pip install antlr4-tools     (requiere Java 11+; descarga el jar automáticamente)

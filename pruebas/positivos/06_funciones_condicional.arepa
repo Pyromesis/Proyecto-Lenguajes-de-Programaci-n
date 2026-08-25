@@ -1,0 +1,40 @@
+﻿# Funciones y condicionales
+quihubo
+
+invente cuadrado(n) {
+    devuelva n * n
+}
+
+invente dolares(valor, tasa) {
+    fijese_si (valor > 1000000) {
+        devuelva valor / tasa * 0.95
+    } sino {
+        devuelva valor / tasa
+    }
+}
+
+invente etiqueta_ventas(total) {
+    fijese_si (total >= 1000000) {
+        devuelva "venta grande"
+    } sino fijese_si (total >= 100000) {
+        devuelva "venta mediana"
+    } sino {
+        devuelva "venta normal"
+    }
+}
+
+base = 25
+cuenteme "Cuadrado:", cuadrado(base)
+cuenteme "Dólares:", dolares(2500000, 4000)
+
+fijese_si (cuadrado(4) == 16 y obvio) {
+    cuenteme "Todo cuadra, parce"
+} sino {
+    fijese_si (falso) {
+        cuenteme "Esto nunca sale"
+    } sino {
+        cuenteme "Algo quedó raro"
+    }
+}
+
+chao

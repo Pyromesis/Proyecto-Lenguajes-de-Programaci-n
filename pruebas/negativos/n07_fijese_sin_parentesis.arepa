@@ -1,0 +1,7 @@
+﻿quihubo
+x = 5
+fijese_si x > 3 {
+    cuente_me "si"
+}
+chao
+

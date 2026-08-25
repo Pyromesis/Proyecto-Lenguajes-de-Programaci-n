@@ -1,0 +1,12 @@
+# Carga y guardado de archivos CSV
+quihubo
+
+datos = monte "datos/ventas.csv"
+datos2 = monte "datos/export.csv" con encabezado
+datos3 = monte "datos/punto_y_coma.csv" con encabezado obvio, separador ";"
+datos4 = monte "datos/sin_encabezado.csv" con encabezado falso, separador ","
+
+guarde datos como "salidas/copia.csv"
+guarde datos3 como "salidas/procesado.csv"
+
+chao

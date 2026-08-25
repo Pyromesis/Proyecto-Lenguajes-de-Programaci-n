@@ -1,0 +1,19 @@
+﻿# Asignaciones y expresiones básicas
+quihubo
+
+x = 10
+altura = -3 + x * 2 ^ 2
+z = (x + 5) % 3 / 2
+precio_total = 15000.5 * 4
+
+nombre = "Bogotá"
+bandera = obvio
+vacia = nada
+
+es_valido = x > 5 y no falso o nombre == "Medellín"
+diferente = z != 10 y precio_total >= 60000 y x <= 100
+
+cuenteme "Resultado:", altura, z
+describa x
+
+chao

@@ -1,0 +1,50 @@
+﻿# ============================================================
+#  demo.arepa - Flujo completo en AREPA
+#  Cargar, preparar, resumir y graficar ventas por ciudad
+# ============================================================
+
+quihubo
+
+# --- 1. Montar los datos ------------------------------------
+ventas = monte "datos/ventas.csv" con encabezado, separador ","
+
+# --- 2. Preparar el conjunto de datos -----------------------
+ventas_limpias = ventas
+|> escoja [fecha, ciudad, categoria, unidades, precio]
+|> deje donde unidades > 0 y precio > 0
+|> cree total = unidades * precio
+
+# --- 3. Resumen de ingresos por ciudad ----------------------
+resumen = ventas_limpias
+|> junte por [ciudad]
+|> resuma ingreso = sume(total),
+   promedio = promedie(total),
+   registros = cuente()
+
+# --- 4. Contarle al jefe -------------------------------------
+cuenteme "Resumen listo, parce"
+
+fijese_si (2 + 2 == 4) {
+    cuenteme "Todo cuadra, de una!"
+} sino {
+    cuenteme "Paila, algo no cuadra"
+}
+
+# --- 5. Una función inventada -------------------------------
+invente dolares(valor) {
+    devuelva valor * 4000
+}
+
+cuenteme "En dólares:", dolares(250000)
+
+# --- 6. Visualización (reconocida sintácticamente) ----------
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/ingresos_ciudad.png"
+
+# --- 7. Exportar la tabla -----------------------------------
+guarde resumen como "salidas/resumen_ciudades.csv"
+
+chao

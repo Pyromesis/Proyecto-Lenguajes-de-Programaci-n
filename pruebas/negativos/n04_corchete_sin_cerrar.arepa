@@ -1,0 +1,7 @@
+# ERROR: corchete sin cerrar en escoja
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+pocas = ventas |> escoja [ciudad, precio
+
+chao

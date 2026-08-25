@@ -1,0 +1,6 @@
+quihubo
+
+ventas = monte "datos/ventas.csv"
+resumen = ventas |> escoja [ciudad]
+pinte pastel resumen
+chao

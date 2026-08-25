@@ -1,0 +1,31 @@
+# Pipeline completo: preparación, columnas calculadas y agregaciones
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+limpias = ventas
+|> escoja [fecha, ciudad, categoria, unidades, precio]
+|> deje donde unidades > 0 y precio > 0
+|> renombre categoria -> categoria_producto
+|> convierta fecha -> fecha
+|> convierta precio -> numero
+|> cree total = unidades * precio
+|> limpie duplicados
+|> limpie vacios con 0
+|> acomode por [fecha] pa_abajo
+
+resumen = limpias
+|> junte por [ciudad]
+|> resuma ingreso = sume(total),
+   promedio = promedie(total),
+   mediana_ingreso = mediana(total),
+   minimo_ingreso = minimo(total),
+   maximo_ingreso = maximo(total),
+   dispersion = desviacion(total),
+   registros = cuente()
+
+por_ciudad_categoria = limpias
+|> junte por [ciudad, categoria_producto]
+|> resuma total_ventas = sume(total), n = cuente()
+
+chao
