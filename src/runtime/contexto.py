@@ -39,11 +39,17 @@ def a_texto(valor):
 
 
 class ContextoEjecucion:
-    """Estado global del programa: símbolos raíz y salida acumulada."""
+    """Estado global del programa: símbolos raíz, salida y errores vistos.
+
+    'errores' registra los problemas que ocurrieron durante la corrida
+    (el ejecutor lanza la excepción para interrumpir y la CLI la
+    reporta; además queda archivada aquí para inspección y pruebas).
+    """
 
     def __init__(self):
         self.simbolos = TablaSimbolos()
         self.salida = []
+        self.errores = []
 
     def imprimir(self, *valores):
         """Registra (y muestra) los valores separados por espacio."""
@@ -51,3 +57,7 @@ class ContextoEjecucion:
         self.salida.append(linea)
         print(linea)
         sys.stdout.flush()
+
+    def registrar_error(self, problema):
+        """Archiva un error propio ocurrido durante la ejecución."""
+        self.errores.append(problema)

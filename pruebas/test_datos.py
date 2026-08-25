@@ -330,6 +330,67 @@ def tabla_texto_formato_propio():
     assert "ciudad" in texto and "Bogotá" in texto
 
 
+@caso
+def tabla_cuenta_filas_y_columnas():
+    tabla = _tabla_demo()
+    assert tabla.num_filas == 4
+    assert tabla.num_columnas == 3
+
+
+@caso
+def tabla_insertar_fila_al_final_y_en_posicion():
+    tabla = _tabla_demo()
+    tabla.insertar_fila(["Cali", 7, 1000])
+    assert tabla.num_filas == 5
+    assert tabla.filas[-1].valores == ["Cali", 7, 1000]
+    tabla.insertar_fila(["Primera", 0, 1], posicion=0)
+    assert tabla.filas[0].valores == ["Primera", 0, 1]
+    assert tabla.num_filas == 6
+
+
+@caso
+def tabla_insertar_fila_con_ancho_incorrecto_rechazada():
+    try:
+        _tabla_demo().insertar_fila([1, 2])
+        raise AssertionError("insertar una fila de 2 valores en 3 columnas debería fallar")
+    except Exception as e:
+        assert "valores" in str(e)
+
+
+@caso
+def tabla_eliminar_fila_por_posicion():
+    tabla = _tabla_demo()
+    eliminada = tabla.eliminar_fila(1)
+    assert eliminada.valores == ["Cali", 5, 3000]
+    assert tabla.num_filas == 3
+
+
+@caso
+def tabla_eliminar_fila_fuera_de_rango_rechazada():
+    try:
+        _tabla_demo().eliminar_fila(99)
+        raise AssertionError("eliminar la fila 99 debería fallar")
+    except Exception as e:
+        assert "No existe la fila" in str(e)
+
+
+@caso
+def tabla_insertar_columna_con_valores():
+    tabla = _tabla_demo()
+    tabla.insertar_columna("doble", [2, 10, 16, 2])
+    assert tabla.num_columnas == 4
+    assert tabla.valores_columna("doble") == [2, 10, 16, 2]
+
+
+@caso
+def tabla_insertar_columna_repetida_rechazada():
+    try:
+        _tabla_demo().insertar_columna("ciudad", [1, 2, 3, 4])
+        raise AssertionError("insertar una columna existente debería fallar")
+    except ErrorColumna:
+        pass
+
+
 # ---------------------------------------------------------------------- #
 # Escritor CSV propio
 # ---------------------------------------------------------------------- #

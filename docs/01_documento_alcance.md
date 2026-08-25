@@ -93,7 +93,7 @@ gráficas PNG generadas con un motor propio.
 | Gramática BNF/EBNF documentada | lista, en `docs/03_gramatica_ebnf.md` |
 | Gramática implementada en ANTLR4 (lexer + parser Python) | lista, en `gramatica/Arepa.g4` y `generado/` |
 | Pruebas léxicas y sintácticas positivas y negativas | 28 de 28 pasan (`pruebas/`, incluye 7 verificaciones de la CLI) |
-| Pruebas de la biblioteca propia (datos, expresiones, runtime) | 77 de 77 pasan (`pruebas/test_proyecto.py`: 105 en total) |
+| Pruebas de la biblioteca propia (datos, expresiones, símbolos, runtime) | 99 de 99 pasan (`pruebas/test_proyecto.py`: 127 en total) |
 | Reporte de errores comprensibles con línea y columna | listo, en `src/lenguaje/errores.py` y `src/errores_base.py` |
 | Interfaz de línea de comandos | lista, en `src/cli/main.py` |
 

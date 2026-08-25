@@ -20,7 +20,7 @@ src/
 │   └── arbol.py         impresión jerárquica del árbol de análisis
 │
 ├── datos/               BIBLIOTECA PROPIA DE DATOS
-│   ├── tipos.py         valores, conversiones y calendario propio
+│   ├── tipos.py         valores del DSL, conversiones y calendario propio
 │   ├── fila.py          registro de valores
 │   ├── columna.py       metadato: nombre + tipo
 │   ├── tabla.py         estructura central y sus operaciones
@@ -33,12 +33,20 @@ src/
 │
 ├── runtime/             BIBLIOTECA PROPIA DE EJECUCIÓN
 │   ├── simbolos.py      ámbitos encadenados + funciones 'invente'
-│   ├── contexto.py      estado global y salida formateada
+│   ├── contexto.py      estado global: símbolos, salida, tablas y errores
 │   └── ejecutor.py      intérprete del programa (visitor propio)
 │
 ├── errores_base.py      jerarquía propia de errores de todo el runtime
 └── cli/main.py          interfaz de línea de comandos
 ```
+
+Nota sobre variantes de organización: en lugar de un paquete `valores.py`
+separado, los valores del DSL (`nada`, conversiones, tipos) viven en
+`datos/tipos.py`; en lugar de un paquete `operaciones/`, las operaciones
+sobre datos son métodos de `Tabla` (seleccionar, filtrar, crear columna,
+conversiones) y la orquestación de asignaciones/pipeline está en
+`runtime/ejecutor.py`. La matriz de trazabilidad de la sección 10 indica
+exactamente dónde queda cada funcionalidad.
 
 Dependencias entre capas (de abajo hacia arriba): `errores_base` →
 `datos` → `expresiones` → `runtime` → `cli`. Solo `lenguaje` toca el
@@ -172,9 +180,10 @@ Los bloques de `fijese_si` no crean ámbito; solo las funciones.
 
 ### `ContextoEjecucion` (`contexto.py`)
 
-**Qué hace:** guarda los símbolos raíz y la salida del programa. El
-formato de valores y tablas en texto es propio (ancho calculado por
-columna, `nada` visible, recorte de filas), reemplazando a `tabulate`.
+**Qué hace:** guarda los símbolos raíz, la salida del programa y el
+registro de errores ocurridos durante la corrida. El formato de valores
+y tablas en texto es propio (ancho calculado por columna, `nada`
+visible, recorte de filas), reemplazando a `tabulate`.
 
 ---
 
@@ -231,23 +240,26 @@ del dato sí es exacta.
 
 ## 8. Pruebas
 
-`python pruebas/test_proyecto.py` ejecuta las cuatro suites:
+`python pruebas/test_proyecto.py` ejecuta las cinco suites:
 
 | Suite | Archivo | Pruebas |
 |---|---|---|
 | Front-end (léxico y sintáctico) | `test_front.py` | 28 |
-| Biblioteca propia de datos | `test_datos.py` | 35 |
+| Biblioteca propia de datos | `test_datos.py` | 42 |
 | Evaluador de expresiones propio | `test_expresiones.py` | 14 |
+| Tabla de símbolos y contexto propios | `test_simbolos.py` | 15 |
 | Runtime propio (programas completos) | `test_runtime.py` | 28 |
 
-Total: **105 pruebas**. Cubren: CSV válido, vacío, con encabezados, con
+Total: **127 pruebas**. Cubren: CSV válido, vacío, con encabezados, con
 faltantes, con comillas y separadores raros; selección, filtrado,
-comparaciones, orden (incluido el caso `nada`), duplicados, vacíos,
-conversiones; expresiones aritméticas con precedencia y asociatividad,
-lógicos, `nada`, errores de tipos y de operación; asignaciones, variables
-inexistentes, columnas inexistentes, agregaciones, funciones con
-recursión, condicionales, guardado y programas válidos/inválidos.
-Ninguna prueba usa bibliotecas externas para el trabajo que se prueba.
+inserción y eliminación de filas y columnas, orden (incluido el caso
+`nada`), duplicados, vacíos, conversiones; expresiones aritméticas con
+precedencia y asociatividad, lógicos, `nada`, errores de tipos y de
+operación; tabla de símbolos (declarar, consultar, actualizar, ámbitos,
+sombra, validación de identificadores), contexto (salida, tablas,
+registro de errores); funciones con recursión, condicionales,
+agregaciones, guardado y programas válidos/inválidos. Ninguna prueba usa
+bibliotecas externas para el trabajo que se prueba.
 
 ---
 
@@ -260,3 +272,62 @@ Ninguna prueba usa bibliotecas externas para el trabajo que se prueba.
 No hay más dependencias. En particular: no hay pandas, NumPy,
 Matplotlib, Polars, tabulate, openpyxl ni equivalentes, ni en el código
 ni en los planes de las siguientes fases.
+
+---
+
+## 10. Matriz de trazabilidad
+
+Para la sustentación: cada funcionalidad exigida y dónde está
+implementada, con su prueba asociada.
+
+| Funcionalidad | Módulo (archivo) | Función / clase | Prueba |
+|---|---|---|---|
+| Nombres de columnas | `datos/tabla.py` | `Tabla.nombres_columnas` | `test_datos.py::csv_archivo_real_del_proyecto` |
+| Filas (registros) | `datos/fila.py` | clase `Fila` | `test_datos.py::csv_valido_basico` |
+| Columnas (metadato) | `datos/columna.py` | clase `Columna` | `test_datos.py::tabla_conversion_de_columna` |
+| Acceso por columna | `datos/tabla.py` | `Tabla.valores_columna` | `test_datos.py::tabla_ordenamiento_propio_ascendente` |
+| Acceso por fila | `datos/tabla.py` | `Tabla.filas` + `Fila.valor_en` | `test_datos.py::tabla_insertar_fila_al_final_y_en_posicion` |
+| Cantidad de registros | `datos/tabla.py` | `Tabla.num_filas` | `test_datos.py::tabla_cuenta_filas_y_columnas` |
+| Cantidad de columnas | `datos/tabla.py` | `Tabla.num_columnas` | `test_datos.py::tabla_cuenta_filas_y_columnas` |
+| Selección de columnas | `datos/tabla.py` | `Tabla.seleccionar` | `test_datos.py::tabla_seleccion_de_columnas` |
+| Filtrado | `datos/tabla.py` | `Tabla.filtrar` | `test_datos.py::tabla_filtrado` + `test_runtime.py::deje_donde_filtra_filas` |
+| Inserción de fila | `datos/tabla.py` | `Tabla.insertar_fila` | `test_datos.py::tabla_insertar_fila_al_final_y_en_posicion` |
+| Eliminación de fila | `datos/tabla.py` | `Tabla.eliminar_fila` | `test_datos.py::tabla_eliminar_fila_por_posicion` |
+| Inserción de columna | `datos/tabla.py` | `Tabla.insertar_columna` / `Tabla.crear_columna` | `test_datos.py::tabla_insertar_columna_con_valores` |
+| Eliminación de columna | `datos/tabla.py` | `Tabla.eliminar_columna` | (usada por operaciones de Fase 2) |
+| Copia | `datos/tabla.py` | `Tabla.copiar` | `test_runtime.py::pipeline_completo_con_cree` |
+| Representación legible | `datos/tabla.py` | `Tabla.texto_tabla` | `test_datos.py::tabla_texto_formato_propio` |
+| Ordenamiento propio | `datos/tabla.py` | `Tabla.ordenar` (merge sort) | `test_datos.py::tabla_ordenamiento_estable_por_dos_claves` |
+| Duplicados y vacíos | `datos/tabla.py` | `quitar_duplicados`, `rellenar_vacios`, `eliminar_filas_con_vacios` | `test_datos.py::tabla_quitar_duplicados_conserva_primera` |
+| Agrupamiento | `datos/tabla.py` | `Tabla.agrupar` | `test_datos.py::tabla_agrupar_propio` |
+| Lector CSV propio | `datos/lector_csv.py` | `LectorCSV._partir_campos` (máquina de estados) | `test_datos.py` (12 casos csv_*) |
+| Escritor CSV propio | `datos/escritor_csv.py` | `EscritorCSV.escribir` | `test_datos.py::escritor_csv_roundtrip` |
+| Tipos y valores (`nada`) | `datos/tipos.py` | `NADA`, `texto_a_valor`, `convertir_a_tipo` | `test_datos.py::tipos_*` |
+| Fechas sin bibliotecas | `datos/tipos.py` | `_es_fecha_valida` (calendario propio) | `test_datos.py::tipos_fecha_valida_propia` |
+| Enteros/decimales/cadenas/booleanos | `expresiones/evaluador.py` | `visitAtomo`, `visitCadena` | `test_expresiones.py::aritmetica_basica` |
+| Suma, resta, mult., div., módulo, potencia | `expresiones/operadores.py` | `sumar`…`potenciar` | `test_expresiones.py::precedencia_multiplicacion_sobre_suma` |
+| Comparaciones | `expresiones/operadores.py` | `igual`…`mayor_igual` | `test_expresiones.py::comparaciones_numericas` |
+| AND / OR / NOT | `expresiones/operadores.py` | `conjuncion`, `disyuncion`, `negar_logico` | `test_expresiones.py::logicos_y_o_no` |
+| Paréntesis y precedencia | gramática (`Arepa.g4`) + `evaluador.py` | jerarquía de reglas | `test_expresiones.py::parentesis_anidados` |
+| Valores nulos en expresiones | `expresiones/operadores.py` | propagación de `NADA` | `test_expresiones.py::nada_se_propaga` |
+| Identificadores (columna/variable) | `expresiones/evaluador.py` | `_resolver_nombre` | `test_runtime.py::variable_inexistente_rechazada` |
+| Errores de tipos | `expresiones/operadores.py` | `ErrorTipos` con mensaje claro | `test_expresiones.py::suma_numero_mas_texto_rechazada` |
+| Tabla de símbolos: declarar/consultar | `runtime/simbolos.py` | `TablaSimbolos.declarar`/`buscar` | `test_simbolos.py::declarar_y_consultar` |
+| Tabla de símbolos: actualizar | `runtime/simbolos.py` | `TablaSimbolos.asignar` | `test_simbolos.py::actualizar_valor_existente` |
+| Símbolos no declarados | `runtime/simbolos.py` | `ErrorVariable` en `buscar`/`asignar` | `test_simbolos.py::consultar_inexistente_rechazado` |
+| Ámbitos (padre/hijo, sombra) | `runtime/simbolos.py` | `hijo`, `existe_local` | `test_simbolos.py::sombra_local_sobre_el_padre` |
+| Validación de identificadores | `runtime/simbolos.py` | `validar_identificador` | `test_simbolos.py::identificador_invalido_rechazado` |
+| Funciones `invente` (closures) | `runtime/simbolos.py` + `runtime/ejecutor.py` | `FuncionArepa`, `_llamar_funcion` | `test_runtime.py::invente_devuelva_y_recursion` |
+| Contexto de ejecución | `runtime/contexto.py` | `ContextoEjecucion` | `test_simbolos.py::contexto_reune_simbolos_salida_y_tablas` |
+| Registro de errores en contexto | `runtime/contexto.py` | `registrar_error` | `test_simbolos.py::contexto_registra_errores` |
+| Asignaciones | `runtime/ejecutor.py` | `visitAsignacion` | `test_runtime.py::asignaciones_y_reasignacion` |
+| Creación de columnas calculadas | `runtime/ejecutor.py` | `_aplicar_operacion` (CREE) | `test_runtime.py::pipeline_completo_con_cree` |
+| Conversiones básicas | `runtime/ejecutor.py` | `_aplicar_operacion` (CONVIERTA) | `test_runtime.py::convierta_tipo_de_columna` |
+| Carga CSV (`monte`) | `runtime/ejecutor.py` | `_cargar` → `LectorCSV` | `test_runtime.py::monte_carga_csv_real` |
+| Agrupamiento y agregaciones propias | `runtime/ejecutor.py` | `_ejecutar_resuma`, `_calcular_agregacion` | `test_runtime.py::junte_resuma_agregaciones` |
+| Guardado (`guarde`) | `runtime/ejecutor.py` | `visitInstruccion_guarde` → `EscritorCSV` | `test_runtime.py::guarde_escribe_csv_legible` |
+| Reconocimiento de visualización | `runtime/ejecutor.py` | `visitInstruccion_grafica` (valida, no dibuja) | `test_runtime.py::pinte_valida_columnas_de_la_grafica` |
+| Diagnóstico léxico/sintáctico | `lenguaje/errores.py` | `ErroresArepa`, `_traducir` | `test_front.py` (13 negativas) |
+| Árbol de análisis | `lenguaje/arbol.py` | `imprimir_arbol` | `test_front.py` (CLI `--arbol`) |
+| Errores semánticos y de ejecución | `errores_base.py` | jerarquía `ErrorArepa` | `test_simbolos.py::contexto_registra_errores` |
+| Integración DSL → árbol → biblioteca propia | `runtime/ejecutor.py` | flujo completo | `test_runtime.py` (28 casos) |

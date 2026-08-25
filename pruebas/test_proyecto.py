@@ -24,6 +24,7 @@ SUITES = (
     ("Front-end (léxico y sintáctico)", "test_front.py"),
     ("Biblioteca propia de datos", "test_datos.py"),
     ("Evaluador de expresiones propio", "test_expresiones.py"),
+    ("Tabla de símbolos y contexto propios", "test_simbolos.py"),
     ("Runtime propio (programas completos)", "test_runtime.py"),
 )
 

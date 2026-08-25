@@ -48,9 +48,9 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
    `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
    bibliotecas equivalentes.
-8. **Suite de pruebas** `pruebas/test_proyecto.py`: 4 suites con 105
-   pruebas en total (28 de front-end, 35 de datos, 14 de expresiones y
-   28 de runtime); todas pasan.
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: 5 suites con 127
+   pruebas en total (28 de front-end, 42 de datos, 14 de expresiones,
+   15 de símbolos y contexto, y 28 de runtime); todas pasan.
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -90,10 +90,11 @@ proyecto/
 │   ├── positivos/*.arepa     deben aceptarse
 │   ├── negativos/*.arepa     deben rechazarse con diagnóstico
 │   ├── test_front.py         suite del front-end (28)
-│   ├── test_datos.py         suite de la biblioteca de datos (35)
+│   ├── test_datos.py         suite de la biblioteca de datos (42)
 │   ├── test_expresiones.py   suite del evaluador (14)
+│   ├── test_simbolos.py      suite de símbolos y contexto (15)
 │   ├── test_runtime.py       suite del runtime (28)
-│   └── test_proyecto.py      corredor maestro (105)
+│   └── test_proyecto.py      corredor maestro (127)
 ├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
 └── requirements.txt          dependencias (solo ANTLR4)
@@ -121,7 +122,7 @@ python src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
 python src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
 python src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas (105)
+# 4. Suite completa de pruebas (127)
 python pruebas/test_proyecto.py
 ```
 

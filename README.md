@@ -54,7 +54,7 @@ python src/cli/main.py ejemplos/demo.arepa --ejecutar
 python src/cli/main.py ejemplos/demo.arepa --arbol
 python src/cli/main.py ejemplos/demo.arepa --tokens
 
-# Correr TODAS las suites (105 pruebas)
+# Correr TODAS las suites (127 pruebas)
 python pruebas/test_proyecto.py
 ```
 
@@ -89,7 +89,7 @@ Análisis sintáctico: OK
 | `src/runtime/` | biblioteca propia: símbolos, contexto y ejecutor del DSL |
 | `src/cli/main.py` | interfaz de línea de comandos |
 | `datos/` | CSV de ejemplo que consumen los programas |
-| `pruebas/` | 4 suites de pruebas y programas positivos/negativos |
+| `pruebas/` | 5 suites de pruebas y programas positivos/negativos |
 | `ejemplos/` | demo completo y ejemplos cortos por componente |
 | `docs/` | alcance, catálogo, EBNF, informe y arquitectura |
 

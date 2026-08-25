@@ -25,7 +25,7 @@ Limitaciones:
 
 from datos.columna import Columna
 from datos.fila import Fila
-from errores_base import ErrorColumna
+from errores_base import ErrorColumna, ErrorEjecucion
 from datos.tipos import es_nada, nombre_tipo
 
 
@@ -53,6 +53,10 @@ class Tabla:
     def num_filas(self):
         return len(self.filas)
 
+    @property
+    def num_columnas(self):
+        return len(self.columnas)
+
     def _inferir_tipos(self):
         for i, columna in enumerate(self.columnas):
             valores = [f.valor_en(i) for f in self.filas]
@@ -73,6 +77,57 @@ class Tabla:
         """Lista con los valores de una columna, fila por fila."""
         i = self.indice_columna(nombre)
         return [f.valor_en(i) for f in self.filas]
+
+    # ---------------------------------------------------------------- #
+    # Inserción y eliminación directa de filas y columnas
+    # ---------------------------------------------------------------- #
+
+    def insertar_fila(self, valores, posicion=None):
+        """Inserta una fila propia con un valor por cada columna.
+
+        Si 'posicion' es None la fila va al final. Lanza ErrorEjecucion
+        si la cantidad de valores no coincide con las columnas.
+        """
+        if len(valores) != len(self.columnas):
+            raise ErrorEjecucion(
+                "La fila tiene {0} valores pero la tabla '{1}' tiene {2} "
+                "columnas.".format(len(valores), self.nombre, len(self.columnas))
+            )
+        fila = Fila(valores)
+        if posicion is None:
+            self.filas.append(fila)
+        else:
+            self.filas.insert(posicion, fila)
+        return fila
+
+    def eliminar_fila(self, posicion):
+        """Elimina y devuelve la fila en 'posicion'; ErrorEjecucion si no existe."""
+        if posicion < 0 or posicion >= len(self.filas):
+            raise ErrorEjecucion(
+                "No existe la fila {0} en '{1}': la tabla tiene {2} filas.".format(
+                    posicion, self.nombre, len(self.filas)
+                )
+            )
+        return self.filas.pop(posicion)
+
+    def insertar_columna(self, nombre, valores):
+        """Inserta una columna con un valor dado por fila (inserción directa).
+
+        Difiere de crear_columna: aquí los valores ya están calculados.
+        """
+        if self.tiene_columna(nombre):
+            raise ErrorColumna(
+                "La columna '{0}' ya existe en '{1}'.".format(nombre, self.nombre)
+            )
+        if len(valores) != len(self.filas):
+            raise ErrorEjecucion(
+                "La columna '{0}' trae {1} valores pero '{2}' tiene {3} "
+                "filas.".format(nombre, len(valores), self.nombre, len(self.filas))
+            )
+        for f, v in zip(self.filas, valores):
+            f.agregar(v)
+        self.columnas.append(Columna(nombre))
+        self.columnas[-1].tipo = Columna.inferir(nombre, valores).tipo
 
     # ---------------------------------------------------------------- #
     # Selección

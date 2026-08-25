@@ -142,6 +142,7 @@ def _ejecutar(arbol):
     try:
         ejecutor.ejecutar(arbol)
     except ErrorArepa as problema:
+        ejecutor.contexto.registrar_error(problema)
         etiqueta = type(problema).__name__
         mapa = {
             "ErrorSemantico": "semántico",
