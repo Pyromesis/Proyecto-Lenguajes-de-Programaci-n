@@ -110,6 +110,8 @@ def probar_cli():
 
     r = ejecutar(demo, "--tokens")
     casos.append(("CLI: --tokens imprime la tabla de tokens", "TOKEN" in (r.stdout or "") and r.returncode == 0))
+    casos.append(("CLI: --tokens muestra reservadas y operadores",
+                  "QUIHUBO" in (r.stdout or "") and "PIPE" in (r.stdout or "")))
 
     r = ejecutar(negativo)
     casos.append(("CLI: programa inválido sale con código 1", r.returncode == 1))
@@ -182,6 +184,31 @@ def probar_diagnosticos():
     for texto in malformados:
         _, _, errores = analizar(texto)  # no debe lanzar
     casos.append(("diagnóstico: 10 entradas malformadas sin excepciones", True))
+
+    # 8. Comentarios en cualquier posición no alteran la sintaxis
+    con_comentarios = (
+        "# antes de abrir\n"
+        "quihubo # tras abrir\n"
+        "# entre sentencias\n"
+        "x = 1 # tras una sentencia\n"
+        "# antes de cerrar\n"
+        "chao # tras cerrar\n"
+    )
+    _, _, errores = analizar(con_comentarios)
+    assert not errores, "los comentarios no deben producir errores: {0}".format(errores)
+    casos.append(("diagnóstico: comentarios en cualquier posición", True))
+
+    # 9. Número incompleto ('3.' sin decimales) se rechaza con diagnóstico
+    errores = diagnosticar("quihubo\nx = 3. + 1\nchao\n")
+    assert any("." in e["mensaje"] for e in errores)
+    casos.append(("diagnóstico: número incompleto '3.' se rechaza", True))
+
+    # 10. Sin mensajes duplicados en ningún diagnóstico anterior
+    for texto in malformados + [con_comentarios]:
+        _, _, errores = analizar(texto)
+        claves = [(e["tipo"], e["linea"], e["columna"], e["mensaje"]) for e in errores]
+        assert len(claves) == len(set(claves)), "hay errores duplicados"
+    casos.append(("diagnóstico: sin mensajes duplicados", True))
 
     return casos
 

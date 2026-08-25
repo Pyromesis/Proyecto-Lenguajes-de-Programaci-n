@@ -12,4 +12,9 @@ mezcla = ventas |> deje donde precio >= 10000 y unidades <= 50 o ciudad == "Cali
 ordenadas = ventas |> acomode por [precio] pa_abajo
 alfabetico = ventas |> acomode por [ciudad] pa_arriba
 
+# los seis operadores relacionales dentro de filtros
+menores = ventas |> deje donde precio < 4000
+menores_igual = ventas |> deje donde unidades <= 12
+diferentes = ventas |> deje donde ciudad != "Cali"
+
 chao

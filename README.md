@@ -56,7 +56,7 @@ chao
 * árbol de análisis legible (`--arbol`) y tabla de tokens (`--tokens`);
 * diagnóstico de errores léxicos y sintácticos en español con línea y
   columna;
-* CLI con códigos de salida 0/1/2 y 150 pruebas en 6 suites.
+* CLI con códigos de salida 0/1/2 y 161 pruebas en 6 suites.
 
 **Solamente sintáctico en esta fase:** `pinte` y `guardela`/`muestrela` se
 reconocen y se validan (tabla y columnas existentes) pero **no generan
@@ -167,8 +167,8 @@ Salida (extracto real):
 python pruebas/test_proyecto.py
 ```
 
-Ejecuta las 6 suites (150 pruebas): front-end (36: 8 positivos, 14
-negativos, 7 de diagnóstico, 7 de CLI), estructura del árbol (15), datos
+Ejecuta las 6 suites (161 pruebas): front-end (43: 8 positivos, 17
+negativos, 10 de diagnóstico, 8 de CLI), estructura del árbol (19), datos
 (42), expresiones (14), símbolos y contexto (15) y runtime (28). Cada
 suite también corre sola, por ejemplo `python pruebas/test_front.py`.
 
@@ -203,7 +203,7 @@ proyecto/
 │   └── cli/main.py           CLI (validar y --ejecutar)
 ├── datos/                    CSV de ejemplo para los programas
 ├── ejemplos/                 demo + filtros + graficas + funciones
-├── pruebas/                  6 suites (150) + programas positivos/negativos
+├── pruebas/                  6 suites (161) + programas positivos/negativos
 ├── docs/                     alcance, catálogo, EBNF, informe, arquitectura
 ├── generar_gramatica.bat     regeneración en Windows
 └── requirements.txt          antlr4-python3-runtime==4.13.2
@@ -249,3 +249,4 @@ con `--ejecutar`.
 * [Informe de la Fase 1](docs/04_informe_fase1.md)
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
 * [Guía de sustentación](docs/06_guia_sustentacion.md)
+* [Matriz de trazabilidad del Primer Corte](docs/07_matriz_trazabilidad_corte1.md)

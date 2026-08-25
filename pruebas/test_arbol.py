@@ -231,6 +231,52 @@ def precedencia_suma_al_mismo_nivel():
 
 
 @caso
+def precedencia_multiplicacion_primero():
+    # a * b + c: la raíz aritmética es '+'; el '*' queda en el primer termino
+    arbol, parser = arbol_de("quihubo\nx = 2 * 3 + 4\nchao\n")
+    raiz = nodos_de(arbol, parser, "aritmetica")[0]
+    assert hijos_terminal(raiz) == ["+"]
+    primer_termino = raiz.getChild(0)
+    assert "*" in hijos_terminal(primer_termino)
+
+
+@caso
+def precedencia_division_y_suma():
+    # a / b + c: igual que el anterior pero con '/'
+    arbol, parser = arbol_de("quihubo\nx = 8 / 2 + 1\nchao\n")
+    raiz = nodos_de(arbol, parser, "aritmetica")[0]
+    assert hijos_terminal(raiz) == ["+"]
+    primer_termino = raiz.getChild(0)
+    assert "/" in hijos_terminal(primer_termino)
+
+
+@caso
+def comparacion_sobre_la_suma_completa():
+    # a + b == c: el '==' compara las dos aritmeticas completas
+    arbol, parser = arbol_de("quihubo\nr = t |> deje donde a + b == c\nchao\n")
+    filtro = nodos_de(arbol, parser, "operacion_datos")[0]
+    condicion = nodos_de(filtro, parser, "expresion_logica")[0]
+    comparaciones = [n for n in nodos_de(condicion, parser, "comparacion")
+                     if _contiene_token(n, "==")]
+    assert len(comparaciones) == 1
+    assert hijos_regla(comparaciones[0], parser) == [
+        "aritmetica", "operador_relacional", "aritmetica"
+    ]
+    # el '+' vive dentro de la primera aritmetica, no al nivel del '=='
+    assert "+" in hijos_terminal(comparaciones[0].getChild(0))
+
+
+@caso
+def parentesis_con_multiplicacion_dentro():
+    # a + (b * c): el '+' manda arriba; el '*' vive dentro del paréntesis
+    arbol, parser = arbol_de("quihubo\nx = 1 + (2 * 3)\nchao\n")
+    raiz = nodos_de(arbol, parser, "aritmetica")[0]
+    assert hijos_terminal(raiz) == ["+"]
+    segundo = raiz.getChild(2)
+    assert "*" in hijos_terminal(segundo) or _contiene_token(segundo, "*")
+
+
+@caso
 def potencia_asociativa_a_derecha_en_arbol():
     arbol, parser = arbol_de("quihubo\nx = 2 ^ 3 ^ 2\nchao\n")
     factor = nodos_de(arbol, parser, "factor")[0]

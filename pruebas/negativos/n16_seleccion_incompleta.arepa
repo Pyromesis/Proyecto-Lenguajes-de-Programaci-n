@@ -1,0 +1,5 @@
+# 'escoja' exige al menos una columna dentro de los corchetes
+quihubo
+t = monte "a.csv"
+r = t |> escoja []
+chao

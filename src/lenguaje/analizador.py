@@ -53,4 +53,16 @@ def analizar(texto):
     arbol = parser.programa()
 
     errores = list(error_lexico.errores) + list(error_sintactico.errores)
-    return parser, arbol, errores
+    return parser, arbol, _sin_duplicados(errores)
+
+
+def _sin_duplicados(errores):
+    """Quita errores exactamente iguales (mismo tipo, posición y mensaje)."""
+    unicos = []
+    vistos = set()
+    for error in errores:
+        clave = (error["tipo"], error["linea"], error["columna"], error["mensaje"])
+        if clave not in vistos:
+            vistos.add(clave)
+            unicos.append(error)
+    return unicos

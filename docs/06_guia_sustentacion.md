@@ -20,7 +20,7 @@ python pruebas/test_proyecto.py
   `asignacion` (68), `operacion_datos` (127), `instruccion_monte` (140),
   `instruccion_grafica` (177), `expresion_logica` (205).
 * **Especificación equivalente:** `docs/03_gramatica_ebnf.md`.
-* **Prueba:** las 150 de `python pruebas/test_proyecto.py` parsean con
+* **Prueba:** las 161 de `python pruebas/test_proyecto.py` parsean con
   esta gramática.
 * **Ejemplo en vivo:** abrir `Arepa.g4` y mostrar `programa` y
   `instruccion_grafica`.
@@ -44,7 +44,7 @@ python pruebas/test_proyecto.py
   `(parser, arbol, errores)`.
 * **Gramática:** regla inicial `programa : NL* QUIHUBO NL+ sentencias?
   NL* CHAO NL* EOF`.
-* **Prueba:** `test_front.py` — 8 positivos aceptados, 14 negativos
+* **Prueba:** `test_front.py` — 8 positivos aceptados, 17 negativos
   rechazados.
 * **Ejemplo:** `python src/cli/main.py ejemplos/demo.arepa` → "Programa
   bien escrito: 9 sentencia(s) reconocida(s)".
@@ -66,7 +66,7 @@ python pruebas/test_proyecto.py
 * **Gramática:** cualquier desviación produce error del listener; el
   programa nunca se cae con excepciones no controladas (verificado con 10
   entradas malformadas).
-* **Prueba:** `test_front.py` — 14 negativos + 7 de diagnóstico.
+* **Prueba:** `test_front.py` — 17 negativos + 10 de diagnóstico.
 * **Ejemplo:** `python src/cli/main.py pruebas/negativos/n01_falta_chao.arepa`
   → rechazado con línea y columna.
 
@@ -77,7 +77,7 @@ python pruebas/test_proyecto.py
   Y").
 * **Prueba:** `test_front.py::probar_diagnosticos` — caso 1 verifica
   línea 2 columna 6 exactas para un `@`; caso 2 verifica que un error de
-  la línea 4 se reporte en la línea 4; los 14 negativos validan posición.
+  la línea 4 se reporte en la línea 4; los 17 negativos validan posición.
 * **Ejemplo:** `x = 1 @ 2` → `[léxico] Línea 2, Columna 6: Hay un símbolo
   '@' que no hace parte del lenguaje AREPA`.
 

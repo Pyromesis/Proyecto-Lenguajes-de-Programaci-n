@@ -10,6 +10,7 @@ b = a + 2
 frase = "dijo \"hola\" y se fue"
 ruta = "C:\\datos\\archivo.csv"
 salto = "linea1\nlinea2"
+vacia = ""
 
 # unarios y potencia asociativa a derecha
 neg = -5 + -b

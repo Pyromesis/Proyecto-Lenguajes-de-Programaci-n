@@ -98,6 +98,8 @@ sentencias nuevas.
 <llamada_funcion>    ::= <identificador> "(" [ <lista_argumentos> ] ")"
 <lista_argumentos>   ::= <expresion> { "," [NL] <expresion> }
 
+<cadena>             ::= CADENA
+
 <identificador>      ::= LETRA { LETRA | DÍGITO | "_" }
 <nombre_columna>     ::= <identificador> | PALABRA_RESERVADA
 ```

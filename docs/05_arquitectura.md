@@ -244,18 +244,19 @@ del dato sí es exacta.
 
 | Suite | Archivo | Pruebas |
 |---|---|---|
-| Front-end (léxico y sintáctico) | `test_front.py` | 36 |
-| Estructura del árbol de análisis | `test_arbol.py` | 15 |
+| Front-end (léxico y sintáctico) | `test_front.py` | 43 |
+| Estructura del árbol de análisis | `test_arbol.py` | 19 |
 | Biblioteca propia de datos | `test_datos.py` | 42 |
 | Evaluador de expresiones propio | `test_expresiones.py` | 14 |
 | Tabla de símbolos y contexto propios | `test_simbolos.py` | 15 |
 | Runtime propio (programas completos) | `test_runtime.py` | 28 |
 
-Total: **150 pruebas**. Las 36 de front-end desglosan en: 8 programas
-positivos, 14 negativos, 7 de diagnóstico (línea/columna exactas y
-robustez) y 7 de CLI. Las 15 de árbol verifican la estructura jerárquica
-y la precedencia recorriendo el árbol programáticamente. Ninguna prueba
-usa bibliotecas externas para el trabajo que se prueba.
+Total: **161 pruebas**. Las 43 de front-end desglosan en: 8 programas
+positivos, 17 negativos, 10 de diagnóstico (línea/columna exactas,
+robustez, comentarios, números incompletos y ausencia de duplicados) y 8
+de CLI. Las 19 de árbol verifican la estructura jerárquica y la
+precedencia recorriendo el árbol programáticamente. Ninguna prueba usa
+bibliotecas externas para el trabajo que se prueba.
 
 ### Matriz de cobertura del primer corte
 
@@ -271,7 +272,7 @@ usa bibliotecas externas para el trabajo que se prueba.
 | Filtros (`deje donde`) | `03` + `test_arbol.py::arbol_de_filtro` | `n05_deje_sin_donde` | OK |
 | Visualización (solo sintáctica) | `05_graficas.arepa` + `test_arbol.py::arbol_de_visualizacion` | `n09_pinte_tipo_invalido`, `n13_pinte_sin_tabla` | OK |
 | Árbol de análisis | `test_arbol.py` (15 casos) + CLI `--arbol` | — (siempre generable) | OK |
-| Errores con línea y columna | `test_front.py` sección diagnóstico (7) | los 14 negativos validan posición | OK |
+| Errores con línea y columna | `test_front.py` sección diagnóstico (10) | los 17 negativos validan posición | OK |
 | Tokens (`--tokens`) | `test_front.py` CLI | — | OK |
 | Comentarios | `08_casos_borde.arepa` (entre sentencias) | — (siempre válidos) | OK |
 | Identificadores (tildes, ñ) | `08_casos_borde.arepa` | `n10_identificador_invalido` | OK |
