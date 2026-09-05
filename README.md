@@ -248,5 +248,11 @@ con `--ejecutar`.
 * [Gramática BNF/EBNF](docs/03_gramatica_ebnf.md)
 * [Informe de la Fase 1](docs/04_informe_fase1.md)
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
-* [Guía de sustentación](docs/06_guia_sustentacion.md)
-* [Matriz de trazabilidad del Primer Corte](docs/07_matriz_trazabilidad_corte1.md)
+* [Guía de sustentación](docs/07_guia_sustentacion.md)
+* [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)
+
+## Integrantes
+
+* Camilo Bernal
+* Diego Moreno
+* Yeisson Rincon
