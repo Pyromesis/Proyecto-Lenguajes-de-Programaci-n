@@ -1,5 +1,11 @@
 # AREPA
 
+## Integrantes
+
+* Camilo Bernal
+* Diego Moreno
+* Yeisson Rincon
+
 ## Qué es AREPA
 
 AREPA significa **A**nálisis **R**eproducible de datos **E**scrito con
@@ -250,9 +256,3 @@ con `--ejecutar`.
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
 * [Guía de sustentación](docs/07_guia_sustentacion.md)
 * [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)
-
-## Integrantes
-
-* Camilo Bernal
-* Diego Moreno
-* Yeisson Rincon
