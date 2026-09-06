@@ -11,7 +11,7 @@ Verifica que:
     salida correctos y con las opciones --tokens y --arbol.
 
 Uso:
-    python pruebas/test_front.py
+    python3 pruebas/test_front.py
 """
 
 import glob
@@ -25,7 +25,6 @@ sys.path.insert(0, os.path.join(RAIZ, "generado"))
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-os.system("")  # habilita los colores ANSI en la consola de Windows
 
 from lenguaje.analizador import analizar  # noqa: E402
 

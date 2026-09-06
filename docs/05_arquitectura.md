@@ -240,7 +240,7 @@ del dato sí es exacta.
 
 ## 8. Pruebas
 
-`python pruebas/test_proyecto.py` ejecuta las seis suites:
+`python3 pruebas/test_proyecto.py` ejecuta las seis suites:
 
 | Suite | Archivo | Pruebas |
 |---|---|---|

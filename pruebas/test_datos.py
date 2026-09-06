@@ -6,7 +6,7 @@ propio. Ninguna prueba usa csv/pandas: se prueba exclusivamente el
 código del equipo.
 
 Uso:
-    python pruebas/test_datos.py
+    python3 pruebas/test_datos.py
 """
 
 import os

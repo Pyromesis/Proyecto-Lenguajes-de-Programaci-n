@@ -1,2 +1,15 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Todo el texto del proyecto usa LF (entorno oficial: Linux)
+* text=auto eol=lf
+
+# Reglas explicitas por tipo de archivo
+*.py text eol=lf
+*.g4 text eol=lf
+*.md text eol=lf
+*.arepa text eol=lf
+*.sh text eol=lf
+*.csv text eol=lf
+*.tokens text eol=lf
+*.interp text eol=lf
+*.txt text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf

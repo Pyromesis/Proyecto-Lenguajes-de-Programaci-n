@@ -3,12 +3,19 @@
 Ruta rápida para demostrar en vivo cada punto del primer corte. Para cada
 punto: dónde está el código, qué prueba lo respalda y qué ejemplo mostrar.
 
-Comandos base (desde la raíz del proyecto):
+Comandos base (desde la raíz del proyecto, en una terminal Linux):
 
 ```bash
-pip install -r requirements.txt
-python src/cli/main.py ejemplos/demo.arepa --arbol
-python pruebas/test_proyecto.py
+python3 --version
+java -version
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+./generar_gramatica.sh
+python3 src/cli/main.py ejemplos/demo.arepa
+python3 src/cli/main.py ejemplos/demo.arepa --tokens
+python3 src/cli/main.py ejemplos/demo.arepa --arbol
+python3 pruebas/test_proyecto.py
 ```
 
 ---
@@ -20,7 +27,7 @@ python pruebas/test_proyecto.py
   `asignacion` (68), `operacion_datos` (127), `instruccion_monte` (140),
   `instruccion_grafica` (177), `expresion_logica` (205).
 * **Especificación equivalente:** `docs/03_gramatica_ebnf.md`.
-* **Prueba:** las 161 de `python pruebas/test_proyecto.py` parsean con
+* **Prueba:** las 161 de `python3 pruebas/test_proyecto.py` parsean con
   esta gramática.
 * **Ejemplo en vivo:** abrir `Arepa.g4` y mostrar `programa` y
   `instruccion_grafica`.
@@ -28,14 +35,14 @@ python pruebas/test_proyecto.py
 ## 2. Cómo se genera el lexer/parser
 
 * **Procedimiento:** `antlr4 -Dlanguage=Python3 -visitor -no-listener -o
-  generado gramatica/Arepa.g4` o `./generar_gramatica.sh` en Linux.
+  generado gramatica/Arepa.g4` o `./generar_gramatica.sh`.
 * **Archivos generados:** `generado/ArepaLexer.py`, `ArepaParser.py`,
   `ArepaVisitor.py` (encabezado "Generated from gramatica/Arepa.g4 by
   ANTLR 4.13.2"; nunca se editan a mano).
 * **Versión documentada:** runtime `antlr4-python3-runtime==4.13.2` en
   `requirements.txt`, misma del jar.
 * **Demostración:** ejecutar `./generar_gramatica.sh` y volver a correr
-  `python pruebas/test_proyecto.py` sin que cambie el resultado.
+  `python3 pruebas/test_proyecto.py` sin que cambie el resultado.
 
 ## 3. Cómo se reconoce un programa
 
@@ -46,14 +53,14 @@ python pruebas/test_proyecto.py
   NL* CHAO NL* EOF`.
 * **Prueba:** `test_front.py` — 8 positivos aceptados, 17 negativos
   rechazados.
-* **Ejemplo:** `python src/cli/main.py ejemplos/demo.arepa` → "Programa
+* **Ejemplo:** `python3 src/cli/main.py ejemplos/demo.arepa` → "Programa
   bien escrito: 9 sentencia(s) reconocida(s)".
 
 ## 4. Cómo se genera el árbol
 
 * **Archivo:** `src/lenguaje/arbol.py`, `imprimir_arbol` (línea 46):
   recorrido propio con ramas ASCII, oculta los saltos de línea.
-* **Comando:** `python src/cli/main.py ejemplos/demo.arepa --arbol`.
+* **Comando:** `python3 src/cli/main.py ejemplos/demo.arepa --arbol`.
 * **Prueba:** `test_arbol.py` (15 casos) recorre el árbol
   programáticamente y verifica jerarquía y precedencia.
 * **Ejemplo:** mostrar en pantalla el subárbol de `asignacion` del demo.
@@ -67,7 +74,7 @@ python pruebas/test_proyecto.py
   programa nunca se cae con excepciones no controladas (verificado con 10
   entradas malformadas).
 * **Prueba:** `test_front.py` — 17 negativos + 10 de diagnóstico.
-* **Ejemplo:** `python src/cli/main.py pruebas/negativos/n01_falta_chao.arepa`
+* **Ejemplo:** `python3 src/cli/main.py pruebas/negativos/n01_falta_chao.arepa`
   → rechazado con línea y columna.
 
 ## 6. Cómo se reporta línea y columna

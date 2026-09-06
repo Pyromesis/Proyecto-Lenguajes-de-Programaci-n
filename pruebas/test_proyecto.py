@@ -8,7 +8,7 @@ Ejecuta las cuatro suites del proyecto en orden:
   4. runtime propio (programas completos del DSL).
 
 Uso:
-    python pruebas/test_proyecto.py
+    python3 pruebas/test_proyecto.py
 """
 
 import os

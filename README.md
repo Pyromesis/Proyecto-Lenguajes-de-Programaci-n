@@ -74,14 +74,36 @@ PNG corresponden a los cortes 2 y 3.
 **No pertenece a esta fase:** motor de gráficas, exportación PNG,
 estadísticas avanzadas y producto final.
 
+## Requisitos
+
+Entorno oficial del proyecto (Linux-only):
+
+* **Linux** (distribución con terminal Bash)
+* **Python 3.11 o superior** (probado con 3.13)
+* **Java 11 o superior** (solo para regenerar el lexer/parser con ANTLR)
+* **Git**
+* **ANTLR 4.13.2** (`antlr-4.13.2-complete.jar` para regenerar;
+  `antlr4-python3-runtime==4.13.2` para ejecutar, instalado vía
+  `requirements.txt`)
+
 ## Instalación
 
 ```bash
-# 1. Python 3.11 o superior (probado con 3.13)
-python --version
+# 1. Clonar el repositorio
+git clone https://github.com/Pyromesis/Proyecto-Lenguajes-de-Programaci-n.git
+cd Proyecto-Lenguajes-de-Programaci-n
 
-# 2. Instalar el único runtime necesario
-pip install -r requirements.txt
+# 2. Comprobar versiones
+python3 --version   # 3.11+
+java -version       # 11+
+
+# 3. Crear y activar el entorno virtual
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 4. Instalar el único runtime necesario
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
 ```
 
 ## Dependencias
@@ -99,16 +121,16 @@ es propia: sin pandas, NumPy, Matplotlib ni equivalentes.
 
 ```bash
 # Validar un programa (front-end: léxico + sintáctico)
-python src/cli/main.py ejemplos/demo.arepa
+python3 src/cli/main.py ejemplos/demo.arepa
 
 # Ejecutarlo con la biblioteca propia
-python src/cli/main.py ejemplos/demo.arepa --ejecutar
+python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
 
 # Ver el árbol de análisis
-python src/cli/main.py ejemplos/demo.arepa --arbol
+python3 src/cli/main.py ejemplos/demo.arepa --arbol
 
 # Ver la tabla de tokens
-python src/cli/main.py ejemplos/demo.arepa --tokens
+python3 src/cli/main.py ejemplos/demo.arepa --tokens
 
 # Códigos de salida: 0 = válido, 1 = con errores, 2 = archivo no encontrado
 ```
@@ -136,20 +158,41 @@ símbolos) y tabla de tokens con `--tokens`.
 
 La fuente única es `gramatica/Arepa.g4` (gramática combinada lexer+parser).
 La especificación formal equivalente está en `docs/03_gramatica_ebnf.md`.
-Para regenerar:
+
+### ANTLR en Linux
+
+Descargue el jar de ANTLR 4.13.2 y defina `ANTLR_JAR`:
+
+```bash
+mkdir -p "$HOME/antlr"
+# Descargue antlr-4.13.2-complete.jar desde https://www.antlr.org/download.html
+# y guárdelo en $HOME/antlr/, luego:
+export ANTLR_JAR="$HOME/antlr/antlr-4.13.2-complete.jar"
+```
+
+### Regenerar el lexer/parser
+
+```bash
+chmod +x generar_gramatica.sh
+./generar_gramatica.sh
+```
+
+El script comprueba Java 11+, el jar de ANTLR, la existencia de
+`gramatica/Arepa.g4`, crea `generado/` si hace falta y verifica que se
+generen `ArepaLexer.py`, `ArepaParser.py` y `ArepaVisitor.py`.
+
+Alternativa con `antlr4-tools` (requiere Java 11+):
 
 ```bash
 antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 ```
 
-Requiere Java 11+ y `antlr-4.13.2-complete.jar`. También sirve
-`./generar_gramatica.sh` (busca el jar en `$HOME/antlr/` o usa
-`ANTLR_JAR`). El código generado vive en `generado/` y no se edita a mano.
+El código generado vive en `generado/` y no se edita a mano.
 
 ## Árbol de análisis
 
 ```bash
-python src/cli/main.py ejemplos/demo.arepa --arbol
+python3 src/cli/main.py ejemplos/demo.arepa --arbol
 ```
 
 Salida (extracto real):
@@ -170,13 +213,13 @@ Salida (extracto real):
 ## Pruebas
 
 ```bash
-python pruebas/test_proyecto.py
+python3 pruebas/test_proyecto.py
 ```
 
 Ejecuta las 6 suites (161 pruebas): front-end (43: 8 positivos, 17
 negativos, 10 de diagnóstico, 8 de CLI), estructura del árbol (19), datos
 (42), expresiones (14), símbolos y contexto (15) y runtime (28). Cada
-suite también corre sola, por ejemplo `python pruebas/test_front.py`.
+suite también corre sola, por ejemplo `python3 pruebas/test_front.py`.
 
 ## Errores (ejemplos reales)
 
@@ -244,7 +287,7 @@ trazabilidad funcionalidad → archivo → función → prueba):
 | `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) |
 | `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` |
 
-Todos validan con `python src/cli/main.py ejemplos/<nombre>.arepa` y corren
+Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
 con `--ejecutar`.
 
 ## Documentación

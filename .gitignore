@@ -8,7 +8,3 @@ venv/
 
 # Salidas de ejecución (gráficas y CSV generados)
 salidas/
-
-# Archivos del sistema
-Thumbs.db
-.DS_Store

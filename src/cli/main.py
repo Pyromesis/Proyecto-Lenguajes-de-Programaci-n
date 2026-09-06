@@ -14,7 +14,7 @@ Dos modos:
     genera imágenes (Fase 3).
 
 Uso:
-    python src/cli/main.py <archivo.arepa> [--arbol] [--tokens] [--ejecutar]
+    python3 src/cli/main.py <archivo.arepa> [--arbol] [--tokens] [--ejecutar]
 
 Códigos de salida:
     0 - el programa es válido (y se ejecutó sin errores si --ejecutar)

@@ -29,7 +29,7 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    `.tokens/.interp`. Se generó con
    `antlr4 -Dlanguage=Python3 -visitor -no-listener Arepa.g4`.
 4. **Interfaz de línea de comandos** `src/cli/main.py`:
-   - `python src/cli/main.py <archivo.arepa>` valida el programa.
+   - `python3 src/cli/main.py <archivo.arepa>` valida el programa.
    - `--tokens` muestra la tabla de tokens (tipo, texto, línea, columna).
    - `--arbol` imprime el árbol de análisis jerárquico.
    - `--ejecutar` corre el programa con la biblioteca propia del equipo.
@@ -110,27 +110,27 @@ pruebas / ejemplos / documentación.
 
 ```bash
 # 1. Python 3.11+ con el runtime de ANTLR
-pip install -r requirements.txt        # antlr4-python3-runtime==4.13.2
+python3 -m pip install -r requirements.txt        # antlr4-python3-runtime==4.13.2
 
 # 2. Regenerar lexer/parser (requiere Java 11+ y antlr-4.13.2-complete.jar)
-antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
-# Alternativa sin instalar nada global: pip install antlr4-tools && antlr4 ...
-# También sirve el script ./generar_gramatica.sh (busca el jar
-# en $HOME/antlr o usa la variable ANTLR_JAR).
+chmod +x generar_gramatica.sh
+./generar_gramatica.sh
+# (usa $ANTLR_JAR o $HOME/antlr/antlr-4.13.2-complete.jar)
+# Alternativa sin instalar nada global: python3 -m pip install antlr4-tools && antlr4 ...
 
 # 3. Validar un programa
-python src/cli/main.py ejemplos/demo.arepa
-python src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
-python src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
-python src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
+python3 src/cli/main.py ejemplos/demo.arepa
+python3 src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
+python3 src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
+python3 src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
 # 4. Suite completa de pruebas (161)
-python pruebas/test_proyecto.py
+python3 pruebas/test_proyecto.py
 ```
 
 ## 5. Resultados de las pruebas
 
-Ejecutando `python pruebas/test_front.py` pasan las 43 pruebas
+Ejecutando `python3 pruebas/test_front.py` pasan las 43 pruebas
 (8 positivas + 17 negativas + 10 de diagnóstico + 8 de la interfaz):
 
 | Prueba | Clase | Resultado |

@@ -10,7 +10,7 @@ Verifica que el árbol producido por ANTLR4:
 No basta con que el árbol se imprima: aquí se recorre programáticamente.
 
 Uso:
-    python pruebas/test_arbol.py
+    python3 pruebas/test_arbol.py
 """
 
 import os

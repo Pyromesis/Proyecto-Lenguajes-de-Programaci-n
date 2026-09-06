@@ -6,7 +6,7 @@ asignaciones, carga CSV, selección, filtrado, columnas calculadas,
 agregaciones, funciones, condicionales, guardado y errores semánticos.
 
 Uso:
-    python pruebas/test_runtime.py
+    python3 pruebas/test_runtime.py
 """
 
 import os

@@ -10,7 +10,7 @@ REQUISITO → DOCUMENTACIÓN → REGLA EBNF → REGLA Arepa.g4 → CÓDIGO → P
 Convenciones: "EBNF" remite a `docs/03_gramatica_ebnf.md`; "ANTLR" remite a
 `gramatica/Arepa.g4` con su línea; "Prueba" remite a `pruebas/`. Todas las
 filas tienen estado **VERIFICADO** con la ejecución de
-`python pruebas/test_proyecto.py` (161 → ver conteo vigente en §8 de
+`python3 pruebas/test_proyecto.py` (161 → ver conteo vigente en §8 de
 `docs/05_arquitectura.md` y en README).
 
 | ID | Requisito | Documento | Regla EBNF | Regla ANTLR (línea) | Código | Prueba | Ejemplo | Estado |
@@ -38,7 +38,7 @@ filas tienen estado **VERIFICADO** con la ejecución de
 | R21 | Catálogo de instrucciones | `docs/02` completo | — | — | — | — | — | VERIFICADO |
 | R22 | Archivo `.g4` | README (Gramática) | — | `gramatica/Arepa.g4` | — | `test_proyecto.py` completo | — | VERIFICADO |
 | R23 | Código generado por ANTLR | README (Estructura) | — | — | `generado/` (Lexer, Parser, Visitor, `.tokens`) | sincronía 42/42 reglas | — | VERIFICADO |
-| R24 | Pruebas léxicas y sintácticas | `docs/04` §5 | — | — | `pruebas/` (6 suites) | `python pruebas/test_proyecto.py` | — | VERIFICADO |
+| R24 | Pruebas léxicas y sintácticas | `docs/04` §5 | — | — | `pruebas/` (6 suites) | `python3 pruebas/test_proyecto.py` | — | VERIFICADO |
 | R25 | Ejemplos | README (Ejemplos) | — | — | — | validación de los 4 con la CLI | `ejemplos/` | VERIFICADO |
 | R26 | README | `README.md` completo | — | — | — | comandos ejecutados uno a uno | — | VERIFICADO |
 | R27 | Árbol de análisis | README (Árbol), `docs/06` §4 | — | — | `src/lenguaje/arbol.py::imprimir_arbol` (46) | `test_arbol.py` (19) + CLI `--arbol` | salida real en README | VERIFICADO |

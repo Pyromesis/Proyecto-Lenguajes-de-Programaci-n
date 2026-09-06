@@ -6,7 +6,7 @@ Evalúa expresiones reales del DSL parseándolas con la gramática ANTLR4
 precedencia, relacionales, lógicos, 'nada' y errores de tipos.
 
 Uso:
-    python pruebas/test_expresiones.py
+    python3 pruebas/test_expresiones.py
 """
 
 import os

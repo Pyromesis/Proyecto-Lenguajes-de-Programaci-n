@@ -6,7 +6,7 @@ declarar, consultar, actualizar, existencia, ámbitos, no declarados,
 validación de identificadores, funciones 'invente' y registro de errores.
 
 Uso:
-    python pruebas/test_simbolos.py
+    python3 pruebas/test_simbolos.py
 """
 
 import os
