@@ -81,6 +81,16 @@ gráficas PNG generadas con un motor propio.
    modo `--ejecutar` corre programas reales sin bibliotecas externas;
    `pinte` se valida pero no genera imágenes todavía.
 
+**Restricciones técnicas de ejecución (resumen unificado).** El lector CSV
+propio carga el archivo completo en memoria (`lector_csv.py:leer`) y exige
+codificación UTF-8 (se tolera BOM); no hay límite numérico configurado: el
+tope práctico es la memoria disponible. Las comparaciones solo admiten
+operandos del mismo género (número con número, texto con texto, lógico con
+lógico); mezclar número con texto lanza `ErrorTipos`, no hay coerción
+número↔texto ni concatenación con `+`, y `nada` se propaga por operaciones
+y comparaciones (`expresiones/operadores.py`). El detalle de algoritmos y
+mensajes vive en `docs/05_arquitectura.md`.
+
 ## 7. Alcance funcional de esta fase (Corte 1)
 
 | Capacidad mínima exigida | Estado |
