@@ -142,8 +142,8 @@ Para regenerar:
 antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 ```
 
-Requiere Java 11+ y `antlr-4.13.2-complete.jar`. En Windows también sirve
-`generar_gramatica.bat` (busca el jar en `%USERPROFILE%\antlr\` o usa
+Requiere Java 11+ y `antlr-4.13.2-complete.jar`. También sirve
+`./generar_gramatica.sh` (busca el jar en `$HOME/antlr/` o usa
 `ANTLR_JAR`). El código generado vive en `generado/` y no se edita a mano.
 
 ## Árbol de análisis
@@ -211,7 +211,7 @@ proyecto/
 ├── ejemplos/                 demo + filtros + graficas + funciones
 ├── pruebas/                  6 suites (161) + programas positivos/negativos
 ├── docs/                     alcance, catálogo, EBNF, informe, arquitectura
-├── generar_gramatica.bat     regeneración en Windows
+├── generar_gramatica.sh      regeneración en Linux
 └── requirements.txt          antlr4-python3-runtime==4.13.2
 ```
 

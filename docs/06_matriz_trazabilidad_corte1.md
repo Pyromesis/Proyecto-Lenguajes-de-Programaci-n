@@ -25,7 +25,7 @@ filas tienen estado **VERIFICADO** con la ejecución de
 | R08 | Literales (enteros, decimales, cadenas, lógicos, nada) | `docs/02` §5 | EBNF §6 (`ENTERO`, `DECIMAL`, `CADENA`, `ESCAPE`) | `DECIMAL` (378), `ENTERO` (379), `CADENA` (380), `OBVIO/FALSO/NADA` (366-368) | `src/datos/tipos.py`, `src/expresiones/evaluador.py` | `test_expresiones.py`, `test_datos.py::tipos_*` | `08_casos_borde.arepa` (escapes, `""`) | VERIFICADO |
 | R09 | Sentencias | `docs/02` §2-§3 | EBNF §2 `<sentencia>` | `sentencia` (48) | `src/runtime/ejecutor.py` | `test_front.py` (positivos) | `ejemplos/demo.arepa` (9 sentencias) | VERIFICADO |
 | R10 | Gramática BNF/EBNF | `docs/03` completo | — | — | — | chequeo automático 42/42 reglas | — | VERIFICADO |
-| R11 | Gramática implementada en ANTLR4 | `docs/04` §1.2, README | — | `grammar Arepa;` (25) | `gramatica/Arepa.g4` | regeneración con `generar_gramatica.bat` + re-test | — | VERIFICADO |
+| R11 | Gramática implementada en ANTLR4 | `docs/04` §1.2, README | — | `grammar Arepa;` (25) | `gramatica/Arepa.g4` | regeneración con `generar_gramatica.sh` + re-test | — | VERIFICADO |
 | R12 | Lexer y parser para Python | README (Dependencias) | — | — | `generado/ArepaLexer.py`, `generado/ArepaParser.py` | `test_front.py` (todo pasa tras regenerar) | — | VERIFICADO |
 | R13 | Validación de programas correctos | `docs/01` §7 | — | — | `src/lenguaje/analizador.py::analizar` | `test_front.py` 8 positivos | `pruebas/positivos/*.arepa` | VERIFICADO |
 | R14 | Validación de programas incorrectos | `docs/04` §5 | — | — | `src/lenguaje/errores.py::syntaxError` (32) | `test_front.py` 17 negativos | `pruebas/negativos/*.arepa` | VERIFICADO |

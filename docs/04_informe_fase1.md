@@ -115,8 +115,8 @@ pip install -r requirements.txt        # antlr4-python3-runtime==4.13.2
 # 2. Regenerar lexer/parser (requiere Java 11+ y antlr-4.13.2-complete.jar)
 antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 # Alternativa sin instalar nada global: pip install antlr4-tools && antlr4 ...
-# En Windows también sirve el script generar_gramatica.bat (busca el jar
-# en %USERPROFILE%\antlr o usa la variable ANTLR_JAR).
+# También sirve el script ./generar_gramatica.sh (busca el jar
+# en $HOME/antlr o usa la variable ANTLR_JAR).
 
 # 3. Validar un programa
 python src/cli/main.py ejemplos/demo.arepa

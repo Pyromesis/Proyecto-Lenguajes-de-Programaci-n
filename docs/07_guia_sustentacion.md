@@ -28,13 +28,13 @@ python pruebas/test_proyecto.py
 ## 2. Cómo se genera el lexer/parser
 
 * **Procedimiento:** `antlr4 -Dlanguage=Python3 -visitor -no-listener -o
-  generado gramatica/Arepa.g4` o `generar_gramatica.bat` en Windows.
+  generado gramatica/Arepa.g4` o `./generar_gramatica.sh` en Linux.
 * **Archivos generados:** `generado/ArepaLexer.py`, `ArepaParser.py`,
   `ArepaVisitor.py` (encabezado "Generated from gramatica/Arepa.g4 by
   ANTLR 4.13.2"; nunca se editan a mano).
 * **Versión documentada:** runtime `antlr4-python3-runtime==4.13.2` en
   `requirements.txt`, misma del jar.
-* **Demostración:** ejecutar `generar_gramatica.bat` y volver a correr
+* **Demostración:** ejecutar `./generar_gramatica.sh` y volver a correr
   `python pruebas/test_proyecto.py` sin que cambie el resultado.
 
 ## 3. Cómo se reconoce un programa
