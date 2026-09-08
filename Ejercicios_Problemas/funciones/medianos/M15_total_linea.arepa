@@ -1,0 +1,13 @@
+# M15 - Funcion total de linea con datos reales
+# Medio: funcion pura usada luego en pipeline cree.
+
+quihubo
+invente total_linea(unidades, precio) {
+    devuelva unidades * precio
+}
+cuenteme "12 x 3500:", total_linea(12, 3500)
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = total_linea(unidades, precio)
+cuenteme "total aplicado"
+describa con_total
+chao

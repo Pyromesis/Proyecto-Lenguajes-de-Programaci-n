@@ -1,0 +1,12 @@
+# M05 - Funcion tabla del 5 reutilizada
+# Medio: una funcion, varias llamadas con distintos argumentos.
+
+quihubo
+invente tabla5(n) {
+    devuelva n * 5
+}
+cuenteme "5 x 1:", tabla5(1)
+cuenteme "5 x 2:", tabla5(2)
+cuenteme "5 x 3:", tabla5(3)
+cuenteme "5 x 10:", tabla5(10)
+chao

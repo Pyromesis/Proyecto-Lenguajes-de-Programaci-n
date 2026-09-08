@@ -1,0 +1,14 @@
+# M07 - Funciones con invente y devuelva
+# Medio: que es un closure? Funcion con referencia al ambito donde se definio.
+# devuelva interrumpe el cuerpo mediante RetornoFuncion.
+
+quihubo
+invente doble(valor) {
+    devuelva valor * 2
+}
+cuenteme "doble de 21:", doble(21)
+invente suma(a, b) {
+    devuelva a + b
+}
+cuenteme "suma:", suma(10, 32)
+chao

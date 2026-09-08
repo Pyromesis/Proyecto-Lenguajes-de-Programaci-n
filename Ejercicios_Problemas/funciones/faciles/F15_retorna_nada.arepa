@@ -1,0 +1,10 @@
+# F15 - Funcion que retorna nada
+# Facil: nada es el faltante, distinto de 0.
+
+quihubo
+invente nada_demo() {
+    devuelva nada
+}
+cuenteme "retorna:", nada_demo()
+cuenteme "nada + 1:", nada_demo() + 1
+chao

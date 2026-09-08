@@ -1,0 +1,14 @@
+# M04 - Funcion descuento con condicional y decimales
+# Medio: comparacion + aritmetica con 0.9.
+
+quihubo
+invente descuento(precio) {
+    fijese_si (precio > 100000) {
+        devuelva precio * 0.9
+    } sino {
+        devuelva precio
+    }
+}
+cuenteme "descuento 150000:", descuento(150000)
+cuenteme "descuento 50000:", descuento(50000)
+chao

@@ -1,0 +1,10 @@
+# M03 - Funcion area de rectangulo
+# Medio: dos parametros y multiplicacion.
+
+quihubo
+invente area_rectangulo(base, altura) {
+    devuelva base * altura
+}
+cuenteme "area 5x3:", area_rectangulo(5, 3)
+cuenteme "area 10x2.5:", area_rectangulo(10, 2.5)
+chao

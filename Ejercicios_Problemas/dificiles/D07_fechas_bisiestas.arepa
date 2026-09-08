@@ -1,0 +1,12 @@
+# D07 - Validacion de fechas con calendario propio
+# Facil: que hace? Comprueba formato y existencia.
+# Medio: febrero 29 solo si bisiesto (regla 100/400).
+# 2024-02-29 valida, 2026-02-29 invalida (daria ErrorTipos en convierta).
+# Aqui solo convertimos fechas reales del CSV.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+fechas = ventas |> convierta fecha -> fecha
+cuenteme "fechas validas ok"
+describa fechas
+chao

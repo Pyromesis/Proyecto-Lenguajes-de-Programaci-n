@@ -1,0 +1,15 @@
+# D03 - Semantica de nada (faltante)
+# Facil: es igual a 0? No.
+# Medio: en agregaciones los nada se ignoran; si no quedan, resultado nada.
+# Dificil: nada se propaga en aritmetica/comparacion/logica (estilo SQL).
+# Ojo: no usar nada en fijese_si porque exige obvio/falso exacto.
+
+quihubo
+x = nada
+resultado = nada + 1
+cuenteme "resultado es nada:", resultado
+ventas = monte "datos/encuesta.csv" con encabezado, separador ";"
+limpias = ventas |> limpie vacios con 0
+cuenteme "vacios rellenados"
+describa limpias
+chao

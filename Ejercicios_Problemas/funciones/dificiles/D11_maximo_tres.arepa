@@ -1,0 +1,17 @@
+# D11 - Maximo de tres usando maximo2
+# Dificil: reutilizar una funcion dentro de otra con condicional.
+
+quihubo
+invente maximo2(a, b) {
+    fijese_si (a > b) {
+        devuelva a
+    } sino {
+        devuelva b
+    }
+}
+invente maximo3(a, b, c) {
+    devuelva maximo2(maximo2(a, b), c)
+}
+cuenteme "max 3, 9, 5:", maximo3(3, 9, 5)
+cuenteme "max 10, 2, 8:", maximo3(10, 2, 8)
+chao

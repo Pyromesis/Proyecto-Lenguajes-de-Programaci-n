@@ -1,0 +1,12 @@
+# F10 - Condicional simple fijese_si
+# Facil: salida del lexer? Tokens. Que recibe el parser? Tokens.
+# El parser valida que la secuencia siga la gramatica.
+
+quihubo
+x = 5
+fijese_si (x > 3) {
+    cuenteme "x es grande"
+} sino {
+    cuenteme "x es chico"
+}
+chao

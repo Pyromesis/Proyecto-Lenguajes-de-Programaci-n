@@ -1,0 +1,15 @@
+# F03 - Decimales y cadenas con escapes
+# Facil: 3.14 es valido? Si.
+# Medio: .5 no es valido segun DECIMAL ([0-9]+ '.' [0-9]+).
+# Dificil: sintaxis decimal simple y no ambigua.
+# Cadenas: comillas dobles, escapes \n \t \\ \".
+
+quihubo
+pi = 3.14
+doble = pi * 2
+mensaje = "Hola\nAREPA"
+cita = "dice \"hola\""
+cuenteme "doble:", doble
+cuenteme mensaje
+cuenteme cita
+chao

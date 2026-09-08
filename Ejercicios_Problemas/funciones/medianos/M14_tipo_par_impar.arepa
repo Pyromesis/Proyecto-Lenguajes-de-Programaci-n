@@ -1,0 +1,15 @@
+# M14 - Funcion par/impar con modulo y texto
+# Medio: n % 2 decide la rama.
+
+quihubo
+invente tipo_num(n) {
+    fijese_si (n % 2 == 0) {
+        devuelva "par"
+    } sino {
+        devuelva "impar"
+    }
+}
+cuenteme tipo_num(8)
+cuenteme tipo_num(13)
+cuenteme tipo_num(0)
+chao

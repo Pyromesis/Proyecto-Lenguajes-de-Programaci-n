@@ -1,0 +1,9 @@
+# F07 - cuenteme y describa
+# Facil: que guarda la tabla de simbolos? Nombres y valores.
+# cuenteme imprime valores, describa resume una tabla.
+
+quihubo
+datos = monte "datos/ventas.csv" con encabezado, separador ","
+cuenteme "cargue ventas"
+describa datos
+chao

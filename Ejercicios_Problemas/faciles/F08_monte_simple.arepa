@@ -1,0 +1,9 @@
+# F08 - monte simple (carga CSV declarativa)
+# Facil: que devuelve monte? Una Tabla propia.
+# Medio: que opciones documenta? encabezado y separador.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+cuenteme "monte ok"
+describa ventas
+chao

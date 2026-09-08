@@ -1,0 +1,14 @@
+# M08 - Funcion diferencia absoluta
+# Medio: condicional que resta en el orden correcto.
+
+quihubo
+invente diferencia(a, b) {
+    fijese_si (a > b) {
+        devuelva a - b
+    } sino {
+        devuelva b - a
+    }
+}
+cuenteme "dif 10 y 3:", diferencia(10, 3)
+cuenteme "dif 3 y 10:", diferencia(3, 10)
+chao

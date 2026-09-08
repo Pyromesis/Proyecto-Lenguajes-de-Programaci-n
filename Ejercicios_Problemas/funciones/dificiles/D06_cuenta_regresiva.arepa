@@ -1,0 +1,15 @@
+# D06 - Cuenta regresiva recursiva con efecto
+# Dificil: la recursion tambien sirve para repetir efectos (cuenteme).
+# La llamada recursiva va como sentencia (instruccion_llamada).
+
+quihubo
+invente cuenta(n) {
+    fijese_si (n <= 0) {
+        cuenteme "fin"
+    } sino {
+        cuenteme n
+        cuenta(n - 1)
+    }
+}
+cuenta(5)
+chao

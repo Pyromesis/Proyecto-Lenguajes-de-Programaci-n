@@ -1,0 +1,11 @@
+# M05 - cree columna calculada + renombre con flecha
+# cree total = unidades * precio evalua la expresion por fila.
+# renombre total -> ingreso usa la flecha ->.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+final = con_total |> renombre total -> ingreso
+cuenteme "cree y renombre ok"
+describa final
+chao

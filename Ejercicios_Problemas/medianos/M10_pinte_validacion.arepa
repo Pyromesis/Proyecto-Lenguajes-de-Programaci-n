@@ -1,0 +1,16 @@
+# M10 - pinte validado en primer corte (sin PNG)
+# Facil: tipos? barras, lineas, histograma, dispersion, cajas.
+# Medio: que se valida? Tabla y columnas usadas.
+# Dificil: por que no penalizar PNG? El alcance lo deja para cortes posteriores.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+resumen = con_total |> junte por [ciudad] |> resuma ingreso = sume(total), registros = cuente()
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/ejercicio_pinte.png"
+cuenteme "pinte validado"
+chao

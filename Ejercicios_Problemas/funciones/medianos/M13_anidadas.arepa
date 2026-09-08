@@ -1,0 +1,13 @@
+# M13 - Llamadas anidadas: cuadruple usa doble dos veces
+# Medio: devuelva doble(doble(n)).
+
+quihubo
+invente doble(valor) {
+    devuelva valor * 2
+}
+invente cuadruple2(n) {
+    devuelva doble(doble(n))
+}
+cuenteme "cuadruple de 3:", cuadruple2(3)
+cuenteme "cuadruple de 7:", cuadruple2(7)
+chao

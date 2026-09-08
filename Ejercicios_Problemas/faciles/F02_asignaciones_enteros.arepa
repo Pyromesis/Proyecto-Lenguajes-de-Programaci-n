@@ -1,0 +1,14 @@
+# F02 - Asignaciones con enteros
+# Facil: que valida x = 1? Que encaja en asignacion.
+# Medio: precedencia basica de * sobre +.
+
+quihubo
+a = 42
+b = 10
+suma = a + b
+resta = a - b
+multi = a * b
+cuenteme "suma:", suma
+cuenteme "resta:", resta
+cuenteme "multi:", multi
+chao

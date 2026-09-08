@@ -1,0 +1,17 @@
+# D02 - Identificadores Unicode + columna reservada fecha
+# Facil: puede empezar por numero? No.
+# Medio: puede contener enie? Si.
+# Dificil: por que separar identificador y nombre_columna?
+# Las variables exigen ID puro; las columnas aceptan reservadas
+# porque vienen de datos externos (ej. fecha).
+
+quihubo
+Bogotá = 1
+año_2026 = 2
+cuenteme "Bogota:", Bogotá
+cuenteme "anio:", año_2026
+ventas = monte "datos/ventas.csv" con encabezado
+solo_fecha = ventas |> escoja [fecha, ciudad]
+cuenteme "columna fecha ok"
+describa solo_fecha
+chao

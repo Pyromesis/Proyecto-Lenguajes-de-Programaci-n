@@ -1,0 +1,17 @@
+# M01 - Funcion clasificar edad con sino encadenado
+# Medio: fijese_si + sino fijese_si + sino.
+
+quihubo
+invente clasificar_edad(edad) {
+    fijese_si (edad < 18) {
+        devuelva "menor"
+    } sino fijese_si (edad < 60) {
+        devuelva "adulto"
+    } sino {
+        devuelva "mayor"
+    }
+}
+cuenteme clasificar_edad(10)
+cuenteme clasificar_edad(30)
+cuenteme clasificar_edad(70)
+chao

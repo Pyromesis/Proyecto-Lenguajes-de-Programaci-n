@@ -1,0 +1,9 @@
+# F01 - Programa minimo
+# Facil: idea central del primer corte.
+# Demuestra que el front-end reconoce quihubo/chao y una sentencia.
+# Respuesta guia: el corte demuestra especificacion + front-end que
+# reconoce programas validos e invalidos.
+
+quihubo
+cuenteme "Hola AREPA"
+chao

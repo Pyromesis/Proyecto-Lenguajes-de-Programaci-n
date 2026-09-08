@@ -1,0 +1,14 @@
+# D14 - Funcion con pipeline dentro del cuerpo
+# Dificil: el bloque de la funcion acepta asignaciones con pipeline,
+# monte, deje y cuenteme; las variables quedan en el ambito de la llamada.
+
+quihubo
+invente cargar_y_filtrar(limite) {
+    ventas = monte "datos/ventas.csv" con encabezado
+    filtradas = ventas |> deje donde precio > limite
+    cuenteme "filtrado dentro de funcion"
+    describa filtradas
+    devuelva limite * 2
+}
+cuenteme "doble limite:", cargar_y_filtrar(3000)
+chao

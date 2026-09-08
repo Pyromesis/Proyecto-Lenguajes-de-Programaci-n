@@ -1,0 +1,14 @@
+# D05 - MCD de Euclides recursivo
+# Dificil: mcd(a, b) con modulo.
+
+quihubo
+invente mcd(a, b) {
+    fijese_si (b == 0) {
+        devuelva a
+    } sino {
+        devuelva mcd(b, a % b)
+    }
+}
+cuenteme "mcd 48 y 18:", mcd(48, 18)
+cuenteme "mcd 100 y 25:", mcd(100, 25)
+chao

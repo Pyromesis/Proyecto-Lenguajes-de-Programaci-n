@@ -1,0 +1,10 @@
+# F11 - Funcion promedio de dos numeros
+# Facil: parentesis + division.
+
+quihubo
+invente promedio(a, b) {
+    devuelva (a + b) / 2
+}
+cuenteme "promedio 10 y 20:", promedio(10, 20)
+cuenteme "promedio 3 y 4:", promedio(3, 4)
+chao

@@ -1,0 +1,12 @@
+# M10 - Funcion usada dentro de pipeline cree
+# Medio: el evaluador resuelve la llamada por fila con la columna precio.
+
+quihubo
+invente impuesto(valor) {
+    devuelva valor * 19 / 100
+}
+ventas = monte "datos/ventas.csv" con encabezado
+con_imp = ventas |> cree imp = impuesto(precio)
+cuenteme "impuesto aplicado"
+describa con_imp
+chao

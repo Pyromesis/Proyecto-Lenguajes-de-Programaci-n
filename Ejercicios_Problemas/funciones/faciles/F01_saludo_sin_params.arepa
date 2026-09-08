@@ -1,0 +1,9 @@
+# F01 - Funcion sin parametros que retorna texto
+# Facil: invente + devuelva + llamada como expresion.
+
+quihubo
+invente saludo() {
+    devuelva "hola AREPA"
+}
+cuenteme saludo()
+chao

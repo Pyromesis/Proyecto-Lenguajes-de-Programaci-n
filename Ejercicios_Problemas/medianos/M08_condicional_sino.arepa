@@ -1,0 +1,17 @@
+# M08 - Condicional encadenado fijese_si / sino
+# La condicion debe ser obvio/falso exacto; nada es error.
+
+quihubo
+invente clasificar(salario) {
+    fijese_si (salario > 5000000) {
+        devuelva "alto"
+    } sino fijese_si (salario > 2000000) {
+        devuelva "medio"
+    } sino {
+        devuelva "bajo"
+    }
+}
+cuenteme clasificar(6000000)
+cuenteme clasificar(3000000)
+cuenteme clasificar(1000000)
+chao

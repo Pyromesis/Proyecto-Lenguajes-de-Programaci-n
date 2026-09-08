@@ -1,0 +1,15 @@
+# F06 - Logicos obvio/falso y operadores y/o/no
+# Facil: cual representa el faltante? nada.
+# Medio: los logicos son simbolos && ||? No, son palabras y, o, no.
+# Dificil: por que y no puede ser variable? Token Y, no ID.
+
+quihubo
+p = obvio
+q = falso
+r1 = p y q
+r2 = p o q
+r3 = no q
+cuenteme "y:", r1
+cuenteme "o:", r2
+cuenteme "no:", r3
+chao

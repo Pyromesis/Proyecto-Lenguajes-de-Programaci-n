@@ -1,0 +1,10 @@
+# F10 - Funcion cubo con potencia
+# Facil: operador ^.
+
+quihubo
+invente cubo(n) {
+    devuelva n ^ 3
+}
+cuenteme "cubo de 4:", cubo(4)
+cuenteme "cubo de 2:", cubo(2)
+chao

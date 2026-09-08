@@ -1,0 +1,13 @@
+# M04 - Limpieza de datos limpie
+# Facil: que es duplicado? Fila con la misma tupla de valores.
+# Medio: que conserva? La primera aparicion.
+# Dificil: nada != 0 ni texto vacio; faltante real vs valor valido.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+sin_dupli = ventas |> limpie duplicados
+rellenas = ventas |> limpie vacios con 0
+cuenteme "limpie ok"
+describa sin_dupli
+describa rellenas
+chao

@@ -1,0 +1,10 @@
+# M07 - Funcion potencia con dos parametros
+# Medio: operador ^ asociativo a derecha.
+
+quihubo
+invente potencia(base, expo) {
+    devuelva base ^ expo
+}
+cuenteme "2 ^ 10:", potencia(2, 10)
+cuenteme "3 ^ 3:", potencia(3, 3)
+chao

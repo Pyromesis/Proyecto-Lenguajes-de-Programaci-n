@@ -1,0 +1,13 @@
+# F04 - Comentarios y saltos de linea significativos
+# Facil: el comentario se ejecuta? No.
+# Medio: por que skip? Para quitarlo del flujo de tokens.
+# NL separa sentencias, WS se descarta.
+
+# comentario antes del programa
+quihubo
+# comentario dentro
+x = 1 # explicacion al final de la linea
+z = 2
+cuenteme "x:", x
+cuenteme "z:", z
+chao

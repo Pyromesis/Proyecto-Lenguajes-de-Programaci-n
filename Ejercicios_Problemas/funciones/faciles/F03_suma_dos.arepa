@@ -1,0 +1,10 @@
+# F03 - Funcion suma de dos numeros
+# Facil: dos parametros.
+
+quihubo
+invente sumar(a, b) {
+    devuelva a + b
+}
+cuenteme "10 + 32:", sumar(10, 32)
+cuenteme "1.5 + 2.5:", sumar(1.5, 2.5)
+chao

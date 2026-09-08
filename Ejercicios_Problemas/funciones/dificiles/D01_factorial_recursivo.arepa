@@ -1,0 +1,14 @@
+# D01 - Factorial recursivo
+# Dificil: la funcion se vincula a un entorno que resuelve su propio nombre.
+
+quihubo
+invente factorial(n) {
+    fijese_si (n <= 1) {
+        devuelva 1
+    } sino {
+        devuelva n * factorial(n - 1)
+    }
+}
+cuenteme "fact 5:", factorial(5)
+cuenteme "fact 0:", factorial(0)
+chao

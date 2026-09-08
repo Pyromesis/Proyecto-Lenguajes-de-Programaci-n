@@ -1,0 +1,11 @@
+# D05 - junte + resuma con todas las estadisticas propias
+# Mediana usa orden por insercion propio; desviacion es poblacional propia.
+# Minimo/maximo recorren valores; nada se ignora.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+resumen = con_total |> junte por [ciudad] |> resuma ingreso = sume(total), promedio = promedie(total), mitad = mediana(total), minimo_v = minimo(total), maximo_v = maximo(total), desv = desviacion(total), registros = cuente()
+cuenteme "estadisticas ok"
+describa resumen
+chao

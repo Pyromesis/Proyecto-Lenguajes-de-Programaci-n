@@ -1,0 +1,10 @@
+# F14 - Funcion llamada como sentencia (procedimiento)
+# Facil: instruccion_llamada permite llamada suelta; sin devuelva retorna nada.
+
+quihubo
+invente avisar(mensaje) {
+    cuenteme mensaje
+}
+avisar("hola desde funcion")
+avisar("segundo aviso")
+chao

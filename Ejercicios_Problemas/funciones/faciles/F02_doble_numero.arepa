@@ -1,0 +1,10 @@
+# F02 - Funcion doble de un numero
+# Facil: un parametro, una expresion aritmetica.
+
+quihubo
+invente doble(valor) {
+    devuelva valor * 2
+}
+cuenteme "doble de 21:", doble(21)
+cuenteme "doble de 3.5:", doble(3.5)
+chao

@@ -1,0 +1,23 @@
+# D15 - Flujo completo con funciones, pinte y guarde
+# Dificil: une invente, cree con funcion, junte, resuma, pinte y guarde.
+
+quihubo
+invente total_linea(unidades, precio) {
+    devuelva unidades * precio
+}
+invente dolares(valor) {
+    devuelva valor / 4000
+}
+ventas = monte "datos/ventas.csv" con encabezado, separador ","
+limpias = ventas |> deje donde unidades > 0 y precio > 0 |> cree total = total_linea(unidades, precio)
+resumen = limpias |> junte por [ciudad] |> resuma ingreso = sume(total), registros = cuente()
+cuenteme "flujo con funciones listo"
+describa resumen
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/flujo_funciones.png"
+guarde resumen como "salidas/flujo_funciones.csv"
+cuenteme "ejemplo dolares:", dolares(8000000)
+chao

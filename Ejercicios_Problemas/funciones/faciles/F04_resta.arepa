@@ -1,0 +1,9 @@
+# F04 - Funcion resta
+# Facil: parametros a, b con operador -.
+
+quihubo
+invente restar(a, b) {
+    devuelva a - b
+}
+cuenteme "50 - 8:", restar(50, 8)
+chao

@@ -1,0 +1,14 @@
+# D03 - Suma hasta n recursiva
+# Dificil: caso base n <= 0.
+
+quihubo
+invente suma_hasta(n) {
+    fijese_si (n <= 0) {
+        devuelva 0
+    } sino {
+        devuelva n + suma_hasta(n - 1)
+    }
+}
+cuenteme "suma 10:", suma_hasta(10)
+cuenteme "suma 12:", suma_hasta(12)
+chao

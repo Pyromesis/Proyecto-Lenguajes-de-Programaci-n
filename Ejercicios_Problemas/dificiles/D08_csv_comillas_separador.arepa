@@ -1,0 +1,13 @@
+# D08 - Maquina de estados CSV: comas dentro de comillas y escape ""
+# Facil: por que no split simple? Las comas dentro de comillas no separan.
+# Medio: que significa "" dentro de comillas? Una comilla literal.
+# El lector usa estados FUERA/DENTRO; separador dentro no corta.
+
+quihubo
+tienda = monte "Ejercicios_Problemas/datos/comillas.csv" con encabezado, separador ","
+cuenteme "comillas ok"
+describa tienda
+filtrada = tienda |> deje donde valor > 3000
+cuenteme "filtro comillas ok"
+describa filtrada
+chao

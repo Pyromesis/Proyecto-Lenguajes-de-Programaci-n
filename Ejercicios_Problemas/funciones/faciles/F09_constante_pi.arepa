@@ -1,0 +1,10 @@
+# F09 - Funcion constante decimal
+# Facil: literal DECIMAL valido 3.14.
+
+quihubo
+invente pivalor() {
+    devuelva 3.14
+}
+cuenteme "pi:", pivalor()
+cuenteme "doble pi:", pivalor() * 2
+chao

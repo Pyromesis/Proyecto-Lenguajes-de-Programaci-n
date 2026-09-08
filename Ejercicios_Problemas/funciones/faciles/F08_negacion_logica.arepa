@@ -1,0 +1,10 @@
+# F08 - Funcion negacion logica
+# Facil: operador no exige obvio/falso.
+
+quihubo
+invente negar(valor) {
+    devuelva no valor
+}
+cuenteme "no obvio:", negar(obvio)
+cuenteme "no falso:", negar(falso)
+chao

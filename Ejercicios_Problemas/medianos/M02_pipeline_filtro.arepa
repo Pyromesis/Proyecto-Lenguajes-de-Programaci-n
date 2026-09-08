@@ -1,0 +1,12 @@
+# M02 - Pipeline con filtro deje donde
+# Facil: que hace? Filtra filas.
+# Medio: que significa exactamente True? Valor logico verdadero, no truthy.
+# Dificil: el evaluador resuelve cada columna contra la fila actual.
+# Pipeline: cada etapa recibe la tabla anterior y devuelve otra (D3, sin mutar).
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+filtradas = ventas |> deje donde unidades > 10 y precio > 3000
+cuenteme "filtro ok"
+describa filtradas
+chao

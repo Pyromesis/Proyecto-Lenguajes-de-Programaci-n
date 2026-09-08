@@ -1,0 +1,22 @@
+# D10 - Flujo completo dificil: todo el DSL encadenado
+# Une monte, escoja, deje, cree, acomode, limpie, junte, resuma,
+# pinte, guarde, invente y condicional en un solo programa valido.
+# Trazabilidad: requisito -> Arepa.g4 -> Tabla/evaluador/ejecutor -> prueba.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado, separador ","
+limpias = ventas |> escoja [fecha, ciudad, unidades, precio] |> deje donde unidades > 0 y precio > 0 |> cree total = unidades * precio |> acomode por [total] pa_abajo |> limpie duplicados
+resumen = limpias |> junte por [ciudad] |> resuma ingreso = sume(total), promedio = promedie(total), registros = cuente()
+cuenteme "flujo listo"
+describa resumen
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/flujo_final.png"
+guarde resumen como "salidas/flujo_resumen.csv"
+invente dolares(valor) {
+    devuelva valor / 4000
+}
+cuenteme "ejemplo dolares:", dolares(1000000)
+chao

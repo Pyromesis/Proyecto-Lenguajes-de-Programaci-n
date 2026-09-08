@@ -1,0 +1,10 @@
+# F09 - escoja simple (seleccion de columnas)
+# Facil: que elimina? Columnas no seleccionadas.
+# Medio: filtra filas? No.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+cortada = ventas |> escoja [ciudad, precio]
+cuenteme "escoja ok"
+describa cortada
+chao

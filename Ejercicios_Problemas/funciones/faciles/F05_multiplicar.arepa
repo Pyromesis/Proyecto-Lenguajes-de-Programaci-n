@@ -1,0 +1,9 @@
+# F05 - Funcion multiplicacion
+# Facil: operador * con dos parametros.
+
+quihubo
+invente multiplicar(a, b) {
+    devuelva a * b
+}
+cuenteme "6 * 7:", multiplicar(6, 7)
+chao

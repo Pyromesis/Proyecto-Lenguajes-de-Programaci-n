@@ -1,0 +1,12 @@
+# M06 - convierta tipos del DSL
+# Facil: tipos documentados? numero, texto, logico y fecha; nada = faltante.
+# Medio: como se convierte? Intentos sucesivos de parseo propio.
+# Dificil: fecha se valida AAAA-MM-DD pero sin aritmetica en este corte.
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+lista = encuesta |> escoja [edad, ingreso]
+convertidas = lista |> convierta edad -> numero
+cuenteme "convierta ok"
+describa convertidas
+chao

@@ -1,0 +1,22 @@
+# M01 - Precedencia aritmetica y potencia asociativa a derecha
+# Medio: como se asocia ^? A derecha: 2 ^ (3 ^ 2) = 512.
+# Facil: 2 + 3 * 4 vale 14? Si, 2 + (3*4).
+# Dificil: la forma del arbol debe coincidir con la semantica del evaluador.
+
+quihubo
+a = 2 + 3 * 4
+b = (2 + 3) * 4
+c = 2 ^ 3 ^ 2
+cuenteme "a:", a
+cuenteme "b:", b
+cuenteme "c:", c
+fijese_si (a == 14) {
+    cuenteme "precedencia ok"
+}
+fijese_si (b == 20) {
+    cuenteme "parentesis ok"
+}
+fijese_si (c == 512) {
+    cuenteme "potencia derecha ok"
+}
+chao

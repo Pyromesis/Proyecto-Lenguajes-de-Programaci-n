@@ -1,0 +1,14 @@
+# F07 - Funcion que retorna logico con condicional
+# Facil: fijese_si dentro de funcion, condicion exacta obvio/falso.
+
+quihubo
+invente es_mayor(a, b) {
+    fijese_si (a > b) {
+        devuelva obvio
+    } sino {
+        devuelva falso
+    }
+}
+cuenteme "10 > 3:", es_mayor(10, 3)
+cuenteme "2 > 9:", es_mayor(2, 9)
+chao

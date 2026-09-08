@@ -1,0 +1,10 @@
+# M12 - Funcion con tres parametros
+# Medio: lista de parametros con comas.
+
+quihubo
+invente suma3(a, b, c) {
+    devuelva a + b + c
+}
+cuenteme "1+2+3:", suma3(1, 2, 3)
+cuenteme "10+20+30:", suma3(10, 20, 30)
+chao

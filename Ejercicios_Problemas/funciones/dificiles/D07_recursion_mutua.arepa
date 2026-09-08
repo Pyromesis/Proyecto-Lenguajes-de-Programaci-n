@@ -1,0 +1,22 @@
+# D07 - Recursion mutua: par e impar se llaman
+# Dificil: la busqueda sube por la cadena de ambitos, asi ambas se ven.
+
+quihubo
+invente es_par_rec(n) {
+    fijese_si (n == 0) {
+        devuelva obvio
+    } sino {
+        devuelva es_impar_rec(n - 1)
+    }
+}
+invente es_impar_rec(n) {
+    fijese_si (n == 0) {
+        devuelva falso
+    } sino {
+        devuelva es_par_rec(n - 1)
+    }
+}
+cuenteme "4 par:", es_par_rec(4)
+cuenteme "7 par:", es_par_rec(7)
+cuenteme "7 impar:", es_impar_rec(7)
+chao

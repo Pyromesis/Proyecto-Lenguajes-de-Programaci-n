@@ -1,0 +1,15 @@
+# D02 - Fibonacci recursivo
+# Dificil: doble llamada recursiva.
+
+quihubo
+invente fib(n) {
+    fijese_si (n <= 1) {
+        devuelva n
+    } sino {
+        devuelva fib(n - 1) + fib(n - 2)
+    }
+}
+cuenteme "fib 0:", fib(0)
+cuenteme "fib 1:", fib(1)
+cuenteme "fib 10:", fib(10)
+chao

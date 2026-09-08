@@ -1,0 +1,14 @@
+# M09 - Funciones logicas compuestas y / o
+# Medio: y, o exigen obvio/falso.
+
+quihubo
+invente ambos(p, q) {
+    devuelva p y q
+}
+invente alguno(p, q) {
+    devuelva p o q
+}
+cuenteme "ambos:", ambos(obvio, falso)
+cuenteme "alguno:", alguno(obvio, falso)
+cuenteme "ambos true:", ambos(obvio, obvio)
+chao

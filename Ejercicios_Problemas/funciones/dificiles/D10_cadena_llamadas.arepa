@@ -1,0 +1,22 @@
+# D10 - Cadena profunda de 5 llamadas
+# Dificil: cada funcion delega en la siguiente; el retorno se propaga.
+
+quihubo
+invente f1(n) {
+    devuelva n + 1
+}
+invente f2(n) {
+    devuelva f1(n) + 1
+}
+invente f3(n) {
+    devuelva f2(n) + 1
+}
+invente f4(n) {
+    devuelva f3(n) + 1
+}
+invente f5(n) {
+    devuelva f4(n) + 1
+}
+cuenteme "f5 de 10:", f5(10)
+cuenteme "f3 de 0:", f3(0)
+chao

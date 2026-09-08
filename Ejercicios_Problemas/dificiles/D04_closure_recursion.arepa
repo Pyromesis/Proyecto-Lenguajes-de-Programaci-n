@@ -1,0 +1,23 @@
+# D04 - Closures y recursion con invente
+# Dificil: por que sirve para recursion?
+# La funcion se vincula a un entorno que permite resolver su propio nombre.
+
+quihubo
+invente factorial(n) {
+    fijese_si (n <= 1) {
+        devuelva 1
+    } sino {
+        devuelva n * factorial(n - 1)
+    }
+}
+cuenteme "fact 5:", factorial(5)
+cuenteme "fact 0:", factorial(0)
+invente suma_hasta(n) {
+    fijese_si (n <= 0) {
+        devuelva 0
+    } sino {
+        devuelva n + suma_hasta(n - 1)
+    }
+}
+cuenteme "suma 10:", suma_hasta(10)
+chao

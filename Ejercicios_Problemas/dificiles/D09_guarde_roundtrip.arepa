@@ -1,0 +1,13 @@
+# D09 - Escritor CSV propio + roundtrip guarde/monte
+# Facil: que operacion usa? guarde.
+# Dificil: evidencia de "desde cero": recorre y serializa en capa propia,
+# entrecomilla campos con separador/comillas/saltos y crea la carpeta.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+cortada = ventas |> escoja [ciudad, precio]
+guarde cortada como "salidas/ejercicio_guarde.csv"
+cuenteme "guarde ok"
+recargada = monte "salidas/ejercicio_guarde.csv" con encabezado
+describa recargada
+chao

@@ -1,0 +1,13 @@
+# M02 - Composicion de funciones: cuadruple usa doble
+# Medio: una funcion llama a otra definida antes.
+
+quihubo
+invente doble(valor) {
+    devuelva valor * 2
+}
+invente cuadruple(valor) {
+    devuelva doble(valor) * 2
+}
+cuenteme "cuadruple de 5:", cuadruple(5)
+cuenteme "cuadruple de 10:", cuadruple(10)
+chao

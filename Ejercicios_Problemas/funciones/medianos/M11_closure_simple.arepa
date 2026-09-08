@@ -1,0 +1,11 @@
+# M11 - Closure simple: funcion captura variable global
+# Medio: la funcion guarda el ambito donde fue definida.
+
+quihubo
+base = 10
+invente sumar_base(n) {
+    devuelva n + base
+}
+cuenteme "5 + base:", sumar_base(5)
+cuenteme "20 + base:", sumar_base(20)
+chao

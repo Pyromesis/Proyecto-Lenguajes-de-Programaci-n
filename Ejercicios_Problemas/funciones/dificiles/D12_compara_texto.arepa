@@ -1,0 +1,14 @@
+# D12 - Funcion que compara texto (fecha exacta)
+# Dificil: == entre texto y texto es valido; entre numero y texto daria ErrorTipos.
+
+quihubo
+invente es_navidad(dia) {
+    fijese_si (dia == "2026-12-25") {
+        devuelva obvio
+    } sino {
+        devuelva falso
+    }
+}
+cuenteme "navidad:", es_navidad("2026-12-25")
+cuenteme "otro dia:", es_navidad("2026-01-05")
+chao

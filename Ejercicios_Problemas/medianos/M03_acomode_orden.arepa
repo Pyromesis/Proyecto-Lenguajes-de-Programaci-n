@@ -1,0 +1,10 @@
+# M03 - Ordenamiento propio acomode
+# Facil: que algoritmo se documenta? Merge sort.
+# Medio: por que estabilidad? Preserva orden relativo si empatan claves.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+ordenadas = ventas |> acomode por [precio] pa_abajo
+cuenteme "acomode ok"
+describa ordenadas
+chao

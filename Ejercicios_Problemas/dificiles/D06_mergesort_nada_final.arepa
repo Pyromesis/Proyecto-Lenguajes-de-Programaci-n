@@ -1,0 +1,13 @@
+# D06 - Ordenamiento estable con nada al final + multiclave
+# Dificil: como se trata nada? Como mayor que cualquier valor, queda al final.
+# encuesta.csv tiene un ingreso vacio (= nada) que debe ir al final en pa_arriba.
+
+quihubo
+ventas = monte "datos/encuesta.csv" con encabezado, separador ";"
+ordenadas = ventas |> acomode por [ingreso] pa_arriba
+cuenteme "nada al final ok"
+describa ordenadas
+ordenadas2 = ventas |> acomode por [ciudad, edad] pa_abajo
+cuenteme "multiclave ok"
+describa ordenadas2
+chao

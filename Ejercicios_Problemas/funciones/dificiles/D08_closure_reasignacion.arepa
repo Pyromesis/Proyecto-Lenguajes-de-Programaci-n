@@ -1,0 +1,12 @@
+# D08 - Closure ve la reasignacion global
+# Dificil: el closure guarda referencia al entorno, no copia del valor.
+
+quihubo
+base = 100
+invente sumar_base(n) {
+    devuelva n + base
+}
+cuenteme "5 + 100:", sumar_base(5)
+base = 200
+cuenteme "5 + 200:", sumar_base(5)
+chao

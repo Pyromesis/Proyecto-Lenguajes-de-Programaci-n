@@ -1,0 +1,14 @@
+# F12 - Funcion es par con modulo
+# Facil: operador % y comparacion ==.
+
+quihubo
+invente es_par(n) {
+    fijese_si (n % 2 == 0) {
+        devuelva obvio
+    } sino {
+        devuelva falso
+    }
+}
+cuenteme "4 es par:", es_par(4)
+cuenteme "7 es par:", es_par(7)
+chao

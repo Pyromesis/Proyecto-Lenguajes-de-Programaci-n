@@ -1,0 +1,14 @@
+# D04 - Potencia recursiva
+# Dificil: expo <= 0 devuelve 1, sino base * pot(base, expo - 1).
+
+quihubo
+invente pot(base, expo) {
+    fijese_si (expo <= 0) {
+        devuelva 1
+    } sino {
+        devuelva base * pot(base, expo - 1)
+    }
+}
+cuenteme "2 ^ 10:", pot(2, 10)
+cuenteme "3 ^ 4:", pot(3, 4)
+chao

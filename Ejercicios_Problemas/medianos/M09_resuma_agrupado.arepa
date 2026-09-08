@@ -1,0 +1,11 @@
+# M09 - junte + resuma con agregaciones
+# junte prepara claves; resuma calcula sume/cuente con algoritmos propios.
+# resuma sin junte resume toda la tabla; con junte agrupa por ciudad.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+resumen = con_total |> junte por [ciudad] |> resuma ingreso = sume(total), registros = cuente()
+cuenteme "resuma ok"
+describa resumen
+chao

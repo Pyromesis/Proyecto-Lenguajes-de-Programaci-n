@@ -1,0 +1,14 @@
+# F13 - Funcion maximo de dos (nombre maximo2 para no chocar con agregacion maximo)
+# Facil: condicional que devuelve uno de los parametros.
+
+quihubo
+invente maximo2(a, b) {
+    fijese_si (a > b) {
+        devuelva a
+    } sino {
+        devuelva b
+    }
+}
+cuenteme "max de 10 y 3:", maximo2(10, 3)
+cuenteme "max de 2 y 9:", maximo2(2, 9)
+chao

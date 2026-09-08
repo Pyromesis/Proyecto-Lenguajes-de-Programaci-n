@@ -1,0 +1,15 @@
+# D13 - Division segura que retorna nada
+# Dificil: nada se propaga en aritmetica; no usar nada como condicion de fijese_si.
+
+quihubo
+invente seguro_dividir(a, b) {
+    fijese_si (b == 0) {
+        devuelva nada
+    } sino {
+        devuelva a / b
+    }
+}
+cuenteme "10 / 2:", seguro_dividir(10, 2)
+cuenteme "10 / 0:", seguro_dividir(10, 0)
+cuenteme "nada + 5:", seguro_dividir(10, 0) + 5
+chao

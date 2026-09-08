@@ -1,0 +1,20 @@
+# D01 - Unario, potencia asociativa y logica combinada
+# Dificil: precedencia o < y < no < comparaciones < + - < * / % < - unario < ^.
+# -5 + 3 * -2 = -11 ; 2 ^ 3 ^ 2 = 512.
+
+quihubo
+a = -5 + 3 * -2
+b = 2 ^ 3 ^ 2
+c = no falso y obvio
+d = 10 > 5 y 3 <= 3 o falso
+cuenteme "a:", a
+cuenteme "b:", b
+cuenteme "c:", c
+cuenteme "d:", d
+fijese_si (a == -11) {
+    cuenteme "unario ok"
+}
+fijese_si (b == 512) {
+    cuenteme "asociativa ok"
+}
+chao

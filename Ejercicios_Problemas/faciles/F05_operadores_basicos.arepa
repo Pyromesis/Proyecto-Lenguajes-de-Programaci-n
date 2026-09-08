@@ -1,0 +1,15 @@
+# F05 - Operadores aritmeticos y comparacion
+# Facil: que error hay con 1/0? ErrorOperacion.
+# Medio: comparar numero y texto da ErrorTipos.
+
+quihubo
+a = 10 / 2
+b = 10 % 3
+c = 2 ^ 3
+cuenteme "a:", a
+cuenteme "b:", b
+cuenteme "c:", c
+fijese_si (a == 5) {
+    cuenteme "a vale 5"
+}
+chao

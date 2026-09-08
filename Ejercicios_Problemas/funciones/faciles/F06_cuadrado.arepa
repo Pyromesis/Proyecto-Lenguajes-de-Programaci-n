@@ -1,0 +1,10 @@
+# F06 - Funcion cuadrado
+# Facil: un parametro usado dos veces.
+
+quihubo
+invente cuadrado(n) {
+    devuelva n * n
+}
+cuenteme "cuadrado de 9:", cuadrado(9)
+cuenteme "cuadrado de 1.5:", cuadrado(1.5)
+chao

@@ -1,0 +1,17 @@
+# M06 - Funcion nivel por nota con texto
+# Medio: comparaciones devuelven texto distinto (sin concatenar con +).
+
+quihubo
+invente nivel(nota) {
+    fijese_si (nota >= 90) {
+        devuelva "alto"
+    } sino fijese_si (nota >= 60) {
+        devuelva "medio"
+    } sino {
+        devuelva "bajo"
+    }
+}
+cuenteme nivel(95)
+cuenteme nivel(70)
+cuenteme nivel(30)
+chao
