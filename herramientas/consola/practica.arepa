@@ -1,0 +1,42 @@
+# ============================================================
+#  practica.arepa - Hoja de práctica del autocompletado AREPA
+#  Ábrelo con:  vim herramientas/consola/practica.arepa
+#  Ejercicio: borra la palabra indicada y recupérala con Tab.
+#  Valídalo con:  arepa herramientas/consola/practica.arepa
+# ============================================================
+
+quihubo
+
+# TAB 1: borra "monte" y escribe "mon" + Tab
+ventas = monte "datos/ventas.csv" con encabezado, separador ","
+
+# TAB 2: borra "escoja" y escribe "esc" + Tab
+# TAB 3: borra "|>" y escribe "|" + Tab
+limpias = ventas
+|> escoja [fecha, ciudad, unidades, precio]
+|> deje donde unidades > 0 y precio > 0
+|> cree total = unidades * precio
+
+# TAB 4: borra "junte" y escribe "jun" + Tab
+# TAB 5: borra "resuma" y escribe "res" + Tab
+resumen = limpias
+|> junte por [ciudad]
+|> resuma ingreso = sume(total), registros = cuente()
+
+# TAB 6: borra "barras" y escribe "bar" + Tab
+# TAB 7: borra "guardela" y escribe "guar" + Tab
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/practica.png"
+
+# TAB 8: en vim escribe ":ArepaPlantilla " + Tab (lista las plantillas)
+# TAB 9: en el REPL escribe ":plantilla pin" + Tab
+# TAB 10 (fantasma vim): en una línea nueva escribe "cuen" y mira el gris,
+#        pulsa Tab y queda "cuenteme". Ctrl-F hace lo mismo.
+# TAB 11 (fantasma REPL): corre "python3 src/cli/repl.py", escribe "pin"
+#        y verás "te" en gris; Tab lo acepta y deja "pinte".
+guarde resumen como "salidas/practica.csv"
+
+chao

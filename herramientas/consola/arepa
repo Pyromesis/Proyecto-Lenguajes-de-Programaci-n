@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# Lanzador del CLI de AREPA (consola, Linux).
+# Resuelve la raíz del repo desde su propia ubicación, así funciona
+# desde cualquier directorio.
+# Instalación (una sola vez):
+#   ln -s "$PWD/herramientas/consola/arepa" ~/.local/bin/arepa
+# Uso:
+#   arepa programa.arepa [--arbol] [--tokens] [--ejecutar]
+set -eu
+RAIZ="$(cd "$(dirname "$0")/../.." && pwd)"
+exec python3 "$RAIZ/src/cli/main.py" "$@"
