@@ -141,7 +141,11 @@ tipos con el sistema propio y decide qué hacer con `nada`.
 * `nada` se propaga: `nada + 1`, `nada == 5`, `obvio y nada` producen
   `nada` (estilo SQL);
 * comparar número con texto lanza `ErrorTipos` (sin coerción silenciosa);
-* dividir o sacar módulo entre cero lanza `ErrorOperacion`;
+* dividir entre cero no es error: `1/0` produce `infinito`, `-1/0`
+  produce `-infinito` y `0/0` produce `nada` (indefinido);
+* el módulo entre cero no es error: produce `nada` (indefinido);
+* la potencia que desborda produce `infinito` (con su signo); solo sigue
+  siendo error el resultado complejo (p. ej. `(-1) ^ 0.5`);
 * los lógicos exigen `obvio`/`falso`.
 
 ### Evaluador (`evaluador.py`)
@@ -208,7 +212,9 @@ un visitor propio.
 * **Funciones**: `invente` registra la función; al llamarla se crea un
   ámbito hijo con los parámetros enlazados; `devuelva` interrumpe el
   cuerpo con `RetornoFuncion` (control de flujo interno, no un error);
-  fuera de una función es error semántico.
+  fuera de una función es error semántico. La recursión que agota la
+  pila no muestra `RecursionError`: produce `ErrorEjecucion` en español
+  que pide revisar el caso base.
 * **Condicionales**: `fijese_si` exige condición lógica (`nada` es
   error); `sino` encadena con otro `fijese_si` o un bloque.
 * **`pinte`**: valida que la tabla exista y que las columnas de

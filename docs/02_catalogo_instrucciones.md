@@ -170,7 +170,7 @@ guardela "salidas/ingresos.png"
 
 | Clase | Operadores | Notas |
 |---|---|---|
-| Aritméticos | `+  -  *  /  %  ^` | `^` es potencia, asociativa a derecha |
+| Aritméticos | `+  -  *  /  %  ^` | `^` es potencia, asociativa a derecha; `1/0` da `infinito`, `0/0` y `5%0` dan `nada` (sin error) |
 | Relacionales | `==  !=  <  <=  >  >=` | producen lógicos |
 | Lógicos | `y   o   no` | palabras, no símbolos |
 | Asignación | `=` | solo sentencia |

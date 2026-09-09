@@ -18,7 +18,7 @@ Limitaciones:
 
 import os
 
-from datos.tipos import es_nada
+from datos.tipos import es_infinito, es_nada, formatear_numero
 
 
 class EscritorCSV:
@@ -47,6 +47,8 @@ class EscritorCSV:
             texto = ""
         elif isinstance(valor, bool):
             texto = "obvio" if valor else "falso"
+        elif es_infinito(valor):
+            texto = formatear_numero(valor)
         elif isinstance(valor, float) and valor.is_integer():
             texto = str(int(valor))
         else:

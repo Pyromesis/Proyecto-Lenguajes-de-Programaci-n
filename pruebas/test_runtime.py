@@ -381,6 +381,53 @@ def csv_duro_se_carga_completo():
     assert tabla.filas[3].valor_en(2) is NADA
 
 
+# ---------------------------------------------------------------------- #
+# Bordes robustos: agregaciones vacías, infinito y recursión profunda
+# ---------------------------------------------------------------------- #
+
+RUTA_VACIA = os.path.join(RAIZ, "pruebas", "datos", "vacia.csv").replace("\\", "/")
+
+
+@caso
+def agregaciones_en_tabla_vacia_dan_nada():
+    programa = (
+        'quihubo\nvacia = monte "{0}" con encabezado\n'
+        "resumen = vacia |> resuma mitad = mediana(unidades), "
+        "menor = minimo(unidades), total = sume(unidades), "
+        "registros = cuente()\n"
+        "chao\n".format(RUTA_VACIA)
+    )
+    ejecutor = correr(programa)
+    resumen = ejecutor.contexto.simbolos.buscar("resumen")
+    assert resumen.num_filas == 1
+    assert resumen.filas[0].valor_en(0) is NADA
+    assert resumen.filas[0].valor_en(1) is NADA
+    assert resumen.filas[0].valor_en(2) is NADA
+    assert resumen.filas[0].valor_en(3) == 0
+
+
+@caso
+def division_por_cero_no_tumba_runtime():
+    ejecutor = correr("quihubo\na = 1 / 0\nb = 0 / 0\nc = 5 % 0\nchao\n")
+    assert ejecutor.contexto.simbolos.buscar("a") == float("inf")
+    assert ejecutor.contexto.simbolos.buscar("b") is NADA
+    assert ejecutor.contexto.simbolos.buscar("c") is NADA
+
+
+@caso
+def recursion_profunda_mensaje_amable():
+    programa = (
+        "quihubo\n"
+        "invente suma_hasta(n) { "
+        "fijese_si (n <= 0) { devuelva 0 } "
+        "sino { devuelva n + suma_hasta(n - 1) } }\n"
+        "r = suma_hasta(100000)\n"
+        "chao\n"
+    )
+    problema = correr_y_fallar(programa)
+    assert "recurs" in problema.mensaje
+
+
 def main():
     pasaron = fallaron = 0
     print("=" * 78)

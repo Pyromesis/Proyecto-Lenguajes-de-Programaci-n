@@ -155,21 +155,32 @@ def logico_con_numero_rechazado():
 
 
 @caso
-def division_entre_cero_rechazada():
-    try:
-        valor_de("5 / 0")
-        raise AssertionError("división entre cero debería fallar")
-    except ErrorOperacion as e:
-        assert "cero" in e.mensaje
+def division_entre_cero_da_infinito():
+    assert valor_de("5 / 2") == 2.5
+    assert valor_de("1 / 0") == float("inf")
+    assert valor_de("-1 / 0") == float("-inf")
+    assert valor_de("0 / 0") is NADA
 
 
 @caso
-def modulo_entre_cero_rechazado():
+def modulo_entre_cero_da_nada():
+    assert valor_de("5 % 0") is NADA
+    assert valor_de("0 % 0") is NADA
+
+
+@caso
+def potencia_casos_borde():
+    assert valor_de("0 ^ -1") == float("inf")
+    assert valor_de("2 ^ 3") == 8
+
+
+@caso
+def potencia_compleja_rechazada():
     try:
-        valor_de("5 % 0")
-        raise AssertionError("módulo entre cero debería fallar")
-    except ErrorOperacion:
-        pass
+        valor_de("(-1) ^ 0.5")
+        raise AssertionError("potencia compleja debería fallar")
+    except ErrorOperacion as e:
+        assert "real" in e.mensaje
 
 
 def main():

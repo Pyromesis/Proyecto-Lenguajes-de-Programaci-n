@@ -37,6 +37,7 @@ from datos.tipos import (
     convertir_a_tipo,
     es_nada,
     es_numero,
+    formatear_numero,
     nombre_tipo,
 )
 from errores_base import (
@@ -82,6 +83,11 @@ class EjecutorArepa(ArepaVisitor):
         """Ejecuta el programa completo a partir de la raiz del arbol."""
         try:
             self.visit(arbol)
+        except RecursionError:
+            raise ErrorEjecucion(
+                "La recursión es muy profunda y se agotó la pila: revisá "
+                "el caso base de la función o probá con un número más chico."
+            )
         except RetornoFuncion:
             raise ErrorSemantico(
                 "'devuelva' solo puede usarse dentro de una función definida "
@@ -338,6 +344,8 @@ class EjecutorArepa(ArepaVisitor):
 
     def _mediana(self, valores):
         """Mediana con orden por insercion propio (sin sorted())."""
+        if not valores:
+            return NADA
         ordenados = self._ordenar_insercion(valores)
         n = len(ordenados)
         medio = n // 2
@@ -375,8 +383,13 @@ class EjecutorArepa(ArepaVisitor):
         if n < 2:
             return NADA
         promedio = sum(valores) / n
+        if isinstance(promedio, float) and promedio != promedio:
+            return NADA
         varianza = sum((v - promedio) ** 2 for v in valores) / n
-        return varianza ** 0.5
+        resultado = varianza ** 0.5
+        if isinstance(resultado, float) and resultado != resultado:
+            return NADA
+        return resultado
 
     # ---------------------------------------------------------------- #
     # Guardar y graficar (reconocimiento con validacion semantica)
@@ -591,8 +604,6 @@ class EjecutorArepa(ArepaVisitor):
 
 
 def _num(valor):
-    """Formatea numeros sin '.0' cuando son enteros."""
-    if isinstance(valor, float) and valor.is_integer():
-        return str(int(valor))
-    return str(valor)
+    """Formatea numeros sin '.0' cuando son enteros; infinitos como 'infinito'."""
+    return formatear_numero(valor)
 

@@ -26,7 +26,7 @@ Limitaciones:
 from datos.columna import Columna
 from datos.fila import Fila
 from errores_base import ErrorColumna, ErrorEjecucion
-from datos.tipos import es_nada
+from datos.tipos import es_nada, formatear_numero
 
 
 class Tabla:
@@ -164,7 +164,7 @@ class Tabla:
         Los valores 'nada' siempre quedan al final.
         """
         if not claves:
-            raise ValueError("acomode necesita al menos una columna.")
+            raise ErrorEjecucion("acomode necesita al menos una columna.")
         criterios = [(self.indice_columna(n), d) for n, d in claves]
         ordenadas = self._mezcla(self.filas, criterios)
         resultado = Tabla(self.nombres_columnas, ordenadas, self.nombre, self.origen)
@@ -381,6 +381,6 @@ def _visible(valor):
         return "nada"
     if isinstance(valor, bool):
         return "obvio" if valor else "falso"
-    if isinstance(valor, float) and valor.is_integer():
-        return str(int(valor))
+    if isinstance(valor, float):
+        return formatear_numero(valor)
     return str(valor)

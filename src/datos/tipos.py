@@ -4,8 +4,10 @@ AREPA - Sistema propio de tipos de valores (src/datos/tipos.py)
 Implementado por el equipo. Clasifica y convierte los valores del DSL
 sin usar ninguna biblioteca externa: solo operaciones básicas de Python.
 
-Valores del lenguaje:
-  * numero  -> int / float de Python (elegidos como representación)
+ Valores del lenguaje:
+   * numero  -> int / float de Python (elegidos como representación);
+               el infinito (p. ej. 1/0) también es numero y se muestra
+               como 'infinito' (o '-infinito')
   * texto   -> str
   * logico  -> bool (solo los literales 'obvio' y 'falso')
   * nada    -> ValorNulo (singleton propio, equivalente a un faltante)
@@ -48,6 +50,25 @@ NADA = ValorNulo()
 
 TIPOS = ("numero", "texto", "logico", "fecha")
 
+INFINITO = float("inf")
+MENOS_INFINITO = float("-inf")
+
+
+def es_infinito(valor):
+    """True si el valor es infinito positivo o negativo (tipo numero)."""
+    return isinstance(valor, float) and valor in (INFINITO, MENOS_INFINITO)
+
+
+def formatear_numero(valor):
+    """Texto propio para números: enteros sin '.0' e infinitos legibles."""
+    if valor == INFINITO:
+        return "infinito"
+    if valor == MENOS_INFINITO:
+        return "-infinito"
+    if isinstance(valor, float) and valor.is_integer():
+        return str(int(valor))
+    return str(valor)
+
 
 def es_nada(valor):
     return isinstance(valor, ValorNulo)
@@ -88,11 +109,7 @@ def texto_a_valor(texto):
     if limpio == "":
         return NADA
     try:
-        return int(limpio)
-    except ValueError:
-        pass
-    try:
-        return float(limpio)
+        return _parsear_numero(limpio)
     except ValueError:
         pass
     if limpio == "obvio":
@@ -130,15 +147,12 @@ def convertir_a_tipo(valor, tipo, contexto=""):
             return valor
         if es_texto(valor):
             try:
-                return int(valor.strip())
+                return _parsear_numero(valor.strip())
             except ValueError:
-                try:
-                    return float(valor.strip())
-                except ValueError:
-                    raise ErrorTipos(
-                        "No pude convertir '{0}' a numero{1}.".format(valor, _donde(contexto)),
-                        contexto=contexto,
-                    )
+                raise ErrorTipos(
+                    "No pude convertir '{0}' a numero{1}.".format(valor, _donde(contexto)),
+                    contexto=contexto,
+                )
         raise ErrorTipos(
             "No puedo convertir un valor {0} a numero{1}.".format(
                 nombre_tipo(valor), _donde(contexto)
@@ -169,11 +183,24 @@ def convertir_a_tipo(valor, tipo, contexto=""):
     )
 
 
+def _parsear_numero(texto):
+    """Convierte un texto a int, float o infinito; lanza ValueError si no es número."""
+    bajo = texto.lower()
+    if bajo in ("inf", "+inf", "infinity", "infinito", "+infinito"):
+        return INFINITO
+    if bajo in ("-inf", "-infinity", "-infinito"):
+        return MENOS_INFINITO
+    if bajo in ("nan", "+nan", "-nan"):
+        raise ValueError("indefinido")
+    try:
+        return int(texto)
+    except ValueError:
+        return float(texto)
+
+
 def _numero_a_texto(numero):
     """Formatea números sin el '.0' de los enteros guardados como float."""
-    if isinstance(numero, float) and numero.is_integer():
-        return str(int(numero))
-    return str(numero)
+    return formatear_numero(numero)
 
 
 def _donde(contexto):

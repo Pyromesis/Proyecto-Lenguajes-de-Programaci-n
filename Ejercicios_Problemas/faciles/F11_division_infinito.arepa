@@ -1,0 +1,17 @@
+# F11 - Division y modulo por cero sin error
+# La division entre cero produce infinito con signo; 0/0 y el modulo
+# entre cero producen nada (indefinido). Nada tumba el programa.
+
+quihubo
+a = 1 / 0
+b = -1 / 0
+c = 0 / 0
+d = 5 % 0
+e = 0 ^ -1
+cuenteme "1/0:", a
+cuenteme "-1/0:", b
+cuenteme "0/0:", c
+cuenteme "5%0:", d
+cuenteme "0^-1:", e
+cuenteme "2 + 2:", 2 + 2
+chao

@@ -5,21 +5,36 @@ Implementado por el equipo. Cada operador del DSL es una función propia
 que valida tipos con el sistema propio (datos.tipos) y decide qué hacer
 con el valor faltante 'nada'.
 
-Reglas semánticas decididas por el equipo:
-  * 'nada' se propaga: cualquier operación aritmética o comparación con
-    'nada' produce 'nada' (estilo SQL);
-  * los operadores lógicos exigen valores lógicos (obvio/falso) o 'nada',
-    que también se propaga;
-  * una comparación entre numero y texto lanza ErrorTipos (no hay
-    coerción silenciosa);
-  * dividir o sacar módulo entre cero lanza ErrorOperacion.
+ Reglas semánticas decididas por el equipo:
+   * 'nada' se propaga: cualquier operación aritmética o comparación con
+     'nada' produce 'nada' (estilo SQL);
+   * los operadores lógicos exigen valores lógicos (obvio/falso) o 'nada',
+     que también se propaga;
+   * una comparación entre numero y texto lanza ErrorTipos (no hay
+     coerción silenciosa);
+   * dividir entre cero NO es error: 1/0 produce 'infinito', -1/0
+     produce '-infinito' y 0/0 produce 'nada' (indefinido);
+   * el módulo entre cero NO es error: produce 'nada' (indefinido);
+   * el indefinido punto flotante ('nan', p. ej. infinito + (-infinito))
+     se vuelve 'nada' en aritmética y desviación;
+   * la potencia que desborda produce 'infinito' (con su signo); solo
+     sigue siendo error el resultado complejo (p. ej. (-1) ^ 0.5).
 
 Limitaciones:
   * no hay coerción numero<->texto en '+' (la concatenación no existe en
     el DSL a propósito: el catálogo no la define).
 """
 
-from datos.tipos import NADA, es_nada, es_numero, es_texto, es_logico, nombre_tipo
+from datos.tipos import (
+    INFINITO,
+    MENOS_INFINITO,
+    NADA,
+    es_nada,
+    es_numero,
+    es_texto,
+    es_logico,
+    nombre_tipo,
+)
 from errores_base import ErrorOperacion, ErrorTipos
 
 
@@ -37,25 +52,36 @@ def _propagar_nada(a, b):
     return es_nada(a) or es_nada(b)
 
 
+def _sin_nan(valor):
+    """Regla propia: el indefinido punto flotante ('nan') se vuelve 'nada'.
+
+    Así combinaciones como infinito + (-infinito) no tumban el programa
+    ni muestran 'nan': producen el faltante del DSL.
+    """
+    if isinstance(valor, float) and valor != valor:
+        return NADA
+    return valor
+
+
 def sumar(a, b):
     if _propagar_nada(a, b):
         return NADA
     _exigir_numeros(a, b, "+")
-    return a + b
+    return _sin_nan(a + b)
 
 
 def restar(a, b):
     if _propagar_nada(a, b):
         return NADA
     _exigir_numeros(a, b, "-")
-    return a - b
+    return _sin_nan(a - b)
 
 
 def multiplicar(a, b):
     if _propagar_nada(a, b):
         return NADA
     _exigir_numeros(a, b, "*")
-    return a * b
+    return _sin_nan(a * b)
 
 
 def dividir(a, b):
@@ -63,8 +89,10 @@ def dividir(a, b):
         return NADA
     _exigir_numeros(a, b, "/")
     if b == 0:
-        raise ErrorOperacion("No se puede dividir entre cero.")
-    return a / b
+        if a == 0:
+            return NADA
+        return INFINITO if a > 0 else MENOS_INFINITO
+    return _sin_nan(a / b)
 
 
 def modulo(a, b):
@@ -72,8 +100,8 @@ def modulo(a, b):
         return NADA
     _exigir_numeros(a, b, "%")
     if b == 0:
-        raise ErrorOperacion("No se puede calcular el módulo entre cero.")
-    return a % b
+        return NADA
+    return _sin_nan(a % b)
 
 
 def potenciar(a, b):
@@ -81,11 +109,30 @@ def potenciar(a, b):
         return NADA
     _exigir_numeros(a, b, "^")
     try:
-        return a ** b
-    except (OverflowError, ZeroDivisionError):
+        resultado = a ** b
+    except ZeroDivisionError:
+        return INFINITO
+    except OverflowError:
+        return _infinito_con_signo(a, b)
+    if isinstance(resultado, complex):
         raise ErrorOperacion(
-            "La potencia {0} ^ {1} no se puede calcular.".format(a, b)
+            "La potencia {0} ^ {1} no tiene resultado real.".format(a, b)
         )
+    if resultado == INFINITO:
+        return INFINITO
+    if resultado == MENOS_INFINITO:
+        return MENOS_INFINITO
+    return _sin_nan(resultado)
+
+
+def _infinito_con_signo(base, expo):
+    """Infinito con el signo que tendría el resultado desbordado."""
+    try:
+        if base < 0 and float(expo).is_integer() and int(expo) % 2 == 1:
+            return MENOS_INFINITO
+    except (TypeError, ValueError):
+        pass
+    return INFINITO
 
 
 def negar_numero(v):
