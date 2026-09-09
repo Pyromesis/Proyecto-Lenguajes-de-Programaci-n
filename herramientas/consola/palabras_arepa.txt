@@ -1,0 +1,55 @@
+# Palabras reservadas de AREPA para autocompletado en consola.
+# Fuente: gramatica/Arepa.g4 (tokens del lexer). Una por línea.
+# Uso con vim: setlocal dictionary+=<ruta>/palabras_arepa.txt
+# Uso con el REPL: src/cli/repl.py las carga para completar con Tab.
+quihubo
+chao
+monte
+guarde
+como
+con
+encabezado
+separador
+escoja
+deje
+donde
+acomode
+por
+pa_arriba
+pa_abajo
+cree
+renombre
+limpie
+duplicados
+vacios
+convierta
+junte
+resuma
+numero
+texto
+logico
+fecha
+pinte
+barras
+lineas
+histograma
+dispersion
+cajas
+titulo
+ejex
+ejey
+leyenda
+guardela
+muestrela
+invente
+devuelva
+fijese_si
+sino
+cuenteme
+describa
+obvio
+falso
+nada
+y
+o
+no
