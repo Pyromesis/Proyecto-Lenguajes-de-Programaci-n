@@ -1,0 +1,14 @@
+# M19 - Funcion aprueba examen con logico
+# Medio: >= decide entre obvio y falso.
+
+quihubo
+invente aprueba(nota) {
+    fijese_si (nota >= 60) {
+        devuelva obvio
+    } sino {
+        devuelva falso
+    }
+}
+cuenteme "nota 75:", aprueba(75)
+cuenteme "nota 40:", aprueba(40)
+chao

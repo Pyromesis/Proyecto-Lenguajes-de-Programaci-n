@@ -1,0 +1,18 @@
+# D24 - Cociente y resto por restas sucesivas
+# Dificil: dividir sin usar / : cuantas veces cabe b en a, y que sobra.
+
+quihubo
+invente cociente(a, b) {
+    fijese_si (a < b) {
+        devuelva 0
+    } sino {
+        devuelva 1 + cociente(a - b, b)
+    }
+}
+invente resto(a, b) {
+    devuelva a - b * cociente(a, b)
+}
+cuenteme "17 / 5 cabe:", cociente(17, 5)
+cuenteme "17 % 5 sobra:", resto(17, 5)
+cuenteme "20 / 4 cabe:", cociente(20, 4)
+chao

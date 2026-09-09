@@ -1,0 +1,16 @@
+# M23 - Funcion logica usada en filtro deje
+# Medio: la llamada se evalua por fila dentro del pipeline.
+
+quihubo
+invente caro(p) {
+    fijese_si (p > 3500) {
+        devuelva obvio
+    } sino {
+        devuelva falso
+    }
+}
+ventas = monte "datos/ventas.csv" con encabezado
+caras = ventas |> deje donde caro(precio)
+cuenteme "tablas caras listas"
+describa caras
+chao

@@ -1,0 +1,20 @@
+# D23 - Contador con closure que escribe el entorno global
+# Dificil: la asignacion dentro de la funcion actualiza la variable
+# capturada (no crea copia); reiniciar la pone en cero.
+
+quihubo
+total = 0
+invente contar() {
+    total = total + 1
+    devuelva total
+}
+invente reiniciar() {
+    total = 0
+    devuelva total
+}
+cuenteme "c1:", contar()
+cuenteme "c2:", contar()
+cuenteme "c3:", contar()
+cuenteme "reinicio:", reiniciar()
+cuenteme "c4:", contar()
+chao

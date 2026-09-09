@@ -1,0 +1,14 @@
+# D20 - Suma de digitos recursiva
+# Dificil: n % 10 separa la ultima cifra; la division exacta la quita.
+
+quihubo
+invente suma_digitos(n) {
+    fijese_si (n < 10) {
+        devuelva n
+    } sino {
+        devuelva (n % 10) + suma_digitos((n - n % 10) / 10)
+    }
+}
+cuenteme "digitos de 47:", suma_digitos(47)
+cuenteme "digitos de 123:", suma_digitos(123)
+chao

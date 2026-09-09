@@ -1,0 +1,14 @@
+# D21 - Doble factorial recursivo
+# Dificil: baja de 2 en 2 (n!! = n * (n - 2) * ... hasta 1).
+
+quihubo
+invente dfactorial(n) {
+    fijese_si (n <= 1) {
+        devuelva 1
+    } sino {
+        devuelva n * dfactorial(n - 2)
+    }
+}
+cuenteme "7!!:", dfactorial(7)
+cuenteme "8!!:", dfactorial(8)
+chao

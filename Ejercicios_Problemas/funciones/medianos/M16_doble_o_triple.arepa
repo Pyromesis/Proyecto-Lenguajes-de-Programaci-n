@@ -1,0 +1,14 @@
+# M16 - Funcion que elige multiplicador con condicional
+# Medio: la rama decide si duplica o triplica.
+
+quihubo
+invente elige_mult(n) {
+    fijese_si (n > 100) {
+        devuelva n * 2
+    } sino {
+        devuelva n * 3
+    }
+}
+cuenteme "150:", elige_mult(150)
+cuenteme "40:", elige_mult(40)
+chao

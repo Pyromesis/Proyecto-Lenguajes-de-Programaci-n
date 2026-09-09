@@ -1,0 +1,10 @@
+# F21 - Funcion doble mas uno
+# Facil: multiplicacion y suma en una expresion.
+
+quihubo
+invente doble_mas_uno(valor) {
+    devuelva valor * 2 + 1
+}
+cuenteme "de 5:", doble_mas_uno(5)
+cuenteme "de 0:", doble_mas_uno(0)
+chao

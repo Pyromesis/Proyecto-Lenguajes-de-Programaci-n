@@ -1,0 +1,10 @@
+# M25 - Funcion promedio ponderado con decimales
+# Medio: dos parametros con pesos 0.4 y 0.6.
+
+quihubo
+invente ponderado(n1, n2) {
+    devuelva n1 * 0.4 + n2 * 0.6
+}
+cuenteme "80 y 90:", ponderado(80, 90)
+cuenteme "50 y 70:", ponderado(50, 70)
+chao

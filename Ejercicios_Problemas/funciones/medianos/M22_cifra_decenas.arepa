@@ -1,0 +1,10 @@
+# M22 - Funcion cifra de las decenas
+# Medio: modulo para quitar unidades y division exacta.
+
+quihubo
+invente decenas(n) {
+    devuelva (n - n % 10) / 10
+}
+cuenteme "decenas de 47:", decenas(47)
+cuenteme "decenas de 5:", decenas(5)
+chao

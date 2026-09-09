@@ -1,0 +1,10 @@
+# F20 - Funcion suma de cuadrados
+# Facil: dos parametros multiplicados por si mismos.
+
+quihubo
+invente suma_cuadrados(a, b) {
+    devuelva a * a + b * b
+}
+cuenteme "3 y 4:", suma_cuadrados(3, 4)
+cuenteme "1 y 2:", suma_cuadrados(1, 2)
+chao

@@ -1,0 +1,10 @@
+# F17 - Funcion perimetro de un cuadrado
+# Facil: un parametro multiplicado por 4.
+
+quihubo
+invente perimetro(lado) {
+    devuelva lado * 4
+}
+cuenteme "perimetro lado 5:", perimetro(5)
+cuenteme "perimetro lado 2.5:", perimetro(2.5)
+chao

@@ -1,0 +1,17 @@
+# D16 - MCM usando MCD anidado
+# Dificil: invente dentro de funcion + mcm(a, b) = a * b / mcd(a, b).
+
+quihubo
+invente mcm(a, b) {
+    invente mcd(p, q) {
+        fijese_si (q == 0) {
+            devuelva p
+        } sino {
+            devuelva mcd(q, p % q)
+        }
+    }
+    devuelva (a * b) / mcd(a, b)
+}
+cuenteme "mcm 12 y 18:", mcm(12, 18)
+cuenteme "mcm 7 y 5:", mcm(7, 5)
+chao

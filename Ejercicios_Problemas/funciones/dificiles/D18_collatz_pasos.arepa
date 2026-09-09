@@ -1,0 +1,16 @@
+# D18 - Pasos de Collatz recursivos
+# Dificil: par sigue n / 2, impar sigue 3 * n + 1, hasta llegar a 1.
+
+quihubo
+invente pasos(n) {
+    fijese_si (n == 1) {
+        devuelva 0
+    } sino fijese_si (n % 2 == 0) {
+        devuelva 1 + pasos(n / 2)
+    } sino {
+        devuelva 1 + pasos(3 * n + 1)
+    }
+}
+cuenteme "pasos del 6:", pasos(6)
+cuenteme "pasos del 1:", pasos(1)
+chao

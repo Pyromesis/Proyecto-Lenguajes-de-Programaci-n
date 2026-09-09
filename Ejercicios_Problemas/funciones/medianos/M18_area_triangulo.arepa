@@ -1,0 +1,10 @@
+# M18 - Funcion area de triangulo
+# Medio: dos parametros, multiplicacion y division.
+
+quihubo
+invente area_triangulo(base, altura) {
+    devuelva base * altura / 2
+}
+cuenteme "area 10x4:", area_triangulo(10, 4)
+cuenteme "area 5x3:", area_triangulo(5, 3)
+chao

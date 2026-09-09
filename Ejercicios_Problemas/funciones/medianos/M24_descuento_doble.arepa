@@ -1,0 +1,17 @@
+# M24 - Funcion descuento aplicado dos veces
+# Medio: componer una funcion con condicional consigo misma.
+
+quihubo
+invente con_descuento(precio) {
+    fijese_si (precio > 100000) {
+        devuelva precio * 0.9
+    } sino {
+        devuelva precio
+    }
+}
+invente con_doble_descuento(precio) {
+    devuelva con_descuento(con_descuento(precio))
+}
+cuenteme "doble en 200000:", con_doble_descuento(200000)
+cuenteme "doble en 50000:", con_doble_descuento(50000)
+chao

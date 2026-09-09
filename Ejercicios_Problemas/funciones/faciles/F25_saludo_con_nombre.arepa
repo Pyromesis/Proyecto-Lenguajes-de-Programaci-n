@@ -1,0 +1,10 @@
+# F25 - Funcion saludo con nombre
+# Facil: cuenteme con texto fijo + parametro (dos argumentos).
+
+quihubo
+invente saludar(nombre) {
+    cuenteme "Hola,", nombre
+}
+saludar("Luisa")
+saludar("Carlos")
+chao

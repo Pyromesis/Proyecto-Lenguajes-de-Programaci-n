@@ -1,0 +1,15 @@
+# M20 - Funcion multiplo de seis con y y modulo
+# Medio: los dos restos deben ser cero a la vez.
+
+quihubo
+invente multiplo6(n) {
+    fijese_si (n % 2 == 0 y n % 3 == 0) {
+        devuelva "multiplo de 6"
+    } sino {
+        devuelva "otro"
+    }
+}
+cuenteme multiplo6(12)
+cuenteme multiplo6(10)
+cuenteme multiplo6(9)
+chao

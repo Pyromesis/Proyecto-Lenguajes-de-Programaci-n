@@ -1,0 +1,10 @@
+# F18 - Funcion celsius a fahrenheit
+# Facil: combina multiplicacion, division y suma.
+
+quihubo
+invente fahrenheit(c) {
+    devuelva c * 9 / 5 + 32
+}
+cuenteme "0 C:", fahrenheit(0)
+cuenteme "100 C:", fahrenheit(100)
+chao

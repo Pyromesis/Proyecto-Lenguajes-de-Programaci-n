@@ -1,0 +1,10 @@
+# F16 - Funcion mitad de un numero
+# Facil: division por 2.
+
+quihubo
+invente mitad(valor) {
+    devuelva valor / 2
+}
+cuenteme "mitad de 10:", mitad(10)
+cuenteme "mitad de 7:", mitad(7)
+chao

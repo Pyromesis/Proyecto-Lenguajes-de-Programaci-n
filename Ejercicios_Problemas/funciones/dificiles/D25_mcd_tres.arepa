@@ -1,0 +1,17 @@
+# D25 - MCD de tres numeros reutilizando mcd
+# Dificil: mcd3(a, b, c) = mcd(mcd(a, b), c).
+
+quihubo
+invente mcd(a, b) {
+    fijese_si (b == 0) {
+        devuelva a
+    } sino {
+        devuelva mcd(b, a % b)
+    }
+}
+invente mcd3(a, b, c) {
+    devuelva mcd(mcd(a, b), c)
+}
+cuenteme "mcd 48, 18 y 30:", mcd3(48, 18, 30)
+cuenteme "mcd 20, 12 y 8:", mcd3(20, 12, 8)
+chao

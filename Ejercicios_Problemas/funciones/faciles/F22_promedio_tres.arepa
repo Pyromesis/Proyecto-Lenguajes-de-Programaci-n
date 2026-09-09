@@ -1,0 +1,10 @@
+# F22 - Funcion promedio de tres numeros
+# Facil: parentesis + division por 3.
+
+quihubo
+invente promedio_tres(a, b, c) {
+    devuelva (a + b + c) / 3
+}
+cuenteme "10, 20 y 30:", promedio_tres(10, 20, 30)
+cuenteme "9, 10 y 11:", promedio_tres(9, 10, 11)
+chao

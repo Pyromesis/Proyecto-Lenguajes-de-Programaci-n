@@ -1,0 +1,10 @@
+# F23 - Funcion cuarta potencia
+# Facil: operador ^ con exponente 4.
+
+quihubo
+invente cuarta(n) {
+    devuelva n ^ 4
+}
+cuenteme "cuarta de 2:", cuarta(2)
+cuenteme "cuarta de 3:", cuarta(3)
+chao

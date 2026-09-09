@@ -1,0 +1,16 @@
+# D17 - Suma de pares hasta n recursiva
+# Dificil: el condicional decide si el numero suma o se salta.
+
+quihubo
+invente suma_pares(n) {
+    fijese_si (n <= 0) {
+        devuelva 0
+    } sino fijese_si (n % 2 == 0) {
+        devuelva n + suma_pares(n - 1)
+    } sino {
+        devuelva suma_pares(n - 1)
+    }
+}
+cuenteme "pares hasta 10:", suma_pares(10)
+cuenteme "pares hasta 7:", suma_pares(7)
+chao

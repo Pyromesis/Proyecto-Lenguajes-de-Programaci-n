@@ -1,0 +1,17 @@
+# M21 - Funcion clima segun temperatura
+# Medio: dos umbrales con sino encadenado.
+
+quihubo
+invente clima(t) {
+    fijese_si (t < 10) {
+        devuelva "frio"
+    } sino fijese_si (t < 25) {
+        devuelva "templado"
+    } sino {
+        devuelva "calor"
+    }
+}
+cuenteme clima(5)
+cuenteme clima(18)
+cuenteme clima(30)
+chao

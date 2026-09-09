@@ -1,0 +1,14 @@
+# F19 - Funcion es cero con comparacion
+# Facil: == devuelve obvio o falso.
+
+quihubo
+invente es_cero(n) {
+    fijese_si (n == 0) {
+        devuelva obvio
+    } sino {
+        devuelva falso
+    }
+}
+cuenteme "0 es cero:", es_cero(0)
+cuenteme "8 es cero:", es_cero(8)
+chao

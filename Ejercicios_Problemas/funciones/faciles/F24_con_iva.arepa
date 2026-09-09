@@ -1,0 +1,10 @@
+# F24 - Funcion precio con IVA
+# Facil: multiplicacion por decimal 1.19.
+
+quihubo
+invente con_iva(precio) {
+    devuelva precio * 1.19
+}
+cuenteme "iva de 100:", con_iva(100)
+cuenteme "iva de 2500:", con_iva(2500)
+chao

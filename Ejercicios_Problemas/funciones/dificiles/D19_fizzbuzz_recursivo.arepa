@@ -1,0 +1,23 @@
+# D19 - FizzBuzz ascendente con recursion y efecto
+# Dificil: primero baja hasta 0 y al volver imprime fizz, buzz o el numero;
+# el resto contra 15, 3 y 5 decide cada linea.
+
+quihubo
+invente fizzbuzz(n) {
+    fijese_si (n <= 0) {
+        cuenteme "inicio"
+    } sino {
+        fizzbuzz(n - 1)
+        fijese_si (n % 15 == 0) {
+            cuenteme "fizzbuzz"
+        } sino fijese_si (n % 3 == 0) {
+            cuenteme "fizz"
+        } sino fijese_si (n % 5 == 0) {
+            cuenteme "buzz"
+        } sino {
+            cuenteme n
+        }
+    }
+}
+fizzbuzz(16)
+chao

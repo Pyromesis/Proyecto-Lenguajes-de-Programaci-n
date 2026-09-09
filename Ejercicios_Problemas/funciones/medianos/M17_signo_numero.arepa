@@ -1,0 +1,17 @@
+# M17 - Funcion signo de un numero con texto
+# Medio: sino encadenado con tres ramas.
+
+quihubo
+invente signo(n) {
+    fijese_si (n > 0) {
+        devuelva "positivo"
+    } sino fijese_si (n == 0) {
+        devuelva "cero"
+    } sino {
+        devuelva "negativo"
+    }
+}
+cuenteme signo(8)
+cuenteme signo(0)
+cuenteme signo(-5)
+chao
