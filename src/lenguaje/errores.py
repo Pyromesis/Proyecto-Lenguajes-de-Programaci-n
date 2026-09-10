@@ -81,6 +81,14 @@ RESERVADAS = {
     "obvio": "el literal verdadero 'obvio'",
     "falso": "el literal 'falso'",
     "nada": "el literal 'nada'",
+    "mientras": "la palabra de ciclo 'mientras'",
+    "repita": "la palabra de ciclo 'repita'",
+    "veces": "la palabra de ciclo 'veces'",
+    "desde": "la palabra de ciclo 'desde'",
+    "hasta": "la palabra de ciclo 'hasta'",
+    "paso": "la palabra de ciclo 'paso'",
+    "pare": "la instrucción 'pare' (rompe el ciclo)",
+    "siga": "la instrucción 'siga' (sigue a la próxima vuelta)",
 }
 
 

@@ -1,7 +1,7 @@
 # Autocompletado de AREPA en consola (Linux, sin internet ni plugins)
 
 Tres herramientas, todas con `Tab`. Palabras tomadas de `gramatica/Arepa.g4`
-(51 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
+(59 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
 
 | Archivo | Qué es |
 |---|---|
@@ -41,7 +41,7 @@ Ejemplos (modo inserción):
 Plantillas (modo normal):
 
 ```vim
-:ArepaPlantilla <Tab>     " lista: base monte tuberia resumen pinte funcion fijese
+:ArepaPlantilla <Tab>     " lista: base monte tuberia resumen pinte funcion fijese ciclo
 :ArepaPlantilla tuberia   " inserta el bloque |> escoja/deje/cree
 ```
 

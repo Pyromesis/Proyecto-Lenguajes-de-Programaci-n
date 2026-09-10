@@ -1,0 +1,6 @@
+# n20 - 'repita desde' sin 'hasta': el rango queda incompleto.
+quihubo
+repita i desde 1 {
+    cuenteme i
+}
+chao

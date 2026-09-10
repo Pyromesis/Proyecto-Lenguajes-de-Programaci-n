@@ -217,6 +217,13 @@ un visitor propio.
   que pide revisar el caso base.
 * **Condicionales**: `fijese_si` exige condición lógica (`nada` es
   error); `sino` encadena con otro `fijese_si` o un bloque.
+* **Ciclos**: `mientras` reevalúa la condición (lógica, `nada` es error)
+  en cada vuelta; `repita N veces` evalúa el conteo una vez (entero ≥
+  0); `repita i desde A hasta B (paso P)` cuenta con `i` inclusive
+  (paso 1/-1 por defecto, 0 prohibido). `pare`/`siga` viajan como
+  señales internas (`SalirCiclo`/`SeguirCiclo`, como `RetornoFuncion`);
+  fuera de un ciclo son error semántico. Tope de 1 000 000 de vueltas
+  con mensaje en español en vez de colgarse.
 * **`pinte`**: valida que la tabla exista y que las columnas de
   `ejex`/`ejey` existan (valor semántico real en Fase 1) y avisa que la
   imagen llega en la Fase 3.
@@ -250,19 +257,21 @@ del dato sí es exacta.
 
 | Suite | Archivo | Pruebas |
 |---|---|---|
-| Front-end (léxico y sintáctico) | `test_front.py` | 43 |
-| Estructura del árbol de análisis | `test_arbol.py` | 19 |
-| Biblioteca propia de datos | `test_datos.py` | 42 |
-| Evaluador de expresiones propio | `test_expresiones.py` | 14 |
+| Front-end (léxico y sintáctico) | `test_front.py` | 48 |
+| Estructura del árbol de análisis | `test_arbol.py` | 21 |
+| Biblioteca propia de datos | `test_datos.py` | 43 |
+| Evaluador de expresiones propio | `test_expresiones.py` | 16 |
 | Tabla de símbolos y contexto propios | `test_simbolos.py` | 15 |
-| Runtime propio (programas completos) | `test_runtime.py` | 28 |
+| Runtime propio (programas completos) | `test_runtime.py` | 51 |
 
-Total: **161 pruebas**. Las 43 de front-end desglosan en: 8 programas
-positivos, 17 negativos, 10 de diagnóstico (línea/columna exactas,
-robustez, comentarios, números incompletos y ausencia de duplicados) y 8
-de CLI. Las 19 de árbol verifican la estructura jerárquica y la
-precedencia recorriendo el árbol programáticamente. Ninguna prueba usa
-bibliotecas externas para el trabajo que se prueba.
+Total: **194 pruebas**. Las 48 de front-end desglosan en: 9 programas
+positivos, 20 negativos, 10 de diagnóstico (línea/columna exactas,
+robustez, comentarios, números incompletos y ausencia de duplicados) y 9
+de CLI. Las 21 de árbol verifican la estructura jerárquica y la
+precedencia recorriendo el árbol programáticamente. Las 51 de runtime
+incluyen 19 de ciclos (`mientras`, `repita`, `pare`/`siga`) y 1 de
+columnas con nombre reservado (D5). Ninguna
+prueba usa bibliotecas externas para el trabajo que se prueba.
 
 ### Matriz de cobertura del primer corte
 
@@ -277,8 +286,8 @@ bibliotecas externas para el trabajo que se prueba.
 | Selección de columnas | `03` + `test_arbol.py::arbol_de_seleccion` | `n04_corchete_sin_cerrar` | OK |
 | Filtros (`deje donde`) | `03` + `test_arbol.py::arbol_de_filtro` | `n05_deje_sin_donde` | OK |
 | Visualización (solo sintáctica) | `05_graficas.arepa` + `test_arbol.py::arbol_de_visualizacion` | `n09_pinte_tipo_invalido`, `n13_pinte_sin_tabla` | OK |
-| Árbol de análisis | `test_arbol.py` (15 casos) + CLI `--arbol` | — (siempre generable) | OK |
-| Errores con línea y columna | `test_front.py` sección diagnóstico (10) | los 17 negativos validan posición | OK |
+| Árbol de análisis | `test_arbol.py` (21 casos) + CLI `--arbol` | — (siempre generable) | OK |
+| Errores con línea y columna | `test_front.py` sección diagnóstico (10) | los 20 negativos validan posición | OK |
 | Tokens (`--tokens`) | `test_front.py` CLI | — | OK |
 | Comentarios | `08_casos_borde.arepa` (entre sentencias) | — (siempre válidos) | OK |
 | Identificadores (tildes, ñ) | `08_casos_borde.arepa` | `n10_identificador_invalido` | OK |
@@ -287,7 +296,7 @@ bibliotecas externas para el trabajo que se prueba.
 | Números (enteros/decimales) | `01` (`15000.5`) | `test_expresiones.py` (`.5` y `3.` fallan) | OK |
 | Booleanos (`obvio`/`falso`) | `01` | `test_expresiones.py::logico_con_numero_rechazado` | OK |
 | Condicionales y funciones (sintaxis) | `06_funciones_condicional.arepa` | `n07_fijese_sin_parentesis` | OK |
-| CLI (códigos 0/1/2, `--arbol`, `--tokens`) | `test_front.py` CLI (7) | código 1 y 2 verificados | OK |
+| CLI (códigos 0/1/2, `--arbol`, `--tokens`) | `test_front.py` CLI (8) | código 1 y 2 verificados | OK |
 
 ---
 
@@ -322,7 +331,7 @@ implementada, con su prueba asociada.
 | Inserción de fila | `datos/tabla.py` | `Tabla.insertar_fila` | `test_datos.py::tabla_insertar_fila_al_final_y_en_posicion` |
 | Eliminación de fila | `datos/tabla.py` | `Tabla.eliminar_fila` | `test_datos.py::tabla_eliminar_fila_por_posicion` |
 | Inserción de columna | `datos/tabla.py` | `Tabla.insertar_columna` / `Tabla.crear_columna` | `test_datos.py::tabla_insertar_columna_con_valores` |
-| Eliminación de columna | `datos/tabla.py` | `Tabla.eliminar_columna` | (usada por operaciones de Fase 2) |
+| Eliminación de columna | `datos/tabla.py` | `Tabla.eliminar_columna` | `test_datos.py::tabla_eliminar_columna` |
 | Copia | `datos/tabla.py` | `Tabla.copiar` | `test_runtime.py::pipeline_completo_con_cree` |
 | Representación legible | `datos/tabla.py` | `Tabla.texto_tabla` | `test_datos.py::tabla_texto_formato_propio` |
 | Ordenamiento propio | `datos/tabla.py` | `Tabla.ordenar` (merge sort) | `test_datos.py::tabla_ordenamiento_estable_por_dos_claves` |
@@ -355,7 +364,8 @@ implementada, con su prueba asociada.
 | Agrupamiento y agregaciones propias | `runtime/ejecutor.py` | `_ejecutar_resuma`, `_calcular_agregacion` | `test_runtime.py::junte_resuma_agregaciones` |
 | Guardado (`guarde`) | `runtime/ejecutor.py` | `visitInstruccion_guarde` → `EscritorCSV` | `test_runtime.py::guarde_escribe_csv_legible` |
 | Reconocimiento de visualización | `runtime/ejecutor.py` | `visitInstruccion_grafica` (valida, no dibuja) | `test_runtime.py::pinte_valida_columnas_de_la_grafica` |
-| Diagnóstico léxico/sintáctico | `lenguaje/errores.py` | `ErroresArepa`, `_traducir` | `test_front.py` (13 negativas) |
+| Diagnóstico léxico/sintáctico | `lenguaje/errores.py` | `ErroresArepa`, `_traducir` | `test_front.py` (20 negativas) |
 | Árbol de análisis | `lenguaje/arbol.py` | `imprimir_arbol` | `test_front.py` (CLI `--arbol`) |
 | Errores semánticos y de ejecución | `errores_base.py` | jerarquía `ErrorArepa` | `test_simbolos.py::contexto_registra_errores` |
-| Integración DSL → árbol → biblioteca propia | `runtime/ejecutor.py` | flujo completo | `test_runtime.py` (28 casos) |
+| Integración DSL → árbol → biblioteca propia | `runtime/ejecutor.py` | flujo completo | `test_runtime.py` (48 casos) |
+| Ciclos `mientras`/`repita` | `runtime/ejecutor.py` | `visitCiclo_mientras`, `visitCiclo_repita`, `visitInstruccion_pare/siga` | `test_runtime.py` (19 casos de ciclos) + `09_ciclos.arepa`, `n18`, `n19`, `n20` |

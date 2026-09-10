@@ -50,6 +50,10 @@ sentencia
     | instruccion_guarde
     | instruccion_grafica
     | condicional
+    | ciclo_mientras
+    | ciclo_repita
+    | instruccion_pare
+    | instruccion_siga
     | definicion_funcion
     | instruccion_devolver
     | instruccion_cuenteme
@@ -102,6 +106,30 @@ parametros
 condicional
     : FIJESE_SI NL* PAREN_I NL* expresion_logica NL* PAREN_D NL* bloque
       (SINO NL* (condicional | bloque))?
+    ;
+
+// --- Ciclos -----------------------------------------------------------------
+// "mientras" repite mientras la condición sea obvio.
+// "repita N veces" repite N vueltas; "repita i desde A hasta B (paso P)"
+// cuenta con la variable i (inclusive en ambos extremos).
+// "pare" rompe el ciclo más cercano; "siga" salta a la siguiente vuelta.
+
+ciclo_mientras
+    : MIENTRAS NL* PAREN_I NL* expresion_logica NL* PAREN_D NL* bloque
+    ;
+
+ciclo_repita
+    : REPITA NL* expresion_logica NL* VECES NL* bloque
+    | REPITA NL* identificador NL* DESDE NL* expresion_logica NL* HASTA
+      NL* expresion_logica (NL* PASO NL* expresion_logica)? NL* bloque
+    ;
+
+instruccion_pare
+    : PARE
+    ;
+
+instruccion_siga
+    : SIGA
     ;
 
 bloque
@@ -288,6 +316,7 @@ nombre_columna
     | PINTE | BARRAS | LINEAS | HISTOGRAMA | DISPERSION | CAJAS | TITULO
     | EJEX | EJEY | LEYENDA | GUARDELA | MUESTRELA
     | INVENTE | DEVUELVA | FIJESE_SI | SINO | CUENTEME | DESCRIBA
+    | MIENTRAS | REPITA | VECES | DESDE | HASTA | PASO | PARE | SIGA
     | OBVIO | FALSO | NADA | Y | O | NO
     ;
 
@@ -360,6 +389,17 @@ FIJESE_SI  : 'fijese_si' ;   // condicional
 SINO       : 'sino' ;
 CUENTEME   : 'cuenteme' ;    // imprime/muestra valores
 DESCRIBA   : 'describa' ;    // resumen estadístico de una tabla
+
+// --- Ciclos ------------------------------------------------------------------
+
+MIENTRAS   : 'mientras' ;    // repite mientras la condición sea obvio
+REPITA     : 'repita' ;      // repite N veces o cuenta desde/hasta
+VECES      : 'veces' ;
+DESDE      : 'desde' ;
+HASTA      : 'hasta' ;
+PASO       : 'paso' ;
+PARE       : 'pare' ;        // rompe el ciclo más cercano
+SIGA       : 'siga' ;        // salta a la siguiente vuelta del ciclo
 
 // --- Literales especiales ---------------------------------------------------------
 

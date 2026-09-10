@@ -23,7 +23,8 @@ let s:palabras = ['quihubo', 'chao', 'monte', 'guarde', 'como', 'con',
       \ 'texto', 'logico', 'fecha', 'pinte', 'barras', 'lineas',
       \ 'histograma', 'dispersion', 'cajas', 'titulo', 'ejex', 'ejey',
       \ 'leyenda', 'guardela', 'muestrela', 'invente', 'devuelva',
-      \ 'fijese_si', 'sino', 'cuenteme', 'describa', 'obvio', 'falso',
+      \ 'fijese_si', 'sino', 'cuenteme', 'describa', 'mientras', 'repita',
+      \ 'veces', 'desde', 'hasta', 'paso', 'pare', 'siga', 'obvio', 'falso',
       \ 'nada', 'y', 'o', 'no', '|>', '->', '==', '!=', '<=', '>=']
 
 " Si el diccionario está junto a este archivo, también se usa (Ctrl-N).
@@ -59,7 +60,7 @@ if has("syntax")
   syntax keyword arepaTrans cree renombre limpie duplicados vacios convierta junte resuma
   syntax keyword arepaTipos numero texto logico fecha
   syntax keyword arepaGraf pinte barras lineas histograma dispersion cajas titulo ejex ejey leyenda guardela muestrela
-  syntax keyword arepaControl invente devuelva fijese_si sino cuenteme describa
+  syntax keyword arepaControl invente devuelva fijese_si sino cuenteme describa mientras repita veces desde hasta paso pare siga
   syntax keyword arepaBool obvio falso nada y o no
   highlight default link arepaEstructura Structure
   highlight default link arepaDatos Keyword
@@ -174,6 +175,9 @@ let g:arepa_plantillas = {
       \            '} sino {',
       \            '    cuenteme "cero o menos"',
       \            '}'],
+      \ 'ciclo': ['mientras (x > 0) {',
+      \           '    x = x - 1',
+      \           '}'],
       \ }
 
 function! ArepaListaPlantillas(A, L, P) abort

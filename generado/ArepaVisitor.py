@@ -69,6 +69,26 @@ class ArepaVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArepaParser#ciclo_mientras.
+    def visitCiclo_mientras(self, ctx:ArepaParser.Ciclo_mientrasContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#ciclo_repita.
+    def visitCiclo_repita(self, ctx:ArepaParser.Ciclo_repitaContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#instruccion_pare.
+    def visitInstruccion_pare(self, ctx:ArepaParser.Instruccion_pareContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#instruccion_siga.
+    def visitInstruccion_siga(self, ctx:ArepaParser.Instruccion_sigaContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArepaParser#bloque.
     def visitBloque(self, ctx:ArepaParser.BloqueContext):
         return self.visitChildren(ctx)

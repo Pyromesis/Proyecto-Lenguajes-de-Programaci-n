@@ -205,6 +205,33 @@ def arbol_de_pipeline_con_etapas():
     assert len(etapas) == 4
 
 
+@caso
+def arbol_de_mientras():
+    arbol, parser = arbol_de("quihubo\nmientras (x > 0) {\n x = x - 1\n}\nchao\n")
+    presentes = reglas_en(arbol, parser)
+    assert "ciclo_mientras" in presentes
+    ciclo = nodos_de(arbol, parser, "ciclo_mientras")[0]
+    assert "mientras" in hijos_terminal(ciclo)
+    assert "expresion_logica" in hijos_regla(ciclo, parser)
+    assert "bloque" in hijos_regla(ciclo, parser)
+
+
+@caso
+def arbol_de_repita():
+    arbol, parser = arbol_de(
+        "quihubo\nrepita 3 veces {\n x = 1\n}\n"
+        "repita i desde 1 hasta 4 paso 2 {\n z = i\n}\nchao\n"
+    )
+    ciclos = nodos_de(arbol, parser, "ciclo_repita")
+    assert len(ciclos) == 2
+    assert "veces" in hijos_terminal(ciclos[0])
+    assert "bloque" in hijos_regla(ciclos[0], parser)
+    terminales = hijos_terminal(ciclos[1])
+    for palabra in ("repita", "desde", "hasta", "paso"):
+        assert palabra in terminales
+    assert "identificador" in hijos_regla(ciclos[1], parser)
+
+
 # ---------------------------------------------------------------------- #
 # Casos: precedencia y asociatividad codificadas en la forma del árbol
 # ---------------------------------------------------------------------- #

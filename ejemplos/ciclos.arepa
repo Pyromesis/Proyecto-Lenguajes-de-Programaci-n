@@ -1,0 +1,53 @@
+# ciclos.arepa - ciclos repita/mientras con pare y siga.
+# Muestra las tres formas del ciclo y su uso junto al flujo de datos:
+# carga, acumulaciones iterativas, pipeline clásico y guardado.
+# Se valida con:  python src/cli/main.py ejemplos/ciclos.arepa
+# Se ejecuta con: python src/cli/main.py ejemplos/ciclos.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado, separador ","
+
+# 1. Factorial con mientras
+n = 5
+factorial = 1
+mientras (n > 1) {
+    factorial = factorial * n
+    n = n - 1
+}
+cuenteme "factorial de 5:", factorial
+
+# 2. Suma de pares del 1 al 20 con repita/siga
+suma_pares = 0
+repita i desde 1 hasta 20 {
+    fijese_si (i % 2 != 0) {
+        siga
+    }
+    suma_pares = suma_pares + i
+}
+cuenteme "suma de pares 1..20:", suma_pares
+
+# 3. Búsqueda con pare: primer múltiplo de 5 y 7 entre 1 y 100
+hallado = 0
+repita i desde 1 hasta 100 {
+    fijese_si (i % 5 == 0 y i % 7 == 0) {
+        hallado = i
+        pare
+    }
+}
+cuenteme "primer multiplo de 5 y 7:", hallado
+
+# 4. Flujo de datos clásico: pipeline + resumen + guardado
+limpias = ventas
+|> escoja [ciudad, unidades, precio]
+|> deje donde unidades > 0 y precio > 0
+|> cree total = unidades * precio
+
+resumen = limpias
+|> junte por [ciudad]
+|> resuma ingreso = sume(total), registros = cuente()
+
+describa resumen
+guarde resumen como "salidas/resumen_ciclos.csv"
+
+chao

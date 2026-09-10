@@ -62,7 +62,7 @@ chao
 * árbol de análisis legible (`--arbol`) y tabla de tokens (`--tokens`);
 * diagnóstico de errores léxicos y sintácticos en español con línea y
   columna;
-* CLI con códigos de salida 0/1/2 y 161 pruebas en 6 suites.
+* CLI con códigos de salida 0/1/2 y 194 pruebas en 6 suites.
 
 **Solamente sintáctico en esta fase:** `pinte` y `guardela`/`muestrela` se
 reconocen y se validan (tabla y columnas existentes) pero **no generan
@@ -145,13 +145,15 @@ python3 src/cli/main.py ejemplos/demo.arepa --tokens
 * **Visualización**: `pinte barras|lineas|histograma|dispersion|cajas`,
   cláusulas `titulo`, `ejex`, `ejey`, `leyenda` y cierre `guardela` /
   `muestrela`.
+* **Control**: `fijese_si` / `sino`, `mientras (cond)`, `repita N veces`,
+  `repita i desde A hasta B (paso P)`, `pare` (rompe), `siga` (sigue).
 * **Operadores**: `+ - * / % ^`, comparaciones `== != < <= > >=`, lógicos
   `y`, `o`, `no`, pipeline `|>`, flecha `->`, asignación `=`.
 * **Literales**: enteros (`42`), decimales (`3.14`), cadenas con escapes
   (`"dice \"hola\""`), booleanos (`obvio`/`falso`) y faltante (`nada`).
 * **Comentarios**: `#` hasta fin de línea, permitidos en cualquier posición.
 
-Lista completa: `docs/02_catalogo_instrucciones.md` (51 reservadas y 22
+Lista completa: `docs/02_catalogo_instrucciones.md` (59 reservadas y 22
 símbolos) y tabla de tokens con `--tokens`.
 
 ## Gramática
@@ -187,6 +189,15 @@ Alternativa con `antlr4-tools` (requiere Java 11+):
 antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 ```
 
+### Nota para Windows (no oficial)
+
+El entorno oficial es Linux. En Windows, con Java 11+ y el jar descargado,
+la misma regeneración funciona desde PowerShell:
+
+```powershell
+java -jar "$env:USERPROFILE/antlr/antlr-4.13.2-complete.jar" -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
+```
+
 El código generado vive en `generado/` y no se edita a mano.
 
 ## Árbol de análisis
@@ -216,9 +227,9 @@ Salida (extracto real):
 python3 pruebas/test_proyecto.py
 ```
 
-Ejecuta las 6 suites (161 pruebas): front-end (43: 8 positivos, 17
-negativos, 10 de diagnóstico, 8 de CLI), estructura del árbol (19), datos
-(42), expresiones (14), símbolos y contexto (15) y runtime (28). Cada
+Ejecuta las 6 suites (194 pruebas): front-end (48: 9 positivos, 20
+negativos, 10 de diagnóstico, 9 de CLI), estructura del árbol (21), datos
+(43), expresiones (16), símbolos y contexto (15) y runtime (51). Cada
 suite también corre sola, por ejemplo `python3 pruebas/test_front.py`.
 
 ## Errores (ejemplos reales)
@@ -252,7 +263,7 @@ proyecto/
 │   └── cli/main.py           CLI (validar y --ejecutar)
 ├── datos/                    CSV de ejemplo para los programas
 ├── ejemplos/                 demo + filtros + graficas + funciones
-├── pruebas/                  6 suites (161) + programas positivos/negativos
+├── pruebas/                  6 suites (194) + programas positivos/negativos
 ├── docs/                     alcance, catálogo, EBNF, informe, arquitectura
 ├── generar_gramatica.sh      regeneración en Linux
 └── requirements.txt          antlr4-python3-runtime==4.13.2
@@ -286,6 +297,7 @@ trazabilidad funcionalidad → archivo → función → prueba):
 | `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden |
 | `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) |
 | `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` |
+| `ejemplos/ciclos.arepa` | `mientras`, `repita`, `pare`/`siga` + flujo de datos |
 
 Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
 con `--ejecutar`.
@@ -297,5 +309,6 @@ con `--ejecutar`.
 * [Gramática BNF/EBNF](docs/03_gramatica_ebnf.md)
 * [Informe de la Fase 1](docs/04_informe_fase1.md)
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
+* [Informe de la Fase 2 (Semántica y Corte 2)](docs/08_informe_fase2.md)
 * [Guía de sustentación](docs/07_guia_sustentacion.md)
 * [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)

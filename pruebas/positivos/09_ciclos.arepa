@@ -1,0 +1,38 @@
+# 09_ciclos.arepa - ciclos repita/mientras con pare y siga.
+# Prueba positiva: todas las formas del ciclo deben reconocerse.
+quihubo
+
+# mientras con condición lógica
+x = 0
+mientras (x < 5) {
+    x = x + 1
+}
+
+# repita N veces
+repita 3 veces {
+    cuenteme "vuelta"
+}
+
+# repita con variable desde/hasta (inclusive)
+total = 0
+repita i desde 1 hasta 5 {
+    total = total + i
+}
+
+# repita con paso explícito
+repita j desde 0 hasta 10 paso 2 {
+    cuenteme j
+}
+
+# pare y siga dentro de ciclos (incluso anidados)
+mientras (obvio) {
+    pare
+}
+repita k desde 1 hasta 4 {
+    fijese_si (k == 2) {
+        siga
+    }
+    cuenteme k
+}
+
+chao

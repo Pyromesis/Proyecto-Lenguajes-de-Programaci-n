@@ -3,7 +3,7 @@ AREPA - Ejecutor propio del DSL (src/runtime/ejecutor.py)
 ---------------------------------------------------------
 Implementado por el equipo. Recorre el arbol de analisis generado por
 ANTLR4 (uso autorizado) y ejecuta el programa: sentencias, pipeline de
-datos, funciones, condicionales y agregaciones.
+datos, funciones, condicionales, ciclos y agregaciones.
 
 Toda la logica es propia:
   * el pipeline aplica las operaciones de datos/tabla.py sobre la Tabla
@@ -21,7 +21,15 @@ Toda la logica es propia:
 Decisiones semanticas propias (documentadas):
   * 'deje donde' conserva la fila solo si la condicion es exactamente
     obvio (True); 'nada' y 'falso' descartan la fila;
-  * la condicion de 'fijese_si' debe ser logica: 'nada' es un error;
+  * la condicion de 'fijese_si' y de 'mientras' debe ser logica: 'nada'
+    es un error;
+  * 'repita N veces' exige un entero de 0 en adelante; 'repita i desde
+    A hasta B' cuenta con i inclusive (paso 1 o -1 por defecto, o el
+    'paso P' indicado, que no puede ser 0);
+  * los bloques de ciclos no crean ambito (como 'fijese_si'); la
+    variable de 'repita ... desde' queda visible al terminar;
+  * 'pare' y 'siga' solo valen dentro de un ciclo; fuera de el son un
+    error semantico;
   * 'limpie vacios' sin 'con' elimina las filas con algun 'nada';
   * 'junte' prepara las claves de agrupacion para el 'resuma' siguiente;
   * 'resuma' sin 'junte' previo resume toda la tabla en una sola fila;
@@ -47,6 +55,8 @@ from errores_base import (
     ErrorTipos,
     ErrorVariable,
     RetornoFuncion,
+    SalirCiclo,
+    SeguirCiclo,
 )
 from expresiones.evaluador import EvaluadorExpresiones
 from runtime.contexto import ContextoEjecucion, a_texto
@@ -58,7 +68,10 @@ AGREGACIONES = (
     "cuente", "sume", "promedie", "mediana", "minimo", "maximo", "desviacion",
 )
 
-DIRECCIONES = ("pa_arriba", "pa_abajo")
+# Tope de seguridad: un ciclo que da más vueltas casi siempre es un
+# descuido (condición que nunca se vuelve falsa o conteo gigante).
+# El mensaje pide revisar la condición o el número en vez de colgarse.
+MAX_VUELTAS_CICLO = 1000000
 
 
 class EjecutorArepa(ArepaVisitor):
@@ -92,6 +105,20 @@ class EjecutorArepa(ArepaVisitor):
             raise ErrorSemantico(
                 "'devuelva' solo puede usarse dentro de una función definida "
                 "con 'invente'."
+            )
+        except SalirCiclo as senal:
+            raise ErrorSemantico(
+                "'pare' solo puede usarse dentro de un ciclo 'repita' o "
+                "'mientras'.",
+                linea=senal.linea,
+                columna=senal.columna,
+            )
+        except SeguirCiclo as senal:
+            raise ErrorSemantico(
+                "'siga' solo puede usarse dentro de un ciclo 'repita' o "
+                "'mientras'.",
+                linea=senal.linea,
+                columna=senal.columna,
             )
 
     # ---------------------------------------------------------------- #
@@ -198,12 +225,9 @@ class EjecutorArepa(ArepaVisitor):
             claves = [(n, "pa_arriba") for n in self._nombres_lista(op.lista_columnas())]
             direccion = op.direccion()
             if direccion is not None:
-                texto = direccion.getText()
-                if texto not in DIRECCIONES:
-                    raise ErrorSemantico(
-                        "'{0}' no es una direccion valida; usa pa_arriba o pa_abajo.".format(texto)
-                    )
-                claves = [(n, texto) for n, _ in claves]
+                # La gramática solo admite pa_arriba/pa_abajo, así que el
+                # texto siempre es una dirección válida.
+                claves = [(n, direccion.getText()) for n, _ in claves]
             return tabla.ordenar(claves)
 
         if op.CREE() is not None:
@@ -481,6 +505,182 @@ class EjecutorArepa(ArepaVisitor):
         if ctx_bloque.sentencias() is not None:
             for sentencia in ctx_bloque.sentencias().sentencia():
                 self.visit(sentencia)
+
+    # ---------------------------------------------------------------- #
+    # Ciclos 'mientras' y 'repita' con 'pare' / 'siga'
+    # ---------------------------------------------------------------- #
+    # Los bloques de un ciclo NO crean ámbito propio (igual que
+    # 'fijese_si'): las variables se leen y escriben en el ámbito actual
+    # y quedan visibles al terminar el ciclo. 'devuelva' dentro de un
+    # ciclo sigue funcionando: RetornoFuncion no se captura aquí y sube
+    # hasta la función que lo contiene.
+
+    def visitCiclo_mientras(self, ctx):
+        condicion = ctx.expresion_logica()
+        bloque = ctx.bloque()
+        vueltas = 0
+        while True:
+            valor = self.evaluador.evaluar(condicion)
+            if valor is False:
+                break
+            if valor is not True:
+                raise ErrorTipos(
+                    "La condicion de 'mientras' debe ser obvio o falso, pero "
+                    "fue {0}.".format(a_texto(valor)),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            vueltas += 1
+            if vueltas > MAX_VUELTAS_CICLO:
+                raise ErrorEjecucion(
+                    "El ciclo 'mientras' dio demasiadas vueltas (más de "
+                    "{0}): revisá que la condición pueda volverse falsa.".format(
+                        MAX_VUELTAS_CICLO
+                    ),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            try:
+                self._ejecutar_bloque(bloque)
+            except SeguirCiclo:
+                continue
+            except SalirCiclo:
+                break
+        return None
+
+    def visitCiclo_repita(self, ctx):
+        if ctx.VECES() is not None:
+            total = self.evaluador.evaluar(ctx.expresion_logica(0))
+            veces = self._exigir_entero_veces(total, ctx)
+            if veces > MAX_VUELTAS_CICLO:
+                raise ErrorEjecucion(
+                    "'repita {0} veces' es demasiado: el tope es {1} "
+                    "vueltas.".format(veces, MAX_VUELTAS_CICLO),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            for _ in range(veces):
+                try:
+                    self._ejecutar_bloque(ctx.bloque())
+                except SeguirCiclo:
+                    continue
+                except SalirCiclo:
+                    break
+            return None
+        return self._ejecutar_repita_rango(ctx)
+
+    def _ejecutar_repita_rango(self, ctx):
+        """'repita i desde A hasta B (paso P)': cuenta con i inclusive."""
+        nombre = ctx.identificador().getText()
+        expresiones = ctx.expresion_logica()
+        inicio = self._exigir_numero_ciclo(
+            self.evaluador.evaluar(expresiones[0]), ctx, "el inicio"
+        )
+        fin = self._exigir_numero_ciclo(
+            self.evaluador.evaluar(expresiones[1]), ctx, "el fin"
+        )
+        if len(expresiones) > 2:
+            paso = self._exigir_numero_ciclo(
+                self.evaluador.evaluar(expresiones[2]), ctx, "el paso"
+            )
+            if paso == 0:
+                raise ErrorSemantico(
+                    "El paso de 'repita' no puede ser 0: el ciclo nunca "
+                    "avanzaría.",
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+        elif inicio <= fin:
+            paso = 1
+        else:
+            paso = -1
+
+        actual = inicio
+        vueltas = 0
+        while (actual <= fin) if paso > 0 else (actual >= fin):
+            vueltas += 1
+            if vueltas > MAX_VUELTAS_CICLO:
+                raise ErrorEjecucion(
+                    "El ciclo 'repita' dio demasiadas vueltas (más de "
+                    "{0}): revisá el rango o el paso.".format(
+                        MAX_VUELTAS_CICLO
+                    ),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            self._asignar_variable(nombre, actual)
+            romper = False
+            try:
+                self._ejecutar_bloque(ctx.bloque())
+            except SeguirCiclo:
+                pass
+            except SalirCiclo:
+                romper = True
+            actual = actual + paso
+            if romper:
+                break
+        return None
+
+    def _asignar_variable(self, nombre, valor):
+        """Asigna si existe (semántica de 'x = ...') o declara si es nueva."""
+        if self._ambito.existe(nombre):
+            self._ambito.asignar(nombre, valor)
+        else:
+            self._ambito.declarar(nombre, valor)
+        return valor
+
+    def _exigir_numero_ciclo(self, valor, ctx, papel):
+        """Valida un límite de 'repita': debe ser un número (no nada)."""
+        if es_nada(valor):
+            raise ErrorSemantico(
+                "{0} de 'repita' es 'nada': se necesita un número.".format(
+                    papel.capitalize()
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if not es_numero(valor):
+            raise ErrorTipos(
+                "{0} de 'repita' debe ser un número, pero fue de tipo "
+                "{1}.".format(papel.capitalize(), nombre_tipo(valor)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        return valor
+
+    def _exigir_entero_veces(self, valor, ctx):
+        """Valida el conteo de 'repita N veces': entero de 0 en adelante."""
+        if es_nada(valor):
+            raise ErrorSemantico(
+                "El conteo de 'repita' es 'nada': se necesita un número "
+                "entero de 0 en adelante.",
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if not isinstance(valor, int) or isinstance(valor, bool):
+            raise ErrorTipos(
+                "'repita' necesita un número entero de veces (p. ej. "
+                "'repita 5 veces'), pero fue de tipo {0}.".format(
+                    nombre_tipo(valor)
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if valor < 0:
+            raise ErrorSemantico(
+                "'repita {0} veces' no es válido: el conteo empieza en 0.".format(
+                    valor
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        return valor
+
+    def visitInstruccion_pare(self, ctx):
+        raise SalirCiclo(linea=ctx.start.line, columna=ctx.start.column)
+
+    def visitInstruccion_siga(self, ctx):
+        raise SeguirCiclo(linea=ctx.start.line, columna=ctx.start.column)
 
     def visitDefinicion_funcion(self, ctx):
         nombre = ctx.identificador().getText()

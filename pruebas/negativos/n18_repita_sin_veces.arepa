@@ -1,0 +1,7 @@
+# n18 - 'repita' sin 'veces' ni rango: construcción incompleta.
+quihubo
+x = 0
+repita 5 {
+    x = x + 1
+}
+chao

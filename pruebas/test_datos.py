@@ -289,6 +289,19 @@ def tabla_renombrar():
 
 
 @caso
+def tabla_eliminar_columna():
+    tabla = _tabla_demo()
+    tabla.eliminar_columna("precio")
+    assert tabla.nombres_columnas == ["ciudad", "unidades"]
+    assert all(len(f.valores) == 2 for f in tabla.filas)
+    try:
+        tabla.eliminar_columna("no_existe")
+        raise AssertionError("eliminar columna inexistente debería fallar")
+    except ErrorColumna:
+        pass
+
+
+@caso
 def tabla_quitar_duplicados_conserva_primera():
     tabla = LectorCSV().leer_texto("a,b\n1,x\n1,x\n2,y\n1,x\n", "t")
     tabla.quitar_duplicados()

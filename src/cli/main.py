@@ -169,4 +169,28 @@ def _ejecutar(arbol):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except BrokenPipeError:
+        # El lector cerró la tubería (p. ej. `arepa demo.arepa --arbol
+        # | head`): salir en silencio con código 0, sin volcado. Se
+        # redirige a devnull para que el flush de cierre no proteste.
+        try:
+            sys.stdout.flush()
+        except OSError:
+            pass
+        sys.stdout = open(os.devnull, "w")
+        sys.exit(0)
+    except OSError as problema:
+        # En Windows, escribir en una tubería ya cerrada llega como
+        # EINVAL en vez de EPIPE: se trata igual (salida limpia).
+        import errno
+
+        if problema.errno in (errno.EPIPE, errno.EINVAL):
+            try:
+                sys.stdout.flush()
+            except OSError:
+                pass
+            sys.stdout = open(os.devnull, "w")
+            sys.exit(0)
+        raise

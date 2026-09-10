@@ -120,6 +120,20 @@ def probar_cli():
     r = ejecutar(os.path.join(RAIZ, "este_archivo_no_existe.arepa"))
     casos.append(("CLI: archivo inexistente sale con código 2", r.returncode == 2))
 
+    # Tubería cerrada (p. ej. `arepa demo.arepa --arbol | head -n 2`):
+    # sale limpio con código 0, sin volcado de excepción.
+    prod = subprocess.Popen(
+        [sys.executable, main_py, demo, "--arbol"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    if prod.stdout is not None:
+        prod.stdout.close()  # el lector se va de inmediato
+    error = prod.stderr.read() if prod.stderr is not None else b""
+    codigo = prod.wait()
+    casos.append(("CLI: tubería cerrada sale limpio sin traceback",
+                  codigo == 0 and b"Traceback" not in error))
+
     return casos
 
 

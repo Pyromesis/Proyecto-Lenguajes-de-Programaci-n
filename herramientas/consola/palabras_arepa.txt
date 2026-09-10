@@ -47,6 +47,14 @@ fijese_si
 sino
 cuenteme
 describa
+mientras
+repita
+veces
+desde
+hasta
+paso
+pare
+siga
 obvio
 falso
 nada

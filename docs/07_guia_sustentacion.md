@@ -27,7 +27,7 @@ python3 pruebas/test_proyecto.py
   `asignacion` (68), `operacion_datos` (127), `instruccion_monte` (140),
   `instruccion_grafica` (177), `expresion_logica` (205).
 * **Especificación equivalente:** `docs/03_gramatica_ebnf.md`.
-* **Prueba:** las 161 de `python3 pruebas/test_proyecto.py` parsean con
+* **Prueba:** las 194 de `python3 pruebas/test_proyecto.py` parsean con
   esta gramática.
 * **Ejemplo en vivo:** abrir `Arepa.g4` y mostrar `programa` y
   `instruccion_grafica`.
@@ -51,7 +51,7 @@ python3 pruebas/test_proyecto.py
   `(parser, arbol, errores)`.
 * **Gramática:** regla inicial `programa : NL* QUIHUBO NL+ sentencias?
   NL* CHAO NL* EOF`.
-* **Prueba:** `test_front.py` — 8 positivos aceptados, 17 negativos
+* **Prueba:** `test_front.py` — 9 positivos aceptados, 20 negativos
   rechazados.
 * **Ejemplo:** `python3 src/cli/main.py ejemplos/demo.arepa` → "Programa
   bien escrito: 9 sentencia(s) reconocida(s)".
@@ -61,19 +61,19 @@ python3 pruebas/test_proyecto.py
 * **Archivo:** `src/lenguaje/arbol.py`, `imprimir_arbol` (línea 46):
   recorrido propio con ramas ASCII, oculta los saltos de línea.
 * **Comando:** `python3 src/cli/main.py ejemplos/demo.arepa --arbol`.
-* **Prueba:** `test_arbol.py` (15 casos) recorre el árbol
+* **Prueba:** `test_arbol.py` (21 casos) recorre el árbol
   programáticamente y verifica jerarquía y precedencia.
 * **Ejemplo:** mostrar en pantalla el subárbol de `asignacion` del demo.
 
 ## 5. Cómo se detecta un programa inválido
 
 * **Archivo:** `src/lenguaje/errores.py`, `syntaxError` (línea 32) captura
-  todo sin detener el análisis; `_traducir` (línea 145) pasa el mensaje
+  todo sin detener el análisis; `_traducir` (línea 153) pasa el mensaje
   técnico a español.
 * **Gramática:** cualquier desviación produce error del listener; el
   programa nunca se cae con excepciones no controladas (verificado con 10
   entradas malformadas).
-* **Prueba:** `test_front.py` — 17 negativos + 10 de diagnóstico.
+* **Prueba:** `test_front.py` — 20 negativos + 10 de diagnóstico.
 * **Ejemplo:** `python3 src/cli/main.py pruebas/negativos/n01_falta_chao.arepa`
   → rechazado con línea y columna.
 
@@ -84,29 +84,29 @@ python3 pruebas/test_proyecto.py
   Y").
 * **Prueba:** `test_front.py::probar_diagnosticos` — caso 1 verifica
   línea 2 columna 6 exactas para un `@`; caso 2 verifica que un error de
-  la línea 4 se reporte en la línea 4; los 17 negativos validan posición.
+  la línea 4 se reporte en la línea 4; los 20 negativos validan posición.
 * **Ejemplo:** `x = 1 @ 2` → `[léxico] Línea 2, Columna 6: Hay un símbolo
   '@' que no hace parte del lenguaje AREPA`.
 
 ## 7. Cómo se implementan asignaciones y expresiones
 
-* **Gramática:** `asignacion` (Arepa.g4:68) y la jerarquía
+* **Gramática:** `asignacion` (Arepa.g4:72) y la jerarquía
   `expresion_logica → conjuncion → negacion → comparacion → aritmetica →
   termino → factor → unario → atomo`, que codifica la precedencia
   documentada (`o < y < no < comparación < +- < */% < ^ derecha < - unario`).
 * **Código propio:** `src/expresiones/evaluador.py` (`evaluar` línea 71,
   `visitAritmetica` 126) y `src/expresiones/operadores.py`; en el runtime,
-  `src/runtime/ejecutor.py::visitAsignacion` (línea 110).
+  `src/runtime/ejecutor.py::visitAsignacion` (línea 143).
 * **Prueba:** `test_arbol.py` (precedencia en la forma del árbol),
-  `test_expresiones.py` (14 casos: `1 + 2 * 3 == 7`, `2 ^ 3 ^ 2 == 512`,
+  `test_expresiones.py` (16 casos: `1 + 2 * 3 == 7`, `2 ^ 3 ^ 2 == 512`,
   `(1 + 2) * 3`, errores de tipos).
 * **Ejemplo:** `pruebas/positivos/01_asignaciones_expresiones.arepa`.
 
 ## 8. Cómo se reconoce CSV
 
-* **Gramática:** `instruccion_monte` (Arepa.g4:140): `monte cadena
+* **Gramática:** `instruccion_monte` (Arepa.g4:168): `monte cadena
   opciones_archivo?` con opciones `encabezado` y `separador`.
-* **Código propio:** `src/runtime/ejecutor.py::_cargar` (línea 160) usa el
+* **Código propio:** `src/runtime/ejecutor.py::_cargar` (línea 193) usa el
   lector propio `src/datos/lector_csv.py` (máquina de estados con comillas
   y escape `""`).
 * **Prueba:** `test_runtime.py::monte_carga_csv_real` y los 12 casos
@@ -117,9 +117,9 @@ python3 pruebas/test_proyecto.py
 ## 9. Cómo se reconoce selección
 
 * **Gramática:** alternativa `ESCOJA lista_columnas` dentro de
-  `operacion_datos` (Arepa.g4:127).
+  `operacion_datos` (Arepa.g4:155).
 * **Código propio:** `src/runtime/ejecutor.py::_aplicar_operacion`
-  (línea 179, rama ESCOJA) sobre `Tabla.seleccionar`
+  (línea 215, rama ESCOJA) sobre `Tabla.seleccionar`
   (`src/datos/tabla.py`).
 * **Prueba:** `test_arbol.py::arbol_de_seleccion` (estructura) y
   `test_runtime.py::escoja_selecciona_columnas`.
@@ -138,16 +138,35 @@ python3 pruebas/test_proyecto.py
 
 ## 11. Cómo se reconoce visualización (solo sintáctico)
 
-* **Gramática:** `instruccion_grafica` (Arepa.g4:177): `pinte
+* **Gramática:** `instruccion_grafica` (Arepa.g4:205): `pinte
   tipo_grafica identificador (clausula_estetica)* (final_grafica)?` con
   tipos `barras|lineas|histograma|dispersion|cajas`.
 * **Código propio:** `src/runtime/ejecutor.py::visitInstruccion_grafica`
-  (línea 396): valida que la tabla exista y que las columnas de
+  (línea 433): valida que la tabla exista y que las columnas de
   `ejex`/`ejey` existan; avisa que la imagen llega en la Fase 3.
 * **Prueba:** `test_arbol.py::arbol_de_visualizacion` (estructura con
   cláusulas y cierre), negativas `n09_pinte_tipo_invalido` y
   `n13_pinte_sin_tabla`, semántica `pinte_valida_columnas_de_la_grafica`.
 * **Ejemplo:** `ejemplos/graficas.arepa` (las cinco formas).
+
+## 12. Cómo funcionan los ciclos (ampliación del Corte 2)
+
+* **Gramática:** `ciclo_mientras` y `ciclo_repita` (Arepa.g4): `mientras
+  (cond) bloque`, `repita expr veces bloque`,
+  `repita id desde expr hasta expr (paso expr)? bloque`; `pare`/`siga`
+  como sentencias.
+* **Código propio:** `src/runtime/ejecutor.py::visitCiclo_mientras`,
+  `visitCiclo_repita` (+ `visitInstruccion_pare`/`siga` con señales
+  internas `SalirCiclo`/`SeguirCiclo`); fuera de ciclo son error
+  semántico con línea y columna.
+* **Prueba:** `test_runtime.py` (19 casos de ciclos: acumulación,
+  rangos, pasos, `pare`/`siga`, anidados, `devuelva` en función, tope
+  de vueltas), `test_arbol.py::arbol_de_mientras` y
+  `::arbol_de_repita`, positiva `09_ciclos.arepa`, negativas
+  `n18_repita_sin_veces`, `n19_mientras_sin_parentesis`,
+  `n20_repita_sin_hasta`.
+* **Ejemplo:** `python src/cli/main.py ejemplos/ciclos.arepa --ejecutar`
+  (factorial 120, pares 110, múltiplo 35 + pipeline + `guarde`).
 
 ---
 

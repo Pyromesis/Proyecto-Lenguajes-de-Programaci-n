@@ -428,6 +428,181 @@ def recursion_profunda_mensaje_amable():
     assert "recurs" in problema.mensaje
 
 
+# ---------------------------------------------------------------------- #
+# Ciclos 'mientras' y 'repita' con 'pare' y 'siga'
+# ---------------------------------------------------------------------- #
+
+@caso
+def mientras_acumula_hasta_condicion():
+    ejecutor = correr(
+        "quihubo\nx = 0\nmientras (x < 5) {\n x = x + 1\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("x") == 5
+
+
+@caso
+def mientras_condicion_no_logica_rechazada():
+    problema = correr_y_fallar("quihubo\nx = 1\nmientras (x) {\n x = 2\n}\nchao\n")
+    assert "mientras" in problema.mensaje and "obvio o falso" in problema.mensaje
+
+
+@caso
+def mientras_con_nada_rechazado():
+    problema = correr_y_fallar("quihubo\nmientras (nada) {\n}\nchao\n")
+    assert "mientras" in problema.mensaje and "obvio o falso" in problema.mensaje
+
+
+@caso
+def repita_veces_acumula():
+    ejecutor = correr(
+        "quihubo\nt = 0\nrepita 4 veces {\n t = t + 2\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("t") == 8
+
+
+@caso
+def repita_veces_cero_no_ejecuta():
+    ejecutor = correr(
+        "quihubo\nt = 7\nrepita 0 veces {\n t = 99\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("t") == 7
+
+
+@caso
+def repita_veces_no_entero_rechazado():
+    problema = correr_y_fallar("quihubo\nrepita 2.5 veces {\n}\nchao\n")
+    assert "entero" in problema.mensaje
+
+
+@caso
+def repita_veces_negativo_rechazado():
+    problema = correr_y_fallar("quihubo\nrepita -1 veces {\n}\nchao\n")
+    assert "empieza en 0" in problema.mensaje
+
+
+@caso
+def repita_rango_suma_inclusive():
+    ejecutor = correr(
+        "quihubo\ns = 0\nrepita i desde 1 hasta 5 {\n s = s + i\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("s") == 15
+    assert ejecutor.contexto.simbolos.buscar("i") == 5
+
+
+@caso
+def repita_rango_descendente_automatico():
+    ejecutor = correr(
+        "quihubo\ns = 0\nrepita i desde 3 hasta 1 {\n s = s + i\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("s") == 6
+
+
+@caso
+def repita_rango_con_paso():
+    ejecutor = correr(
+        "quihubo\ns = 0\nrepita i desde 0 hasta 10 paso 2 {\n s = s + i\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("s") == 30
+
+
+@caso
+def repita_paso_cero_rechazado():
+    problema = correr_y_fallar(
+        "quihubo\nrepita i desde 1 hasta 3 paso 0 {\n}\nchao\n"
+    )
+    assert "no puede ser 0" in problema.mensaje
+
+
+@caso
+def pare_rompe_mientras():
+    ejecutor = correr(
+        "quihubo\nx = 0\nmientras (obvio) {\n"
+        " x = x + 1\n fijese_si (x >= 3) {\n pare\n }\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("x") == 3
+
+
+@caso
+def siga_salta_vuelta():
+    ejecutor = correr(
+        "quihubo\ns = 0\nrepita i desde 1 hasta 5 {\n"
+        " fijese_si (i == 3) {\n siga\n }\n s = s + i\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("s") == 12
+
+
+@caso
+def pare_fuera_de_ciclo_rechazado():
+    problema = correr_y_fallar("quihubo\npare\nchao\n")
+    assert "dentro de un ciclo" in problema.mensaje
+
+
+@caso
+def siga_fuera_de_ciclo_rechazado():
+    problema = correr_y_fallar("quihubo\nsiga\nchao\n")
+    assert "dentro de un ciclo" in problema.mensaje
+
+
+@caso
+def ciclos_anidados_pare_interno():
+    ejecutor = correr(
+        "quihubo\ns = 0\nrepita i desde 1 hasta 3 {\n"
+        " repita j desde 1 hasta 5 {\n"
+        "  fijese_si (j > 2) {\n pare\n }\n  s = s + 1\n }\n}\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("s") == 6
+
+
+@caso
+def devuelva_en_ciclo_de_funcion():
+    ejecutor = correr(
+        "quihubo\ninvente suma(n) {\n s = 0\n"
+        " repita i desde 1 hasta n {\n s = s + i\n }\n devuelva s\n}\n"
+        "r = suma(10)\nchao\n"
+    )
+    assert ejecutor.contexto.simbolos.buscar("r") == 55
+
+
+@caso
+def mientras_infinito_pide_revisar_condicion():
+    import runtime.ejecutor as modulo
+    anterior = modulo.MAX_VUELTAS_CICLO
+    modulo.MAX_VUELTAS_CICLO = 5
+    try:
+        problema = correr_y_fallar("quihubo\nmientras (obvio) {\n}\nchao\n")
+    finally:
+        modulo.MAX_VUELTAS_CICLO = anterior
+    assert "demasiadas vueltas" in problema.mensaje
+
+
+@caso
+def repita_gigante_pide_revisar_numero():
+    import runtime.ejecutor as modulo
+    anterior = modulo.MAX_VUELTAS_CICLO
+    modulo.MAX_VUELTAS_CICLO = 5
+    try:
+        problema = correr_y_fallar("quihubo\nrepita 100 veces {\n}\nchao\n")
+    finally:
+        modulo.MAX_VUELTAS_CICLO = anterior
+    assert "demasiado" in problema.mensaje
+
+
+@caso
+def columnas_con_nombre_de_ciclo_d5():
+    """D5: las nuevas reservadas valen como nombres de columna (CSV externo)."""
+    ruta = os.path.join(RAIZ, "pruebas", "datos", "columnas_raras.csv").replace("\\", "/")
+    programa = (
+        'quihubo\nt = monte "{0}" con encabezado\n'
+        "r = t |> escoja [veces, paso]\n"
+        "s = r |> cree doble = veces * 2\n"
+        "chao\n".format(ruta)
+    )
+    ejecutor = correr(programa)
+    tabla = ejecutor.contexto.simbolos.buscar("s")
+    assert tabla.nombres_columnas == ["veces", "paso", "doble"]
+    assert tabla.filas[0].valor_en(2) == 6
+
+
 def main():
     pasaron = fallaron = 0
     print("=" * 78)

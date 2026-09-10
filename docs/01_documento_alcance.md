@@ -102,8 +102,8 @@ mensajes vive en `docs/05_arquitectura.md`.
 | Reconocimiento sintáctico de visualización (`pinte ... guardela/muestrela`) | reconocido (todavía no produce gráficas) |
 | Gramática BNF/EBNF documentada | lista, en `docs/03_gramatica_ebnf.md` |
 | Gramática implementada en ANTLR4 (lexer + parser Python) | lista, en `gramatica/Arepa.g4` y `generado/` |
-| Pruebas léxicas y sintácticas positivas y negativas | 43 de 43 pasan (`pruebas/test_front.py`: 8 positivos, 17 negativos, 10 de diagnóstico y 8 de CLI) |
-| Pruebas de la biblioteca propia (árbol, datos, expresiones, símbolos, runtime) | 118 de 118 pasan (`pruebas/test_proyecto.py`: 161 en total) |
+| Pruebas léxicas y sintácticas positivas y negativas | 48 de 48 pasan (`pruebas/test_front.py`: 9 positivos, 20 negativos, 10 de diagnóstico y 9 de CLI) |
+| Pruebas de la biblioteca propia (árbol, datos, expresiones, símbolos, runtime) | 146 de 146 pasan (`pruebas/test_proyecto.py`: 194 en total) |
 | Reporte de errores comprensibles con línea y columna | listo, en `src/lenguaje/errores.py` y `src/errores_base.py` |
 | Interfaz de línea de comandos | lista, en `src/cli/main.py` |
 

@@ -91,3 +91,27 @@ class RetornoFuncion(Exception):
     def __init__(self, valor):
         super().__init__("retorno de función")
         self.valor = valor
+
+
+# ---------------------------------------------------------------------- #
+# Control de flujo de ciclos (no es un error): 'pare' rompe el ciclo más
+# cercano y 'siga' salta a la siguiente vuelta. Si escapan de todo ciclo,
+# el ejecutor las convierte en ErrorSemantico con línea y columna.
+# ---------------------------------------------------------------------- #
+
+class SalirCiclo(Exception):
+    """Señal interna de 'pare': rompe el ciclo 'repita'/'mientras' activo."""
+
+    def __init__(self, linea=-1, columna=-1):
+        super().__init__("salir de ciclo")
+        self.linea = linea
+        self.columna = columna
+
+
+class SeguirCiclo(Exception):
+    """Señal interna de 'siga': salta a la siguiente vuelta del ciclo."""
+
+    def __init__(self, linea=-1, columna=-1):
+        super().__init__("seguir en ciclo")
+        self.linea = linea
+        self.columna = columna

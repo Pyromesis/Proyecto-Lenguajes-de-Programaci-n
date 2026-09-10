@@ -1,0 +1,7 @@
+# n19 - 'mientras' sin paréntesis: la condición exige paréntesis.
+quihubo
+x = 0
+mientras x < 5 {
+    x = x + 1
+}
+chao

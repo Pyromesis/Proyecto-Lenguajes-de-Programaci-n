@@ -38,6 +38,10 @@ cierre comparten línea con otras sentencias.
                       | <instruccion_guarde>
                       | <instruccion_grafica>
                       | <condicional>
+                      | <ciclo_mientras>
+                      | <ciclo_repita>
+                      | <instruccion_pare>
+                      | <instruccion_siga>
                       | <definicion_funcion>
                       | <instruccion_devolver>
                       | <instruccion_cuenteme>
@@ -57,6 +61,17 @@ cierre comparten línea con otras sentencias.
                         [ "sino" [NL] ( <condicional> | <bloque> ) ]
 
 <bloque>            ::= "{" [ NL ] [ <sentencias> ] [ NL ] "}"
+
+<ciclo_mientras>    ::= "mientras" [NL] "(" [NL] <expresion_logica> [NL] ")"
+                        [NL] <bloque>
+
+<ciclo_repita>      ::= "repita" [NL] <expresion_logica> [NL] "veces" [NL] <bloque>
+                      | "repita" [NL] <identificador> [NL] "desde" [NL]
+                        <expresion_logica> [NL] "hasta" [NL] <expresion_logica>
+                        [ [NL] "paso" [NL] <expresion_logica> ] [NL] <bloque>
+
+<instruccion_pare>  ::= "pare"
+<instruccion_siga>  ::= "siga"
 
 <definicion_funcion> ::= "invente" <identificador> "(" [ <parametros> ] ")" <bloque>
 
@@ -104,7 +119,7 @@ sentencias nuevas.
 <nombre_columna>     ::= <identificador> | PALABRA_RESERVADA
 ```
 
-`nombre_columna` acepta además cualquier palabra reservada (las 51 de la
+`nombre_columna` acepta además cualquier palabra reservada (las 59 de la
 sección 6): los nombres de las columnas provienen de archivos externos y
 pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
 
@@ -168,10 +183,12 @@ PALABRA_RESERVADA ::= "quihubo" | "chao" | "monte" | "guarde" | "como" | "con"
                     | "histograma" | "dispersion" | "cajas" | "titulo" | "ejex"
                     | "ejey" | "leyenda" | "guardela" | "muestrela" | "invente"
                     | "devuelva" | "fijese_si" | "sino" | "cuenteme" | "describa"
+                    | "mientras" | "repita" | "veces" | "desde" | "hasta"
+                    | "paso" | "pare" | "siga"
                     | "obvio" | "falso" | "nada" | "y" | "o" | "no"
 ```
 
-Son 51 palabras reservadas en total. Los comentarios pueden aparecer en
+Son 59 palabras reservadas en total. Los comentarios pueden aparecer en
 cualquier línea del programa.
 
 Símbolos y operadores del léxico (tokens de una sola pieza):
@@ -203,4 +220,5 @@ símbolos simples.
 La regla EBNF `{ X }` equivale a la estrella ANTLR `X*`; `[ X ]` equivale a
 `X?`. Los nombres de reglas coinciden: `programa`, `sentencias`, `sentencia`,
 `asignacion`, `expresion`, `etapa_pipeline`, `operacion_datos`,
-`instruccion_grafica`, `condicional`, `definicion_funcion`, etc.
+`instruccion_grafica`, `condicional`, `ciclo_mientras`, `ciclo_repita`,
+`definicion_funcion`, etc.

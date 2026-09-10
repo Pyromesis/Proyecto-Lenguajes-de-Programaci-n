@@ -19,8 +19,8 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
      diseño (`docs/02_catalogo_instrucciones.md`).
    - Gramática formal en BNF/EBNF (`docs/03_gramatica_ebnf.md`).
 2. **Gramática ANTLR4 combinada (lexer + parser)** en `gramatica/Arepa.g4`
-   (~330 líneas de código, 410 con comentarios y blancos): 51 palabras
-   reservadas (45 instrucciones y estructuras, 3 literales especiales y 3
+   (~330 líneas de código, 410 con comentarios y blancos): 59 palabras
+   reservadas (53 instrucciones y estructuras, 3 literales especiales y 3
    operadores lógicos), 22 símbolos y operadores, literales enteros y
    decimales, cadenas con escapes, comentarios con `#`, saltos de línea
    significativos e identificadores Unicode.
@@ -48,10 +48,11 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
    `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
    bibliotecas equivalentes.
-8. **Suite de pruebas** `pruebas/test_proyecto.py`: 6 suites con 161
-   pruebas en total (43 de front-end, 19 de estructura del árbol, 42 de
-   datos, 14 de expresiones, 15 de símbolos y contexto, y 28 de
-   runtime); todas pasan.
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: 6 suites con 194
+   pruebas en total (48 de front-end, 21 de estructura del árbol, 43 de
+   datos, 16 de expresiones, 15 de símbolos y contexto, y 51 de
+   runtime); todas pasan. (Nota Corte 2: el conteo creció con los ciclos
+   `mientras`/`repita`; el detalle vive en `docs/08_informe_fase2.md`.)
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -90,13 +91,13 @@ proyecto/
 ├── pruebas/
 │   ├── positivos/*.arepa     deben aceptarse
 │   ├── negativos/*.arepa     deben rechazarse con diagnóstico
-│   ├── test_front.py         suite del front-end (43: 8 pos + 17 neg + 10 diag + 8 CLI)
-│   ├── test_arbol.py         suite de estructura del árbol (19)
-│   ├── test_datos.py         suite de la biblioteca de datos (42)
-│   ├── test_expresiones.py   suite del evaluador (14)
+│   ├── test_front.py         suite del front-end (48: 9 pos + 20 neg + 10 diag + 9 CLI)
+│   ├── test_arbol.py         suite de estructura del árbol (21)
+│   ├── test_datos.py         suite de la biblioteca de datos (43)
+│   ├── test_expresiones.py   suite del evaluador (16)
 │   ├── test_simbolos.py      suite de símbolos y contexto (15)
-│   ├── test_runtime.py       suite del runtime (28)
-│   └── test_proyecto.py      corredor maestro (161)
+│   ├── test_runtime.py       suite del runtime (51)
+│   └── test_proyecto.py      corredor maestro (194)
 ├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
 └── requirements.txt          dependencias (solo ANTLR4)
@@ -124,7 +125,7 @@ python3 src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
 python3 src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas (161)
+# 4. Suite completa de pruebas (194)
 python3 pruebas/test_proyecto.py
 ```
 
@@ -143,6 +144,7 @@ Ejecutando `python3 pruebas/test_front.py` pasan las 43 pruebas
 | 06_funciones_condicional | positiva | PASÓ |
 | 07_preparacion_completa | positiva | PASÓ |
 | 08_casos_borde | positiva | PASÓ |
+| 09_ciclos | positiva | PASÓ (mientras, repita, pare/siga) |
 | n01_falta_chao | negativa | PASÓ (rechazado, L7,C0) |
 | n02_cadena_sin_cerrar | negativa | PASÓ (error léxico, L2,C9) |
 | n03_simbolo_raro (`@`) | negativa | PASÓ (error léxico, L4,C7) |
@@ -160,6 +162,9 @@ Ejecutando `python3 pruebas/test_front.py` pasan las 43 pruebas
 | n15_sin_quihubo | negativa | PASÓ (L2,C0, sin apertura) |
 | n16_seleccion_incompleta | negativa | PASÓ (L4,C17, lista vacía) |
 | n17_monte_sin_cadena | negativa | PASÓ (L3,C10, falta la ruta) |
+| n18_repita_sin_veces | negativa | PASÓ (`repita 5` sin `veces` ni rango) |
+| n19_mientras_sin_parentesis | negativa | PASÓ (condición sin paréntesis) |
+| n20_repita_sin_hasta | negativa | PASÓ (`desde` sin `hasta`) |
 | Diagnóstico: léxico con línea/columna exactas | diagnóstico | PASÓ |
 | Diagnóstico: error de la línea 4 reportado en la línea 4 | diagnóstico | PASÓ |
 | Diagnóstico: cadena sin cerrar en español | diagnóstico | PASÓ |
@@ -167,10 +172,14 @@ Ejecutando `python3 pruebas/test_front.py` pasan las 43 pruebas
 | Diagnóstico: delimitador faltante señala el '(' | diagnóstico | PASÓ |
 | Diagnóstico: 'chao' con contenido extra se rechaza | diagnóstico | PASÓ |
 | Diagnóstico: 10 entradas malformadas sin excepciones | diagnóstico | PASÓ |
+| Diagnóstico: comentarios en cualquier posición | diagnóstico | PASÓ |
+| Diagnóstico: número incompleto '3.' se rechaza | diagnóstico | PASÓ |
+| Diagnóstico: sin mensajes duplicados | diagnóstico | PASÓ |
 | CLI: código 0 en programa válido | interfaz | PASÓ |
 | CLI: mensaje de programa bien escrito | interfaz | PASÓ |
 | CLI: `--arbol` imprime el árbol | interfaz | PASÓ |
 | CLI: `--tokens` imprime la tabla | interfaz | PASÓ |
+| CLI: `--tokens` muestra reservadas y operadores | interfaz | PASÓ |
 | CLI: código 1 en programa inválido | interfaz | PASÓ |
 | CLI: reporta la línea del error | interfaz | PASÓ |
 | CLI: código 2 con archivo inexistente | interfaz | PASÓ |
@@ -214,6 +223,12 @@ línea crudos y que ninguno sea un volcado de más de 300 caracteres.
   estructura se pueda leer.
 
 ## 8. Limitaciones conocidas (aceptadas en esta fase)
+
+> Nota del Corte 2: los puntos 1 y 2 quedaron resueltos (ver
+> `docs/08_informe_fase2.md`): `monte` ya lee CSV con el lector propio,
+> `--ejecutar` corre programas reales y la tabla de símbolos detecta
+> variables sin declarar. Se conservan aquí como registro de lo que el
+> Corte 1 entregó.
 
 1. No hay ejecución semántica: `monte` todavía no lee CSV ni `pinte` dibuja
    (eso va para las fases 2 y 3).

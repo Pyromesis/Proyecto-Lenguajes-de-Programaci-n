@@ -35,6 +35,13 @@ lo que significa en el día a día se parece a lo que hace la instrucción:
 | `devuelva` | retorno | valor de retorno |
 | `fijese_si` | "fíjese si…" | condicional |
 | `sino` | camino alterno | else |
+| `mientras` | "mientras haya…" | ciclo condicional |
+| `repita` | "repita eso" | ciclo contado |
+| `veces` | número de vueltas | marcador de `repita N veces` |
+| `desde` / `hasta` | rango | límites de `repita i desde A hasta B` |
+| `paso` | avance | incremento del rango (opcional) |
+| `pare` | "pare ahí" | rompe el ciclo |
+| `siga` | "siga derecho" | salta a la próxima vuelta |
 | `obvio` | "¡obvio!" | verdadero |
 | `falso` | negación absoluta | falso |
 | `nada` | "no hay nada" | valor faltante |
@@ -42,7 +49,7 @@ lo que significa en el día a día se parece a lo que hace la instrucción:
 | `o` | "a o b" | disyunción lógica |
 | `no` | "no pasa" | negación lógica |
 
-Con estas últimas, el vocabulario reservado queda en **51 palabras**: 45
+Con estas últimas, el vocabulario reservado queda en **59 palabras**: 53
 instrucciones y estructuras, 3 literales especiales (`obvio`, `falso`,
 `nada`) y 3 operadores lógicos (`y`, `o`, `no`).
 
@@ -164,6 +171,53 @@ guardela "salidas/ingresos.png"
 | Condicional | `fijese_si (EXPR) { … } sino { … }` (el `sino` puede encadenar otro `fijese_si`) |
 | Impresión | `cuenteme ARG, ARG, …` |
 
+### 3.6 Ciclos (ampliación del Corte 2)
+
+Los ciclos son una **ampliación** sobre el mínimo del enunciado (que solo
+exige funciones y condicionales): sirven para acumulaciones iterativas y
+búsquedas con parada temprana sin recurrir a recursión manual.
+
+| Constructo | Sintaxis |
+|---|---|
+| Mientras | `mientras (EXPR_LÓGICA) { sentencias }` |
+| Repita N veces | `repita EXPR veces { sentencias }` (entero de 0 en adelante) |
+| Repita rango | `repita ID desde EXPR hasta EXPR (paso EXPR)? { sentencias }` |
+| Romper | `pare` (sale del ciclo más cercano) |
+| Seguir | `siga` (salta a la próxima vuelta) |
+
+Reglas semánticas:
+
+* la condición de `mientras` debe ser `obvio`/`falso` (como
+  `fijese_si`); `nada` es error;
+* el conteo de `repita N veces` se evalúa una vez y exige entero ≥ 0;
+* el rango cuenta con la variable **inclusive** en ambos extremos; el
+  paso por defecto es 1 (o -1 si el inicio es mayor que el fin) y no
+  puede ser 0;
+* los bloques de ciclo **no crean ámbito** (igual que `fijese_si`); la
+  variable del rango queda visible al terminar;
+* `pare`/`siga` fuera de un ciclo es error semántico;
+* `devuelva` dentro de un ciclo en una función retorna normalmente;
+* tope de seguridad: más de 1 000 000 de vueltas produce un error que
+  pide revisar la condición, el rango o el paso (no se cuelga).
+
+Ejemplos (`ejemplos/ciclos.arepa`):
+
+```text
+factorial = 1
+mientras (n > 1) {
+    factorial = factorial * n
+    n = n - 1
+}
+
+repita 3 veces {
+    cuenteme "vuelta"
+}
+
+repita i desde 1 hasta 10 paso 2 {
+    cuenteme i
+}
+```
+
 ---
 
 ## 4. Operadores
@@ -224,6 +278,7 @@ cocina: una etapa por línea.
 | D8 | `pinte` es sentencia, no expresión | Una gráfica no compone aritméticamente; separarla simplifica la gramática y su semántica futura |
 | D9 | Sin acceso con punto (`tabla.columna`) | En el pipeline la tabla implícita es la etapa anterior; el punto queda como ampliación |
 | D10 | Errores en español con línea y columna | Requisito del componente "Errores y diagnóstico"; mejora la comprensibilidad |
+| D11 | Ciclos como ampliación acotada (no copia de Python) | El enunciado pide no convertir el DSL en Python completo; por eso los ciclos son solo `mientras`/`repita` con `pare`/`siga`, sin `for` clásico estilo C: la forma `repita i desde A hasta B` lee como receta y el `paso` es opcional |
 
 ---
 

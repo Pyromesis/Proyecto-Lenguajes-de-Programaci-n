@@ -29,6 +29,12 @@ import glob
 import os
 import sys
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 try:
     import termios as _termios
     import tty as _tty
@@ -56,7 +62,8 @@ _FALLBACK = (
     "acomode por pa_arriba pa_abajo cree renombre limpie duplicados vacios convierta "
     "junte resuma numero texto logico fecha pinte barras lineas histograma dispersion "
     "cajas titulo ejex ejey leyenda guardela muestrela invente devuelva fijese_si sino "
-    "cuenteme describa obvio falso nada y o no"
+    "cuenteme describa mientras repita veces desde hasta paso pare siga "
+    "obvio falso nada y o no"
 ).split()
 
 if os.path.isfile(_DICT):
@@ -67,7 +74,7 @@ else:
 
 COMANDOS = [":ayuda", ":ver", ":validar", ":ejemplo", ":plantilla",
             ":plantillas", ":limpiar", ":guardar", ":salir"]
-TODO = sorted(set(PALABRAS + COMANDOS + ["|>", "->", "==", "!=", "<=", ">="]))
+VOCABULARIO = sorted(set(PALABRAS + COMANDOS + ["|>", "->", "==", "!=", "<=", ">="]))
 
 PLANTILLAS = {
     "base": ["quihubo", "", "", "chao"],
@@ -92,10 +99,17 @@ PLANTILLAS = {
                "} sino {",
                '    cuenteme "cero o menos"',
                "}"],
+    "ciclo": ["mientras (x > 0) {",
+              "    x = x - 1",
+              "}",
+              "repita i desde 1 hasta 10 {",
+              "    cuenteme i",
+              "}"],
 }
 
 _EJEMPLOS = {"demo": "demo.arepa", "filtros": "filtros.arepa",
-             "graficas": "graficas.arepa", "funciones": "funciones.arepa"}
+             "graficas": "graficas.arepa", "funciones": "funciones.arepa",
+             "ciclos": "ciclos.arepa"}
 
 
 def _archivos(texto):
@@ -132,7 +146,7 @@ def _completar(texto, estado):
     elif texto.startswith(":"):
         opciones = [c + " " for c in COMANDOS if c.startswith(texto)]
     else:
-        opciones = [p for p in TODO if p.startswith(texto)]
+        opciones = [p for p in VOCABULARIO if p.startswith(texto)]
     if estado < len(opciones):
         return opciones[estado]
     return None
@@ -196,7 +210,7 @@ def _sugerencia(linea, pos):
         cands = [c + " " for c in COMANDOS if c.startswith(base)]
     else:
         base = frag.lstrip("[(,")  # ignora [(, pegados: "(fij" sugiere fijese_si
-        cands = [p for p in TODO if base and p.startswith(base)]
+        cands = [p for p in VOCABULARIO if base and p.startswith(base)]
     for c in cands:
         if c.startswith(base) and len(c) > len(base):
             suf = c[len(base):]
@@ -329,7 +343,16 @@ def _envolver(buffer):
 
 
 def main(argv=None):
-    fantasma = (argv is None or "--simple" not in argv)
+    argv = list(argv) if argv is not None else []
+    if "--help" in argv or "-h" in argv:
+        print("Uso: python3 src/cli/repl.py [--simple] [--help]")
+        print("Consola interactiva de AREPA con autocompletado por Tab.")
+        print("  --simple   usa readline clásico (sin texto fantasma).")
+        print("  --help     muestra esta ayuda.")
+        print("Dentro: :ayuda :ver :validar :ejemplo [nombre] :plantilla <nombre>")
+        print("        :plantillas :limpiar :guardar <archivo> :salir")
+        return
+    fantasma = ("--simple" not in argv)
     historial = []
     hist_path = os.path.expanduser("~/.arepa_history")
     if fantasma:
@@ -427,7 +450,7 @@ def main(argv=None):
 
         # Validación rápida por línea: avisa si la palabra no existe.
         primera = linea.strip().split()
-        if primera and primera[0] not in TODO and not primera[0].startswith(("#", '"')):
+        if primera and primera[0] not in VOCABULARIO and not primera[0].startswith(("#", '"')):
             suger = [p for p in PALABRAS if p.startswith(primera[0][:3])]
             if suger:
                 print("  (¿quisiste decir: {0} ? Tab para completar)".format(", ".join(suger[:4])))
