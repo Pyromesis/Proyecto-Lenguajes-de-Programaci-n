@@ -1,0 +1,9 @@
+# M13 - acomode dos claves (Corte 2)
+# Medio: orden estable por ciudad y luego por precio descendente.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+ordenadas = ventas |> acomode por [ciudad, precio] pa_abajo
+cuenteme "doble orden ok"
+describa ordenadas
+chao

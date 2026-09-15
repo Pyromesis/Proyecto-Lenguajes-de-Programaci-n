@@ -1,0 +1,9 @@
+# F15 - renombre simple (Corte 2)
+# Facil: cambia el nombre de una columna conservando su posicion.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+cambiada = ventas |> renombre unidades -> cantidad
+cuenteme "renombre ok"
+describa cambiada
+chao

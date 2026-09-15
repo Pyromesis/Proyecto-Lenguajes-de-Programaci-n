@@ -1,0 +1,9 @@
+# F20 - cuente y sume sin junte (Corte 2)
+# Facil: resuma sin junte previo resume toda la tabla en una sola fila.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas |> resuma total_u = sume(unidades), registros = cuente()
+cuenteme "sume y cuente ok"
+describa resumen
+chao

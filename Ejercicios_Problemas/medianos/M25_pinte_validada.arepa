@@ -1,0 +1,12 @@
+# M25 - pinte validada (Corte 2)
+# Medio: pinte valida tabla y columnas; la imagen llega en Fase 3.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+pinte barras ventas
+titulo "Unidades por fecha"
+ejex fecha
+ejey unidades
+guardela "salidas/ej_M25.png"
+cuenteme "grafica validada ok"
+chao

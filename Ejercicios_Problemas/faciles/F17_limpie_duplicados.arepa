@@ -1,0 +1,9 @@
+# F17 - limpie duplicados (Corte 2)
+# Facil: quita filas repetidas conservando la primera aparicion.
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+unicas = encuesta |> limpie duplicados
+cuenteme "duplicados ok"
+describa unicas
+chao

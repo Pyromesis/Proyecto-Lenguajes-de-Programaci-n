@@ -1,0 +1,18 @@
+# D22 - flujo encuesta con guarde (Corte 2)
+# Dificil: separador punto y coma, renombre, conversion, orden y guarde.
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+base = encuesta
+|> escoja [id, ciudad, edad, ingreso]
+|> renombre id -> identificacion
+validos = base
+|> deje donde edad >= 18 y ingreso > 0
+|> cree ingreso_mensual = ingreso / 12
+listos = validos
+|> limpie duplicados
+|> convierta edad -> numero
+|> acomode por [ingreso_mensual] pa_abajo
+guarde listos como "salidas/ej_D22.csv"
+cuenteme "flujo D22 ok"
+chao

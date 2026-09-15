@@ -9,7 +9,7 @@ implementación (`gramatica/Arepa.g4`) definan exactamente lo mismo:
      PALABRA_RESERVADA de la EBNF.
 
 Uso:
-    python herramientas/chequeo_gramatica.py
+    python3 herramientas/chequeo_gramatica.py
 
 Salida: 0 si todo está sincronizado, 1 con el detalle si algo falta.
 """

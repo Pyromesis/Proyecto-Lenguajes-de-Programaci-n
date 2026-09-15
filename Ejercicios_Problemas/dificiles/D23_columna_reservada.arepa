@@ -1,0 +1,12 @@
+# D23 - columna con nombre reservado (Corte 2)
+# Dificil: fecha es palabra reservada pero vale como columna (D5);
+# como variable seria error, como columna funciona.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+pedazo = ventas
+|> escoja [fecha, ciudad]
+|> deje donde ciudad == "Cali"
+cuenteme "columna reservada ok"
+describa pedazo
+chao

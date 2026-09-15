@@ -1,0 +1,10 @@
+# M17 - resuma cuatro agregaciones (Corte 2)
+# Medio: varias agregaciones propias sobre el mismo grupo.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+resumen = con_total |> junte por [ciudad] |> resuma ingreso = sume(total), prom = promedie(total), menor = minimo(total), mayor = maximo(total)
+cuenteme "cuatro agregaciones ok"
+describa resumen
+chao

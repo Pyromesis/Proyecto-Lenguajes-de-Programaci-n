@@ -1,0 +1,10 @@
+# D13 - agregaciones ignoran nada (Corte 2)
+# Dificil: la encuesta trae un ingreso vacio; promedie lo ignora en vez
+# de contaminar el calculo.
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+resumen = encuesta |> junte por [ciudad] |> resuma prom = promedie(ingreso), registros = cuente()
+cuenteme "nada ignorado ok"
+describa resumen
+chao

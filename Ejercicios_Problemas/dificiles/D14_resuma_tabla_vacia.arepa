@@ -1,0 +1,11 @@
+# D14 - resuma tabla vacia da nada (Corte 2)
+# Dificil: filtrar hasta cero filas no tumba el programa; sume y
+# promedie dan nada y cuente da 0.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+nada_hay = ventas |> deje donde unidades > 100000
+resumen = nada_hay |> resuma total = sume(unidades), prom = promedie(unidades), registros = cuente()
+cuenteme "vacio robusto ok"
+describa resumen
+chao

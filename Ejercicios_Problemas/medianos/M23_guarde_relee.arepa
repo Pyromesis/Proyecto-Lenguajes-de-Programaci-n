@@ -1,0 +1,11 @@
+# M23 - guarde y relee (roundtrip Corte 2)
+# Medio: lo exportado con el escritor propio se vuelve a cargar igual.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+corte = ventas |> escoja [ciudad, precio]
+guarde corte como "salidas/ej_M23.csv"
+otra = monte "salidas/ej_M23.csv" con encabezado
+cuenteme "roundtrip ok"
+describa otra
+chao

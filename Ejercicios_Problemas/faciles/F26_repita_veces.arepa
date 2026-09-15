@@ -1,0 +1,10 @@
+# F26 - repita N veces (Corte 2)
+# Facil: ciclo contado con entero de 0 en adelante.
+
+quihubo
+total = 0
+repita 4 veces {
+    total = total + 10
+}
+cuenteme "4 vueltas de 10:", total
+chao

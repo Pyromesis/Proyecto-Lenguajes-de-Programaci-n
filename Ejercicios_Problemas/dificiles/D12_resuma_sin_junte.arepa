@@ -1,0 +1,9 @@
+# D12 - resuma sin junte da una fila (Corte 2)
+# Dificil: sin junte previo, todo se resume en un solo grupo.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas |> resuma ingreso_total = sume(precio), registros = cuente()
+cuenteme "una sola fila ok"
+describa resumen
+chao

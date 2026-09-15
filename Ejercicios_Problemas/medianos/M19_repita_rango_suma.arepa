@@ -1,0 +1,10 @@
+# M19 - repita rango acumula (Corte 2)
+# Medio: cuenta con i inclusive en ambos extremos (1..100 = 5050).
+
+quihubo
+total = 0
+repita i desde 1 hasta 100 {
+    total = total + i
+}
+cuenteme "suma 1..100:", total
+chao

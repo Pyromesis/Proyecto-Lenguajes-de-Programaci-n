@@ -1,0 +1,13 @@
+# M11 - pipeline escoja + deje + cree (Corte 2)
+# Medio: tres etapas encadenadas; cada una recibe la tabla anterior y
+# devuelve una nueva sin modificarla.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+listas = ventas
+|> escoja [ciudad, unidades, precio]
+|> deje donde unidades > 0
+|> cree total = unidades * precio
+cuenteme "pipeline ok"
+describa listas
+chao

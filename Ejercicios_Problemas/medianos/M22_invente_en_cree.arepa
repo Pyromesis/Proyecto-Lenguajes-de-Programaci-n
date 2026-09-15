@@ -1,0 +1,12 @@
+# M22 - invente usada en cree (Corte 2)
+# Medio: una funcion propia calcula la celda de cada fila del pipeline.
+
+quihubo
+invente con_iva(valor) {
+    devuelva valor * 1.19
+}
+ventas = monte "datos/ventas.csv" con encabezado
+con_iva = ventas |> cree precio_iva = con_iva(precio)
+cuenteme "funcion en cree ok"
+describa con_iva
+chao

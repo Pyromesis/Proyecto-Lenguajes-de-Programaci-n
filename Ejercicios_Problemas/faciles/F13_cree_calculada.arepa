@@ -1,0 +1,9 @@
+# F13 - cree columna calculada (Corte 2)
+# Facil: crea una columna nueva evaluando la expresion en cada fila.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+cuenteme "columna calculada ok"
+describa con_total
+chao

@@ -1,0 +1,15 @@
+# D24 - ciclos anidados con pare (Corte 2)
+# Dificil: pare solo rompe el ciclo interno mas cercano.
+
+quihubo
+pares = 0
+repita i desde 1 hasta 5 {
+    repita j desde 1 hasta 10 {
+        fijese_si (j > 2) {
+            pare
+        }
+        pares = pares + 1
+    }
+}
+cuenteme "5 x 2 =", pares
+chao

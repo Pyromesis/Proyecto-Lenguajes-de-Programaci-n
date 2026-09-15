@@ -1,0 +1,9 @@
+# M15 - limpie vacios elimina filas (Corte 2)
+# Medio: sin con, quita las filas que tengan algun nada.
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+limpia = encuesta |> limpie vacios
+cuenteme "filas sin vacios ok"
+describa limpia
+chao

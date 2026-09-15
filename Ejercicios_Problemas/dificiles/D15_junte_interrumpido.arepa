@@ -1,0 +1,13 @@
+# D15 - junte interrumpido se descarta (Corte 2)
+# Dificil: el junte solo prepara el resuma inmediato; si otra operacion
+# se interpone, las claves rezagadas se descartan y resume todo junto.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas
+|> junte por [ciudad]
+|> escoja [ciudad, unidades]
+|> resuma registros = cuente()
+cuenteme "junte interrumpido ok"
+describa resumen
+chao

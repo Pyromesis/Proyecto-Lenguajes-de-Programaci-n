@@ -1,0 +1,16 @@
+# D18 - repita con paso pare y siga (Corte 2)
+# Dificil: paso 3 desde 1; siga salta multiplos de 4; pare frena en 20.
+
+quihubo
+total = 0
+repita i desde 1 hasta 30 paso 3 {
+    fijese_si (i > 20) {
+        pare
+    }
+    fijese_si (i % 4 == 0) {
+        siga
+    }
+    total = total + i
+}
+cuenteme "paso pare siga:", total
+chao

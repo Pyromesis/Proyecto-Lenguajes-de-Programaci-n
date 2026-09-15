@@ -16,4 +16,4 @@ antlr4-python3-runtime==4.13.2
 #   adicional del profesor).
 
 # Opcional (solo para REGENERAR lexer/parser desde Arepa.g4, no para
-# ejecutar el proyecto): pip install antlr4-tools (requiere Java 11+).
+# ejecutar el proyecto): python3 -m pip install antlr4-tools (requiere Java 11+).

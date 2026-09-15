@@ -1,0 +1,8 @@
+# F24 - describa tabla (estadisticas Corte 2)
+# Facil: resumen estadistico propio de cada columna numerica.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+cuenteme "describa ok"
+describa ventas
+chao

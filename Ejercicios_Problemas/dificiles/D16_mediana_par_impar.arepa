@@ -1,0 +1,12 @@
+# D16 - mediana par e impar (Corte 2)
+# Dificil: con 12 filas (par) promedia los dos del medio; con filtro
+# impar devuelve el valor central.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+par = ventas |> resuma mitad = mediana(unidades)
+impar = ventas |> deje donde unidades > 10 |> resuma mitad = mediana(unidades)
+cuenteme "mediana par e impar ok"
+describa par
+describa impar
+chao

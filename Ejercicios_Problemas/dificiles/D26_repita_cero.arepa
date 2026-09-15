@@ -1,0 +1,10 @@
+# D26 - repita cero no ejecuta (Corte 2)
+# Dificil: el conteo 0 es valido y el cuerpo no corre ni una vez.
+
+quihubo
+total = 99
+repita 0 veces {
+    total = 0
+}
+cuenteme "cero veces conserva:", total
+chao

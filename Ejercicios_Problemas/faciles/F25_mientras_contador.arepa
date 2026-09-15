@@ -1,0 +1,12 @@
+# F25 - mientras contador (Corte 2)
+# Facil: ciclo mientras con condicion logica que se vuelve falsa.
+
+quihubo
+n = 1
+total = 0
+mientras (n <= 5) {
+    total = total + n
+    n = n + 1
+}
+cuenteme "suma 1..5:", total
+chao

@@ -1,0 +1,16 @@
+# M18 - mientras con pare (Corte 2)
+# Medio: pare sale del ciclo mas cercano al hallar lo buscado.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+n = 1
+hallado = 0
+mientras (n <= 12) {
+    fijese_si (n * 7 == 35) {
+        hallado = n
+        pare
+    }
+    n = n + 1
+}
+cuenteme "hallado:", hallado
+chao

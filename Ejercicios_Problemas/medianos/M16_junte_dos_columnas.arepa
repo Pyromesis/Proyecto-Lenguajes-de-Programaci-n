@@ -1,0 +1,9 @@
+# M16 - junte dos columnas (Corte 2)
+# Medio: agrupa por la combinacion ciudad + categoria.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas |> junte por [ciudad, categoria] |> resuma registros = cuente(), total_u = sume(unidades)
+cuenteme "doble junte ok"
+describa resumen
+chao

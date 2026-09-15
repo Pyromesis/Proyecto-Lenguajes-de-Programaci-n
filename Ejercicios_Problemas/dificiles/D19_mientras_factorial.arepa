@@ -1,0 +1,12 @@
+# D19 - mientras factorial (Corte 2)
+# Dificil: acumulacion iterativa sin recursion (6! = 720).
+
+quihubo
+n = 6
+factorial = 1
+mientras (n > 1) {
+    factorial = factorial * n
+    n = n - 1
+}
+cuenteme "factorial de 6:", factorial
+chao

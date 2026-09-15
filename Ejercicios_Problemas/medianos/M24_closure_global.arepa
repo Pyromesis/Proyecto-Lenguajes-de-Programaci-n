@@ -1,0 +1,10 @@
+# M24 - closure lee global (Corte 2)
+# Medio: la funcion captura el ambito donde se definio (closure).
+
+quihubo
+tasa = 4000
+invente dolares(pesos) {
+    devuelva pesos / tasa
+}
+cuenteme "2500000 pesos son:", dolares(2500000)
+chao

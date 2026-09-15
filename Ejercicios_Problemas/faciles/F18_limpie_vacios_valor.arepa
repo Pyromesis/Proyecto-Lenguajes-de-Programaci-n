@@ -1,0 +1,10 @@
+# F18 - limpie vacios con valor (Corte 2)
+# Facil: rellena cada nada con el valor dado (la encuesta trae un
+# ingreso vacio que se vuelve 0).
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+rellena = encuesta |> limpie vacios con 0
+cuenteme "vacios ok"
+describa rellena
+chao

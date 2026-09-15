@@ -1,0 +1,9 @@
+# F16 - convierta a texto (Corte 2)
+# Facil: convierte una columna numero a texto con el sistema propio.
+
+quihubo
+datos = monte "datos/empleados.csv" con encabezado
+convertida = datos |> convierta salario -> texto
+cuenteme "conversion ok"
+describa convertida
+chao

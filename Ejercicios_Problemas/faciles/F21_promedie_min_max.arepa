@@ -1,0 +1,9 @@
+# F21 - promedie minimo maximo (Corte 2)
+# Facil: tres agregaciones propias sobre una columna numerica.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas |> resuma prom = promedie(precio), menor = minimo(precio), mayor = maximo(precio)
+cuenteme "promedie minimo maximo ok"
+describa resumen
+chao

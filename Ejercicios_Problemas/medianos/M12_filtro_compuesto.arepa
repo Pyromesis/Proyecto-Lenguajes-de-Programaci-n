@@ -1,0 +1,9 @@
+# M12 - filtro logico compuesto (Corte 2)
+# Medio: y tiene mas precedencia que o; el parentesis altera el orden.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+filtro = ventas |> deje donde (unidades > 5 y precio < 4000) o categoria == "lacteos"
+cuenteme "filtro compuesto ok"
+describa filtro
+chao

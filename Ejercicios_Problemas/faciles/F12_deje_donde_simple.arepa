@@ -1,0 +1,10 @@
+# F12 - deje donde simple (filtrado Corte 2)
+# Facil: filtra filas con una comparacion sencilla; solo pasan las que
+# dan exactamente obvio. La tabla de entrada no se modifica (D3).
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+altas = ventas |> deje donde unidades > 10
+cuenteme "filtro ok"
+describa altas
+chao

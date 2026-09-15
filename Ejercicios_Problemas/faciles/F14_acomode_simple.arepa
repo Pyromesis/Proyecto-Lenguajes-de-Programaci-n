@@ -1,0 +1,9 @@
+# F14 - acomode simple (ordenamiento Corte 2)
+# Facil: ordena con merge sort propio y estable; pa_abajo es descendente.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+ordenadas = ventas |> acomode por [precio] pa_abajo
+cuenteme "orden ok"
+describa ordenadas
+chao

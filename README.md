@@ -27,6 +27,7 @@ columnas, resumir y graficar. AREPA describe ese flujo como una receta
 declarativa:
 
 ```text
+quihubo
 ventas = monte "datos/ventas.csv" con encabezado, separador ","
 
 limpias = ventas
@@ -44,9 +45,11 @@ ejex ciudad
 ejey ingreso
 guardela "salidas/ingresos_ciudad.png"
 
-guarde resumen como "salidas/resumen.csv"
+guarde resumen como "salidas/resumen_ciudades.csv"
 chao
 ```
+
+Es `ejemplos/demo.arepa` (completo con `cuenteme`, `fijese_si` e `invente`).
 
 ## Estado exacto (Cortes 1 y 2, Linux-only)
 
@@ -151,6 +154,13 @@ python3 src/cli/main.py ejemplos/demo.arepa --arbol
 python3 src/cli/main.py ejemplos/demo.arepa --tokens
 
 # Códigos de salida: 0 = válido, 1 = con errores, 2 = archivo no encontrado
+```
+
+Consola interactiva (REPL con autocompletado por Tab):
+
+```bash
+python3 src/cli/repl.py            # con fantasma (terminal Linux)
+python3 src/cli/repl.py --simple   # modo clásico
 ```
 
 ## Tokens importantes
@@ -276,15 +286,18 @@ proyecto/
 │   ├── expresiones/          propia: operadores y evaluador
 │   ├── runtime/              propia: símbolos, contexto y ejecutor
 │   ├── errores_base.py       jerarquía propia de errores
-│   └── cli/main.py           CLI (validar y --ejecutar)
+│   └── cli/                  main.py (validar y --ejecutar) y repl.py
 ├── datos/                    CSV de ejemplo para los programas
 ├── ejemplos/                 demo + filtros + graficas + funciones + ciclos
+├── Ejercicios_Problemas/     187 ejercicios (índice en su README.md)
 ├── salidas/                  evidencia Corte 2 (3 CSV versionados)
 ├── pruebas/                  6 suites (194) + programas positivos/negativos
+├── herramientas/             chequeos, demo de sustentación y consola
 ├── docs/                     alcance, catálogo, EBNF, informes, arquitectura,
 │                             reglas semánticas (09) y trazabilidad Corte 2 (10)
 ├── generar_gramatica.sh      regeneración en Linux
-└── requirements.txt          antlr4-python3-runtime==4.13.2
+├── requirements.txt          antlr4-python3-runtime==4.13.2
+└── Proyecto_LP.pdf           enunciado del curso
 ```
 
 ## Implementaciones desarrolladas desde cero
@@ -320,6 +333,26 @@ trazabilidad funcionalidad → archivo → función → prueba):
 Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
 con `--ejecutar`. Los 3 CSV de evidencia están versionados (exceptuados en
 `.gitignore`).
+
+## Ejercicios
+
+187 programas de práctica en `Ejercicios_Problemas/` (índice completo en
+`Ejercicios_Problemas/README.md`): repaso general más 45 nuevos del Corte 2
+(F12–F26, M11–M25, D12–D26) y 75 de funciones. Todos validan y ejecutan:
+
+```bash
+python3 src/cli/main.py Ejercicios_Problemas/faciles/F12_deje_donde_simple.arepa --ejecutar
+```
+
+## Herramientas
+
+```bash
+python3 herramientas/chequeo_gramatica.py   # EBNF <-> .g4: 46/46 reglas, 59 reservadas
+python3 herramientas/chequeo_pruebas.py     # conteo único: 6 suites, 194 pruebas
+bash herramientas/demo_sustentacion.sh      # demo de sustentación paso a paso
+```
+
+Autocompletado por Tab (Vim, REPL y Bash): `herramientas/consola/README.md`.
 
 ## Documentación
 

@@ -1,0 +1,15 @@
+# D21 - flujo ventas con guarde (Corte 2)
+# Dificil: flujo completo como el demo pero con mediana y maximo.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+limpias = ventas
+|> escoja [ciudad, unidades, precio]
+|> deje donde unidades > 0 y precio > 0
+|> cree total = unidades * precio
+resumen = limpias
+|> junte por [ciudad]
+|> resuma ingreso = sume(total), mitad = mediana(total), pico = maximo(total), registros = cuente()
+guarde resumen como "salidas/ej_D21.csv"
+cuenteme "flujo D21 ok"
+chao

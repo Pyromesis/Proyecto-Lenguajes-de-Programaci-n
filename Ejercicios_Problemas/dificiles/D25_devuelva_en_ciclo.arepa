@@ -1,0 +1,16 @@
+# D25 - devuelva dentro de ciclo (Corte 2)
+# Dificil: devuelva interrumpe el ciclo y retorna desde la funcion.
+
+quihubo
+invente primero_mayor(tope) {
+    i = 1
+    mientras (i <= tope) {
+        fijese_si (i * i > 50) {
+            devuelva i
+        }
+        i = i + 1
+    }
+    devuelva 0
+}
+cuenteme "primero con cuadrado > 50:", primero_mayor(20)
+chao

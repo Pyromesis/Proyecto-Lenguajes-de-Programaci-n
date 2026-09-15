@@ -1,0 +1,9 @@
+# M20 - repita rango descendente (Corte 2)
+# Medio: si el inicio es mayor que el fin, el paso por defecto es -1.
+
+quihubo
+repita i desde 5 hasta 1 {
+    cuenteme "bajando:", i
+}
+cuenteme "rango descendente ok"
+chao

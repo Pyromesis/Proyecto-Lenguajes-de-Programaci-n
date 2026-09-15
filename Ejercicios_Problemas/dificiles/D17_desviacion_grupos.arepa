@@ -1,0 +1,9 @@
+# D17 - desviacion poblacional (Corte 2)
+# Dificil: raiz de la media de diferencias al cuadrado sobre el grupo.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas |> junte por [ciudad] |> resuma desv = desviacion(precio), registros = cuente()
+cuenteme "desviacion ok"
+describa resumen
+chao

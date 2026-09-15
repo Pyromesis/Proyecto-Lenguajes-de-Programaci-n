@@ -1,0 +1,9 @@
+# F19 - guarde CSV (escritura Corte 2)
+# Facil: exporta una tabla con el escritor propio UTF-8.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+chicas = ventas |> escoja [ciudad, unidades]
+guarde chicas como "salidas/ej_F19.csv"
+cuenteme "guardado ok"
+chao

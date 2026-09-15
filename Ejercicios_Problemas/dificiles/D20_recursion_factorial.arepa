@@ -1,0 +1,13 @@
+# D20 - recursion con caso base (Corte 2)
+# Dificil: invente con closure y recursion que termina (fact 6 = 720).
+
+quihubo
+invente fact(n) {
+    fijese_si (n <= 1) {
+        devuelva 1
+    } sino {
+        devuelva n * fact(n - 1)
+    }
+}
+cuenteme "fact 6:", fact(6)
+chao

@@ -1,0 +1,9 @@
+# M14 - convierta fecha valida (Corte 2)
+# Medio: valida AAAA-MM-DD con calendario propio (incluye bisiestos).
+
+quihubo
+encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
+fechas = encuesta |> convierta fecha_ingreso -> fecha
+cuenteme "fecha ok"
+describa fechas
+chao

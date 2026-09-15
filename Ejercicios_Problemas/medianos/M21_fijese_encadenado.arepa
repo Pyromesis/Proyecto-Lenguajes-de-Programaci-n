@@ -1,0 +1,14 @@
+# M21 - fijese encadenado sobre datos (Corte 2)
+# Medio: sino puede encadenar otro fijese_si para clasificar.
+
+quihubo
+ventas = monte "datos/ventas.csv" con encabezado
+pedido = 18
+fijese_si (pedido > 20) {
+    cuenteme "pedido grande"
+} sino fijese_si (pedido > 10) {
+    cuenteme "pedido mediano"
+} sino {
+    cuenteme "pedido chico"
+}
+chao
