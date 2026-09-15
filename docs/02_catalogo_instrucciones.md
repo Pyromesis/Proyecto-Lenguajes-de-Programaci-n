@@ -1,4 +1,4 @@
-# AREPA — Catálogo de instrucciones y decisiones de diseño (Fase 1)
+# AREPA — Catálogo de instrucciones y decisiones de diseño (Fases 1–2, Linux)
 
 Aquí está el vocabulario completo de AREPA: palabras reservadas, operadores,
 literales, sentencias y la razón de cada decisión que tomamos. La gramática
@@ -142,7 +142,7 @@ Sentencia directa:
 |---|---|
 | `describa ID` | resumen estadístico de la tabla |
 
-### 3.4 Visualización (solo reconocimiento en Fase 1)
+### 3.4 Visualización (solo reconocimiento en Cortes 1–2)
 
 ```text
 pinte TIPO TABLA

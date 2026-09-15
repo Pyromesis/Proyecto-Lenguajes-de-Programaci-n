@@ -118,14 +118,22 @@ python3 -m pip install -r requirements.txt
 
 ## Dependencias
 
+> **Biblioteca externa pública autorizada (única): ANTLR4.**
+> El curso exige generar el lexer y el parser con ANTLR4, por eso el
+> proyecto usa `antlr4-python3-runtime==4.13.2` (solo para ejecutar el
+> lexer/parser generados desde `gramatica/Arepa.g4`; ver
+> `requirements.txt`). **Todo lo demás es biblioteca propia del DSL**,
+> implementada desde cero por el equipo: `Tabla`/`Columna`/`Fila`, lector
+> y escritor CSV, sistema de tipos, operadores y evaluador de expresiones,
+> tabla de símbolos, contexto y ejecutor, y sistema de errores
+> (detalle en `docs/05_arquitectura.md`).
+
 | Dependencia | Versión | Uso |
 |---|---|---|
 | Python | 3.11+ (probado 3.13) | lenguaje anfitrión |
-| `antlr4-python3-runtime` | 4.13.2 | ejecutar el lexer/parser generados |
+| `antlr4-python3-runtime` | 4.13.2 | ejecutar el lexer/parser generados (única externa) |
 
-ANTLR4 es la única dependencia y está permitida explícitamente por el
-curso. Toda la lógica del DSL (Tabla, CSV, expresiones, símbolos, errores)
-es propia: sin pandas, NumPy, Matplotlib ni equivalentes.
+Sin pandas, NumPy, Matplotlib ni equivalentes.
 
 ## Ejecución
 
@@ -232,6 +240,13 @@ Ejecuta las 6 suites (194 pruebas): front-end (48: 9 positivos, 20
 negativos, 10 de diagnóstico, 9 de CLI), estructura del árbol (21), datos
 (43), expresiones (16), símbolos y contexto (15) y runtime (51). Cada
 suite también corre sola, por ejemplo `python3 pruebas/test_front.py`.
+
+El conteo es único y verificable (fuente de verdad):
+
+```bash
+python3 herramientas/chequeo_pruebas.py
+# Unificado: 6 suites, 194 pruebas.
+```
 
 ## Errores (ejemplos reales)
 

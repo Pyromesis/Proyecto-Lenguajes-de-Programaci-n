@@ -2,7 +2,7 @@
  * ============================================================================
  *  AREPA - Análisis Reproducible de datos Escrito con Palabras Autóctonas
  * ============================================================================
- *  Gramática léxica y sintáctica (Fase 1: Especificación y front-end)
+ *  Gramática léxica y sintáctica (Fases 1-2: especificación, front-end y semántica)
  *  Curso: Lenguajes de Programación y Transducción
  *  Universidad Sergio Arboleda - Semestre 2026-2
  *

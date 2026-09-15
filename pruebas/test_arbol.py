@@ -1,5 +1,5 @@
 """
-AREPA - Pruebas de la estructura del árbol de análisis (Fase 1)
+AREPA - Pruebas de la estructura del árbol de análisis (Cortes 1-2)
 ---------------------------------------------------------------
 Verifica que el árbol producido por ANTLR4:
   * contiene las reglas relevantes de cada instrucción;

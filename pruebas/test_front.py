@@ -1,5 +1,5 @@
 """
-AREPA - Pruebas del front-end (Fase 1)
+AREPA - Pruebas del front-end (Cortes 1-2)
 --------------------------------------
 Verifica que:
   * los programas de pruebas/positivos se reconozcan sin errores;

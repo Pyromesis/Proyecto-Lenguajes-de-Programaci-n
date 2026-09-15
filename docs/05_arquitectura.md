@@ -225,7 +225,7 @@ un visitor propio.
   fuera de un ciclo son error semántico. Tope de 1 000 000 de vueltas
   con mensaje en español en vez de colgarse.
 * **`pinte`**: valida que la tabla exista y que las columnas de
-  `ejex`/`ejey` existan (valor semántico real en Fase 1) y avisa que la
+  `ejex`/`ejey` existan (validado desde el Corte 1) y avisa que la
   imagen llega en la Fase 3.
 * **`monte`/`guarde`**: usan el lector y escritor CSV propios; los
   errores de archivo y de formato incluyen la ruta y la línea.
@@ -264,7 +264,9 @@ del dato sí es exacta.
 | Tabla de símbolos y contexto propios | `test_simbolos.py` | 15 |
 | Runtime propio (programas completos) | `test_runtime.py` | 51 |
 
-Total: **194 pruebas**. Las 48 de front-end desglosan en: 9 programas
+Total: **194 pruebas** (fuente única verificable con
+`python3 herramientas/chequeo_pruebas.py`, que falla si algún total
+cambia). Las 48 de front-end desglosan en: 9 programas
 positivos, 20 negativos, 10 de diagnóstico (línea/columna exactas,
 robustez, comentarios, números incompletos y ausencia de duplicados) y 9
 de CLI. Las 21 de árbol verifican la estructura jerárquica y la

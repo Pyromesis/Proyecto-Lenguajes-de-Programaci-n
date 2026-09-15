@@ -3,7 +3,7 @@ AREPA - Interfaz de línea de comandos (src/cli/main.py)
 -------------------------------------------------------
 Dos modos:
 
-  * Validación (por defecto, Fase 1): análisis léxico y sintáctico del
+  * Validación (por defecto, Cortes 1-2): análisis léxico y sintáctico del
     programa con el lexer/parser de ANTLR4 y el listener propio; reporta
     los errores con línea y columna.
 

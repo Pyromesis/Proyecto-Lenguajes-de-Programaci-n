@@ -443,7 +443,7 @@ class EjecutorArepa(ArepaVisitor):
         )
 
     def visitInstruccion_grafica(self, ctx):
-        """Fase 1: valida la instruccion y avisa que la imagen llega en Fase 3."""
+        """Cortes 1-2: valida la instruccion y avisa que la imagen llega en Fase 3."""
         nombre = ctx.identificador().getText()
         tipo = ctx.tipo_grafica().getText()
         tabla = self._obtener_tabla(nombre, ctx)
