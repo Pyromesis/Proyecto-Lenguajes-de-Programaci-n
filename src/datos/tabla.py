@@ -347,6 +347,8 @@ class Tabla:
     def copiar(self):
         copia = Tabla(self.nombres_columnas, [f.copiar() for f in self.filas],
                       self.nombre, self.origen)
+        for c, original in zip(copia.columnas, self.columnas):
+            c.tipo = original.tipo
         return copia
 
     def texto_tabla(self, maximo_filas=10):

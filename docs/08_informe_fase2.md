@@ -43,7 +43,7 @@ Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 | Selección, filtrado y creación de columnas | `escoja_selecciona_columnas`, `deje_donde_filtra_filas`, `pipeline_completo_con_cree` |
 | Agrupamiento y agregaciones | `junte_resuma_agregaciones`, `agregaciones_estadisticas_propias`, `agregaciones_en_tabla_vacia_dan_nada` |
 | Estadísticas descriptivas | `describa` → `describa_produce_resumen_propio` (`sume/promedie/mediana/minimo/maximo/desviacion` por columna numérica) |
-| Escritura de resultados en CSV | `ejemplos/demo.arepa --ejecutar` genera `salidas/resumen_ciudades.csv`; `ejemplos/ciclos.arepa --ejecutar` genera `salidas/resumen_ciclos.csv` |
+| Escritura de resultados en CSV | `ejemplos/demo.arepa --ejecutar` genera `salidas/resumen_ciudades.csv`; `ejemplos/ciclos.arepa --ejecutar` genera `salidas/resumen_ciclos.csv`; `ejemplos/filtros.arepa --ejecutar` genera `salidas/filtros_listos.csv` (los 3 versionados, exceptuados en `.gitignore`) |
 | Errores por variables inexistentes | `variable_inexistente_rechazada` |
 | Errores por columnas inexistentes | `escoja_columna_inexistente`, `agregacion_sobre_columna_inexistente`, `pinte_valida_columnas_de_la_grafica` |
 | Errores por tipos incompatibles | `suma_numero_mas_texto_rechazada`, `comparacion_numero_con_texto_rechazada`, `logico_con_numero_rechazado` (en `test_expresiones.py`) |
@@ -88,7 +88,7 @@ sin convertir el DSL en una copia de Python (no hay `for` estilo C).
 
 | Requisito | Estado |
 |---|---|
-| ANTLR4 para lexer y parser | `antlr4-python3-runtime==4.13.2`; regeneración con `generar_gramatica.sh` (Linux) o `java -jar $ANTLR_JAR ... -o generado gramatica/Arepa.g4` (verificado en Windows con JDK 17) |
+| ANTLR4 para lexer y parser | `antlr4-python3-runtime==4.13.2`; regeneración con `generar_gramatica.sh` (Linux, verificado con JDK 17) |
 | Python 3.11+ | probado con 3.12/3.13 |
 | Patrón Visitor | `EjecutorArepa` y `EvaluadorExpresiones` extienden `ArepaVisitor` |
 | Bibliotecas sugeridas (pandas, NumPy, Matplotlib) | **no se usan**: toda la lógica es propia (`docs/05_arquitectura.md`); el enunciado las presenta como apoyo opcional ("podrán emplearse") |
@@ -109,4 +109,4 @@ resumen correctamente exportada (p. ej. `salidas/resumen_ciudades.csv` con
 |---|---|---|
 | `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 46/46 reglas y 59 reservadas en ambas direcciones (hace real el "chequeo" citado en `docs/06` R10/R23) | `python herramientas/chequeo_gramatica.py` |
 | `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, negativo con línea/columna, ejecución + CSV, ciclos, suite 6/6); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
-| Tubería cerrada | `arepa demo.arepa --arbol \| head` sale limpio (código 0, sin volcado) en Linux y Windows | `test_front.py` CLI: "tubería cerrada sale limpio sin traceback" |
+| Tubería cerrada | `arepa demo.arepa --arbol \| head` sale limpio (código 0, sin volcado) en Linux | `test_front.py` CLI: "tubería cerrada sale limpio sin traceback" |

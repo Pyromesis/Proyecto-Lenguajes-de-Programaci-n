@@ -26,4 +26,9 @@ listos = validos
 |> convierta edad -> numero
 |> acomode por [ingreso_mensual] pa_abajo
 
+# Evidencia de transformación y exportación (Corte 2)
+describa listos
+cuenteme "Registros listos para el reporte"
+guarde listos como "salidas/filtros_listos.csv"
+
 chao

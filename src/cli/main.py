@@ -40,7 +40,7 @@ from lenguaje.analizador import analizar  # noqa: E402
 from lenguaje.arbol import contar_sentencias, imprimir_arbol  # noqa: E402
 from errores_base import ErrorArepa, RetornoFuncion  # noqa: E402
 
-VERSION = "AREPA v0.2 (Fase 1 - front-end + biblioteca propia)"
+VERSION = "AREPA v0.3 (Fase 2 - semantica y procesamiento de datos)"
 LINEA = "=" * 62
 
 
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except BrokenPipeError:
-        # El lector cerró la tubería (p. ej. `arepa demo.arepa --arbol
+        # Linux: el lector cerró la tubería (p. ej. `arepa demo.arepa --arbol
         # | head`): salir en silencio con código 0, sin volcado. Se
         # redirige a devnull para que el flush de cierre no proteste.
         try:
@@ -182,8 +182,8 @@ if __name__ == "__main__":
         sys.stdout = open(os.devnull, "w")
         sys.exit(0)
     except OSError as problema:
-        # En Windows, escribir en una tubería ya cerrada llega como
-        # EINVAL en vez de EPIPE: se trata igual (salida limpia).
+        # Linux: escribir en una tubería ya cerrada llega como EPIPE
+        # (y en algunos kernels como EINVAL): se trata igual.
         import errno
 
         if problema.errno in (errno.EPIPE, errno.EINVAL):

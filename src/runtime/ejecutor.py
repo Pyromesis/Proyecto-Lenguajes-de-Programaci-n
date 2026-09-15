@@ -212,6 +212,11 @@ class EjecutorArepa(ArepaVisitor):
     def _aplicar_operacion(self, etapa, tabla):
         op = etapa.operacion_datos()
 
+        if op.JUNTE() is None and op.RESUMA() is None:
+            # Un 'junte' solo prepara el 'resuma' inmediato: si otra
+            # operación se interpone, las claves rezagadas se descartan.
+            self._claves_junte = None
+
         if op.ESCOJA() is not None:
             return tabla.seleccionar(self._nombres_lista(op.lista_columnas()))
 
@@ -249,6 +254,13 @@ class EjecutorArepa(ArepaVisitor):
         if op.LIMPIE() is not None:
             copia = tabla.copiar()
             if op.DUPLICADOS() is not None:
+                if op.expresion_logica() is not None:
+                    raise ErrorSemantico(
+                        "'limpie duplicados' no recibe valor con 'con': "
+                        "usá 'limpie duplicados' solo o 'limpie vacios con VALOR'.",
+                        linea=op.start.line,
+                        columna=op.start.column,
+                    )
                 copia.quitar_duplicados()
                 return copia
             relleno = op.expresion_logica()
@@ -784,13 +796,11 @@ class EjecutorArepa(ArepaVisitor):
         # Estado guardado: ambito actual y contexto de fila del evaluador.
         ambito_previo = self._ambito
         simbolos_previos = self.evaluador.simbolos
-        fila_previa, tabla_previa = self.evaluador._fila, self.evaluador._tabla
-        modo_previo = self.evaluador.modo_columna
+        contexto_fila_previo = self.evaluador.tomar_contexto_fila()
 
         self._ambito = ambito_llamada
         self.evaluador.simbolos = ambito_llamada
-        self.evaluador._fila, self.evaluador._tabla = None, None
-        self.evaluador.modo_columna = False
+        self.evaluador.fijar_contexto_fila(None, None, False)
         try:
             self._ejecutar_bloque(funcion.nodo_bloque)
             return NADA
@@ -799,8 +809,7 @@ class EjecutorArepa(ArepaVisitor):
         finally:
             self._ambito = ambito_previo
             self.evaluador.simbolos = simbolos_previos
-            self.evaluador._fila, self.evaluador._tabla = fila_previa, tabla_previa
-            self.evaluador.modo_columna = modo_previo
+            self.evaluador.fijar_contexto_fila(*contexto_fila_previo)
 
 
 def _num(valor):

@@ -1,4 +1,4 @@
-# AREPA — Gramática BNF/EBNF (Fase 1)
+# AREPA — Gramática BNF/EBNF (Fases 1–2, acumulativa, Linux)
 
 Esta especificación es la fuente formal del lenguaje y se corresponde 1 a 1
 con la implementación en ANTLR4 (`gramatica/Arepa.g4`).

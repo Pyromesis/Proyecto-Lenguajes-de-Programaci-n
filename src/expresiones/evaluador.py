@@ -86,6 +86,14 @@ class EvaluadorExpresiones(ArepaVisitor):
         finally:
             self._fila, self._tabla = fila_previa, tabla_previa
 
+    def tomar_contexto_fila(self):
+        """Guarda (fila, tabla, modo_columna) para llamadas a funciones."""
+        return (self._fila, self._tabla, self.modo_columna)
+
+    def fijar_contexto_fila(self, fila, tabla, modo_columna=False):
+        """Restaura el contexto de fila (lo usa el ejecutor al llamar)."""
+        self._fila, self._tabla, self.modo_columna = fila, tabla, modo_columna
+
     # ---------------------------------------------------------------- #
     # Logica: o < y < no
     # ---------------------------------------------------------------- #
@@ -203,7 +211,7 @@ class EvaluadorExpresiones(ArepaVisitor):
             return nombre
         if self._tabla is not None and self._fila is not None:
             if self._tabla.tiene_columna(nombre):
-                indice = self._tabla._indice_opcional(nombre)
+                indice = self._tabla.indice_columna(nombre)
                 return self._fila.valor_en(indice)
         if self.simbolos.existe(nombre):
             return self.simbolos.buscar(nombre)

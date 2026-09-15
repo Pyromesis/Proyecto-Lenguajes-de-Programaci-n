@@ -7,4 +7,9 @@ __pycache__/
 venv/
 
 # Salidas de ejecución (gráficas y CSV generados)
-salidas/
+# Se ignora todo lo generado, EXCEPTO la evidencia verificable del Corte 2
+salidas/*
+!salidas/resumen_ciudades.csv
+!salidas/resumen_ciclos.csv
+!salidas/filtros_listos.csv
+!salidas/.gitkeep

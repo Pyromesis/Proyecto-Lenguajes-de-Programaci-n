@@ -39,7 +39,7 @@ try:
     import termios as _termios
     import tty as _tty
     _PUEDE_FANTASMA = True
-except Exception:  # Windows u otros: sin modo fantasma, solo readline
+except Exception:  # Linux sin termios/tty: sin modo fantasma, solo readline
     _termios = None
     _tty = None
     _PUEDE_FANTASMA = False

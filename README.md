@@ -48,9 +48,9 @@ guarde resumen como "salidas/resumen.csv"
 chao
 ```
 
-## Estado exacto del Primer Corte
+## Estado exacto (Cortes 1 y 2, Linux-only)
 
-**Implementado y verificado (Corte 1 — Especificación y front-end):**
+**Corte 1 — Especificación y front-end (verificado):**
 
 * especificación completa: alcance, usuarios, casos de uso, catálogo de
   instrucciones, gramática BNF/EBNF;
@@ -64,15 +64,25 @@ chao
   columna;
 * CLI con códigos de salida 0/1/2 y 194 pruebas en 6 suites.
 
+**Corte 2 — Semántica y procesamiento de datos (verificado):**
+
+* Visitor y motor propios (`src/runtime/ejecutor.py`,
+  `src/expresiones/evaluador.py`), tabla de símbolos y contexto propios;
+* carga, selección, filtrado, ordenamiento (merge sort propio), columnas
+  calculadas, `limpie`/`renombre`/`convierta`, `junte por` + `resuma`,
+  `describa` y `guarde ... como` (escritor CSV propio UTF-8);
+* reglas semánticas en `docs/09_reglas_semanticas.md` y trazabilidad en
+  `docs/10_matriz_trazabilidad_corte2.md`;
+* 3 programas completos con exportación versionada:
+  `salidas/resumen_ciudades.csv` (demo),
+  `salidas/resumen_ciclos.csv` (ciclos),
+  `salidas/filtros_listos.csv` (filtros).
+
 **Solamente sintáctico en esta fase:** `pinte` y `guardela`/`muestrela` se
 reconocen y se validan (tabla y columnas existentes) pero **no generan
-imágenes**. Con `--ejecutar`, el programa corre sobre la biblioteca propia
-(Tabla, lector CSV, evaluador, símbolos), lo que sirve de evidencia de que
-el front-end reconoce de verdad; el procesamiento completo y las gráficas
-PNG corresponden a los cortes 2 y 3.
+imágenes** (Fase 3).
 
-**No pertenece a esta fase:** motor de gráficas, exportación PNG,
-estadísticas avanzadas y producto final.
+**No pertenece a esta fase:** motor de gráficas y exportación PNG.
 
 ## Requisitos
 
@@ -189,15 +199,6 @@ Alternativa con `antlr4-tools` (requiere Java 11+):
 antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
 ```
 
-### Nota para Windows (no oficial)
-
-El entorno oficial es Linux. En Windows, con Java 11+ y el jar descargado,
-la misma regeneración funciona desde PowerShell:
-
-```powershell
-java -jar "$env:USERPROFILE/antlr/antlr-4.13.2-complete.jar" -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
-```
-
 El código generado vive en `generado/` y no se edita a mano.
 
 ## Árbol de análisis
@@ -262,9 +263,11 @@ proyecto/
 │   ├── errores_base.py       jerarquía propia de errores
 │   └── cli/main.py           CLI (validar y --ejecutar)
 ├── datos/                    CSV de ejemplo para los programas
-├── ejemplos/                 demo + filtros + graficas + funciones
+├── ejemplos/                 demo + filtros + graficas + funciones + ciclos
+├── salidas/                  evidencia Corte 2 (3 CSV versionados)
 ├── pruebas/                  6 suites (194) + programas positivos/negativos
-├── docs/                     alcance, catálogo, EBNF, informe, arquitectura
+├── docs/                     alcance, catálogo, EBNF, informes, arquitectura,
+│                             reglas semánticas (09) y trazabilidad Corte 2 (10)
 ├── generar_gramatica.sh      regeneración en Linux
 └── requirements.txt          antlr4-python3-runtime==4.13.2
 ```
@@ -287,20 +290,21 @@ trazabilidad funcionalidad → archivo → función → prueba):
 * contexto de ejecución propio (salida formateada, registro de errores);
 * sistema de errores propio (léxicos, sintácticos, semánticos, de datos);
 * agregaciones propias (`cuente`, `sume`, `promedie`, `mediana`, `minimo`,
-  `maximo`, `desviacion`) usadas solo como evidencia de reconocimiento.
+  `maximo`, `desviacion`) ejecutadas por `junte`/`resuma` y `describa`.
 
 ## Ejemplos
 
-| Ejemplo | Qué demuestra |
-|---|---|
-| `ejemplos/demo.arepa` | flujo completo del lenguaje |
-| `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden |
-| `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) |
-| `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` |
-| `ejemplos/ciclos.arepa` | `mientras`, `repita`, `pare`/`siga` + flujo de datos |
+| Ejemplo | Qué demuestra | Exportación |
+|---|---|---|
+| `ejemplos/demo.arepa` | flujo completo del lenguaje | `salidas/resumen_ciudades.csv` |
+| `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden | `salidas/filtros_listos.csv` |
+| `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) | — (validación, PNG en Fase 3) |
+| `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` | — |
+| `ejemplos/ciclos.arepa` | `mientras`, `repita`, `pare`/`siga` + flujo de datos | `salidas/resumen_ciclos.csv` |
 
 Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
-con `--ejecutar`.
+con `--ejecutar`. Los 3 CSV de evidencia están versionados (exceptuados en
+`.gitignore`).
 
 ## Documentación
 
@@ -310,5 +314,7 @@ con `--ejecutar`.
 * [Informe de la Fase 1](docs/04_informe_fase1.md)
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
 * [Informe de la Fase 2 (Semántica y Corte 2)](docs/08_informe_fase2.md)
+* [Reglas semánticas (Corte 2)](docs/09_reglas_semanticas.md)
+* [Matriz de trazabilidad del Corte 2](docs/10_matriz_trazabilidad_corte2.md)
 * [Guía de sustentación](docs/07_guia_sustentacion.md)
 * [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)

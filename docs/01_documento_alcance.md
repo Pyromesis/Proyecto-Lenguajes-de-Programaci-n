@@ -1,4 +1,4 @@
-# AREPA — Documento de alcance (Fase 1)
+# AREPA — Documento de alcance (Fases 1–2, acumulativa, Linux)
 
 **AREPA**: *Análisis Reproducible de datos Escrito con Palabras Autóctonas*
 Lenguaje de dominio específico (DSL) para ciencia de datos y visualización.

@@ -198,8 +198,8 @@ línea crudos y que ninguno sea un volcado de más de 300 caracteres.
 | P4 | Columna `fecha` fallaba en `[fecha, ciudad]` | `fecha` también es tipo reservado | Nueva regla `nombre_columna = ID \| cualquier_reservada`, usada en listas, ejes, renombre, conversión y átomos |
 | P5 | Alias `dispersion` en `resuma` fallaba | Mismo choque palabra reservada vs. nombre externo | `item_resumen` usa `nombre_columna` |
 | P6 | Cláusulas de `pinte` se interpretaban como sentencias nuevas | Ambigüedad: cualquier expresión podía iniciar sentencia | Las sentencias-expresión se restringen a llamadas (`instruccion_llamada`) y las cláusulas admiten `[NL]` antes |
-| P7 | BOM UTF-8 provocaba error fantasma al inicio | PowerShell guarda UTF-8 con BOM | Lectura con `utf-8-sig` |
-| P8 | Consola Windows (cp1252) rompía tildes y caracteres especiales | Codificación heredada del sistema | `sys.stdout.reconfigure(encoding="utf-8")` en `main.py` y en el corredor de pruebas |
+| P7 | BOM UTF-8 provocaba error fantasma al inicio | Editores que guardan UTF-8 con BOM | Lectura con `utf-8-sig` (Linux) |
+| P8 | Consola con codificación distinta de UTF-8 rompía tildes y caracteres especiales | Codificación heredada del sistema | `sys.stdout.reconfigure(encoding="utf-8")` en `main.py` y en el corredor de pruebas (Linux, terminal UTF-8) |
 | P9 | `quihubo chao` en una misma línea se aceptaba | La regla `programa` permitía cero saltos tras la apertura | `NL+` obligatorio después de `quihubo`; cubierto por la negativa n12 |
 | P10 | Mensajes como `Esa construcción '\\ny' no cuadra…` confundían | ANTLR incluye saltos crudos y conjuntos de 50+ tokens en sus mensajes | Traducción de tokens, límite de 6 opciones por conjunto y pista cuando se usa una reservada como variable |
 

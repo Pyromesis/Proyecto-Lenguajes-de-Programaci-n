@@ -45,6 +45,10 @@ echo "### 8. Ciclos (ampliación Corte 2)"
 python3 src/cli/main.py ejemplos/ciclos.arepa --ejecutar | grep -q "factorial de 5: 120"
 test -f salidas/resumen_ciclos.csv
 
+echo "### 8b. Tercer programa completo con exportación (filtros)"
+python3 src/cli/main.py ejemplos/filtros.arepa --ejecutar | grep -q "filtros_listos.csv"
+test -f salidas/filtros_listos.csv
+
 echo "### 9. Suite completa (6/6)"
 python3 pruebas/test_proyecto.py 2>&1 | grep -q "6 de 6 suites pasaron"
 
