@@ -300,6 +300,10 @@ proyecto/
 └── Proyecto_LP.pdf           enunciado del curso
 ```
 
+Cada carpeta trae su `README.md` con el detalle
+(`datos/`, `ejemplos/`, `generado/`, `gramatica/`, `herramientas/`,
+`pruebas/`, `salidas/`, `src/`, `Ejercicios_Problemas/`).
+
 ## Implementaciones desarrolladas desde cero
 
 Detalle completo en `docs/05_arquitectura.md` (incluye matriz de

@@ -10,6 +10,11 @@ se resuelven desde ahí.
 python3 src/cli/main.py Ejercicios_Problemas/faciles/F12_deje_donde_simple.arepa --ejecutar
 ```
 
+Convenciones de nombre: `F` fácil, `M` mediano, `D` difícil, numerados
+en orden (`F01–F26`, `M01–M25`, `D01–D26`). Cada archivo trae en sus
+primeras líneas qué concepto del Corte ejercita. Los que usan `guarde`
+escriben en `salidas/ej_*.csv` (temporal, ignorado por git).
+
 ## Corte 1 y repaso general
 
 | Carpeta | Contenido |

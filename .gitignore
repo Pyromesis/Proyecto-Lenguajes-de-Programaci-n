@@ -12,4 +12,5 @@ salidas/*
 !salidas/resumen_ciudades.csv
 !salidas/resumen_ciclos.csv
 !salidas/filtros_listos.csv
+!salidas/README.md
 !salidas/.gitkeep
