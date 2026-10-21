@@ -51,41 +51,18 @@ chao
 
 Es `ejemplos/demo.arepa` (completo con `cuenteme`, `fijese_si` e `invente`).
 
-## Estado exacto (Cortes 1 y 2, Linux-only)
+## Fases del proyecto
 
-**Corte 1 — Especificación y front-end (verificado):**
+El curso plantea tres cortes acumulativos. Los dos primeros están
+entregados; el tercero (gráficas y exportación PNG) queda pendiente.
 
-* especificación completa: alcance, usuarios, casos de uso, catálogo de
-  instrucciones, gramática BNF/EBNF;
-* gramática ANTLR4 (`gramatica/Arepa.g4`) con lexer, parser y Visitor
-  generados para Python;
-* reconocimiento de programas `.arepa`: asignaciones, expresiones con
-  precedencia, carga CSV (`monte`), selección (`escoja`), filtros
-  (`deje donde`), visualización (`pinte ...`), condicionales y funciones;
-* árbol de análisis legible (`--arbol`) y tabla de tokens (`--tokens`);
-* diagnóstico de errores léxicos y sintácticos en español con línea y
-  columna;
-* CLI con códigos de salida 0/1/2 y 194 pruebas en 6 suites.
+| Corte | Fase | Alcance de la versión | Entregables |
+|---|---|---|---|
+| Primero | Especificación y front-end | Asignaciones y expresiones, carga de CSV, selección de columnas, filtros sencillos y reconocimiento de `pinte` aunque todavía no genere la gráfica | Documento de alcance, catálogo de instrucciones, gramática BNF/EBNF y archivo `.g4`, lexer y parser generados, pruebas léxicas y sintácticas |
+| Segundo | Semántica y procesamiento de datos | Visitor, contexto y tabla de símbolos; selección, filtrado, columnas calculadas, agrupamiento, agregaciones y escritura de resultados en CSV | Reglas semánticas documentadas, tres programas completos y pruebas unitarias y de integración |
+| Tercero | Visualización y producto final | Al menos cuatro tipos de gráficas configurables desde el DSL, exportación a PNG, CLI estable y caso de estudio con datos reales | Intérprete completo, manual de usuario y técnico, pruebas de regresión y caso de estudio reproducible |
 
-**Corte 2 — Semántica y procesamiento de datos (verificado):**
-
-* Visitor y motor propios (`src/runtime/ejecutor.py`,
-  `src/expresiones/evaluador.py`), tabla de símbolos y contexto propios;
-* carga, selección, filtrado, ordenamiento (merge sort propio), columnas
-  calculadas, `limpie`/`renombre`/`convierta`, `junte por` + `resuma`,
-  `describa` y `guarde ... como` (escritor CSV propio UTF-8);
-* reglas semánticas en `docs/09_reglas_semanticas.md` y trazabilidad en
-  `docs/10_matriz_trazabilidad_corte2.md`;
-* 3 programas completos con exportación versionada:
-  `salidas/resumen_ciudades.csv` (demo),
-  `salidas/resumen_ciclos.csv` (ciclos),
-  `salidas/filtros_listos.csv` (filtros).
-
-**Solamente sintáctico en esta fase:** `pinte` y `guardela`/`muestrela` se
-reconocen y se validan (tabla y columnas existentes) pero **no generan
-imágenes** (Fase 3).
-
-**No pertenece a esta fase:** motor de gráficas y exportación PNG.
+El enunciado completo está en [`Proyecto_LP.pdf`](Proyecto_LP.pdf), sección 5.
 
 ## Requisitos
 
@@ -120,16 +97,6 @@ python3 -m pip install -r requirements.txt
 ```
 
 ## Dependencias
-
-> **Biblioteca externa pública autorizada (única): ANTLR4.**
-> El curso exige generar el lexer y el parser con ANTLR4, por eso el
-> proyecto usa `antlr4-python3-runtime==4.13.2` (solo para ejecutar el
-> lexer/parser generados desde `gramatica/Arepa.g4`; ver
-> `requirements.txt`). **Todo lo demás es biblioteca propia del DSL**,
-> implementada desde cero por el equipo: `Tabla`/`Columna`/`Fila`, lector
-> y escritor CSV, sistema de tipos, operadores y evaluador de expresiones,
-> tabla de símbolos, contexto y ejecutor, y sistema de errores
-> (detalle en `docs/05_arquitectura.md`).
 
 | Dependencia | Versión | Uso |
 |---|---|---|
