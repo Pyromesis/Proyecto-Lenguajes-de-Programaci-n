@@ -15,8 +15,13 @@ Toda la logica es propia:
     insercion propio y la desviacion es la estandar poblacional;
   * las funciones 'invente' se guardan como closures propias: capturan
     el ambito donde fueron definidas y admiten recursion;
-  * 'pinte' se reconoce y valida semanticamente (tabla y columnas de
-    ejex/ejey), pero NO genera imagenes: eso llega en la Fase 3.
+  * 'pinte' valida la tabla y sus columnas y construye el PNG con el
+    motor propio de graficas (barras, lineas, histograma, dispersion y
+    cajas); 'guardela' escribe la ruta pedida y 'muestrela' deja el
+    archivo en salidas/ e intenta abrirlo sin bloquear.
+  * Lista, Registro y Tabla se crean con literales ([...], {clave: ...},
+    arme [...] con [[...]]), se leen con indices 1-based y se modifican
+    con 'agregue', 'saque', asignaciones indexadas y 'recorra'.
 
 Decisiones semanticas propias (documentadas):
   * 'deje donde' conserva la fila solo si la condicion es exactamente
@@ -36,9 +41,16 @@ Decisiones semanticas propias (documentadas):
   * 'devuelva' fuera de una funcion es un error semantico.
 """
 
+import os
+import shutil
+import subprocess
+
+from datos import acceso
 from datos.escritor_csv import EscritorCSV
 from datos.fila import Fila
 from datos.lector_csv import LectorCSV
+from datos.lista import Lista
+from datos.registro import Registro
 from datos.tabla import Tabla
 from datos.tipos import (
     NADA,
@@ -51,6 +63,8 @@ from datos.tipos import (
 from errores_base import (
     ErrorColumna,
     ErrorEjecucion,
+    ErrorGrafica,
+    ErrorOperacion,
     ErrorSemantico,
     ErrorTipos,
     ErrorVariable,
@@ -59,6 +73,7 @@ from errores_base import (
     SeguirCiclo,
 )
 from expresiones.evaluador import EvaluadorExpresiones
+from graficas.tipos_grafica import Serie, dibujar
 from runtime.contexto import ContextoEjecucion, a_texto
 from runtime.simbolos import FuncionArepa
 
@@ -80,7 +95,9 @@ class EjecutorArepa(ArepaVisitor):
     def __init__(self):
         self.contexto = ContextoEjecucion()
         self.evaluador = EvaluadorExpresiones(
-            self.contexto.simbolos, invocar=self._invocar
+            self.contexto.simbolos,
+            invocar=self._invocar,
+            evaluar_expresion=self.evaluar_expresion,
         )
         self._ambito = self.contexto.simbolos
         self._claves_junte = None
@@ -142,12 +159,41 @@ class EjecutorArepa(ArepaVisitor):
 
     def visitAsignacion(self, ctx):
         nombre = ctx.identificador().getText()
+        indices = ctx.indice()
+
+        if indices:
+            contenedor = self._ambito.buscar_opcional(nombre)
+            if contenedor is None:
+                raise ErrorVariable(
+                    "La variable '{0}' no esta declarada; no se puede "
+                    "asignar dentro de ella.".format(nombre),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            for indice in indices[:-1]:
+                posicion = self.evaluar_expresion(indice.expresion())
+                contenedor = acceso.obtener(
+                    contenedor, posicion, indice.start.line, indice.start.column
+                )
+            ultimo = indices[-1]
+            posicion = self.evaluar_expresion(ultimo.expresion())
+            valor = self.visit(ctx.expresion())
+            acceso.asignar(
+                contenedor, posicion, valor,
+                ultimo.start.line, ultimo.start.column,
+            )
+            return valor
+
         valor = self.visit(ctx.expresion())
         if self._ambito.existe(nombre):
             self._ambito.asignar(nombre, valor)
         else:
             self._ambito.declarar(nombre, valor)
         return valor
+
+    def evaluar_expresion(self, ctx):
+        """Callback del evaluador: una expresion puede ser un pipeline."""
+        return self.visitExpresion(ctx)
 
     def visitExpresion(self, ctx):
         """Pipeline: primera etapa y encadenamiento con '|>'.
@@ -174,14 +220,19 @@ class EjecutorArepa(ArepaVisitor):
     def _evaluar_primera_etapa(self, etapa):
         operacion = etapa.operacion_datos()
         if operacion is None:
-            return self.evaluador.evaluar(etapa.expresion_logica())
+            # La expresion puede venir de un callback del evaluador (por
+            # ejemplo un parentesis dentro de 'deje donde'): se conserva
+            # la fila/tabla actuales para resolver nombres de columna.
+            fila_actual, tabla_actual = self.evaluador.tomar_contexto_fila()[:2]
+            return self.evaluador.evaluar(
+                etapa.expresion_logica(), fila_actual, tabla_actual
+            )
         if operacion.instruccion_monte() is not None:
             return self._cargar(operacion.instruccion_monte())
         raise ErrorSemantico(
             "La etapa '{0}' necesita una tabla de entrada: encadenala con "
-            "'|>' despues de una tabla o cargala con 'monte'.".format(
-                operacion.start.text
-            ),
+            "'|>' despues de una tabla o cargala con 'monte' o creala con "
+            "'arme'.".format(operacion.start.text),
             linea=operacion.start.line,
             columna=operacion.start.column,
         )
@@ -315,6 +366,7 @@ class EjecutorArepa(ArepaVisitor):
             self._grupo_filas = filas_grupo
             self._tabla_grupo = tabla
             self._en_resuma = True
+            self.evaluador.modo_resuma = True
             try:
                 valores = list(clave)
                 for llamada in llamadas:
@@ -322,6 +374,7 @@ class EjecutorArepa(ArepaVisitor):
                 filas_resultado.append(Fila(valores))
             finally:
                 self._en_resuma = False
+                self.evaluador.modo_resuma = False
                 self._grupo_filas = None
                 self._tabla_grupo = None
 
@@ -341,40 +394,43 @@ class EjecutorArepa(ArepaVisitor):
             )
         columna = argumentos[0]
         indice = self._tabla_grupo.indice_columna(columna)
-        valores = [
-            f.valor_en(indice)
-            for f in self._grupo_filas
-            if not es_nada(f.valor_en(indice))
-        ]
+        valores = [f.valor_en(indice) for f in self._grupo_filas]
+        return self._calcular_sobre_valores(
+            nombre, valores, "la columna '{0}'".format(columna)
+        )
+
+    def _calcular_sobre_valores(self, nombre, valores, descripcion):
+        """Aplica una agregacion a valores ya reunidos (ignora los 'nada')."""
+        presentes = [v for v in valores if not es_nada(v)]
 
         if nombre == "cuente":
-            return len(valores)
+            return len(presentes)
         if nombre == "sume":
-            self._exigir_numericos(valores, nombre, columna)
-            return sum(valores) if valores else NADA
+            self._exigir_numericos(presentes, nombre, descripcion)
+            return sum(presentes) if presentes else NADA
         if nombre == "promedie":
-            self._exigir_numericos(valores, nombre, columna)
-            return sum(valores) / len(valores) if valores else NADA
+            self._exigir_numericos(presentes, nombre, descripcion)
+            return sum(presentes) / len(presentes) if presentes else NADA
         if nombre == "mediana":
-            self._exigir_numericos(valores, nombre, columna)
-            return self._mediana(valores)
+            self._exigir_numericos(presentes, nombre, descripcion)
+            return self._mediana(presentes)
         if nombre == "minimo":
-            return self._extremo(valores, nombre, columna, menor=True)
+            return self._extremo(presentes, nombre, descripcion, menor=True)
         if nombre == "maximo":
-            return self._extremo(valores, nombre, columna, menor=False)
+            return self._extremo(presentes, nombre, descripcion, menor=False)
         if nombre == "desviacion":
-            self._exigir_numericos(valores, nombre, columna)
-            return self._desviacion(valores)
+            self._exigir_numericos(presentes, nombre, descripcion)
+            return self._desviacion(presentes)
         raise ErrorSemantico("Agregacion '{0}' no reconocida.".format(nombre))
 
     @staticmethod
-    def _exigir_numericos(valores, agregacion, columna):
+    def _exigir_numericos(valores, agregacion, descripcion):
         for v in valores:
             if not es_numero(v):
                 raise ErrorTipos(
-                    "La agregacion '{0}' necesita numeros, pero la columna "
-                    "'{1}' contiene un valor de tipo {2}.".format(
-                        agregacion, columna, nombre_tipo(v)
+                    "La agregacion '{0}' necesita numeros, pero {1} contiene "
+                    "un valor de tipo {2}.".format(
+                        agregacion, descripcion, nombre_tipo(v)
                     )
                 )
 
@@ -402,10 +458,10 @@ class EjecutorArepa(ArepaVisitor):
         return ordenados
 
     @staticmethod
-    def _extremo(valores, agregacion, columna, menor):
+    def _extremo(valores, agregacion, descripcion, menor):
         if not valores:
             return NADA
-        EjecutorArepa._exigir_numericos(valores, agregacion, columna)
+        EjecutorArepa._exigir_numericos(valores, agregacion, descripcion)
         extremo = valores[0]
         for v in valores[1:]:
             if (v < extremo) if menor else (v > extremo):
@@ -428,7 +484,7 @@ class EjecutorArepa(ArepaVisitor):
         return resultado
 
     # ---------------------------------------------------------------- #
-    # Guardar y graficar (reconocimiento con validacion semantica)
+    # Guardar y graficar
     # ---------------------------------------------------------------- #
 
     def visitInstruccion_guarde(self, ctx):
@@ -436,6 +492,7 @@ class EjecutorArepa(ArepaVisitor):
         ruta = self.evaluador.evaluar(ctx.cadena())
         tabla = self._obtener_tabla(nombre, ctx)
         EscritorCSV().escribir(ruta, tabla)
+        self.contexto.registrar_archivo(ruta, "csv", os.path.getsize(ruta))
         self.contexto.imprimir(
             "[guarde] La tabla '{0}' quedo escrita en '{1}' ({2} filas).".format(
                 nombre, ruta, tabla.num_filas
@@ -443,26 +500,390 @@ class EjecutorArepa(ArepaVisitor):
         )
 
     def visitInstruccion_grafica(self, ctx):
-        """Cortes 1-2: valida la instruccion y avisa que la imagen llega en Fase 3."""
+        """Ejecuta 'pinte': valida columnas, dibuja el PNG y lo publica.
+
+        Valores por defecto de las columnas (documentados tambien abajo):
+          * 'ejex': la primera columna de tipo texto o fecha; si no hay
+            ninguna, se usan los indices de fila 1..n como x numerica;
+          * 'ejey': todas las columnas numericas de la tabla;
+          * 'dispersion' sin 'ejex': la primera columna numerica es x y
+            las restantes son las series y (si solo hay una numerica, se
+            usa como y y x pasa a ser el indice de fila);
+          * 'histograma': exige exactamente una columna en 'ejey' e
+            ignora 'ejex', porque las cubetas se calculan sobre los
+            valores de y;
+          * 'cajas': con 'ejex' textual el motor agrupa una caja por
+            categoria; sin x textual hay una caja por serie de 'ejey'.
+
+        La clausula final decide el destino: 'guardela' escribe la ruta
+        indicada (obligatoriamente .png), 'muestrela' deja el archivo en
+        salidas/<tabla>_<tipo>.png y, si hay entorno grafico, lo abre sin
+        esperar. Sin clausula final solo se valida y se renderiza.
+        """
         nombre = ctx.identificador().getText()
         tipo = ctx.tipo_grafica().getText()
         tabla = self._obtener_tabla(nombre, ctx)
+
+        if tabla.num_filas == 0:
+            raise ErrorGrafica(
+                "La tabla '{0}' no tiene filas para graficar.".format(nombre),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+        titulo = ""
+        leyenda = ""
+        columna_x = None
+        columnas_y = None
+        ubicacion_x = ctx.start
+        ubicacion_y = ctx.start
+        vistas = set()
+
         for clausula in ctx.clausula_estetica():
-            if clausula.EJEX() is not None or clausula.EJEY() is not None:
-                columna = clausula.nombre_columna().getText()
-                if not tabla.tiene_columna(columna):
-                    raise ErrorColumna(
-                        "La grafica usa la columna '{0}' que no existe en "
-                        "'{1}'. Columnas: {2}.".format(
-                            columna, nombre, ", ".join(tabla.nombres_columnas)
+            if clausula.TITULO() is not None:
+                self._rechazar_repetida(vistas, "titulo", clausula)
+                titulo = self.evaluador.evaluar(clausula.cadena())
+            elif clausula.LEYENDA() is not None:
+                self._rechazar_repetida(vistas, "leyenda", clausula)
+                leyenda = self.evaluador.evaluar(clausula.cadena())
+            elif clausula.EJEX() is not None:
+                # 'ejex' solo admite una columna, pero se reutiliza el
+                # lector de listas para no duplicar logica.
+                nombres = self._columnas_de_clausula(clausula)
+                columna_x, ubicacion_x = nombres[0]
+            elif clausula.EJEY() is not None:
+                self._rechazar_repetida(vistas, "ejey", clausula)
+                columnas_y = self._columnas_de_clausula(clausula)
+                ubicacion_y = clausula.start
+
+        if tipo == "histograma":
+            # El histograma ignora 'ejex' a proposito: las cubetas salen
+            # de los valores de la unica columna de 'ejey'.
+            if columnas_y is None:
+                numericas = self._columnas_numericas(tabla)
+                if len(numericas) != 1:
+                    raise ErrorGrafica(
+                        "El histograma necesita exactamente una columna "
+                        "numerica en 'ejey' y la tabla '{0}' tiene {1}: {2}. "
+                        "Indique una con 'ejey <columna>'.".format(
+                            nombre,
+                            len(numericas),
+                            ", ".join(numericas) if numericas else "ninguna",
                         ),
-                        linea=clausula.start.line,
-                        columna=clausula.start.column,
+                        linea=ctx.start.line,
+                        columna=ctx.start.column,
                     )
-        self.contexto.imprimir(
-            "[pinte] Grafica de {0} sobre '{1}' validada; la generacion de "
-            "imagenes llega en la Fase 3.".format(tipo, nombre)
+                columnas_y = [(numericas[0], ctx.start)]
+            elif len(columnas_y) != 1:
+                raise ErrorGrafica(
+                    "El histograma usa exactamente una columna en 'ejey'; "
+                    "se indicaron {0}: {1}.".format(
+                        len(columnas_y),
+                        ", ".join(n for n, _ in columnas_y),
+                    ),
+                    linea=ubicacion_y.line,
+                    columna=ubicacion_y.column,
+                )
+            valores_x = None
+            etiqueta_x = ""
+            nombre_x = ""
+        else:
+            if (
+                tipo == "dispersion"
+                and columna_x is None
+                and columnas_y is None
+            ):
+                numericas = self._columnas_numericas(tabla)
+                if not numericas:
+                    raise ErrorGrafica(
+                        "La dispersion necesita al menos una columna numerica "
+                        "en 'ejey'; la tabla '{0}' no tiene ninguna. Columnas: "
+                        "{1}.".format(nombre, ", ".join(tabla.nombres_columnas)),
+                        linea=ctx.start.line,
+                        columna=ctx.start.column,
+                    )
+                if len(numericas) > 1:
+                    columna_x = numericas[0]
+                    columnas_y = [(c, ctx.start) for c in numericas[1:]]
+                else:
+                    # Una sola numerica: no hay par x/y, asi que se usa el
+                    # indice de fila como x y esa columna como serie y.
+                    columnas_y = [(numericas[0], ctx.start)]
+
+            if columna_x is None:
+                nombre_x = self._primera_columna_categorica(tabla)
+                if nombre_x is None:
+                    valores_x = list(range(1, tabla.num_filas + 1))
+                    etiqueta_x = ""
+                else:
+                    valores_x = tabla.valores_columna(nombre_x)
+                    etiqueta_x = nombre_x
+            else:
+                nombre_x = columna_x
+                indice = self._indice_columna(tabla, nombre_x, ubicacion_x, nombre)
+                if tipo != "cajas":
+                    self._validar_eje_x(tabla, indice, tipo, ubicacion_x)
+                valores_x = tabla.valores_columna(nombre_x)
+                etiqueta_x = nombre_x
+
+            if columnas_y is None:
+                numericas = self._columnas_numericas(tabla)
+                if not numericas:
+                    raise ErrorGrafica(
+                        "La grafica de {0} necesita al menos una columna "
+                        "numerica en 'ejey'; la tabla '{1}' no tiene ninguna. "
+                        "Columnas: {2}.".format(
+                            tipo,
+                            nombre,
+                            ", ".join(
+                                "{0} ({1})".format(c.nombre, c.tipo)
+                                for c in tabla.columnas
+                            ),
+                        ),
+                        linea=ctx.start.line,
+                        columna=ctx.start.column,
+                    )
+                columnas_y = [(c, ctx.start) for c in numericas]
+
+        # Cada columna de 'ejey' debe ser numerica: tipo 'numero' o valores
+        # todos numericos (los 'nada' se ignoran al dibujar).
+        for nombre_y, ubicacion in columnas_y:
+            indice = self._indice_columna(tabla, nombre_y, ubicacion, nombre)
+            if not self._es_numerica(tabla, indice):
+                raise ErrorGrafica(
+                    "La grafica de {0} necesita columnas numericas en 'ejey'; "
+                    "'{1}' es de tipo {2}. Columnas numericas: {3}.".format(
+                        tipo,
+                        nombre_y,
+                        tabla.columnas[indice].tipo,
+                        ", ".join(self._columnas_numericas(tabla))
+                        or "ninguna",
+                    ),
+                    linea=ubicacion.line,
+                    columna=ubicacion.column,
+                )
+
+        series = [
+            Serie(
+                nombre=nombre_y,
+                x=valores_x,
+                y=tabla.valores_columna(nombre_y),
+            )
+            for nombre_y, _ in columnas_y
+        ]
+
+        if leyenda:
+            etiqueta_y = leyenda
+        elif len(columnas_y) == 1:
+            etiqueta_y = columnas_y[0][0]
+        else:
+            etiqueta_y = ", ".join(nombre_y for nombre_y, _ in columnas_y)
+
+        try:
+            lienzo = dibujar(
+                tipo,
+                series,
+                titulo=titulo,
+                etiqueta_x=etiqueta_x,
+                etiqueta_y=etiqueta_y,
+                leyenda=leyenda,
+                ancho=800,
+                alto=480,
+            )
+        except ValueError as problema:
+            raise ErrorGrafica(
+                "No se pudo dibujar la grafica de {0}: {1}".format(
+                    tipo, problema
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+        final = ctx.final_grafica()
+        if final is None:
+            self.contexto.imprimir(
+                "[pinte] Grafica de {0} sobre '{1}' lista; agregá 'guardela' "
+                "o 'muestrela' para verla.".format(tipo, nombre)
+            )
+            return None
+
+        if final.GUARDELA() is not None:
+            ruta = self.evaluador.evaluar(final.cadena())
+            if not str(ruta).lower().endswith(".png"):
+                raise ErrorGrafica(
+                    "La ruta '{0}' debe terminar en '.png' (extension "
+                    "esperada para guardar la grafica).".format(ruta),
+                    linea=final.start.line,
+                    columna=final.start.column,
+                )
+            escritos = self._guardar_png(lienzo, ruta, final)
+            self.contexto.imprimir(
+                "[pinte] Grafica de {0} guardada en '{1}' ({2} bytes, "
+                "800x480).".format(tipo, ruta, escritos)
+            )
+        else:
+            carpeta = "salidas"
+            os.makedirs(carpeta, exist_ok=True)
+            ruta = os.path.join(carpeta, "{0}_{1}.png".format(nombre, tipo))
+            escritos = self._guardar_png(lienzo, ruta, final)
+            self.contexto.imprimir(
+                "[pinte] Grafica de {0} en '{1}' ({2} bytes, 800x480).".format(
+                    tipo, ruta, escritos
+                )
+            )
+            self._abrir_grafica(ruta)
+        return None
+
+    def _rechazar_repetida(self, vistas, clausula, nodo):
+        """Falla si 'titulo', 'leyenda' o 'ejey' aparecen dos veces."""
+        if clausula in vistas:
+            raise ErrorGrafica(
+                "La clausula '{0}' esta repetida en la grafica; indiquela "
+                "una sola vez.".format(clausula),
+                linea=nodo.start.line,
+                columna=nodo.start.column,
+            )
+        vistas.add(clausula)
+
+    @staticmethod
+    def _columnas_de_clausula(clausula):
+        """Pares (nombre, ubicacion) de 'ejex'/'ejey' (columna o lista)."""
+        lista = clausula.lista_literal()
+        if lista is None:
+            return [(clausula.nombre_columna().getText(), clausula.start)]
+        return [
+            (expresion.getText().strip(), expresion.start)
+            for expresion in lista.expresion()
+        ]
+
+    @staticmethod
+    def _indice_columna(tabla, nombre, ubicacion, tabla_nombre):
+        """Indice de la columna o ErrorColumna con la ubicacion de la clausula."""
+        if not tabla.tiene_columna(nombre):
+            raise ErrorColumna(
+                "La grafica usa la columna '{0}' que no existe en '{1}'. "
+                "Columnas: {2}.".format(
+                    nombre, tabla_nombre, ", ".join(tabla.nombres_columnas)
+                ),
+                linea=ubicacion.line,
+                columna=ubicacion.column,
+            )
+        return tabla.indice_columna(nombre)
+
+    @staticmethod
+    def _primera_columna_categorica(tabla):
+        """Primera columna de tipo texto o fecha, o None."""
+        for columna in tabla.columnas:
+            if columna.tipo in ("texto", "fecha"):
+                return columna.nombre
+        return None
+
+    @staticmethod
+    def _es_numerica(tabla, indice):
+        """True si la columna es 'numero' o todos sus valores son numericos.
+
+        Se aceptan numeros propios y textos que representen un numero
+        (el motor de graficas ya convierte esos textos al dibujar).
+        """
+        columna = tabla.columnas[indice]
+        if columna.tipo == "numero":
+            return True
+        vistos = False
+        for valor in tabla.valores_columna(columna.nombre):
+            if es_nada(valor):
+                continue
+            if not EjecutorArepa._es_valor_numerico(valor):
+                return False
+            vistos = True
+        return vistos
+
+    @staticmethod
+    def _es_valor_numerico(valor):
+        """Numero propio o texto convertible a 'float' no vacio."""
+        if es_numero(valor):
+            return True
+        if not isinstance(valor, str):
+            return False
+        texto = valor.strip()
+        if not texto:
+            return False
+        try:
+            float(texto)
+        except ValueError:
+            return False
+        return True
+
+    def _columnas_numericas(self, tabla):
+        """Nombres de las columnas que pueden usarse como 'ejey'."""
+        return [
+            columna.nombre
+            for indice, columna in enumerate(tabla.columnas)
+            if self._es_numerica(tabla, indice)
+        ]
+
+    @staticmethod
+    def _validar_eje_x(tabla, indice, tipo, ubicacion):
+        """Valida que x sea numerica o textual (fecha se trata como texto)."""
+        columna = tabla.columnas[indice]
+        if columna.tipo in ("numero", "texto", "fecha"):
+            return
+        validas = [
+            c.nombre
+            for c in tabla.columnas
+            if c.tipo in ("numero", "texto", "fecha")
+        ]
+        raise ErrorGrafica(
+            "La grafica de {0} necesita que 'ejex' sea numerica o textual; "
+            "'{1}' es de tipo {2}. Columnas validas: {3}.".format(
+                tipo,
+                columna.nombre,
+                columna.tipo,
+                ", ".join(validas) or "ninguna",
+            ),
+            linea=ubicacion.line,
+            columna=ubicacion.column,
         )
+
+    def _guardar_png(self, lienzo, ruta, nodo):
+        """Escribe el PNG creando directorios y archiva el resultado."""
+        carpeta = os.path.dirname(ruta)
+        try:
+            if carpeta:
+                os.makedirs(carpeta, exist_ok=True)
+            escritos = lienzo.guardar(ruta)
+        except OSError as problema:
+            raise ErrorGrafica(
+                "No se pudo escribir el PNG '{0}': {1}".format(ruta, problema),
+                linea=nodo.start.line,
+                columna=nodo.start.column,
+            )
+        self.contexto.registrar_archivo(ruta, "png", escritos)
+        return escritos
+
+    def _abrir_grafica(self, ruta):
+        """Intenta abrir el PNG con xdg-open sin bloquear; nunca falla."""
+        sin_ventana = os.environ.get("AREPA_SIN_VENTANA")
+        hay_entorno = bool(
+            os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")
+        )
+        visor = shutil.which("xdg-open")
+        if sin_ventana or not hay_entorno or visor is None:
+            self.contexto.imprimir(
+                "[pinte] No hay entorno grafico; la imagen quedo en "
+                "'{0}'.".format(ruta)
+            )
+            return
+        try:
+            subprocess.Popen(
+                [visor, ruta],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except OSError:
+            self.contexto.imprimir(
+                "[pinte] No hay entorno grafico; la imagen quedo en "
+                "'{0}'.".format(ruta)
+            )
 
     def _obtener_tabla(self, nombre, ctx):
         valor = self._ambito.buscar_opcional(nombre)
@@ -476,9 +897,8 @@ class EjecutorArepa(ArepaVisitor):
         if not isinstance(valor, Tabla):
             raise ErrorTipos(
                 "'{0}' no es una tabla (es de tipo {1}); esta instruccion "
-                "solo trabaja con tablas cargadas con 'monte'.".format(
-                    nombre, nombre_tipo(valor)
-                ),
+                "solo trabaja con tablas cargadas con 'monte' o creadas con "
+                "'arme'.".format(nombre, nombre_tipo(valor)),
                 linea=ctx.start.line,
                 columna=ctx.start.column,
             )
@@ -718,13 +1138,146 @@ class EjecutorArepa(ArepaVisitor):
     def visitInstruccion_cuenteme(self, ctx):
         valores = []
         if ctx.lista_argumentos() is not None:
-            valores = [self.evaluador.evaluar(e) for e in ctx.lista_argumentos().expresion()]
+            valores = [self.visit(e) for e in ctx.lista_argumentos().expresion()]
         self.contexto.imprimir(*valores)
 
     def visitInstruccion_describa(self, ctx):
         nombre = ctx.identificador().getText()
         tabla = self._obtener_tabla(nombre, ctx)
         self.contexto.imprimir(self._resumen_texto(tabla))
+
+    # ---------------------------------------------------------------- #
+    # 'agregue', 'saque' y 'recorra'
+    # ---------------------------------------------------------------- #
+
+    def visitInstruccion_agregue(self, ctx):
+        nombre = ctx.identificador().getText()
+        destino = self._ambito.buscar_opcional(nombre)
+        if destino is None:
+            raise ErrorVariable(
+                "La variable '{0}' no esta declarada; no hay donde agregar.".format(
+                    nombre
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        valor = self.visit(ctx.expresion())
+        if isinstance(destino, Tabla):
+            valores = acceso.valores_para_fila(
+                destino, valor, ctx.start.line, ctx.start.column
+            )
+            destino.insertar_fila(valores)
+        elif isinstance(destino, Lista):
+            destino.agregar(valor)
+        else:
+            raise ErrorTipos(
+                "'agregue' solo trabaja sobre una tabla o una lista, pero "
+                "'{0}' es de tipo {1}.".format(nombre, nombre_tipo(destino)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        return None
+
+    def visitInstruccion_saque(self, ctx):
+        nombre = ctx.identificador().getText()
+        destino = self._ambito.buscar_opcional(nombre)
+        if destino is None:
+            raise ErrorVariable(
+                "La variable '{0}' no esta declarada; no hay de donde sacar.".format(
+                    nombre
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        posicion = self.visit(ctx.expresion())
+        if not isinstance(posicion, int) or isinstance(posicion, bool):
+            raise ErrorTipos(
+                "'saque' necesita un numero entero que indique la posicion "
+                "(se cuenta desde 1), pero recibio un valor de tipo {0}.".format(
+                    nombre_tipo(posicion)
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if isinstance(destino, Tabla):
+            self._validar_posicion(
+                posicion, destino.num_filas, "fila", "La tabla '{0}'".format(nombre),
+                ctx,
+            )
+            destino.eliminar_fila(posicion - 1)
+        elif isinstance(destino, Lista):
+            self._validar_posicion(
+                posicion, destino.largo(), "elemento", "La lista '{0}'".format(nombre),
+                ctx,
+            )
+            destino.quitar(posicion - 1)
+        else:
+            raise ErrorTipos(
+                "'saque' solo trabaja sobre una tabla o una lista, pero "
+                "'{0}' es de tipo {1}.".format(nombre, nombre_tipo(destino)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        return None
+
+    def _validar_posicion(self, posicion, total, unidad, sujeto, ctx):
+        """Valida 1 <= posicion <= total para 'saque' (mensaje 1-based)."""
+        if posicion < 1 or posicion > total:
+            raise ErrorOperacion(
+                "{0} tiene {1} {2}s; no existe {3} {4} (se cuenta desde 1).".format(
+                    sujeto, total, unidad,
+                    "la" if unidad == "fila" else "el", posicion,
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+    def visitCiclo_recorra(self, ctx):
+        destino = ctx.identificador(0).getText()
+        nombre_fuente = ctx.identificador(1).getText()
+        fuente = self._ambito.buscar_opcional(nombre_fuente)
+        if fuente is None:
+            raise ErrorVariable(
+                "La variable '{0}' no esta declarada; no hay nada que "
+                "recorrer.".format(nombre_fuente),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if isinstance(fuente, Tabla):
+            # Snapshot de las filas: si la tabla cambia durante el
+            # recorrido, el ciclo sigue sobre las filas iniciales. Cada
+            # registro queda enlazado a su fila, así que las mutaciones
+            # de celdas sí se reflejan en la tabla.
+            elementos = [
+                fuente.fila_como_registro(i) for i in range(fuente.num_filas)
+            ]
+        elif isinstance(fuente, Lista):
+            elementos = list(fuente)
+        else:
+            raise ErrorTipos(
+                "'recorra' necesita una tabla o una lista, pero '{0}' es de "
+                "tipo {1}.".format(nombre_fuente, nombre_tipo(fuente)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+        if len(elementos) > MAX_VUELTAS_CICLO:
+            raise ErrorEjecucion(
+                "El ciclo 'recorra' tiene {0} elementos y el tope es {1}: "
+                "revisá la colección.".format(len(elementos), MAX_VUELTAS_CICLO),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+        for elemento in elementos:
+            self._asignar_variable(destino, elemento)
+            try:
+                self._ejecutar_bloque(ctx.bloque())
+            except SeguirCiclo:
+                continue
+            except SalirCiclo:
+                break
+        return None
 
     def _resumen_texto(self, tabla):
         """Resumen estadistico propio (reemplaza a pandas describe())."""
@@ -751,7 +1304,11 @@ class EjecutorArepa(ArepaVisitor):
         return "\n".join(lineas)
 
     def visitInstruccion_llamada(self, ctx):
-        return self.evaluador.evaluar(ctx.llamada_funcion())
+        return self.visit(ctx.llamada_funcion())
+
+    def visitLlamada_funcion(self, ctx):
+        """Una llamada suelta la resuelve el evaluador de expresiones."""
+        return self.evaluador.evaluar(ctx)
 
     # ---------------------------------------------------------------- #
     # Invocacion: funciones del usuario y agregaciones
@@ -759,13 +1316,16 @@ class EjecutorArepa(ArepaVisitor):
 
     def _invocar(self, nombre, argumentos, ctx):
         if nombre in AGREGACIONES:
-            if not self._en_resuma or self._grupo_filas is None:
-                raise ErrorSemantico(
-                    "La agregacion '{0}' solo puede usarse dentro de 'resuma'.".format(nombre),
-                    linea=ctx.start.line,
-                    columna=ctx.start.column,
-                )
-            return self._calcular_agregacion(nombre, argumentos, ctx)
+            if self._en_resuma and self._grupo_filas is not None:
+                return self._calcular_agregacion(nombre, argumentos, ctx)
+            return self._agregacion_fuera_de_resuma(nombre, argumentos, ctx)
+
+        if nombre == "largo":
+            return self._largo(argumentos, ctx)
+        if nombre == "columna":
+            return self._columna(argumentos, ctx)
+        if nombre == "columnas":
+            return self._columnas(argumentos, ctx)
 
         funcion = self._ambito.buscar_opcional(nombre)
         if isinstance(funcion, FuncionArepa):
@@ -777,6 +1337,167 @@ class EjecutorArepa(ArepaVisitor):
             linea=ctx.start.line,
             columna=ctx.start.column,
         )
+
+    # ---------------------------------------------------------------- #
+    # Funciones incorporadas de la Fase A
+    # ---------------------------------------------------------------- #
+
+    def _largo(self, argumentos, ctx):
+        self._exigir_aridad("largo", argumentos, 1, ctx)
+        valor = argumentos[0]
+        if isinstance(valor, Tabla):
+            return valor.num_filas
+        if isinstance(valor, Lista):
+            return valor.largo()
+        if isinstance(valor, Registro):
+            return valor.largo()
+        if isinstance(valor, str):
+            return len(valor)
+        raise ErrorTipos(
+            "'largo' no acepta un valor de tipo {0}; espera una tabla, una "
+            "lista, un registro o un texto.".format(nombre_tipo(valor)),
+            linea=ctx.start.line,
+            columna=ctx.start.column,
+        )
+
+    def _columna(self, argumentos, ctx):
+        self._exigir_aridad("columna", argumentos, 2, ctx)
+        tabla, columna = argumentos
+        if not isinstance(tabla, Tabla):
+            raise ErrorTipos(
+                "El primer argumento de 'columna' debe ser una tabla, pero "
+                "llegó un valor de tipo {0}.".format(nombre_tipo(tabla)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if not isinstance(columna, str):
+            raise ErrorTipos(
+                "El segundo argumento de 'columna' debe ser el nombre de una "
+                "columna, pero llegó un valor de tipo {0}.".format(
+                    nombre_tipo(columna)
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        try:
+            valores = tabla.valores_columna(columna)
+        except ErrorColumna as problema:
+            if problema.linea == -1:
+                problema.linea = ctx.start.line
+                problema.columna = ctx.start.column
+            raise
+        return Lista(valores)
+
+    def _columnas(self, argumentos, ctx):
+        self._exigir_aridad("columnas", argumentos, 1, ctx)
+        tabla = argumentos[0]
+        if not isinstance(tabla, Tabla):
+            raise ErrorTipos(
+                "'columnas' espera una tabla, pero llegó un valor de tipo "
+                "{0}.".format(nombre_tipo(tabla)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        return Lista(tabla.nombres_columnas)
+
+    def _exigir_aridad(self, nombre, argumentos, esperados, ctx):
+        if len(argumentos) != esperados:
+            raise ErrorSemantico(
+                "'{0}' recibe {1} argumento(s) pero llegaron {2}.".format(
+                    nombre, esperados, len(argumentos)
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+    # ---------------------------------------------------------------- #
+    # Agregaciones fuera de 'resuma'
+    # ---------------------------------------------------------------- #
+
+    def _agregacion_fuera_de_resuma(self, nombre, argumentos, ctx):
+        """Agregacion sobre una tabla+columna o sobre una lista."""
+        if nombre == "cuente":
+            if len(argumentos) == 1:
+                valor = argumentos[0]
+                if isinstance(valor, Tabla):
+                    return valor.num_filas
+                if isinstance(valor, Lista):
+                    return valor.largo()
+                raise ErrorTipos(
+                    "'cuente' espera una tabla o una lista, pero llegó un "
+                    "valor de tipo {0}.".format(nombre_tipo(valor)),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            if len(argumentos) == 2:
+                tabla, columna = argumentos
+                self._exigir_tabla_y_columna(nombre, tabla, columna, ctx)
+                indice = self._indice_de_columna(tabla, columna, ctx)
+                return sum(
+                    1 for f in tabla.filas if not es_nada(f.valor_en(indice))
+                )
+            raise ErrorSemantico(
+                "'cuente' necesita una tabla, una lista o una tabla y una "
+                "columna: cuente(tabla), cuente(lista) o cuente(tabla, columna).",
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+        if len(argumentos) == 1:
+            valor = argumentos[0]
+            if not isinstance(valor, Lista):
+                raise ErrorTipos(
+                    "La agregacion '{0}' espera una lista o '{0}(tabla, "
+                    "columna)', pero llegó un valor de tipo {1}.".format(
+                        nombre, nombre_tipo(valor)
+                    ),
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            return self._calcular_sobre_valores(nombre, list(valor), "la lista")
+
+        if len(argumentos) == 2:
+            tabla, columna = argumentos
+            self._exigir_tabla_y_columna(nombre, tabla, columna, ctx)
+            self._indice_de_columna(tabla, columna, ctx)
+            return self._calcular_sobre_valores(
+                nombre, tabla.valores_columna(columna),
+                "la columna '{0}'".format(columna),
+            )
+
+        raise ErrorSemantico(
+            "La agregacion '{0}' necesita una lista o una tabla y una "
+            "columna: {0}(lista) o {0}(tabla, columna).".format(nombre),
+            linea=ctx.start.line,
+            columna=ctx.start.column,
+        )
+
+    def _exigir_tabla_y_columna(self, nombre, tabla, columna, ctx):
+        if not isinstance(tabla, Tabla):
+            raise ErrorTipos(
+                "El primer argumento de '{0}' debe ser una tabla, pero llegó "
+                "un valor de tipo {1}.".format(nombre, nombre_tipo(tabla)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if not isinstance(columna, str):
+            raise ErrorTipos(
+                "El segundo argumento de '{0}' debe ser el nombre de una "
+                "columna, pero llegó un valor de tipo {1}.".format(
+                    nombre, nombre_tipo(columna)
+                ),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+    def _indice_de_columna(self, tabla, columna, ctx):
+        try:
+            return tabla.indice_columna(columna)
+        except ErrorColumna as problema:
+            if problema.linea == -1:
+                problema.linea = ctx.start.line
+                problema.columna = ctx.start.column
+            raise
 
     def _llamar_funcion(self, funcion, argumentos, ctx):
         if len(argumentos) != len(funcion.parametros):

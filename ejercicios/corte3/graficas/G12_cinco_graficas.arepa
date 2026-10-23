@@ -1,0 +1,40 @@
+# G12 - Las cinco graficas en un solo programa
+# Corte 3: barras, lineas, histograma, dispersion y cajas.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G12_cinco_graficas.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+
+pinte barras con_total
+titulo "Unidades por fecha"
+ejex fecha
+ejey unidades
+guardela "salidas/ej_g12_barras.png"
+
+pinte lineas con_total
+titulo "Total por fecha"
+ejex fecha
+ejey total
+guardela "salidas/ej_g12_lineas.png"
+
+pinte histograma con_total
+titulo "Distribucion del total"
+ejey total
+guardela "salidas/ej_g12_histograma.png"
+
+pinte dispersion con_total
+titulo "Precio frente a total"
+ejex precio
+ejey total
+guardela "salidas/ej_g12_dispersion.png"
+
+pinte cajas con_total
+titulo "Total por ciudad"
+ejex ciudad
+ejey total
+guardela "salidas/ej_g12_cajas.png"
+
+chao

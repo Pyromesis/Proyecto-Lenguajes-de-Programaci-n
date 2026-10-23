@@ -1,0 +1,9 @@
+# n22_registro_sin_dos_puntos.arepa - error sintáctico a propósito.
+# Un par de registro necesita dos puntos entre la clave y el valor:
+# debe escribirse {nombre: "Ana"}. Sin los ':', el analizador
+# sintáctico no reconoce el literal de registro.
+quihubo
+
+persona = {nombre "Ana"}
+
+chao

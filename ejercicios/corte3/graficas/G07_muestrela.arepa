@@ -1,0 +1,17 @@
+# G07 - muestrela: salida automatica en salidas/
+# Corte 3: sin 'guardela', el PNG se escribe como salidas/ventas_barras.png.
+# En consola sin entorno grafico se ejecuta con --sin-ventana.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G07_muestrela.arepa --ejecutar --sin-ventana
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+pinte barras ventas
+titulo "Unidades por fecha"
+ejex fecha
+ejey unidades
+muestrela
+
+chao

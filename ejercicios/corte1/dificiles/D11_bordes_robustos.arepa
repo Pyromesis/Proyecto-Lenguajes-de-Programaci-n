@@ -3,7 +3,7 @@
 # y sume dan nada; cuente da 0. Y 1/0 da infinito sin error.
 
 quihubo
-vacia = monte "Ejercicios_Problemas/datos/vacia.csv" con encabezado
+vacia = monte "ejercicios/datos/vacia.csv" con encabezado
 resumen = vacia |> resuma mitad = mediana(unidades), menor = minimo(unidades), total = sume(unidades), registros = cuente()
 cuenteme "agregado vacio ok"
 describa resumen

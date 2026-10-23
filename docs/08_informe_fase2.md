@@ -8,7 +8,7 @@ Este documento mapea cada exigencia del Corte 2 del enunciado a su evidencia
 verificable en el repositorio. Todo se comprueba con:
 
 ```bash
-python pruebas/test_proyecto.py   # 6 suites, 194 pruebas, todas pasan
+python pruebas/test_proyecto.py   # conteo vigente: 8 suites, 319 pruebas, todas pasan
 ```
 
 ---
@@ -29,7 +29,7 @@ python pruebas/test_proyecto.py   # 6 suites, 194 pruebas, todas pasan
 | Renombre y conversión (preparación) | `renombre COL -> NUEVA`, `convierta COL -> tipo` (calendario propio AAAA-MM-DD) |
 | Agrupamiento y agregaciones | `junte por` + `resuma` → `Tabla.agrupar` + `cuente/sume/promedie/mediana/minimo/maximo/desviacion` propios (mediana por inserción, desviación poblacional) |
 | Validaciones semánticas | `src/errores_base.py` (`ErrorVariable`, `ErrorColumna`, `ErrorTipos`, `ErrorOperacion`, `ErrorSemantico`, `ErrorEjecucion`, `ErrorArchivo`, `ErrorCSV`) |
-| Pruebas | `pruebas/test_proyecto.py` (corredor) + 6 suites: front-end 48, árbol 21, datos 43, expresiones 16, símbolos 15, runtime 51 |
+| Pruebas | `pruebas/test_proyecto.py` (corredor) + 8 suites (conteo vigente: front-end 55, árbol 28, datos 43, estructuras 48, expresiones 16, símbolos 15, runtime 51, gráficas 63) |
 
 Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 
@@ -51,18 +51,20 @@ Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 
 ---
 
-## 3. Programas completos (mínimo 3 exigidos; hay 5)
+## 3. Programas completos (mínimo 3 exigidos; hay 6)
 
 | Programa | Qué ejercita |
 |---|---|
-| `ejemplos/demo.arepa` | flujo completo: carga, pipeline, resumen por ciudad, gráfica (validada), guardado |
+| `ejemplos/demo.arepa` | flujo completo: carga, pipeline, resumen por ciudad, gráfica, guardado |
 | `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden |
 | `ejemplos/funciones.arepa` | `invente`, condicionales, `cuenteme`, `describa` |
-| `ejemplos/graficas.arepa` | los cinco tipos de visualización (validación) |
+| `ejemplos/graficas.arepa` | los cinco tipos de visualización (desde el Corte 3 genera 5 PNG) |
 | `ejemplos/ciclos.arepa` | ciclos + pipeline + `describa` + `guarde` |
+| `ejemplos/memoria.arepa` | listas, registros, `arme`, acceso 1-based, `recorra` y agregaciones en memoria |
 
 Todos validan (`python src/cli/main.py ejemplos/<nombre>.arepa`) y corren
-(`--ejecutar`). Evidencia de transformación y exportación: `salidas/*.csv`.
+(`--ejecutar`). Evidencia de transformación y exportación: `salidas/*.csv` y
+`salidas/*.png`.
 
 ---
 
@@ -91,10 +93,10 @@ sin convertir el DSL en una copia de Python (no hay `for` estilo C).
 | ANTLR4 para lexer y parser | `antlr4-python3-runtime==4.13.2`; regeneración con `generar_gramatica.sh` (Linux, verificado con JDK 17) |
 | Python 3.11+ | probado con 3.12/3.13 |
 | Patrón Visitor | `EjecutorArepa` y `EvaluadorExpresiones` extienden `ArepaVisitor` |
-| Bibliotecas sugeridas (pandas, NumPy, Matplotlib) | **no se usan**: toda la lógica es propia (`docs/05_arquitectura.md`); el enunciado las presenta como apoyo opcional ("podrán emplearse") |
+| Bibliotecas sugeridas (pandas, NumPy, Matplotlib) | **no se usan**: toda la lógica es propia (`docs/05_arquitectura.md`); el motor de gráficas del Corte 3 también se implementó desde cero (`docs/11_informe_fase3.md`) |
 | Git + remoto | historial en `git log`; rama `main` |
 | Dependencias | `requirements.txt` (solo `antlr4-python3-runtime`) |
-| CLI | `src/cli/main.py` (códigos 0/1/2, `--arbol`, `--tokens`, `--ejecutar`); REPL opcional en `src/cli/repl.py` |
+| CLI | `src/cli/main.py` (códigos 0/1/2, `--arbol`, `--tokens`, `--ejecutar`, `--sin-ventana`, `--ayuda`, `--version`); REPL opcional en `src/cli/repl.py` |
 | Datos de ejemplo | `datos/ventas.csv`, `datos/encuesta.csv`, `datos/empleados.csv` |
 
 **Producto del corte:** el DSL procesa datos reales y produce una tabla
@@ -107,6 +109,6 @@ resumen correctamente exportada (p. ej. `salidas/resumen_ciudades.csv` con
 
 | Herramienta | Qué garantiza | Cómo correrla |
 |---|---|---|
-| `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 46/46 reglas y 59 reservadas en ambas direcciones (hace real el "chequeo" citado en `docs/06` R10/R23) | `python herramientas/chequeo_gramatica.py` |
-| `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, negativo con línea/columna, ejecución + CSV, ciclos, suite 6/6); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
+| `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 57/57 reglas y 65 reservadas en ambas direcciones (hace real el "chequeo" citado en `docs/06` R10/R23) | `python herramientas/chequeo_gramatica.py` |
+| `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, ayuda/versión, negativo con línea/columna, ejecución + CSV, ciclos, estructuras en memoria, caso de estudio con 5 PNG, suite completa); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
 | Tubería cerrada | `arepa demo.arepa --arbol \| head` sale limpio (código 0, sin volcado) en Linux | `test_front.py` CLI: "tubería cerrada sale limpio sin traceback" |

@@ -1,0 +1,18 @@
+# G09 - Serie temporal: pasajeros por periodo
+# Corte 3: eje x continuo construido con anio y mes.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G09_serie_temporal.arepa --ejecutar
+
+quihubo
+
+pasajeros = monte "caso_estudio/datos/pasajeros.csv" con encabezado
+serie = pasajeros
+|> cree periodo = anio + (mes - 1) / 12
+
+pinte lineas serie
+titulo "Pasajeros internacionales 1949-1960"
+ejex periodo
+ejey pasajeros
+guardela "salidas/ej_g09_serie_temporal.png"
+
+chao

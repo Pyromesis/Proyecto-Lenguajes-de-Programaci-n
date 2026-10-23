@@ -25,6 +25,12 @@ vacios
 convierta
 junte
 resuma
+arme
+agregue
+saque
+recorra
+en
+de
 numero
 texto
 logico

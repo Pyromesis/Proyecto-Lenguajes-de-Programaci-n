@@ -1,0 +1,9 @@
+# n21_fila_incompleta.arepa - error sintáctico a propósito.
+# A la fila ["Luis" 31] le falta la coma entre los dos valores:
+# debe escribirse ["Luis", 31]. Sin la coma, el analizador
+# sintáctico rechaza la fila de 'arme'.
+quihubo
+
+gente = arme [nombre, edad] con [["Luis" 31]]
+
+chao

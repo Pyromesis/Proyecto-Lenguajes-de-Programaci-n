@@ -1,0 +1,16 @@
+# G04 - Dispersion: precio frente a unidades
+# Corte 3: dos columnas numericas, una como x y otra como y.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G04_dispersion_precio.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+pinte dispersion ventas
+titulo "Precio frente a unidades"
+ejex precio
+ejey unidades
+guardela "salidas/ej_g04_dispersion_precio.png"
+
+chao

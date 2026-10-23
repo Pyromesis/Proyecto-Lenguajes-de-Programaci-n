@@ -80,6 +80,10 @@ class ErrorCSV(ErrorArchivo):
         self.linea_archivo = linea_archivo
 
 
+class ErrorGrafica(ErrorEjecucion):
+    """La instrucción 'pinte' no puede construir o guardar la gráfica."""
+
+
 # ---------------------------------------------------------------------- #
 # Control de flujo interno (no es un error): usada por 'devuelva' para
 # salir de la ejecución de una función con su valor.

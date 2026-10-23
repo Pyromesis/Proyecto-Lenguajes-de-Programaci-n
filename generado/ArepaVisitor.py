@@ -54,6 +54,21 @@ class ArepaVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArepaParser#instruccion_agregue.
+    def visitInstruccion_agregue(self, ctx:ArepaParser.Instruccion_agregueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#instruccion_saque.
+    def visitInstruccion_saque(self, ctx:ArepaParser.Instruccion_saqueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#ciclo_recorra.
+    def visitCiclo_recorra(self, ctx:ArepaParser.Ciclo_recorraContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArepaParser#definicion_funcion.
     def visitDefinicion_funcion(self, ctx:ArepaParser.Definicion_funcionContext):
         return self.visitChildren(ctx)
@@ -199,18 +214,58 @@ class ArepaVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArepaParser#factor.
-    def visitFactor(self, ctx:ArepaParser.FactorContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ArepaParser#unario.
     def visitUnario(self, ctx:ArepaParser.UnarioContext):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArepaParser#potencia.
+    def visitPotencia(self, ctx:ArepaParser.PotenciaContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#acceso.
+    def visitAcceso(self, ctx:ArepaParser.AccesoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#indice.
+    def visitIndice(self, ctx:ArepaParser.IndiceContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArepaParser#atomo.
     def visitAtomo(self, ctx:ArepaParser.AtomoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#lista_literal.
+    def visitLista_literal(self, ctx:ArepaParser.Lista_literalContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#registro_literal.
+    def visitRegistro_literal(self, ctx:ArepaParser.Registro_literalContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#par_registro.
+    def visitPar_registro(self, ctx:ArepaParser.Par_registroContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#clave_registro.
+    def visitClave_registro(self, ctx:ArepaParser.Clave_registroContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#tabla_literal.
+    def visitTabla_literal(self, ctx:ArepaParser.Tabla_literalContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#fila_literal.
+    def visitFila_literal(self, ctx:ArepaParser.Fila_literalContext):
         return self.visitChildren(ctx)
 
 

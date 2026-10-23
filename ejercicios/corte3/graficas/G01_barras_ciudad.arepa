@@ -1,0 +1,20 @@
+# G01 - Barras: ingresos por ciudad
+# Corte 3: carga, columna calculada, agrupacion y exportacion PNG.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G01_barras_ciudad.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+resumen = con_total
+|> junte por [ciudad]
+|> resuma ingreso = sume(total)
+
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+guardela "salidas/ej_g01_barras_ciudad.png"
+
+chao

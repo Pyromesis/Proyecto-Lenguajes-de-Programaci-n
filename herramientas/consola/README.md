@@ -1,7 +1,7 @@
 # Autocompletado de AREPA en consola (Linux, sin internet ni plugins)
 
 Tres herramientas, todas con `Tab`. Palabras tomadas de `gramatica/Arepa.g4`
-(59 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
+(65 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
 
 | Archivo | Qué es |
 |---|---|

@@ -1,7 +1,7 @@
 # Datos de ejemplo (Linux, UTF-8)
 
 CSV reales que usan los programas de `ejemplos/`, los ejercicios de
-`Ejercicios_Problemas/` y las pruebas del Corte 2. Todos en UTF-8
+`ejercicios/` y las pruebas del Corte 2. Todos en UTF-8
 (el lector propio tolera BOM con `utf-8-sig`).
 
 | Archivo | Filas | Columnas | Separador | Notas |
@@ -22,4 +22,4 @@ encuesta = monte "datos/encuesta.csv" con encabezado, separador ";"
 ```
 
 Casos borde del lector propio (comillas, vacíos) viven en
-`Ejercicios_Problemas/datos/` y `pruebas/datos/`.
+`ejercicios/datos/` y `pruebas/datos/`.

@@ -1,16 +1,21 @@
 """
 AREPA - Corredor maestro de pruebas
 -----------------------------------
-Ejecuta las seis suites del proyecto en orden:
+Ejecuta las ocho suites del proyecto en orden:
   1. front-end (lexer/parser ANTLR4 + diagnóstico propio);
   2. estructura del árbol de análisis;
   3. biblioteca propia de datos (lector CSV, Tabla, tipos);
-  4. evaluador de expresiones propio;
-  5. tabla de símbolos y contexto propios;
-  6. runtime propio (programas completos del DSL).
+  4. estructuras propias (listas, registros y tablas en memoria);
+  5. evaluador de expresiones propio;
+  6. tabla de símbolos y contexto propios;
+  7. runtime propio (programas completos del DSL);
+  8. motor gráfico y visualización propia (PNG, escalas, lienzo).
 
 Uso:
     python3 pruebas/test_proyecto.py
+
+Si existe `.venv/bin/python`, el corredor lo usa para las suites (es el
+intérprete que trae antlr4 en una instalación limpia).
 """
 
 import os
@@ -26,21 +31,32 @@ SUITES = (
     ("Front-end (léxico y sintáctico)", "test_front.py"),
     ("Estructura del árbol de análisis", "test_arbol.py"),
     ("Biblioteca propia de datos", "test_datos.py"),
+    ("Estructuras propias (listas, registros, tablas)", "test_estructuras.py"),
     ("Evaluador de expresiones propio", "test_expresiones.py"),
     ("Tabla de símbolos y contexto propios", "test_simbolos.py"),
     ("Runtime propio (programas completos)", "test_runtime.py"),
+    ("Motor gráfico y visualización propia", "test_graficas.py"),
 )
+
+
+def _interprete():
+    """Devuelve el intérprete con antlr4: .venv si existe, si no el actual."""
+    ruta_venv = os.path.join(RAIZ, ".venv", "bin", "python")
+    if os.path.exists(ruta_venv):
+        return ruta_venv
+    return sys.executable
 
 
 def main():
     total_ok = 0
     fallidas = []
+    interprete = _interprete()
     for titulo, archivo in SUITES:
         print("\n" + "#" * 78)
         print("# SUITE: {0} ({1})".format(titulo, archivo))
         print("#" * 78 + "\n")
         resultado = subprocess.run(
-            [sys.executable, os.path.join(RAIZ, "pruebas", archivo)],
+            [interprete, os.path.join(RAIZ, "pruebas", archivo)],
             capture_output=True,
             text=True,
             encoding="utf-8",

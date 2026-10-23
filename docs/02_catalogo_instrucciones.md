@@ -1,4 +1,4 @@
-# AREPA — Catálogo de instrucciones y decisiones de diseño (Fases 1–2, Linux)
+# AREPA — Catálogo de instrucciones y decisiones de diseño (Fases 1–3, Linux)
 
 Aquí está el vocabulario completo de AREPA: palabras reservadas, operadores,
 literales, sentencias y la razón de cada decisión que tomamos. La gramática
@@ -28,6 +28,12 @@ lo que significa en el día a día se parece a lo que hace la instrucción:
 | `convierta` | convertir | conversión de tipos |
 | `junte por` | "júntelos por ciudad" | agrupamiento |
 | `resuma` | "resuma" | agregaciones |
+| `arme` | "arme la tabla" | crea una tabla en memoria |
+| `agregue` | "agregue eso ahí" | agrega una fila o un elemento |
+| `saque` | "saque eso de ahí" | quita una fila o un elemento |
+| `recorra` | "recorra esto" | recorre una tabla o una lista |
+| `en` | "póngalo en…" | destino de `agregue` y `recorra` |
+| `de` | "sáquelo de…" | origen de `saque` |
 | `cuenteme` | "cuénteme, ¿qué salió?" | imprime valores |
 | `describa` | "descríbame la tabla" | resumen estadístico |
 | `pinte` | "pínteme esa gráfica" | visualización |
@@ -49,9 +55,10 @@ lo que significa en el día a día se parece a lo que hace la instrucción:
 | `o` | "a o b" | disyunción lógica |
 | `no` | "no pasa" | negación lógica |
 
-Con estas últimas, el vocabulario reservado queda en **59 palabras**: 53
+Con estas últimas, el vocabulario reservado queda en **65 palabras**: 59
 instrucciones y estructuras, 3 literales especiales (`obvio`, `falso`,
-`nada`) y 3 operadores lógicos (`y`, `o`, `no`).
+`nada`) y 3 operadores lógicos (`y`, `o`, `no`). Las 6 incorporaciones del
+Corte A4 son `arme`, `agregue`, `saque`, `recorra`, `en` y `de`.
 
 **Decisión D1 — sin tildes en palabras reservadas.** Se escriben sin tilde
 (`numero`, `lineas`, `titulo`) para no pelear con la codificación y porque así
@@ -136,31 +143,79 @@ Funciones de agregación (identificadores predefinidos, no reservadas):
 `cuente()`, `sume(col)`, `promedie(col)`, `mediana(col)`, `minimo(col)`,
 `maximo(col)`, `desviacion(col)`.
 
+Dentro de `resuma` los argumentos son **nombres de columna** (`sume(total)`,
+`cuente()`); fuera de `resuma` las mismas agregaciones reciben una tabla y
+una columna o una lista (`sume(tabla, total)`, `sume(lista)`). Ver §3.8.
+
 Sentencia directa:
 
 | Sentencia | Ejemplo |
 |---|---|
 | `describa ID` | resumen estadístico de la tabla |
 
-### 3.4 Visualización (solo reconocimiento en Cortes 1–2)
+### 3.4 Visualización (implementada desde la Fase 3)
 
 ```text
 pinte TIPO TABLA
-  (titulo CADENA)? (ejex COL)? (ejey COL)? (leyenda CADENA)?
+  (titulo CADENA)? (ejex COL)? (ejey COL_O_LISTA)? (leyenda CADENA)?
   (guardela CADENA | muestrela)?
 ```
 
 TIPO ∈ { `barras`, `lineas`, `histograma`, `dispersion`, `cajas` }.
 
-Ejemplo:
+Cláusulas:
+
+| Cláusula | Sintaxis | Notas |
+|---|---|---|
+| Título | `titulo CADENA` | una sola vez |
+| Eje x | `ejex COL` | una sola columna |
+| Eje y | `ejey COL` o `ejey [COL, COL, …]` | **varias series** con la lista |
+| Leyenda | `leyenda CADENA` | una sola vez |
+| Cierre | `guardela CADENA` o `muestrela` | produce el archivo PNG |
+
+`guardela "ruta.png"` exporta a PNG en la ruta indicada (debe terminar en
+`.png`); `muestrela` deja el archivo en `salidas/<tabla>_<tipo>.png` y, si hay
+entorno gráfico (y no está `AREPA_SIN_VENTANA` / `--sin-ventana`), lo abre. Sin
+cláusula final, la gráfica solo se valida y se prepara.
+
+Ejemplo (varias series):
 
 ```text
-pinte barras resumen
-titulo "Ingresos por ciudad"
-ejex ciudad
-ejey ingreso
-guardela "salidas/ingresos.png"
+pinte lineas resumen
+titulo "Ventas por mes"
+ejex mes
+ejey [norte, sur]
+leyenda "Regiones"
+guardela "salidas/ventas.png"
 ```
+
+**Valores por defecto de las columnas.**
+
+* `ejex`: la primera columna de texto o fecha; si no hay ninguna, los índices
+  de fila 1..n.
+* `ejey`: todas las columnas numéricas.
+* `histograma`: exige exactamente una columna en `ejey` e **ignora `ejex`**
+  (las cubetas salen de los valores de y).
+* `dispersion` sin `ejex`: la primera columna numérica es x; si solo hay una
+  numérica, x pasa a ser el índice de fila.
+* `cajas`: agrupa una caja por valor de `ejex` cuando sus valores se repiten
+  (sean texto o número); si cada x es única, una caja por serie de `ejey`.
+
+**Errores propios de `pinte`** (todos con línea y columna):
+
+* tabla vacía → `ErrorGrafica`;
+* variable inexistente → `ErrorVariable` (con pista de columnas);
+* columna de `ejex`/`ejey` que no existe → `ErrorColumna` (mensaje que lista
+  las columnas disponibles);
+* columna de `ejey` que no es numérica → `ErrorGrafica`;
+* histograma con cero o más de una columna en `ejey` → `ErrorGrafica`;
+* `titulo`, `leyenda` o `ejey` repetidos → `ErrorGrafica`;
+* ruta de `guardela` que no termina en `.png` → `ErrorGrafica`;
+* fallo al dibujar o al escribir el archivo → `ErrorGrafica`.
+
+Las gráficas son PNG RGB 800x480 y se generan con el motor propio
+(`src/graficas/`); dos ejecuciones del mismo programa producen el mismo
+archivo.
 
 ### 3.5 Abstracción y control
 
@@ -220,20 +275,138 @@ repita i desde 1 hasta 10 paso 2 {
 
 ---
 
+### 3.7 Estructuras propias: listas, registros y tablas en memoria
+
+Además del pipeline sobre CSV, AREPA puede construir y modificar sus
+propias estructuras en memoria. La sintaxis vive en las reglas
+`lista_literal`, `registro_literal`, `tabla_literal`, `acceso`,
+`instruccion_agregue`, `instruccion_saque` y `ciclo_recorra` del `.g4`.
+
+| Constructo | Sintaxis | Ejemplo |
+|---|---|---|
+| Lista literal | `[EXPR, …]` (también `[]`) | `nums = [10, 20, 30]`, `vacia = []` |
+| Registro literal | `{clave: EXPR, …}` (también `{}`) | `persona = {nombre: "Ana", edad: 20}` |
+| Tabla con filas | `arme [COL, …] con [[EXPR, …], …]` | `gente = arme [nombre, edad] con [["Ana", 20], ["Luis", 31]]` |
+| Tabla vacía | `arme [COL, …]` | `plantilla = arme [nombre, edad]` |
+| Acceso encadenado | `ID[índice][índice]…` | `gente[1]["edad"]`, `anidada[2][1]` |
+| Asignación indexada | `ID[índice]… = EXPR` | `nums[2] = 25`, `gente[1]["edad"] = 22` |
+| Agregar | `agregue EXPR en ID` | `agregue ["Pedro", 40] en gente` |
+| Quitar | `saque EXPR de ID` | `saque 1 de gente` |
+| Recorrer | `recorra VAR en ID { … }` | `recorra fila en gente { … }` |
+
+**Literales.** Las claves de un registro son un `nombre_columna` (acepta
+reservadas) o una cadena: `{nombre: "Ana", "nombre completo": "Ana Pérez"}`.
+Los valores son expresiones, así que se pueden anidar listas, registros y
+tablas. `[]` y `{}` son válidos.
+
+**`arme`.** La lista de columnas es obligatoria. Con `con [...]` cada fila
+debe traer exactamente un valor por columna; sin `con` la tabla queda vacía
+y se llena después con `agregue`. Las columnas pueden llamarse como una
+palabra reservada (`arme [fecha, total]`), igual que las columnas de un CSV
+(D5).
+
+**Acceso 1-based (D12).** El primer elemento de una lista, la primera fila
+de una tabla y la primera celda de una fila se leen con `[1]`; `[0]` y los
+índices negativos no existen. En una tabla, `tabla[i]` devuelve la fila `i`
+como un **registro enlazado** (claves = nombres de columna), de modo que
+`gente[1]["edad"] = 22` actualiza la celda real. En un registro el índice
+debe ser texto (la clave); en lista, tabla y fila debe ser entero.
+
+**Mutación explícita (D13).** El pipeline `|>` no muta la tabla de entrada:
+cada etapa produce una tabla nueva. Solo estas operaciones mutan la
+variable que reciben:
+
+* asignación indexada (`nums[2] = 25`, `gente[1]["edad"] = 22`);
+* `agregue ... en ...` (a una lista agrega al final; a una tabla agrega una
+  fila con una lista, una `Fila` o un registro con todas las columnas);
+* `saque ... de ...` (quita por posición 1-based una fila o un elemento).
+
+**`recorra`.** Recorre una tabla (cada vuelta recibe un registro de fila) o
+una lista (cada vuelta recibe un elemento). Toma una **fotografía** de la
+colección al empezar: agregar o quitar durante el recorrido no altera las
+vueltas pendientes, aunque asignar celdas de una fila sí se refleja porque
+el registro está enlazado. El bloque **no crea ámbito** (la variable del
+recorrido queda visible al terminar) y admite `pare`/`siga`. Recorrer un
+número, un registro o un texto es error de tipos.
+
+Ejemplo completo (`ejemplos/memoria.arepa`, extracto):
+
+```text
+gastos = arme [mes, categoria, valor] con [
+    ["Enero", "Mercado", 120000],
+    ["Enero", "Transporte", 45000],
+    ["Febrero", "Mercado", 135000]
+]
+
+total_recorrido = 0
+recorra fila en gastos {
+    total_recorrido = total_recorrido + fila["valor"]
+}
+
+total = sume(gastos, valor)
+resumen = gastos
+|> junte por [categoria]
+|> resuma total = sume(valor), registros = cuente()
+
+guarde resumen como "salidas/memoria_resumen.csv"
+```
+
+### 3.8 Funciones incorporadas y agregaciones fuera de `resuma`
+
+| Función | Firma | Resultado |
+|---|---|---|
+| `largo` | `largo(tabla \| lista \| registro \| texto)` | filas, elementos, claves o caracteres |
+| `columna` | `columna(tabla, NOMBRE_COLUMNA)` | `Lista` con los valores de esa columna |
+| `columnas` | `columnas(tabla)` | `Lista` con los nombres de las columnas |
+
+El segundo argumento de `columna` es un **nombre** de columna, no una
+expresión que se evalúe como variable. Ejemplos:
+
+```text
+filas = largo(gastos)
+nombres = columnas(gastos)
+valores = columna(gastos, valor)
+primero = valores[1]
+```
+
+Las siete agregaciones también se pueden usar **fuera de `resuma`**:
+
+| Forma | Ejemplo | Resultado |
+|---|---|---|
+| Tabla + columna | `sume(gastos, valor)` | agregación de esa columna |
+| Lista | `sume([10, 20, 30])` | agregación de los elementos |
+| Conteo de filas | `cuente(gastos)` | número de filas |
+| Conteo de lista | `cuente(numeros)` | número de elementos |
+| Conteo con columna | `cuente(gastos, valor)` | celdas que no son `nada` |
+
+Aplican `promedie`, `mediana`, `minimo`, `maximo` y `desviacion` con las
+mismas dos formas (tabla+columna o lista). Los `nada` se ignoran; si no
+queda ningún valor, el resultado es `nada` (salvo `cuente`, que da 0).
+Dentro de `resuma` la firma cambia: `sume(valor)`, `promedie(valor)`,
+`cuente()`; allí los argumentos son nombres de columna del grupo actual.
+Usar `sume(valor)` fuera de `resuma` produce un error que recuerda la forma
+`sume(tabla, columna)` o `sume(lista)`.
+
+---
+
 ## 4. Operadores
 
 | Clase | Operadores | Notas |
 |---|---|---|
-| Aritméticos | `+  -  *  /  %  ^` | `^` es potencia, asociativa a derecha; `1/0` da `infinito`, `0/0` y `5%0` dan `nada` (sin error) |
+| Aritméticos | `+  -  *  /  %  ^` | `^` es potencia, asociativa a derecha; `-2 ^ 2 = -4` (la potencia pega más que el menos unario); `1/0` da `infinito`, `0/0` y `5%0` dan `nada` (sin error) |
 | Relacionales | `==  !=  <  <=  >  >=` | producen lógicos |
 | Lógicos | `y   o   no` | palabras, no símbolos |
-| Asignación | `=` | solo sentencia |
+| Asignación | `=` | sentencia simple o asignación indexada |
 | Encadenamiento | `\|>` | pipeline de etapas sobre tablas |
+| Índices | `[ … ]` | acceso 1-based encadenado y literales de lista |
 | Renombre/conversión | `->` | flecha |
-| Agrupación | `( )  [ ]  { }` | expresiones, listas de columnas, bloques |
+| Agrupación | `( )  [ ]  { }` | expresiones, listas/columnas, registros/bloques |
 
 **Precedencia** (menor a mayor): `o` < `y` < `no` < comparaciones < `+ -` <
-`* / %` < `-` unario < `^`. Paréntesis alteran el orden.
+`* / %` < `-` unario < `^` < acceso `[ … ]` < átomo. Paréntesis alteran el
+orden. En la gramática la cadena es `expresion_logica → conjuncion →
+negacion → comparacion → aritmetica → termino → unario → potencia → acceso
+→ atomo`; ya no existe el no terminal `factor`.
 
 ---
 
@@ -246,6 +419,9 @@ repita i desde 1 hasta 10 paso 2 {
 | Cadena | entre comillas dobles, con escapes `\n \t \\ \"` | `"Bogotá"` |
 | Lógico | `obvio`, `falso` | |
 | Faltante | `nada` | |
+| Lista | `[ … ]` | `[1, 2, 3]`, `[]`, `[[1, 2], [3, 4]]` |
+| Registro | `{clave: …}` | `{nombre: "Ana", edad: 20}`, `{}` |
+| Tabla | `arme [col, …] con [[…], …]` | `arme [nombre, edad] con [["Ana", 20]]` |
 
 ---
 
@@ -272,13 +448,15 @@ cocina: una etapa por línea.
 | # | Decisión | Justificación |
 |---|---|---|
 | D4 | Saltos de línea significativos | Delimitan sentencias sin `;`; imitan el ejemplo del enunciado |
-| D5 | `nombre_columna` acepta cualquier palabra reservada | Los nombres de columnas vienen de CSV externos que AREPA no controla (una columna puede llamarse `fecha` o `total`); las variables del programa sí exigen identificador puro |
+| D5 | `nombre_columna` acepta cualquier palabra reservada (las 65, incluidas `arme`, `agregue`, `saque`, `recorra`, `en`, `de`) | Los nombres de columnas vienen de CSV externos que AREPA no controla (una columna puede llamarse `fecha` o `total`); las variables del programa sí exigen identificador puro |
 | D6 | Agregaciones como identificadores predefinidos, no reservadas | Reduce el vocabulario reservado y permite usarlas como llamadas uniformes dentro de `resuma` y expresiones |
 | D7 | Condicionales y funciones desde la Fase 1 en la gramática | El alcance del corte exige asignaciones/expresiones/filtros/gráficas, pero diseñar todo el catálogo desde ya evita romper sintaxis en fases futuras |
 | D8 | `pinte` es sentencia, no expresión | Una gráfica no compone aritméticamente; separarla simplifica la gramática y su semántica futura |
 | D9 | Sin acceso con punto (`tabla.columna`) | En el pipeline la tabla implícita es la etapa anterior; el punto queda como ampliación |
 | D10 | Errores en español con línea y columna | Requisito del componente "Errores y diagnóstico"; mejora la comprensibilidad |
 | D11 | Ciclos como ampliación acotada (no copia de Python) | El enunciado pide no convertir el DSL en Python completo; por eso los ciclos son solo `mientras`/`repita` con `pare`/`siga`, sin `for` clásico estilo C: la forma `repita i desde A hasta B` lee como receta y el `paso` es opcional |
+| D12 | Los índices del lenguaje cuentan desde 1 | Listas, filas, celdas y elementos usan `[1]` para el primero; es la convención de una receta ("la primera fila") y evita el `[0]` que confunde a quien no programa. Las estructuras internas siguen 0-based y `datos/acceso.py` traduce y valida el rango |
+| D13 | El pipeline no muta; la mutación es explícita | Cada etapa `\|>` produce una tabla nueva (D3). Solo `agregue`, `saque` y la asignación indexada modifican la variable que reciben; así se puede conservar la tabla original y el efecto queda visible en el programa |
 
 ---
 
@@ -286,3 +464,13 @@ cocina: una etapa por línea.
 
 Ver `ejemplos/demo.arepa`: carga, preparación en pipeline, resumen por ciudad,
 condicional, función inventada, gráfica de barras exportada a PNG y guardado CSV.
+
+Para las estructuras propias, `ejemplos/memoria.arepa` arma una tabla con
+`arme`, la recorre con `recorra`, calcula agregaciones en memoria
+(`sume(gastos, valor)`, `cuente(gastos)`, `largo`, `columna`, `columnas`),
+resume por categoría con `junte`/`resuma` y exporta
+`salidas/memoria_resumen.csv`. Se valida y ejecuta con:
+
+```bash
+python3 src/cli/main.py ejemplos/memoria.arepa --ejecutar
+```

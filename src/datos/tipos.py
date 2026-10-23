@@ -96,6 +96,18 @@ def nombre_tipo(valor):
         return "numero"
     if es_texto(valor):
         return "texto"
+    # Imports locales: tabla/lista/registro importan este módulo al cargarse,
+    # así que importarlos arriba crearía un ciclo.
+    from datos.lista import Lista
+    from datos.registro import Registro
+    from datos.tabla import Tabla
+
+    if isinstance(valor, Tabla):
+        return "tabla"
+    if isinstance(valor, Lista):
+        return "lista"
+    if isinstance(valor, Registro):
+        return "registro"
     return type(valor).__name__
 
 

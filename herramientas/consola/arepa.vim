@@ -19,7 +19,8 @@ let b:did_ftplugin_arepa = 1
 let s:palabras = ['quihubo', 'chao', 'monte', 'guarde', 'como', 'con',
       \ 'encabezado', 'separador', 'escoja', 'deje', 'donde', 'acomode',
       \ 'por', 'pa_arriba', 'pa_abajo', 'cree', 'renombre', 'limpie',
-      \ 'duplicados', 'vacios', 'convierta', 'junte', 'resuma', 'numero',
+      \ 'duplicados', 'vacios', 'convierta', 'junte', 'resuma', 'arme',
+      \ 'agregue', 'saque', 'recorra', 'en', 'de', 'numero',
       \ 'texto', 'logico', 'fecha', 'pinte', 'barras', 'lineas',
       \ 'histograma', 'dispersion', 'cajas', 'titulo', 'ejex', 'ejey',
       \ 'leyenda', 'guardela', 'muestrela', 'invente', 'devuelva',
@@ -58,13 +59,15 @@ if has("syntax")
   syntax keyword arepaDatos monte guarde como con encabezado separador
   syntax keyword arepaTrans escoja deje donde acomode por pa_arriba pa_abajo
   syntax keyword arepaTrans cree renombre limpie duplicados vacios convierta junte resuma
+  syntax keyword arepaEstructuras arme agregue saque recorra
   syntax keyword arepaTipos numero texto logico fecha
   syntax keyword arepaGraf pinte barras lineas histograma dispersion cajas titulo ejex ejey leyenda guardela muestrela
-  syntax keyword arepaControl invente devuelva fijese_si sino cuenteme describa mientras repita veces desde hasta paso pare siga
+  syntax keyword arepaControl invente devuelva fijese_si sino cuenteme describa mientras repita veces desde hasta paso pare siga en de
   syntax keyword arepaBool obvio falso nada y o no
   highlight default link arepaEstructura Structure
   highlight default link arepaDatos Keyword
   highlight default link arepaTrans Function
+  highlight default link arepaEstructuras Statement
   highlight default link arepaTipos Type
   highlight default link arepaGraf String
   highlight default link arepaControl Conditional

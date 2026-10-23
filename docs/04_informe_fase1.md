@@ -19,10 +19,9 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
      diseño (`docs/02_catalogo_instrucciones.md`).
    - Gramática formal en BNF/EBNF (`docs/03_gramatica_ebnf.md`).
 2. **Gramática ANTLR4 combinada (lexer + parser)** en `gramatica/Arepa.g4`
-   (~330 líneas de código, 410 con comentarios y blancos): 59 palabras
-   reservadas (53 instrucciones y estructuras, 3 literales especiales y 3
-   operadores lógicos), 22 símbolos y operadores, literales enteros y
-   decimales, cadenas con escapes, comentarios con `#`, saltos de línea
+   (527 líneas): 65 palabras reservadas (59 instrucciones y estructuras, 3
+   literales especiales y 3 operadores lógicos), 23 símbolos y operadores,
+   literales enteros y decimales, cadenas con escapes, comentarios con `#`, saltos de línea
    significativos e identificadores Unicode.
 3. **Código generado por ANTLR4** para Python 3 en `generado/`:
    `ArepaLexer.py`, `ArepaParser.py`, `ArepaVisitor.py` y las tablas
@@ -48,11 +47,11 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
    `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
    bibliotecas equivalentes.
-8. **Suite de pruebas** `pruebas/test_proyecto.py`: 6 suites con 194
-   pruebas en total (48 de front-end, 21 de estructura del árbol, 43 de
-   datos, 16 de expresiones, 15 de símbolos y contexto, y 51 de
-   runtime); todas pasan. (Nota Corte 2: el conteo creció con los ciclos
-   `mientras`/`repita`; el detalle vive en `docs/08_informe_fase2.md`.)
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: **8 suites y 319
+   pruebas** en total (55 de front-end, 28 de estructura del árbol, 43 de
+   datos, 48 de estructuras propias, 16 de expresiones, 15 de símbolos y
+   contexto, 51 de runtime y 63 de gráficas); todas pasan. El detalle
+   vive en `docs/08_informe_fase2.md` y `docs/11_informe_fase3.md`.
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -91,13 +90,15 @@ proyecto/
 ├── pruebas/
 │   ├── positivos/*.arepa     deben aceptarse
 │   ├── negativos/*.arepa     deben rechazarse con diagnóstico
-│   ├── test_front.py         suite del front-end (48: 9 pos + 20 neg + 10 diag + 9 CLI)
-│   ├── test_arbol.py         suite de estructura del árbol (21)
+│   ├── test_front.py         suite del front-end (55: 10 pos + 22 neg + 10 diag + 13 CLI)
+│   ├── test_arbol.py         suite de estructura del árbol (28)
 │   ├── test_datos.py         suite de la biblioteca de datos (43)
+│   ├── test_estructuras.py   suite de listas, registros y tablas en memoria (48)
 │   ├── test_expresiones.py   suite del evaluador (16)
 │   ├── test_simbolos.py      suite de símbolos y contexto (15)
 │   ├── test_runtime.py       suite del runtime (51)
-│   └── test_proyecto.py      corredor maestro (194)
+│   ├── test_graficas.py      suite del motor gráfico y caso de estudio (63)
+│   └── test_proyecto.py      corredor maestro (conteo vigente: 319)
 ├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
 └── requirements.txt          dependencias (solo ANTLR4)
@@ -125,14 +126,14 @@ python3 src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
 python3 src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas (194)
+# 4. Suite completa de pruebas (conteo vigente: 8 suites, 319 pruebas)
 python3 pruebas/test_proyecto.py
 ```
 
 ## 5. Resultados de las pruebas
 
-Ejecutando `python3 pruebas/test_front.py` pasan las 43 pruebas
-(8 positivas + 17 negativas + 10 de diagnóstico + 8 de la interfaz):
+Ejecutando `python3 pruebas/test_front.py` pasan las 55 pruebas
+(10 positivas + 22 negativas + 10 de diagnóstico + 13 de CLI):
 
 | Prueba | Clase | Resultado |
 |---|---|---|
@@ -227,8 +228,9 @@ línea crudos y que ninguno sea un volcado de más de 300 caracteres.
 > Nota del Corte 2: los puntos 1 y 2 quedaron resueltos (ver
 > `docs/08_informe_fase2.md`): `monte` ya lee CSV con el lector propio,
 > `--ejecutar` corre programas reales y la tabla de símbolos detecta
-> variables sin declarar. Se conservan aquí como registro de lo que el
-> Corte 1 entregó.
+> variables sin declarar. El Corte 3 cerró del todo el punto 1: `pinte` ya
+> dibuja y exporta PNG (ver `docs/11_informe_fase3.md`). Se conservan aquí
+> como registro de lo que el Corte 1 entregó.
 
 1. No hay ejecución semántica: `monte` todavía no lee CSV ni `pinte` dibuja
    (eso va para las fases 2 y 3).
@@ -251,9 +253,10 @@ línea crudos y que ninguno sea un volcado de más de 300 caracteres.
   declaradas), más pruebas de integración y mensajes aún más claros.
   Todo sobre `Tabla`, el lector CSV propio y el evaluador propio; sin
   pandas ni bibliotecas externas.
-* **Fase 3:** motor de gráficas **propio** (barras, líneas, histograma,
-  dispersión, cajas) que genere imágenes sin matplotlib, exportación
-  PNG y un caso de estudio completo con datos reales.
+* **Fase 3 (completada en el Corte 3; ver `docs/11_informe_fase3.md`):** motor
+  de gráficas **propio** (barras, líneas, histograma, dispersión, cajas) que
+  genera imágenes sin matplotlib, exportación PNG y un caso de estudio completo
+  con datos reales.
 
 Como la gramática de la Fase 1 ya reconoce todo el vocabulario previsto,
 las fases siguientes agregan la semántica **sin tener que tocar la sintaxis**.

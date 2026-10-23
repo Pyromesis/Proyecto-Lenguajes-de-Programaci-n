@@ -2,8 +2,7 @@
 #  graficas.arepa - Las cinco visualizaciones del lenguaje
 #  Demuestra: pinte con barras, lineas, histograma,
 #  dispersion y cajas, con sus cláusulas de estética.
-#  (La generación de imágenes llega en la Fase 3; aquí se
-#   valida la instrucción y sus columnas.)
+#  Cada gráfica se escribe como PNG de 800x480 en salidas/.
 # ============================================================
 
 quihubo

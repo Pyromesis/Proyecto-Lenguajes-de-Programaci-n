@@ -4,7 +4,7 @@
 # El lector usa estados FUERA/DENTRO; separador dentro no corta.
 
 quihubo
-tienda = monte "Ejercicios_Problemas/datos/comillas.csv" con encabezado, separador ","
+tienda = monte "ejercicios/datos/comillas.csv" con encabezado, separador ","
 cuenteme "comillas ok"
 describa tienda
 filtrada = tienda |> deje donde valor > 3000

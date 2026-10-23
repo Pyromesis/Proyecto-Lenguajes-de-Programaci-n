@@ -1,4 +1,4 @@
-# AREPA — Documento de alcance (Fases 1–2, acumulativa, Linux)
+# AREPA — Documento de alcance (Fases 1–3, acumulativa, Linux)
 
 **AREPA**: *Análisis Reproducible de datos Escrito con Palabras Autóctonas*
 Lenguaje de dominio específico (DSL) para ciencia de datos y visualización.
@@ -49,20 +49,27 @@ orientada a objetos o acceso a redes.
 
 * Un **archivo fuente** con extensión `.arepa` escrito en UTF-8.
 * (Desde la Fase 2) los **archivos CSV** que mencione `monte`.
+* (Desde la Fase 3) los **datos públicos** del caso de estudio
+  (`caso_estudio/datos/pasajeros.csv`).
 
 ## 5. Salidas
 
-**Fase 1 (esta entrega):**
+**Fase 1:**
 * La confirmación de que el programa pertenece o no al lenguaje.
 * La lista de tokens, si se pide con `--tokens`.
 * El **árbol de análisis**, si se pide con `--arbol`.
 * Diagnósticos de error léxico y sintáctico que dicen **línea y columna**.
-* (Adicional, con `--ejecutar`) la ejecución del programa con la
-  biblioteca propia: carga CSV, pipeline de datos, agregaciones y
-  exportación, sin usar bibliotecas externas.
 
-**Fases 2 y 3:** consolidación semántica, estadísticas ampliadas y
-gráficas PNG generadas con un motor propio.
+**Fase 2:**
+* (Con `--ejecutar`) la ejecución del programa con la biblioteca propia: carga
+  CSV, pipeline de datos, agregaciones y exportación a CSV.
+
+**Fase 3 (ya implementada):**
+* **Gráficas PNG** (barras, líneas, histograma, dispersión y cajas) generadas
+  por un motor propio, con título, ejes y leyenda configurables desde el DSL,
+  más el bloque `Archivos generados:` con ruta, tipo y bytes.
+* El **caso de estudio** reproducible sobre datos públicos
+  (`caso_estudio/`) con cinco PNG y un CSV de evidencia.
 
 ## 6. Restricciones
 
@@ -75,11 +82,12 @@ gráficas PNG generadas con un motor propio.
    permiten en cualquier posición del programa.
 5. Las variables del programa no pueden llamarse igual que una palabra
    reservada; los nombres de columnas sí pueden (vienen de archivos externos).
-6. La entrega del Corte 1 es el **front-end**: reconoce programas, arma
+6. La entrega del Corte 1 fue el **front-end**: reconoce programas, arma
    el árbol y reporta errores. Como demostración de la biblioteca propia
    (Tabla, lector CSV, evaluador y símbolos hechos por el equipo), el
    modo `--ejecutar` corre programas reales sin bibliotecas externas;
-   `pinte` se valida pero no genera imágenes todavía.
+   desde la Fase 3 `pinte` además **genera el PNG** con el motor gráfico
+   propio.
 
 **Restricciones técnicas de ejecución (resumen unificado).** El lector CSV
 propio carga el archivo completo en memoria (`lector_csv.py:leer`) y exige
@@ -91,19 +99,20 @@ número↔texto ni concatenación con `+`, y `nada` se propaga por operaciones
 y comparaciones (`expresiones/operadores.py`). El detalle de algoritmos y
 mensajes vive en `docs/05_arquitectura.md`.
 
-## 7. Alcance funcional de esta fase (Corte 1)
+## 7. Alcance funcional (acumulado hasta la Fase 3)
 
 | Capacidad mínima exigida | Estado |
 |---|---|
-| Asignaciones y expresiones básicas (aritmética, relacional, lógica) | reconocidas |
-| Carga de CSV (`monte`, con opciones de encabezado y separador) | reconocida |
-| Selección de columnas (`escoja`) | reconocida |
-| Filtros con comparaciones sencillas (`deje donde`) | reconocidos |
-| Reconocimiento sintáctico de visualización (`pinte ... guardela/muestrela`) | reconocido (todavía no produce gráficas) |
+| Asignaciones y expresiones básicas (aritmética, relacional, lógica) | reconocidas y ejecutadas |
+| Carga de CSV (`monte`, con opciones de encabezado y separador) | reconocida y ejecutada |
+| Selección de columnas (`escoja`) | reconocida y ejecutada |
+| Filtros con comparaciones sencillas (`deje donde`) | reconocidos y ejecutados |
+| Visualización (`pinte ... guardela/muestrela`) | **implementada: 5 tipos de gráfica y PNG propio** |
+| Caso de estudio con datos públicos | `caso_estudio/` (AirPassengers, 144 filas) |
 | Gramática BNF/EBNF documentada | lista, en `docs/03_gramatica_ebnf.md` |
 | Gramática implementada en ANTLR4 (lexer + parser Python) | lista, en `gramatica/Arepa.g4` y `generado/` |
-| Pruebas léxicas y sintácticas positivas y negativas | 48 de 48 pasan (`pruebas/test_front.py`: 9 positivos, 20 negativos, 10 de diagnóstico y 9 de CLI) |
-| Pruebas de la biblioteca propia (árbol, datos, expresiones, símbolos, runtime) | 146 de 146 pasan (`pruebas/test_proyecto.py`: 194 en total) |
+| Pruebas léxicas y sintácticas positivas y negativas | 55 de 55 pasan (`pruebas/test_front.py`: 10 positivos, 22 negativos, 10 de diagnóstico y 13 de CLI) |
+| Pruebas de la biblioteca propia (árbol, datos, estructuras, expresiones, símbolos, runtime, gráficas) | 264 de 264 pasan (las 7 suites propias; `pruebas/test_proyecto.py`: 319 en total) |
 | Reporte de errores comprensibles con línea y columna | listo, en `src/lenguaje/errores.py` y `src/errores_base.py` |
 | Interfaz de línea de comandos | lista, en `src/cli/main.py` |
 

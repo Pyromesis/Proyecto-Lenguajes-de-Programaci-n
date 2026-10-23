@@ -58,6 +58,9 @@ sentencia
     | instruccion_devolver
     | instruccion_cuenteme
     | instruccion_describa
+    | instruccion_agregue
+    | instruccion_saque
+    | ciclo_recorra
     | instruccion_llamada
     ;
 
@@ -70,7 +73,7 @@ instruccion_llamada
     ;
 
 asignacion
-    : identificador ASIGNACION expresion
+    : identificador indice* ASIGNACION expresion
     ;
 
 instruccion_guarde
@@ -87,6 +90,22 @@ instruccion_cuenteme
 
 instruccion_describa
     : DESCRIBA identificador
+    ;
+
+// --- Estructuras propias ----------------------------------------------------
+// 'agregue valor en destino' agrega una fila/elemento; 'saque posicion de
+// destino' lo quita; 'recorra elemento en coleccion { ... }' la recorre.
+
+instruccion_agregue
+    : AGREGUE NL* expresion NL* EN NL* identificador
+    ;
+
+instruccion_saque
+    : SAQUE NL* expresion NL* DE NL* identificador
+    ;
+
+ciclo_recorra
+    : RECORRA NL* identificador NL* EN NL* identificador NL* bloque
     ;
 
 // --- Funciones --------------------------------------------------------------
@@ -218,7 +237,7 @@ tipo_grafica
 clausula_estetica
     : TITULO NL* cadena
     | EJEX NL* nombre_columna
-    | EJEY NL* nombre_columna
+    | EJEY NL* (nombre_columna | lista_literal)
     | LEYENDA NL* cadena
     ;
 
@@ -261,16 +280,26 @@ aritmetica
     ;
 
 termino
-    : factor ((POR_OP | DIVISION | MODULO) NL* factor)*
+    : unario ((POR_OP | DIVISION | MODULO) NL* unario)*
     ;
 
-factor
-    : unario (POTENCIA NL* factor)?
-    ;
-
+// Precedencia: '^' pega mas que el '-' unario (-2 ^ 2 = -4) y asocia a
+// la derecha (2 ^ 3 ^ 2 = 2 ^ (3 ^ 2)).
 unario
     : MENOS NL* unario
-    | atomo
+    | potencia
+    ;
+
+potencia
+    : acceso (POTENCIA NL* unario)?
+    ;
+
+acceso
+    : atomo indice*
+    ;
+
+indice
+    : CORCHETE_I NL* expresion NL* CORCHETE_D
     ;
 
 atomo
@@ -280,9 +309,41 @@ atomo
     | OBVIO
     | FALSO
     | NADA
+    | lista_literal
+    | registro_literal
+    | tabla_literal
     | llamada_funcion
     | nombre_columna
     | PAREN_I NL* expresion NL* PAREN_D
+    ;
+
+// --- Literales de estructuras propias ---------------------------------------
+
+lista_literal
+    : CORCHETE_I NL* (expresion (COMA NL* expresion)*)? NL* CORCHETE_D
+    ;
+
+registro_literal
+    : LLAVE_I NL* (par_registro (COMA NL* par_registro)*)? NL* LLAVE_D
+    ;
+
+par_registro
+    : clave_registro DOS_PUNTOS NL* expresion
+    ;
+
+clave_registro
+    : nombre_columna
+    | cadena
+    ;
+
+// 'arme [col1, col2] con [[v1, v2], [v3, v4]]' o 'arme [col1, col2]' vacia.
+tabla_literal
+    : ARME NL* lista_columnas
+      (NL* CON NL* CORCHETE_I NL* (fila_literal (COMA NL* fila_literal)*)? NL* CORCHETE_D)?
+    ;
+
+fila_literal
+    : CORCHETE_I NL* (expresion (COMA NL* expresion)*)? NL* CORCHETE_D
     ;
 
 llamada_funcion
@@ -317,6 +378,7 @@ nombre_columna
     | EJEX | EJEY | LEYENDA | GUARDELA | MUESTRELA
     | INVENTE | DEVUELVA | FIJESE_SI | SINO | CUENTEME | DESCRIBA
     | MIENTRAS | REPITA | VECES | DESDE | HASTA | PASO | PARE | SIGA
+    | ARME | AGREGUE | SAQUE | RECORRA | EN | DE
     | OBVIO | FALSO | NADA | Y | O | NO
     ;
 
@@ -358,6 +420,15 @@ CONVIERTA  : 'convierta' ;   // convierte tipos
 
 JUNTE      : 'junte' ;       // agrupa
 RESUMA     : 'resuma' ;      // agrega/resume
+
+// --- Estructuras propias --------------------------------------------------------
+
+ARME       : 'arme' ;        // crea una tabla en memoria
+AGREGUE    : 'agregue' ;     // agrega fila/elemento
+SAQUE      : 'saque' ;       // quita fila/elemento
+RECORRA    : 'recorra' ;     // recorre filas/elementos
+EN         : 'en' ;
+DE         : 'de' ;
 
 // --- Tipos ---------------------------------------------------------------------
 
@@ -443,6 +514,7 @@ CORCHETE_D : ']' ;
 LLAVE_I    : '{' ;
 LLAVE_D    : '}' ;
 COMA       : ',' ;
+DOS_PUNTOS : ':' ;
 
 // --- Estructura del texto fuente -------------------------------------------------------
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """AREPA - Chequeo del conteo de pruebas (Linux).
 
-Fuente única de verdad del número de pruebas: ejecuta las 6 suites,
+Fuente única de verdad del número de pruebas: ejecuta todas las suites,
 extrae el "N de N" reportado por cada una y lo compara contra el conteo
 canónico. Si algún total cambia (nueva prueba agregada o eliminada),
 este script falla y obliga a actualizar el conteo en un solo lugar:
@@ -10,6 +10,9 @@ la tabla ESPERADO de abajo y los documentos que la citan
 
 Uso:
     python3 herramientas/chequeo_pruebas.py
+
+Si existe `.venv/bin/python`, el script lo usa automáticamente para las
+suites (es el único intérprete que trae antlr4 en una instalación limpia).
 """
 
 import os
@@ -20,14 +23,16 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Conteo canónico: (archivo de suite, pruebas esperadas).
-# Total: 48 + 21 + 43 + 16 + 15 + 51 = 194.
+# Total: 55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 = 319.
 ESPERADO = (
-    ("test_front.py", 48),
-    ("test_arbol.py", 21),
+    ("test_front.py", 55),
+    ("test_arbol.py", 28),
     ("test_datos.py", 43),
+    ("test_estructuras.py", 48),
     ("test_expresiones.py", 16),
     ("test_simbolos.py", 15),
     ("test_runtime.py", 51),
+    ("test_graficas.py", 63),
 )
 
 PATRON = re.compile(r"Resultado:\s*(\d+)\s+de\s+(\d+)")
@@ -39,10 +44,18 @@ def _limpia(salida):
     return ANSI.sub("", salida or "")
 
 
+def _interprete():
+    """Devuelve el intérprete con antlr4: .venv si existe, si no el actual."""
+    ruta_venv = os.path.join(RAIZ, ".venv", "bin", "python")
+    if os.path.exists(ruta_venv):
+        return ruta_venv
+    return sys.executable
+
+
 def contar_suite(archivo):
     """Corre una suite y devuelve (pasadas, totales) según su línea Resultado."""
     resultado = subprocess.run(
-        [sys.executable, os.path.join(RAIZ, "pruebas", archivo)],
+        [_interprete(), os.path.join(RAIZ, "pruebas", archivo)],
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -79,7 +92,7 @@ def main():
     if not ok or total != canonico:
         print("DESUNIFICADO: actualizá ESPERADO aquí y los docs que citan el conteo.")
         return 1
-    print("Unificado: 6 suites, 194 pruebas.")
+    print("Unificado: {0} suites, {1} pruebas.".format(len(ESPERADO), total))
     return 0
 
 
