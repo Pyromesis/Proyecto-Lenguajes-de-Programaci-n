@@ -1,0 +1,82 @@
+# ============================================================
+#  memoria.arepa - Tabla armada en memoria (sin leer CSV)
+#  Demuestra: arme, acceso indexado, recorra, agregaciones
+#  fuera de 'resuma', 'resuma' por categoría y 'guarde'.
+# ============================================================
+
+quihubo
+
+# --- 1. Armar la tabla directamente en memoria --------------
+# Cada fila es una lista con los mismos valores que las columnas:
+# mes, categoria y valor (en pesos).
+gastos = arme [mes, categoria, valor] con [
+    ["Enero", "Mercado", 120000],
+    ["Enero", "Transporte", 45000],
+    ["Febrero", "Mercado", 135000],
+    ["Febrero", "Servicios", 90000],
+    ["Marzo", "Transporte", 50000],
+    ["Marzo", "Mercado", 110000]
+]
+
+# Una tabla vacía con las mismas columnas sirve de plantilla.
+plantilla = arme [mes, categoria, valor]
+
+# --- 2. Consultas y agregaciones en variables ---------------
+filas = largo(gastos)
+columnas_gastos = columnas(gastos)
+total = sume(gastos, valor)
+promedio = promedie(gastos, valor)
+mediana_gastos = mediana(gastos, valor)
+menor = minimo(gastos, valor)
+mayor = maximo(gastos, valor)
+desviacion_gastos = desviacion(gastos, valor)
+registros = cuente(gastos)
+valores_presentes = cuente(gastos, valor)
+
+# --- 3. Recorrer la tabla y acumular en variables -----------
+# El recorrido usa el registro de cada fila: fila["columna"].
+total_recorrido = 0
+recorra fila en gastos {
+    total_recorrido = total_recorrido + fila["valor"]
+}
+
+# Totales por categoría calculados con 'fijese_si' y variables.
+mercado = 0
+transporte = 0
+servicios = 0
+recorra fila en gastos {
+    fijese_si (fila["categoria"] == "Mercado") {
+        mercado = mercado + fila["valor"]
+    }
+    fijese_si (fila["categoria"] == "Transporte") {
+        transporte = transporte + fila["valor"]
+    }
+    fijese_si (fila["categoria"] == "Servicios") {
+        servicios = servicios + fila["valor"]
+    }
+}
+
+# El primer mes y su gasto también se leen con índice 1-based.
+primer_mes = gastos[1]["mes"]
+primer_valor = gastos[1]["valor"]
+
+# --- 4. Resumen agrupado con 'resuma' -----------------------
+resumen = gastos
+|> junte por [categoria]
+|> resuma total = sume(valor), promedio = promedie(valor), registros = cuente()
+
+# --- 5. Mostrar y exportar la evidencia ---------------------
+cuenteme "Filas:", filas, "Columnas:", columnas_gastos
+cuenteme "Plantilla vacia:", largo(plantilla), "filas"
+cuenteme "Primer registro:", primer_mes, primer_valor
+cuenteme "Total:", total, "Total recorrido:", total_recorrido
+cuenteme "Promedio:", promedio, "Mediana:", mediana_gastos
+cuenteme "Minimo:", menor, "Maximo:", mayor, "Desviacion:", desviacion_gastos
+cuenteme "Registros:", registros, "Con valor:", valores_presentes
+cuenteme "Mercado:", mercado, "Transporte:", transporte, "Servicios:", servicios
+describa gastos
+describa resumen
+
+guarde resumen como "salidas/memoria_resumen.csv"
+
+chao

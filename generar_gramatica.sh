@@ -50,7 +50,9 @@ fi
 mkdir -p generado
 
 # 6. Generacion con ANTLR 4.13.2 (Python3, visitor, sin listener)
-java -jar "$ANTLR_JAR" -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
+# -Xexact-output-dir evita que ANTLR replique "gramatica/" dentro de -o.
+java -jar "$ANTLR_JAR" -Dlanguage=Python3 -visitor -no-listener \
+    -Xexact-output-dir -o generado gramatica/Arepa.g4
 
 # 7. Verificar que la generacion termino correctamente
 for archivo in generado/ArepaLexer.py generado/ArepaParser.py generado/ArepaVisitor.py; do

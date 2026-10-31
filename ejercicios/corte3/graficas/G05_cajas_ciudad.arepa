@@ -1,0 +1,17 @@
+# G05 - Cajas: distribucion del total por ciudad
+# Corte 3: con ejex repetido, el motor agrupa una caja por ciudad.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G05_cajas_ciudad.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+
+pinte cajas con_total
+titulo "Total por ciudad"
+ejex ciudad
+ejey total
+guardela "salidas/ej_g05_cajas_ciudad.png"
+
+chao

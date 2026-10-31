@@ -1,0 +1,15 @@
+# G03 - Histograma: distribucion de unidades
+# Corte 3: el histograma exige una sola columna en ejey e ignora ejex.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G03_histograma_unidades.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+pinte histograma ventas
+titulo "Distribucion de unidades vendidas"
+ejey unidades
+guardela "salidas/ej_g03_histograma_unidades.png"
+
+chao

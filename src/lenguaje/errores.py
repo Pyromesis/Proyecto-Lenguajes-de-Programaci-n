@@ -63,7 +63,8 @@ class ErroresArepa(ErrorListener):
 # Traducción de los mensajes técnicos de ANTLR a español claro
 # ---------------------------------------------------------------------- #
 
-# Nombres simbólicos de ANTLR y su lectura en español
+# Nombres simbólicos de ANTLR y su lectura en español.
+# Ojo: estas descripciones se unen con comas, así que no deben contener comas.
 NOMBRES_TOKEN = {
     "NL": "un salto de línea",
     "ID": "un identificador (nombre sin espacios)",
@@ -71,6 +72,42 @@ NOMBRES_TOKEN = {
     "DECIMAL": "un número decimal",
     "CADENA": "una cadena entre comillas dobles",
     "EOF": "el final del archivo",
+    "DOS_PUNTOS": "los dos puntos ':'",
+    "ARME": "la palabra 'arme' (crea una tabla en memoria)",
+    "AGREGUE": "la instrucción 'agregue'",
+    "SAQUE": "la instrucción 'saque'",
+    "RECORRA": "la palabra de ciclo 'recorra'",
+    "EN": "la palabra 'en'",
+    "DE": "la palabra 'de'",
+    "CORCHETE_I": "el corchete de apertura '['",
+    "CORCHETE_D": "el corchete de cierre ']'",
+    "LLAVE_I": "la llave de apertura '{'",
+    "LLAVE_D": "la llave de cierre '}'",
+    "COMA": "la coma ','",
+    "POTENCIA": "el operador de potencia '^'",
+    "ASIGNACION": "el signo igual '='",
+    "PIPE": "el encadenamiento '|>'",
+    "FLECHA": "la flecha '->'",
+    "PAREN_I": "el paréntesis de apertura '('",
+    "PAREN_D": "el paréntesis de cierre ')'",
+}
+
+# ANTLR cita los tokens con texto literal entre comillas (':', ']', ',');
+# aquí también se leen en español.
+SIMBOLOS = {
+    ":": "los dos puntos ':'",
+    ",": "la coma ','",
+    "=": "el signo igual '='",
+    "|>": "el encadenamiento '|>'",
+    "->": "la flecha '->'",
+    "^": "el operador de potencia '^'",
+    "[": "el corchete de apertura '['",
+    "]": "el corchete de cierre ']'",
+    "{": "la llave de apertura '{'",
+    "}": "la llave de cierre '}'",
+    "(": "el paréntesis de apertura '('",
+    ")": "el paréntesis de cierre ')'",
+    "<EOF>": "el final del archivo",
 }
 
 # Palabras reservadas que un usuario puede intentar usar como variable
@@ -89,6 +126,12 @@ RESERVADAS = {
     "paso": "la palabra de ciclo 'paso'",
     "pare": "la instrucción 'pare' (rompe el ciclo)",
     "siga": "la instrucción 'siga' (sigue a la próxima vuelta)",
+    "arme": "la palabra 'arme' (crea tablas)",
+    "agregue": "la instrucción 'agregue'",
+    "saque": "la instrucción 'saque'",
+    "recorra": "la palabra de ciclo 'recorra'",
+    "en": "la palabra 'en'",
+    "de": "la palabra 'de'",
 }
 
 
@@ -107,6 +150,8 @@ def _limpiar_texto(texto):
     limpio = texto.replace("\\n", " ").replace("\\r", "").replace("\\t", " ")
     limpio = re.sub(r"\s+", " ", limpio).strip()
     limpio = limpio.strip("'").strip()
+    if limpio in SIMBOLOS:
+        return SIMBOLOS[limpio]
     if limpio == "":
         return "'(fin de línea)'"
     return "'" + limpio + "'"
@@ -118,10 +163,29 @@ def _traducir_token(token):
     if token == "":
         return token
     if token.startswith("'"):
-        return token
+        interior = token[1:-1] if token.endswith("'") and len(token) > 1 else token[1:]
+        return SIMBOLOS.get(interior, token)
     if token in NOMBRES_TOKEN:
         return NOMBRES_TOKEN[token]
     return "'" + token.lower() + "'"
+
+
+def _dividir_opciones(interior):
+    """Separa por comas sin partir los literales que traen coma (',')."""
+    opciones = []
+    actual = []
+    entre_comillas = False
+    for caracter in interior:
+        if caracter == "'":
+            entre_comillas = not entre_comillas
+            actual.append(caracter)
+        elif caracter == "," and not entre_comillas:
+            opciones.append("".join(actual))
+            actual = []
+        else:
+            actual.append(caracter)
+    opciones.append("".join(actual))
+    return [o for o in opciones if o.strip()]
 
 
 def _traducir_conjunto(fragmento):
@@ -129,11 +193,16 @@ def _traducir_conjunto(fragmento):
     interior = fragmento.strip()
     if interior.startswith("{") and interior.endswith("}"):
         interior = interior[1:-1]
-    opciones = [_traducir_token(t) for t in interior.split(",") if t.strip()]
+    opciones = [_traducir_token(t) for t in _dividir_opciones(interior)]
     if len(opciones) > ErroresArepa.MAX_OPCIONES:
         visibles = opciones[: ErroresArepa.MAX_OPCIONES]
         return ", ".join(visibles) + ", entre otras opciones"
     return ", ".join(opciones)
+
+
+def _verbo_falta(opciones):
+    """Concuerda el verbo: 'los dos puntos' exige 'Hacen falta'."""
+    return "Hacen falta" if opciones.strip().lower().startswith(("los ", "las ")) else "Hace falta"
 
 
 def _pista_reservada(texto_crudo):
@@ -161,7 +230,9 @@ def _traducir(mensaje):
         partes = mensaje.split(" at ", 1)
         lo_que_falta = _traducir_conjunto(partes[0].replace("missing", ""))
         donde = _limpiar_texto(partes[1].strip()) if len(partes) > 1 else "allí"
-        return "Hace falta {0} cerca de {1}".format(lo_que_falta, donde)
+        return "{0} {1} cerca de {2}".format(
+            _verbo_falta(lo_que_falta), lo_que_falta, donde
+        )
 
     if mensaje.startswith("extraneous input"):
         partes = mensaje.split(" expecting ", 1)

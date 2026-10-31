@@ -6,8 +6,8 @@ proyecto que no es código propio (herramienta exigida por el curso).
 
 | Archivo | Qué es |
 |---|---|
-| `ArepaLexer.py` | lexer generado (73 reservadas, operadores, literales) |
-| `ArepaParser.py` | parser generado (53 reglas) |
+| `ArepaLexer.py` | lexer generado (79 reservadas, operadores, literales) |
+| `ArepaParser.py` | parser generado (64 reglas) |
 | `ArepaVisitor.py` | Visitor base que extienden `EjecutorArepa` y `EvaluadorExpresiones` |
 | `Arepa.tokens` / `ArepaLexer.tokens` | tablas de tokens |
 | `Arepa.interp` / `ArepaLexer.interp` | datos intermedios de ANTLR |
@@ -19,10 +19,10 @@ chmod +x generar_gramatica.sh
 ./generar_gramatica.sh
 ```
 
-Sincronía verificable EBNF ↔ `.g4` (53/53 reglas, 73 reservadas):
+Sincronía verificable EBNF ↔ `.g4` (64/64 reglas, 79 reservadas):
 
 ```bash
 python3 herramientas/chequeo_gramatica.py
 ```
 
-Tras regenerar, correr `python3 pruebas/test_proyecto.py` (225 pruebas).
+Tras regenerar, correr `python3 pruebas/test_proyecto.py` (350 pruebas).

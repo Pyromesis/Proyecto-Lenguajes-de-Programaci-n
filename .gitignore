@@ -15,5 +15,6 @@ salidas/*
 !salidas/regresion_casas.csv
 !salidas/clasificacion_estudiantes.csv
 !salidas/arbol_riesgo.csv
+!salidas/memoria_resumen.csv
 !salidas/README.md
 !salidas/.gitkeep

@@ -1,0 +1,104 @@
+# ============================================================
+#  caso_estudio/programa.arepa
+#  Pasajeros aereos internacionales (AirPassengers, 1949-1960)
+#  Flujo completo: carga, limpieza, resumen, indicadores,
+#  cinco graficas y exportacion CSV.
+#
+#  Ejecutar desde la raiz del proyecto:
+#    AREPA_SIN_VENTANA=1 .venv/bin/python src/cli/main.py \
+#        caso_estudio/programa.arepa --ejecutar
+# ============================================================
+
+quihubo
+
+# Etiqueta legible de la decada: "1940s", "1950s" o "1960s".
+# El sufijo evita que la etiqueta se confunda con un valor numerico.
+invente rotulo_decada(decada) {
+    fijese_si (decada < 1950) {
+        devuelva "1940s"
+    }
+    fijese_si (decada < 1960) {
+        devuelva "1950s"
+    }
+    devuelva "1960s"
+}
+
+# --- 1. Carga -------------------------------------------------
+pasajeros = monte "caso_estudio/datos/pasajeros.csv" con encabezado, separador ","
+
+# --- 2. Limpieza y preparacion --------------------------------
+# 'periodo' vuelve continuo el eje año-mes; 'decada' agrupa por decenio.
+preparada = pasajeros
+|> escoja [anio, mes, pasajeros]
+|> deje donde pasajeros > 0
+|> cree periodo = anio + (mes - 1) / 12
+|> cree decada = anio - (anio % 10)
+|> cree decada_etiqueta = rotulo_decada(decada)
+|> convierta decada -> texto
+|> escoja [anio, mes, pasajeros, periodo, decada_etiqueta]
+|> renombre decada_etiqueta -> decada
+
+# --- 3. Resumen anual ----------------------------------------
+resumen = preparada
+|> junte por [anio]
+|> resuma total = sume(pasajeros),
+   promedio = promedie(pasajeros),
+   maximo_mes = maximo(pasajeros),
+   registros = cuente()
+
+# --- 4. Indicadores del caso ---------------------------------
+p_1949 = preparada
+|> deje donde anio == 1949
+
+p_1960 = preparada
+|> deje donde anio == 1960
+
+cuenteme "Registros limpios:", cuente(preparada)
+cuenteme "Total pasajeros:", sume(preparada, pasajeros)
+cuenteme "Promedio mensual:", promedie(preparada, pasajeros)
+cuenteme "Mediana mensual:", mediana(preparada, pasajeros)
+cuenteme "Minimo mensual:", minimo(preparada, pasajeros)
+cuenteme "Maximo mensual:", maximo(preparada, pasajeros)
+cuenteme "Total 1949:", sume(p_1949, pasajeros)
+cuenteme "Total 1960:", sume(p_1960, pasajeros)
+cuenteme "Crecimiento 1949-1960 (%):", (sume(p_1960, pasajeros) - sume(p_1949, pasajeros)) / sume(p_1949, pasajeros) * 100
+
+# --- 5. Exportacion del resumen ------------------------------
+guarde resumen como "caso_estudio/salidas/pasajeros_por_anio.csv"
+
+# --- 6. Visualizaciones --------------------------------------
+# Serie mensual: tendencia creciente con picos de mitad de año.
+pinte lineas preparada
+titulo "Pasajeros internacionales 1949-1960"
+ejex periodo
+ejey pasajeros
+guardela "caso_estudio/salidas/01_serie.png"
+
+# Totales anuales: una barra por año.
+pinte barras resumen
+titulo "Pasajeros por año"
+ejex anio
+ejey total
+guardela "caso_estudio/salidas/02_barras.png"
+
+# Distribucion de los 144 meses.
+pinte histograma preparada
+titulo "Distribucion mensual"
+ejey pasajeros
+guardela "caso_estudio/salidas/03_histograma.png"
+
+# Nube periodo-pasajeros: tendencia y estacionalidad.
+pinte dispersion preparada
+titulo "Tendencia y estacionalidad"
+ejex periodo
+ejey pasajeros
+guardela "caso_estudio/salidas/04_dispersion.png"
+
+# Cajas por decada: nivel y dispersion de cada decenio.
+pinte cajas preparada
+titulo "Pasajeros por decada"
+ejex decada
+ejey pasajeros
+guardela "caso_estudio/salidas/05_cajas.png"
+
+chao

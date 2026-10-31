@@ -10,8 +10,8 @@ REQUISITO → DOCUMENTACIÓN → REGLA EBNF → REGLA Arepa.g4 → CÓDIGO → P
 Convenciones: "EBNF" remite a `docs/03_gramatica_ebnf.md`; "ANTLR" remite a
 `gramatica/Arepa.g4` con su línea; "Prueba" remite a `pruebas/`. Todas las
 filas tienen estado **VERIFICADO** con la ejecución de
-`python3 pruebas/test_proyecto.py` (225 → ver conteo vigente en §8 de
-`docs/05_arquitectura.md` y en README).
+`python3 pruebas/test_proyecto.py` (conteo vigente: 9 suites, 350 pruebas →
+ver §8 de `docs/05_arquitectura.md` y el README).
 
 | ID | Requisito | Documento | Regla EBNF | Regla ANTLR (línea) | Código | Prueba | Ejemplo | Estado |
 |----|-----------|-----------|------------|---------------------|--------|--------|---------|--------|
@@ -20,35 +20,35 @@ filas tienen estado **VERIFICADO** con la ejecución de
 | R03 | Entradas | `docs/01` §4 | — | — | — | — | `datos/*.csv`, `*.arepa` | VERIFICADO |
 | R04 | Salidas | `docs/01` §5 | — | — | `src/cli/main.py` | `test_front.py` (CLI) | salida del demo | VERIFICADO |
 | R05 | Restricciones | `docs/01` §6 | EBNF §1-§2 | `programa` (38) | `src/lenguaje/analizador.py` | `n01`, `n12`, `n14` | — | VERIFICADO |
-| R06 | Palabras reservadas | `docs/02` §1 y §3 | EBNF §7 `PALABRA_RESERVADA` (73) | líneas 384-527 | `generado/ArepaLexer.py` | `test_front.py` (positivos) + `n11` | `docs/02` §3 (tabla) | VERIFICADO |
-| R07 | Operadores | `docs/02` §4 | EBNF §7 (tabla de símbolos) | líneas 496-521 | `src/expresiones/operadores.py` | `test_expresiones.py` (16) | `01_asignaciones_expresiones.arepa` | VERIFICADO |
-| R08 | Literales (enteros, decimales, cadenas, lógicos, nada) | `docs/02` §5 | EBNF §7 (`ENTERO`, `DECIMAL`, `CADENA`, `ESCAPE`) | `DECIMAL` (490), `ENTERO` (491), `CADENA` (492), `OBVIO/FALSO/NADA` (478-480) | `src/datos/tipos.py`, `src/expresiones/evaluador.py` | `test_expresiones.py`, `test_datos.py::tipos_*` | `08_casos_borde.arepa` (escapes, `""`) | VERIFICADO |
+| R06 | Palabras reservadas | `docs/02` §1 y §3 | EBNF §9 `PALABRA_RESERVADA` (79) | líneas 446-557 | `generado/ArepaLexer.py` | `test_front.py` (positivos) + `n11` | `docs/02` §3 (tabla) | VERIFICADO |
+| R07 | Operadores | `docs/02` §4 | EBNF §9 (tabla de símbolos) | líneas 567-592 | `src/expresiones/operadores.py` | `test_expresiones.py` (16) | `01_asignaciones_expresiones.arepa` | VERIFICADO |
+| R08 | Literales (enteros, decimales, cadenas, lógicos, nada) | `docs/02` §5 | EBNF §9 (`ENTERO`, `DECIMAL`, `CADENA`, `ESCAPE`) | `DECIMAL` (561), `ENTERO` (562), `CADENA` (563), `OBVIO/FALSO/NADA` (549-551) | `src/datos/tipos.py`, `src/expresiones/evaluador.py` | `test_expresiones.py`, `test_datos.py::tipos_*` | `08_casos_borde.arepa` (escapes, `""`) | VERIFICADO |
 | R09 | Sentencias | `docs/02` §2-§3 | EBNF §2 `<sentencia>` | `sentencia` (48) | `src/runtime/ejecutor.py` | `test_front.py` (positivos) | `ejemplos/demo.arepa` (9 sentencias) | VERIFICADO |
-| R10 | Gramática BNF/EBNF | `docs/03` completo | — | — | — | chequeo automático 53/53 reglas | — | VERIFICADO |
+| R10 | Gramática BNF/EBNF | `docs/03` completo | — | — | — | chequeo automático 64/64 reglas y 79 reservadas | — | VERIFICADO |
 | R11 | Gramática implementada en ANTLR4 | `docs/04` §1.2, README | — | `grammar Arepa;` (28) | `gramatica/Arepa.g4` | regeneración con `generar_gramatica.sh` + re-test | — | VERIFICADO |
 | R12 | Lexer y parser para Python | README (Dependencias) | — | — | `generado/ArepaLexer.py`, `generado/ArepaParser.py` | `test_front.py` (todo pasa tras regenerar) | — | VERIFICADO |
-| R13 | Validación de programas correctos | `docs/01` §7 | — | — | `src/lenguaje/analizador.py::analizar` | `test_front.py` 9 positivos | `pruebas/positivos/*.arepa` | VERIFICADO |
-| R14 | Validación de programas incorrectos | `docs/04` §5 | — | — | `src/lenguaje/errores.py::syntaxError` (32) | `test_front.py` 20 negativos | `pruebas/negativos/*.arepa` | VERIFICADO |
-| R15 | Asignaciones y expresiones básicas | `docs/02` §3.6, §4 | EBNF §2-§3 (`<asignacion>`, `<expresion>`) | `asignacion` (74), `expresion` (182), `expresion_logica` (285) | `src/expresiones/evaluador.py`, `runtime/ejecutor.py::visitAsignacion` (149) | `test_arbol.py::arbol_de_asignacion`, `test_expresiones.py` | `01_asignaciones_expresiones.arepa` | VERIFICADO |
-| R16 | Reconocimiento de carga CSV | `docs/02` §3.1 | EBNF §4 (`<instruccion_monte>`) | `instruccion_monte` (208), `MONTE` (389) | `runtime/ejecutor.py::_cargar` (199), `datos/lector_csv.py` | `test_runtime.py::monte_carga_csv_real`, `test_datos.py` (csv_*), `n17` | `demo.arepa` (monte con separador) | VERIFICADO |
-| R17 | Selección de columnas | `docs/02` §3.2 | EBNF §4 (`escoja <lista_columnas>`) | `operacion_datos` (193), `ESCOJA` (398) | `runtime/ejecutor.py::_aplicar_operacion`, `datos/tabla.py::seleccionar` | `test_arbol.py::arbol_de_seleccion`, `test_runtime.py::escoja_selecciona_columnas`, `n04`, `n16` | `03_seleccion_filtro.arepa` | VERIFICADO |
-| R18 | Filtros con comparaciones sencillas | `docs/02` §3.2 | EBNF §4 (`deje donde`) + `<operador_relacional>` | `DEJE` (399), `DONDE` (400), `operador_relacional` (302) | `runtime/ejecutor.py` (rama DEJE), `datos/tabla.py::filtrar` | `test_arbol.py::arbol_de_filtro`, `test_runtime.py::deje_donde_filtra_filas`, `n05` | `03_seleccion_filtro.arepa` (los 6 relacionales) | VERIFICADO |
-| R19 | Visualización reconocida sintácticamente (sin gráfica) | `docs/02` §3.5 | EBNF §6 (`<instruccion_grafica>`) | `instruccion_grafica` (257), `PINTE` (443) | `runtime/ejecutor.py::visitInstruccion_grafica` (492) | `test_arbol.py::arbol_de_visualizacion`, `n09`, `n13` | `05_graficas.arepa`, `ejemplos/graficas.arepa` | VERIFICADO |
+| R13 | Validación de programas correctos | `docs/01` §7 | — | — | `src/lenguaje/analizador.py::analizar` | `test_front.py` 10 positivos | `pruebas/positivos/*.arepa` | VERIFICADO |
+| R14 | Validación de programas incorrectos | `docs/04` §5 | — | — | `src/lenguaje/errores.py::syntaxError` (32) | `test_front.py` 22 negativos | `pruebas/negativos/*.arepa` | VERIFICADO |
+| R15 | Asignaciones y expresiones básicas | `docs/02` §3.6, §4 | EBNF §2-§3 (`<asignacion>`, `<expresion>`) | `asignacion` (77), `expresion` (201), `expresion_logica` (304) | `src/expresiones/evaluador.py`, `runtime/ejecutor.py::visitAsignacion` (167) | `test_arbol.py::arbol_de_asignacion`, `test_expresiones.py` | `01_asignaciones_expresiones.arepa` | VERIFICADO |
+| R16 | Reconocimiento de carga CSV | `docs/02` §3.1 | EBNF §5 (`<instruccion_monte>`) | `instruccion_monte` (227), `MONTE` (451) | `runtime/ejecutor.py::_cargar` (251), `datos/lector_csv.py` | `test_runtime.py::monte_carga_csv_real`, `test_datos.py` (csv_*), `n17` | `demo.arepa` (monte con separador) | VERIFICADO |
+| R17 | Selección de columnas | `docs/02` §3.2 | EBNF §5 (`escoja <lista_columnas>`) | `operacion_datos` (212), `ESCOJA` (460) | `runtime/ejecutor.py::_aplicar_operacion` (270), `datos/tabla.py::seleccionar` | `test_arbol.py::arbol_de_seleccion`, `test_runtime.py::escoja_selecciona_columnas`, `n04`, `n16` | `03_seleccion_filtro.arepa` | VERIFICADO |
+| R18 | Filtros con comparaciones sencillas | `docs/02` §3.2 | EBNF §5 (`deje donde`) + `<operador_relacional>` | `DEJE` (461), `DONDE` (462), `operador_relacional` (321) | `runtime/ejecutor.py` (rama DEJE), `datos/tabla.py::filtrar` | `test_arbol.py::arbol_de_filtro`, `test_runtime.py::deje_donde_filtra_filas`, `n05` | `03_seleccion_filtro.arepa` (los 6 relacionales) | VERIFICADO |
+| R19 | Visualización (5 tipos y PNG propio) | `docs/02` §3.5 | EBNF §7 (`<instruccion_grafica>`) | `instruccion_grafica` (276), `PINTE` (514) | `runtime/ejecutor.py::visitInstruccion_grafica` (550), `graficas/` | `test_arbol.py::arbol_de_visualizacion`, `test_graficas.py` (63), `n09`, `n13` | `05_graficas.arepa`, `ejemplos/graficas.arepa` | VERIFICADO |
 | R20 | Documento de alcance | `docs/01` completo | — | — | — | — | — | VERIFICADO |
 | R21 | Catálogo de instrucciones | `docs/02` completo | — | — | — | — | — | VERIFICADO |
 | R22 | Archivo `.g4` | README (Gramática) | — | `gramatica/Arepa.g4` | — | `test_proyecto.py` completo | — | VERIFICADO |
-| R23 | Código generado por ANTLR | README (Estructura) | — | — | `generado/` (Lexer, Parser, Visitor, `.tokens`) | sincronía 53/53 reglas | — | VERIFICADO |
-| R24 | Pruebas léxicas y sintácticas | `docs/04` §5 | — | — | `pruebas/` (7 suites) | `python3 pruebas/test_proyecto.py` | — | VERIFICADO |
-| R25 | Ejemplos | README (Ejemplos) | — | — | — | validación de los 8 con la CLI | `ejemplos/` | VERIFICADO |
+| R23 | Código generado por ANTLR | README (Estructura) | — | — | `generado/` (Lexer, Parser, Visitor, `.tokens`) | sincronía 64/64 reglas y 79 reservadas | — | VERIFICADO |
+| R24 | Pruebas léxicas y sintácticas | `docs/04` §5 | — | — | `pruebas/` (9 suites; en el Corte 1 eran 7) | `python3 pruebas/test_proyecto.py` | — | VERIFICADO |
+| R25 | Ejemplos | README (Ejemplos) | — | — | — | validación de los 9 con la CLI | `ejemplos/` | VERIFICADO |
 | R26 | README | `README.md` completo | — | — | — | comandos ejecutados uno a uno | — | VERIFICADO |
-| R27 | Árbol de análisis | README (Árbol), `docs/06` §4 | — | — | `src/lenguaje/arbol.py::imprimir_arbol` (46) | `test_arbol.py` (21) + CLI `--arbol` | salida real en README | VERIFICADO |
-| R28 | Errores comprensibles (línea y columna) | `docs/04` §5 y §7 | — | — | `src/lenguaje/errores.py::_traducir` (153), `src/errores_base.py` | `test_front.py` (10 de diagnóstico) | mensajes reales en README (Errores) | VERIFICADO |
-| R29 | Comentarios | `docs/02` §2 | EBNF §7 (`COMENTARIO`) | `COMENTARIO` (523) | `generado/ArepaLexer.py` (skip) | `test_front.py::probar_diagnosticos` caso 8 | `08_casos_borde.arepa` (en 3 posiciones) | VERIFICADO |
-| R30 | Identificadores (Unicode, ñ, tildes) | `docs/02` §1.1, `docs/03` §7 | EBNF §7 (`<identificador>`) | `ID` (527) | `runtime/simbolos.py::validar_identificador` | `test_simbolos.py::identificador_*`, `n10` | `08_casos_borde.arepa` (`valor_año`, `piña_dulce`) | VERIFICADO |
-| R31 | Colisiones reservada/identificador/columna | `docs/02` §1.1 (D5) | EBNF §3 (`<nombre_columna>`) | `nombre_columna` (362-376) | `expresiones/evaluador.py::_resolver_nombre` | `n11`, `test_front.py` diagnóstico caso 4 | `numerito`, `y2` en `08_casos_borde.arepa` | VERIFICADO |
-| R32 | Precedencia y asociatividad | `docs/02` §4 | EBNF §3 (jerarquía de expresiones) | `expresion_logica` (285) → `factor` | `expresiones/evaluador.py` | `test_arbol.py` (10 casos de precedencia) | `08_casos_borde.arepa` (`2 ^ 3 ^ 2`) | VERIFICADO |
-| R33 | Pipeline `|>` | `docs/02` §6 (D3) | EBNF §3 (`<expresion>`) | `PIPE` (496), `expresion` (182) | `runtime/ejecutor.py::visitExpresion` (158) | `test_arbol.py::arbol_de_pipeline_con_etapas` | `demo.arepa` | VERIFICADO |
-| R34 | Condicionales y funciones (sintaxis declarada) | `docs/02` §3.6 (D7) | EBNF §2 | `condicional` (144), `definicion_funcion` (133) | `runtime/ejecutor.py` | `test_runtime.py::invente_devuelva_y_recursion`, `n07` | `06_funciones_condicional.arepa` | VERIFICADO |
+| R27 | Árbol de análisis | README (Árbol), `docs/06` §4 | — | — | `src/lenguaje/arbol.py::imprimir_arbol` (46) | `test_arbol.py` (28) + CLI `--arbol` | salida real en README | VERIFICADO |
+| R28 | Errores comprensibles (línea y columna) | `docs/04` §5 y §7 | — | — | `src/lenguaje/errores.py::_traducir` (222), `src/errores_base.py` | `test_front.py` (10 de diagnóstico) | mensajes reales en README (Errores) | VERIFICADO |
+| R29 | Comentarios | `docs/02` §2 | EBNF §9 (`COMENTARIO`) | `COMENTARIO` (595) | `generado/ArepaLexer.py` (skip) | `test_front.py::probar_diagnosticos` caso 8 | `08_casos_borde.arepa` (en 3 posiciones) | VERIFICADO |
+| R30 | Identificadores (Unicode, ñ, tildes) | `docs/02` §1.1, `docs/03` §9 | EBNF §9 (`<identificador>`) | `ID` (599) | `runtime/simbolos.py::validar_identificador` | `test_simbolos.py::identificador_*`, `n10` | `08_casos_borde.arepa` (`valor_año`, `piña_dulce`) | VERIFICADO |
+| R31 | Colisiones reservada/identificador/columna | `docs/02` §1.1 (D5) | EBNF §3 (`<nombre_columna>`) | `nombre_columna` (423) | `expresiones/evaluador.py::_resolver_nombre` | `n11`, `test_front.py` diagnóstico caso 4 | `numerito`, `y2` en `08_casos_borde.arepa` | VERIFICADO |
+| R32 | Precedencia y asociatividad | `docs/02` §4 | EBNF §3 y §8 (jerarquía de expresiones) | `expresion_logica` (304) → `conjuncion` → `negacion` → `comparacion` → `aritmetica` → `termino` → `unario` → `potencia` → `acceso` → `atomo` | `expresiones/evaluador.py` | `test_arbol.py` (11 casos de precedencia y asociatividad) | `08_casos_borde.arepa` (`2 ^ 3 ^ 2`) | VERIFICADO |
+| R33 | Pipeline `\|>` | `docs/02` §6 (D3) | EBNF §3 (`<expresion>`) | `PIPE` (567), `expresion` (201) | `runtime/ejecutor.py::visitExpresion` (205) | `test_arbol.py::arbol_de_pipeline_con_etapas` | `demo.arepa` | VERIFICADO |
+| R34 | Condicionales y funciones (sintaxis declarada) | `docs/02` §3.6 (D7) | EBNF §2 | `condicional` (163), `definicion_funcion` (152) | `runtime/ejecutor.py` | `test_runtime.py::invente_devuelva_y_recursion`, `n07` | `06_funciones_condicional.arepa` | VERIFICADO |
 
 Notas de decisiones intencionales (no son contradicciones):
 
@@ -58,5 +58,10 @@ Notas de decisiones intencionales (no son contradicciones):
   reservada queda como referencia de columna); por eso las negativas de
   carga/selección incompleta usan formas realmente inválidas (`monte 42`,
   `escoja []`).
-* `pinte` se reconoce y valida pero no produce imágenes (R19): el PDF
-  establece que en este corte la visualización es solo sintáctica.
+* `pinte` se reconoce y valida pero en el Corte 1 no producía imágenes (R19):
+  el PDF establece que en ese corte la visualización es solo sintáctica. El
+  PNG real llegó en el Corte 3 (motor propio en `src/graficas/`; ver
+  `docs/11_informe_fase3.md`).
+
+Conteos vigentes a la fecha de este informe: 64 reglas, 79 reservadas, 9
+suites, 350 pruebas, 173 programas.

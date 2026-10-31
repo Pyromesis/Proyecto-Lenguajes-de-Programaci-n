@@ -39,6 +39,12 @@ min_hojas
 prediga
 clasifique
 evalua
+arme
+agregue
+saque
+recorra
+en
+de
 numero
 texto
 logico

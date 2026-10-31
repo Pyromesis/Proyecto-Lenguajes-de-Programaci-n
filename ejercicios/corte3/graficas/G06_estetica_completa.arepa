@@ -1,0 +1,21 @@
+# G06 - Estetica completa: titulo, ejes y leyenda
+# Corte 3: todas las clausulas de configuracion en una sola grafica.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G06_estetica_completa.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+resumen = con_total
+|> junte por [ciudad]
+|> resuma ingreso = sume(total), operaciones = cuente()
+
+pinte barras resumen
+titulo "Ingresos y operaciones por ciudad"
+ejex ciudad
+ejey ingreso
+leyenda "Resumen 2026"
+guardela "salidas/ej_g06_estetica_completa.png"
+
+chao

@@ -53,6 +53,61 @@ chao
 
 Es `ejemplos/demo.arepa` (completo con `cuenteme`, `fijese_si` e `invente`).
 
+Además del pipeline sobre CSV, AREPA puede construir estructuras propias
+en memoria (listas, registros y tablas), recorrerlas y agregarlas sin
+llamar a ninguna biblioteca externa:
+
+```text
+quihubo
+gastos = arme [mes, categoria, valor] con [
+    ["Enero", "Mercado", 120000],
+    ["Enero", "Transporte", 45000],
+    ["Febrero", "Mercado", 135000]
+]
+
+total = sume(gastos, valor)          # agregación fuera de 'resuma'
+recorra fila en gastos {             # recorrido con registro de fila
+    cuenteme fila["mes"], fila["valor"]
+}
+
+resumen = gastos
+|> junte por [categoria]
+|> resuma total = sume(valor), registros = cuente()
+
+guarde resumen como "salidas/memoria_resumen.csv"
+chao
+```
+
+Es `ejemplos/memoria.arepa` (completo con listas, registros, acceso
+1-based, `agregue`, `saque`, `largo`, `columna` y `columnas`).
+
+## Fases del proyecto
+
+El curso plantea tres cortes acumulativos. Los tres están entregados: el
+tercero (gráficas y exportación PNG) se completó en la versión
+`AREPA v0.4 (Fase 3 - visualizacion y producto final)`.
+
+| Corte | Fase | Alcance de la versión | Entregables |
+|---|---|---|---|
+| Primero | Especificación y front-end | Asignaciones y expresiones, carga de CSV, selección de columnas, filtros sencillos y reconocimiento de `pinte` aunque todavía no genere la gráfica | Documento de alcance, catálogo de instrucciones, gramática BNF/EBNF y archivo `.g4`, lexer y parser generados, pruebas léxicas y sintácticas |
+| Segundo | Semántica y procesamiento de datos | Visitor, contexto y tabla de símbolos; selección, filtrado, columnas calculadas, agrupamiento, agregaciones y escritura de resultados en CSV | Reglas semánticas documentadas, tres programas completos y pruebas unitarias y de integración |
+| Tercero | Visualización y producto final | Cinco tipos de gráficas configurables desde el DSL, exportación a PNG con motor propio, CLI estable (`--sin-ventana`, `--ayuda`, `--version`) y caso de estudio con datos reales | Intérprete completo, manual de usuario y técnico, pruebas de regresión y caso de estudio reproducible |
+
+El enunciado completo está en [`Proyecto_LP.pdf`](docs/Proyecto_LP.pdf), sección 5.
+
+Sobre el Corte 2 se agregó una ampliación **A4**: listas, registros y
+tablas en memoria (`arme`), acceso 1-based encadenado, asignación
+indexada, `agregue`/`saque`, `recorra` y agregaciones fuera de `resuma`.
+Se valida con la suite `test_estructuras.py` (48 pruebas) y con
+`ejemplos/memoria.arepa`.
+
+El Corte 3 agregó el **motor gráfico propio** (`src/graficas/`): cinco tipos
+de gráfica (`barras`, `lineas`, `histograma`, `dispersion`, `cajas`) y
+exportación a PNG RGB 800x480 **sin matplotlib ni PIL** (DEFLATE fijo + LZ77,
+CRC-32 y Adler-32 propios). Se valida con la suite `test_graficas.py`
+(63 pruebas), con `ejemplos/graficas.arepa` (que ahora genera cinco PNG
+reales en `salidas/`) y con el caso de estudio de `caso_estudio/`.
+
 El mismo lenguaje también entrena modelos y usa sus predicciones dentro del
 pipeline:
 
@@ -77,42 +132,6 @@ chao
 Es `ejemplos/regresion.arepa`; los equivalentes de clasificación están en
 `ejemplos/clasificacion.arepa` (perceptrón) y
 `ejemplos/arbol_decision.arepa` (árbol multiclase).
-
-## Estado exacto (Cortes 1 y 2, Linux-only)
-
-**Corte 1 — Especificación y front-end (verificado):**
-
-* especificación completa: alcance, usuarios, casos de uso, catálogo de
-  instrucciones, gramática BNF/EBNF;
-* gramática ANTLR4 (`gramatica/Arepa.g4`) con lexer, parser y Visitor
-  generados para Python;
-* reconocimiento de programas `.arepa`: asignaciones, expresiones con
-  precedencia, carga CSV (`monte`), selección (`escoja`), filtros
-  (`deje donde`), visualización (`pinte ...`), condicionales y funciones;
-* árbol de análisis legible (`--arbol`) y tabla de tokens (`--tokens`);
-* diagnóstico de errores léxicos y sintácticos en español con línea y
-  columna;
-* CLI con códigos de salida 0/1/2 y 225 pruebas en 7 suites.
-
-**Corte 2 — Semántica y procesamiento de datos (verificado):**
-
-* Visitor y motor propios (`src/runtime/ejecutor.py`,
-  `src/expresiones/evaluador.py`), tabla de símbolos y contexto propios;
-* carga, selección, filtrado, ordenamiento (merge sort propio), columnas
-  calculadas, `limpie`/`renombre`/`convierta`, `junte por` + `resuma`,
-  `describa` y `guarde ... como` (escritor CSV propio UTF-8);
-* reglas semánticas en `docs/09_reglas_semanticas.md` y trazabilidad en
-  `docs/10_matriz_trazabilidad_corte2.md`;
-* 3 programas completos con exportación versionada:
-  `salidas/resumen_ciudades.csv` (demo),
-  `salidas/resumen_ciclos.csv` (ciclos),
-  `salidas/filtros_listos.csv` (filtros).
-
-**Solamente sintáctico en esta fase:** `pinte` y `guardela`/`muestrela` se
-reconocen y se validan (tabla y columnas existentes) pero **no generan
-imágenes** (Fase 3).
-
-**No pertenece a esta fase:** motor de gráficas y exportación PNG.
 
 **Ampliación verificada — Machine learning (todo propio):**
 
@@ -146,6 +165,7 @@ flowchart TB
     G["Evaluador de expresiones"]
     H["Operaciones de datos"]
     I["Motor de machine learning"]
+    I2["Motor de gráficas"]
   end
   subgraph Bibliotecas["Bibliotecas propias"]
     J["Tabla · Fila · Columna"]
@@ -153,27 +173,31 @@ flowchart TB
     L["Preprocesamiento"]
     M["Regresión · Perceptrón · Árbol"]
     N["Métricas"]
+    R["Lienzo · PNG · escalas"]
   end
   A --> B --> C --> D --> E
   E --> F
   E --> G
   E --> H
   E --> I
+  E --> I2
   H --> J
   H --> K
   I --> L
   I --> M
   I --> N
+  I2 --> R
   E --> O["Salida por consola"]
   H --> P["CSV de salida"]
   I --> P
-  E -.->|Fase 3| Q["Gráficas PNG"]
+  I2 --> Q["Gráficas PNG"]
 ```
 
 El programa entra como texto, ANTLR4 produce el árbol de análisis y el
 Visitor propio lo ejecuta. Todo el estado vive en estructuras del equipo:
 `Tabla` para los datos, `TablaSimbolos` para variables y funciones,
-`ContextoEjecucion` para la salida y el motor `src/ml/` para los modelos.
+`ContextoEjecucion` para la salida, el motor `src/ml/` para los modelos y
+`src/graficas/` para los PNG.
 
 ### 2. Recorrido de una instrucción
 
@@ -349,16 +373,6 @@ python3 -m pip install -r requirements.txt
 
 ## Dependencias
 
-> **Biblioteca externa pública autorizada (única): ANTLR4.**
-> El curso exige generar el lexer y el parser con ANTLR4, por eso el
-> proyecto usa `antlr4-python3-runtime==4.13.2` (solo para ejecutar el
-> lexer/parser generados desde `gramatica/Arepa.g4`; ver
-> `requirements.txt`). **Todo lo demás es biblioteca propia del DSL**,
-> implementada desde cero por el equipo: `Tabla`/`Columna`/`Fila`, lector
-> y escritor CSV, sistema de tipos, operadores y evaluador de expresiones,
-> tabla de símbolos, contexto y ejecutor, y sistema de errores
-> (detalle en `docs/05_arquitectura.md`).
-
 | Dependencia | Versión | Uso |
 |---|---|---|
 | Python | 3.11+ (probado 3.13) | lenguaje anfitrión |
@@ -376,11 +390,19 @@ python3 src/cli/main.py ejemplos/demo.arepa
 # Ejecutarlo con la biblioteca propia
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
 
+# Ejecutar y exportar gráficas sin abrir ventanas (útil en CI)
+python3 src/cli/main.py ejemplos/graficas.arepa --ejecutar --sin-ventana
+
 # Ver el árbol de análisis
 python3 src/cli/main.py ejemplos/demo.arepa --arbol
 
 # Ver la tabla de tokens
 python3 src/cli/main.py ejemplos/demo.arepa --tokens
+
+# Ayuda y versión
+python3 src/cli/main.py --ayuda
+python3 src/cli/main.py --version
+# AREPA v0.4 (Fase 3 - visualizacion y producto final)
 
 # Códigos de salida: 0 = válido, 1 = con errores, 2 = archivo no encontrado
 ```
@@ -399,6 +421,12 @@ python3 src/cli/repl.py --simple   # modo clásico
 * **Datos**: `monte` (cargar CSV), `guarde ... como ...` (exportar),
   `escoja [...]`, `deje donde`, `cree`, `acomode`, `limpie`, `convierta`,
   `junte por`, `resuma`.
+* **Estructuras propias**: listas `[1, 2]`, registros `{nombre: "Ana"}`,
+  tablas `arme [cols] con [[...]]` (o vacías), acceso 1-based encadenado
+  (`t[1]["col"]`), asignación indexada, `agregue ... en ...`,
+  `saque ... de ...`, `recorra ... en ... { }`, builtins `largo`,
+  `columna`, `columnas` y agregaciones fuera de `resuma`
+  (`sume(tabla, col)`, `sume(lista)`, `cuente(tabla[, col])`, …).
 * **Visualización**: `pinte barras|lineas|histograma|dispersion|cajas`,
   cláusulas `titulo`, `ejex`, `ejey`, `leyenda` y cierre `guardela` /
   `muestrela`.
@@ -414,7 +442,7 @@ python3 src/cli/repl.py --simple   # modo clásico
   (`"dice \"hola\""`), booleanos (`obvio`/`falso`) y faltante (`nada`).
 * **Comentarios**: `#` hasta fin de línea, permitidos en cualquier posición.
 
-Lista completa: `docs/02_catalogo_instrucciones.md` (73 reservadas y 22
+Lista completa: `docs/02_catalogo_instrucciones.md` (79 reservadas y 23
 símbolos) y tabla de tokens con `--tokens`.
 
 ## Gramática
@@ -479,18 +507,22 @@ Salida (extracto real):
 python3 pruebas/test_proyecto.py
 ```
 
-Ejecuta las 7 suites (225 pruebas): front-end (48: 9 positivos, 20
-negativos, 10 de diagnóstico, 9 de CLI), estructura del árbol (21), datos
-(43), expresiones (16), símbolos y contexto (15), runtime (51) y machine
-learning (31). Cada suite también corre sola, por ejemplo
-`python3 pruebas/test_front.py` o `python3 pruebas/test_ml.py`.
+Ejecuta las 9 suites (350 pruebas): front-end (55: 10 positivos, 22
+negativos, 10 de diagnóstico, 13 de CLI), estructura del árbol (28), datos
+(43), estructuras propias (48), expresiones (16), símbolos y contexto (15),
+runtime (51), gráficas (63) y machine learning (31). Cada suite también
+corre sola con el entorno activado, por ejemplo
+`python3 pruebas/test_estructuras.py` o `python3 pruebas/test_ml.py`.
 
 El conteo es único y verificable (fuente de verdad):
 
 ```bash
 python3 herramientas/chequeo_pruebas.py
-# Unificado: 7 suites, 225 pruebas.
+# Unificado: 9 suites, 350 pruebas.
 ```
+
+Además, los 173 programas de regresión (164 ejercicios + 9 ejemplos) validan
+y ejecutan con `--ejecutar` sin fallos.
 
 ## Errores (ejemplos reales)
 
@@ -516,28 +548,29 @@ proyecto/
 ├── generado/                 lexer, parser y Visitor generados (no editar)
 ├── src/
 │   ├── lenguaje/             analizador, árbol y diagnóstico del front-end
-│   ├── datos/                propia: Tabla, Columna, Fila, CSV, tipos
+│   ├── datos/                propia: Tabla, Lista, Registro, Columna, Fila, acceso, CSV, tipos
 │   ├── expresiones/          propia: operadores y evaluador
 │   ├── runtime/              propia: símbolos, contexto y ejecutor
+│   ├── graficas/             propia: motor de gráficas (png, lienzo, fuente, escalas, tipos)
 │   ├── ml/                   propia: preprocesamiento, modelos y métricas
 │   ├── errores_base.py       jerarquía propia de errores
 │   └── cli/                  main.py (validar y --ejecutar) y repl.py
 ├── datos/                    CSV de ejemplo (incluye 3 para ML)
-├── ejemplos/                 demo, filtros, gráficas, funciones, ciclos y 3 de ML
-├── Ejercicios_Problemas/     187 ejercicios (índice en su README.md)
-├── salidas/                  evidencia de datos y ML (6 CSV versionados)
-├── pruebas/                  7 suites (225) + programas positivos/negativos
+├── ejemplos/                 9: demo, memoria, filtros, graficas, funciones, ciclos y 3 de ML
+├── ejercicios/               164 ejercicios por corte (1: 32, 2: 120, 3: 12)
+├── caso_estudio/             caso reproducible: programa.arepa + datos/ + 5 PNG + CSV
+├── salidas/                  evidencia: 7 CSV versionados y PNG temporales
+├── pruebas/                  9 suites (350) + positivos/negativos
 ├── herramientas/             chequeos, demo de sustentación y consola
-├── docs/                     alcance, catálogo, EBNF, informes, arquitectura,
-│                             reglas semánticas, trazabilidad y guía de ML (11)
+├── docs/                     índice (README.md), alcance, catálogo, EBNF,
+│                             informes, arquitectura, reglas, manuales, guía de ML y PDF
 ├── generar_gramatica.sh      regeneración en Linux
-├── requirements.txt          antlr4-python3-runtime==4.13.2
-└── Proyecto_LP.pdf           enunciado del curso
+└── requirements.txt          antlr4-python3-runtime==4.13.2
 ```
 
 Cada carpeta trae su `README.md` con el detalle
-(`datos/`, `ejemplos/`, `generado/`, `gramatica/`, `herramientas/`,
-`pruebas/`, `salidas/`, `src/`, `Ejercicios_Problemas/`).
+(`datos/`, `docs/`, `ejemplos/`, `generado/`, `gramatica/`, `herramientas/`,
+`pruebas/`, `salidas/`, `src/`, `ejercicios/`).
 
 ## Implementaciones desarrolladas desde cero
 
@@ -547,6 +580,12 @@ trazabilidad funcionalidad → archivo → función → prueba):
 * estructura de datos `Tabla` con `Columna` y `Fila` (selección, filtrado,
   ordenamiento por mezcla propio, inserción/eliminación, duplicados,
   vacíos, conversiones, agrupamiento, formato legible);
+* estructuras propias `Lista` y `Registro`, más `datos/acceso.py` para el
+  acceso y la asignación 1-based; `Tabla.desde_filas`,
+  `fila_como_registro`, `poner_celda` y `poner_fila` para las tablas en
+  memoria;
+* builtins propios `largo`, `columna` y `columnas`, y agregaciones en
+  memoria fuera de `resuma` (`sume(tabla, col)`, `sume(lista)`, …);
 * lector CSV propio (máquina de estados: comillas, escape `""`,
   separador configurable, errores con línea del archivo);
 * escritor CSV propio;
@@ -558,6 +597,10 @@ trazabilidad funcionalidad → archivo → función → prueba):
 * sistema de errores propio (léxicos, sintácticos, semánticos, de datos);
 * agregaciones propias (`cuente`, `sume`, `promedie`, `mediana`, `minimo`,
   `maximo`, `desviacion`) ejecutadas por `junte`/`resuma` y `describa`;
+* motor de gráficas propio (`src/graficas/`): codificador PNG (chunks,
+  CRC-32 y Adler-32 propios, DEFLATE fijo + LZ77), lienzo RGB con primitivas
+  rasterizadas a mano, fuente bitmap 5x7 y escalas lineales y de banda. Sin
+  matplotlib, PIL ni zlib;
 * preprocesamiento propio para ML: imputación por media/moda, one-hot
   encoding, estandarización y transformación consistente de tablas nuevas;
 * regresión lineal múltiple propia con descenso de gradiente por lotes;
@@ -571,8 +614,9 @@ trazabilidad funcionalidad → archivo → función → prueba):
 | Ejemplo | Qué demuestra | Exportación |
 |---|---|---|
 | `ejemplos/demo.arepa` | flujo completo del lenguaje | `salidas/resumen_ciudades.csv` |
+| `ejemplos/memoria.arepa` | listas, registros, `arme`, acceso 1-based, `recorra` y agregaciones en memoria | `salidas/memoria_resumen.csv` |
 | `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden | `salidas/filtros_listos.csv` |
-| `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) | — (validación, PNG en Fase 3) |
+| `ejemplos/graficas.arepa` | los cinco tipos de visualización | 5 PNG en `salidas/` |
 | `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` | — |
 | `ejemplos/ciclos.arepa` | `mientras`, `repita`, `pare`/`siga` + flujo de datos | `salidas/resumen_ciclos.csv` |
 | `ejemplos/regresion.arepa` | regresión lineal, `prediga` y `evalua` | `salidas/regresion_casas.csv` |
@@ -580,39 +624,74 @@ trazabilidad funcionalidad → archivo → función → prueba):
 | `ejemplos/arbol_decision.arepa` | árbol multiclase CART/Gini | `salidas/arbol_riesgo.csv` |
 
 Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
-con `--ejecutar`. Los 6 CSV de evidencia están versionados (exceptuados en
-`.gitignore`).
+con `--ejecutar`. Los 7 CSV de `salidas/` están versionados como evidencia
+(exceptuados en `.gitignore`); los PNG de `salidas/` son temporales.
+`graficas.arepa` genera cinco PNG reales (`salidas/barras.png`,
+`ventas_lineas.png`, `histograma.png`, `dispersion.png`, `cajas.png`);
+conviene correrlo con `--sin-ventana`. Los PNG del caso de estudio sí se
+versionan en `caso_estudio/salidas/`.
+
+## Caso de estudio
+
+`caso_estudio/` cierra el recorrido con datos públicos: la serie mensual de
+pasajeros internacionales (AirPassengers, 1949-1960, 144 filas). El programa
+`caso_estudio/programa.arepa` carga el CSV, lo limpia, calcula el resumen anual
+y genera cinco PNG más un CSV de evidencia:
+
+```bash
+AREPA_SIN_VENTANA=1 python3 src/cli/main.py caso_estudio/programa.arepa --ejecutar
+```
+
+Indicadores verificados: total 40363, promedio 280.2986, mediana 265.5,
+mínimo 104, máximo 622, 1949 = 1520, 1960 = 5714, crecimiento 275.92 % y CAGR
+12.79 %. El análisis completo está en `caso_estudio/README.md`.
 
 ## Ejercicios
 
-187 programas de práctica en `Ejercicios_Problemas/` (índice completo en
-`Ejercicios_Problemas/README.md`): repaso general más 45 nuevos del Corte 2
-(F12–F26, M11–M25, D12–D26) y 75 de funciones. Todos validan y ejecutan:
+164 programas de práctica en `ejercicios/`, separados por corte (índice
+completo en `ejercicios/README.md`):
+
+| Corte | Programas | Contenido |
+|---|---:|---|
+| 1 | 32 | front-end, expresiones y primer pipeline |
+| 2 | 120 | semántica, datos y 75 ejercicios de funciones |
+| 3 | 12 | las cinco gráficas, estética y exportación PNG |
+
+Con los 9 de `ejemplos/` suman 173 programas, y todos validan y ejecutan:
 
 ```bash
-python3 src/cli/main.py Ejercicios_Problemas/faciles/F12_deje_donde_simple.arepa --ejecutar
+python3 src/cli/main.py ejercicios/corte1/faciles/F01_programa_minimo.arepa --ejecutar
+python3 src/cli/main.py ejercicios/corte3/graficas/G01_barras_ciudad.arepa --ejecutar --sin-ventana
+bash herramientas/regresion_programas.sh
 ```
 
 ## Herramientas
 
 ```bash
-python3 herramientas/chequeo_gramatica.py   # EBNF <-> .g4: 53/53 reglas, 73 reservadas
-python3 herramientas/chequeo_pruebas.py     # conteo único: 7 suites, 225 pruebas
-bash herramientas/demo_sustentacion.sh      # demo de sustentación paso a paso
+python3 herramientas/chequeo_gramatica.py      # EBNF <-> .g4: 64/64 reglas, 79 reservadas
+python3 herramientas/chequeo_pruebas.py        # conteo único: 9 suites, 350 pruebas
+python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/9
+bash herramientas/regresion_programas.sh       # 173 programas (164 + 9 ejemplos)
+bash herramientas/demo_sustentacion.sh         # demo de sustentación paso a paso
 ```
 
 Autocompletado por Tab (Vim, REPL y Bash): `herramientas/consola/README.md`.
 
 ## Documentación
 
+* [Índice completo de documentación](docs/README.md)
 * [Documento de alcance](docs/01_documento_alcance.md)
 * [Catálogo de instrucciones y decisiones de diseño](docs/02_catalogo_instrucciones.md)
 * [Gramática BNF/EBNF](docs/03_gramatica_ebnf.md)
 * [Informe de la Fase 1](docs/04_informe_fase1.md)
 * [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
 * [Informe de la Fase 2 (Semántica y Corte 2)](docs/08_informe_fase2.md)
-* [Reglas semánticas (Corte 2)](docs/09_reglas_semanticas.md)
+* [Informe de la Fase 3 (Visualización y Corte 3)](docs/11_informe_fase3.md)
+* [Reglas semánticas](docs/09_reglas_semanticas.md)
 * [Matriz de trazabilidad del Corte 2](docs/10_matriz_trazabilidad_corte2.md)
 * [Guía de machine learning](docs/11_guia_machine_learning.md)
+* [Matriz de trazabilidad del Corte 3](docs/12_matriz_trazabilidad_corte3.md)
+* [Manual de usuario](docs/manuales/usuario.md)
+* [Manual técnico](docs/manuales/tecnico.md)
 * [Guía de sustentación](docs/07_guia_sustentacion.md)
 * [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)

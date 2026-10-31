@@ -1,0 +1,18 @@
+# G10 - Cajas por decada (x numerica repetida)
+# Corte 3: el motor agrupa por valores repetidos aunque sean numeros.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G10_cajas_decadas.arepa --ejecutar
+
+quihubo
+
+pasajeros = monte "caso_estudio/datos/pasajeros.csv" con encabezado
+con_decada = pasajeros
+|> cree decada = anio - (anio % 10)
+
+pinte cajas con_decada
+titulo "Pasajeros por decada"
+ejex decada
+ejey pasajeros
+guardela "salidas/ej_g10_cajas_decadas.png"
+
+chao

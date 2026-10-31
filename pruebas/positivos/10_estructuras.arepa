@@ -1,0 +1,94 @@
+# ============================================================
+#  10_estructuras.arepa - Listas, registros y tablas en memoria
+#  Prueba positiva: todas las estructuras propias y sus
+#  operaciones (acceso 1-based, asignación indexada, agregue,
+#  saque, recorra) deben reconocerse sin errores.
+# ============================================================
+
+quihubo
+
+# --- Listas -------------------------------------------------
+numeros = [10, 20, 30]
+vacia = []
+anidada = [[1, 2], [3, 4]]
+
+# El acceso cuenta desde 1: numeros[1] es el primero.
+primero = numeros[1]
+esquina = anidada[2][1]
+
+# Asignación indexada y operaciones propias de la lista.
+numeros[2] = 25
+agregue 40 en numeros
+saque 1 de numeros
+cuantos_numeros = largo(numeros)
+
+# --- Registros ----------------------------------------------
+persona = {nombre: "Ana", edad: 20, ciudad: "Bogotá"}
+claves_texto = {"nombre completo": "Ana Pérez", "edad": 20}
+quien = persona["nombre"]
+persona["edad"] = 21
+cuantas_claves = largo(persona)
+
+# --- Tablas en memoria con 'arme' ---------------------------
+gente = arme [nombre, edad] con [["Ana", 20], ["Luis", 31], ["Marta", 27]]
+sin_filas = arme [nombre, edad]
+
+# Acceso a una celda y asignación de filas completas.
+gente[1]["edad"] = 22
+gente[2] = ["Luis", 32]
+gente[3] = {nombre: "Marta", edad: 28}
+
+# Agregar filas con lista o con registro, y sacar una fila.
+agregue ["Pedro", 40] en gente
+agregue {nombre: "Sofía", edad: 35} en gente
+saque 1 de gente
+
+filas = largo(gente)
+nombres = columna(gente, nombre)
+cabeceras = columnas(gente)
+primera_cabecera = cabeceras[1]
+
+# --- Agregaciones fuera de 'resuma' -------------------------
+total_edad = sume(gente, edad)
+promedio_edad = promedie(gente, edad)
+mediana_edad = mediana(gente, edad)
+menor_edad = minimo(gente, edad)
+mayor_edad = maximo(gente, edad)
+dispersion_edad = desviacion(gente, edad)
+registros = cuente(gente)
+con_edad = cuente(gente, edad)
+total_lista = sume(numeros)
+cuantos_lista = cuente(numeros)
+
+# --- Recorridos ---------------------------------------------
+suma_edades = 0
+recorra fila en gente {
+    suma_edades = suma_edades + fila["edad"]
+}
+
+# 'siga' salta la vuelta y 'pare' corta el ciclo.
+recorra fila en gente {
+    fijese_si (fila["edad"] < 30) {
+        siga
+    }
+    cuenteme "Mayor de 30:", fila["nombre"]
+}
+recorra valor en numeros {
+    fijese_si (valor > 30) {
+        pare
+    }
+    cuenteme valor
+}
+
+# --- 'resuma' sigue disponible ------------------------------
+resumen = gente |> junte por [edad] |> resuma personas = cuente(), total = sume(edad)
+
+cuenteme "Lista:", numeros
+cuenteme "Primero:", primero, "Esquina:", esquina
+cuenteme "Persona:", quien, "Claves:", cuantas_claves
+cuenteme "Tabla:", filas, "filas; cabecera:", primera_cabecera
+cuenteme "Suma de edades:", suma_edades
+cuenteme "Total de la lista:", total_lista, "Elementos:", cuantos_lista
+describa resumen
+
+chao

@@ -1,0 +1,18 @@
+# G02 - Lineas: dos series con ejey [lista]
+# Corte 3: una grafica de lineas puede comparar varias columnas numericas.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G02_lineas_dos_series.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+con_precio = ventas |> cree precio_miles = precio / 1000
+
+pinte lineas con_precio
+titulo "Unidades y precio (miles) por fecha"
+ejex fecha
+ejey [unidades, precio_miles]
+leyenda "Ventas"
+guardela "salidas/ej_g02_lineas_dos_series.png"
+
+chao

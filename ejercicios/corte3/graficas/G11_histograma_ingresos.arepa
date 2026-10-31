@@ -1,0 +1,16 @@
+# G11 - Histograma de ingresos calculados
+# Corte 3: columna calculada usada como variable del histograma.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G11_histograma_ingresos.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+con_total = ventas |> cree total = unidades * precio
+
+pinte histograma con_total
+titulo "Distribucion de ingresos por operacion"
+ejey total
+guardela "salidas/ej_g11_histograma_ingresos.png"
+
+chao

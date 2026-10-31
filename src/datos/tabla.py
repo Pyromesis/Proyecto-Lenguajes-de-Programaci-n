@@ -11,7 +11,9 @@ similares. Consta de:
 Operaciones implementadas manualmente (recorren filas y columnas):
   seleccionar, filtrar, ordenar (mezcla propia), crear columna,
   renombrar, quitar duplicados, tratar vacíos, convertir tipos,
-  agrupar y utilidades de formato.
+  agrupar, acceso a una fila como Registro, actualización de celdas
+  (poner_celda / poner_fila), construcción desde filas y utilidades de
+  formato.
 
 Decisiones propias documentadas:
   * el ordenamiento es estable y coloca los 'nada' al final;
@@ -25,6 +27,7 @@ Limitaciones:
 
 from datos.columna import Columna
 from datos.fila import Fila
+from datos.registro import Registro
 from errores_base import ErrorColumna, ErrorEjecucion
 from datos.tipos import es_nada, formatear_numero
 
@@ -40,6 +43,41 @@ class Tabla:
         self.nombre = nombre
         self.origen = origen
         self._inferir_tipos()
+
+    @classmethod
+    def desde_filas(cls, columnas, filas, nombre="tabla", origen=""):
+        """Crea una Tabla a partir de columnas y filas ya calculadas.
+
+        'filas' puede traer listas, tuplas o Fila; cada una debe tener
+        exactamente tantos valores como columnas, o se lanza ErrorEjecucion
+        indicando la fila (1-based) y la cantidad de valores recibidos.
+        """
+        columnas = list(columnas)
+        filas = list(filas) if filas else []
+        propias = []
+        for numero, fila in enumerate(filas, 1):
+            if isinstance(fila, Fila):
+                valores = list(fila.valores)
+            elif isinstance(fila, str):
+                raise ErrorEjecucion(
+                    "La fila {0} debe ser una lista o tupla de valores, no un "
+                    "texto.".format(numero)
+                )
+            else:
+                valores = list(fila)
+            if len(valores) != len(columnas):
+                raise ErrorEjecucion(
+                    "La fila {0} trae {1} {2} pero la tabla '{3}' tiene {4} "
+                    "columnas.".format(
+                        numero,
+                        len(valores),
+                        "valor" if len(valores) == 1 else "valores",
+                        nombre,
+                        len(columnas),
+                    )
+                )
+            propias.append(Fila(valores))
+        return cls(columnas, propias, nombre, origen)
 
     # ---------------------------------------------------------------- #
     # Metadatos básicos
@@ -128,6 +166,99 @@ class Tabla:
             f.agregar(v)
         self.columnas.append(Columna(nombre))
         self.columnas[-1].tipo = Columna.inferir(nombre, valores).tipo
+
+    # ---------------------------------------------------------------- #
+    # Acceso por registro y actualización de celdas
+    # ---------------------------------------------------------------- #
+
+    def fila_como_registro(self, indice):
+        """Devuelve la fila 'indice' como Registro (clave = nombre de columna).
+
+        El registro queda enlazado a la tabla: cada poner() sobre él llama
+        a poner_celda(), que actualiza la celda y re-infiera el tipo.
+        El índice es interno (0-based).
+        """
+        self._validar_fila(indice)
+        fila = self.filas[indice]
+        pares = [
+            (columna.nombre, fila.valor_en(i))
+            for i, columna in enumerate(self.columnas)
+        ]
+        return Registro(
+            pares,
+            al_poner=lambda clave, valor: self.poner_celda(indice, clave, valor),
+        )
+
+    def poner_celda(self, indice, columna, valor):
+        """Actualiza una celda y re-infiera el tipo de esa columna.
+
+        'indice' es la fila interna (0-based); 'columna' puede ser el
+        nombre (str) o el índice interno de la columna.
+        """
+        self._validar_fila(indice)
+        posicion = self._indice_columna_o_error(columna)
+        self.filas[indice].poner_en(posicion, valor)
+        self.columnas[posicion].tipo = Columna.inferir(
+            self.columnas[posicion].nombre,
+            [f.valor_en(posicion) for f in self.filas],
+        ).tipo
+
+    def poner_fila(self, indice, valores):
+        """Reemplaza todos los valores de la fila 'indice'.
+
+        Valida que la cantidad de valores coincida con las columnas y
+        re-infiera los tipos de todas las columnas.
+        """
+        self._validar_fila(indice)
+        if isinstance(valores, Fila):
+            valores = list(valores.valores)
+        else:
+            valores = list(valores)
+        if len(valores) != len(self.columnas):
+            raise ErrorEjecucion(
+                "La fila {0} trae {1} {2} pero la tabla '{3}' tiene {4} "
+                "columnas.".format(
+                    indice + 1,
+                    len(valores),
+                    "valor" if len(valores) == 1 else "valores",
+                    self.nombre,
+                    len(self.columnas),
+                )
+            )
+        self.filas[indice] = Fila(valores)
+        self._inferir_tipos()
+
+    def _validar_fila(self, indice):
+        """Comprueba que la fila interna 'indice' exista."""
+        if not isinstance(indice, int) or isinstance(indice, bool):
+            raise ErrorEjecucion(
+                "El índice de fila debe ser un numero entero; recibí {0}.".format(
+                    repr(indice)
+                )
+            )
+        if indice < 0 or indice >= len(self.filas):
+            raise ErrorEjecucion(
+                "No existe la fila {0} en '{1}': la tabla tiene {2} filas.".format(
+                    indice, self.nombre, len(self.filas)
+                )
+            )
+
+    def _indice_columna_o_error(self, columna):
+        """Traduce nombre o índice de columna a posición; valida el rango."""
+        if isinstance(columna, str):
+            return self.indice_columna(columna)
+        if isinstance(columna, int) and not isinstance(columna, bool):
+            if columna < 0 or columna >= len(self.columnas):
+                raise ErrorColumna(
+                    "No existe la columna {0} en la tabla '{1}': tiene {2} "
+                    "columnas.".format(columna, self.nombre, len(self.columnas))
+                )
+            return columna
+        raise ErrorColumna(
+            "La columna debe ser un nombre o un índice interno; recibí {0}.".format(
+                repr(columna)
+            )
+        )
 
     # ---------------------------------------------------------------- #
     # Selección

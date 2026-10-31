@@ -140,7 +140,7 @@ def arbol_de_asignacion():
 def arbol_de_expresion_aritmetica():
     arbol, parser = arbol_de("quihubo\nx = 2 * 3 + 4\nchao\n")
     assert "termino" in reglas_en(arbol, parser)
-    assert "factor" in reglas_en(arbol, parser)
+    assert "potencia" in reglas_en(arbol, parser)
 
 
 @caso
@@ -181,6 +181,23 @@ def arbol_de_visualizacion():
     clausulas = nodos_de(arbol, parser, "clausula_estetica")
     assert len(clausulas) == 2  # titulo y ejex
     assert "final_grafica" in reglas_en(arbol, parser)
+
+
+@caso
+def arbol_de_visualizacion_con_lista_en_ejey():
+    programa = (
+        "quihubo\nt = monte \"a.csv\"\n"
+        "pinte lineas t\nejey [a, b]\nchao\n"
+    )
+    arbol, parser = arbol_de(programa)
+    grafica = nodos_de(arbol, parser, "instruccion_grafica")[0]
+    assert "lista_literal" in reglas_en(grafica, parser), (
+        "ejey [a, b] debe producir un nodo lista_literal"
+    )
+    nombres = [nodo.getText() for nodo in nodos_de(grafica, parser, "nombre_columna")]
+    assert nombres == ["a", "b"], (
+        "el árbol debe conservar las dos columnas de ejey: {0}".format(nombres)
+    )
 
 
 @caso
@@ -230,6 +247,96 @@ def arbol_de_repita():
     for palabra in ("repita", "desde", "hasta", "paso"):
         assert palabra in terminales
     assert "identificador" in hijos_regla(ciclos[1], parser)
+
+
+@caso
+def arbol_de_tabla_literal():
+    arbol, parser = arbol_de(
+        "quihubo\ngente = arme [a, b] con [[1, 2], [3, 4]]\nchao\n"
+    )
+    presentes = reglas_en(arbol, parser)
+    for regla in ("tabla_literal", "lista_columnas", "fila_literal"):
+        assert regla in presentes, "falta la regla {0}".format(regla)
+    tabla = nodos_de(arbol, parser, "tabla_literal")[0]
+    assert "arme" in hijos_terminal(tabla)
+    assert "con" in hijos_terminal(tabla)
+    filas = nodos_de(tabla, parser, "fila_literal")
+    assert len(filas) == 2, "la tabla debería tener 2 filas"
+    assert hijos_regla(filas[0], parser) == ["expresion", "expresion"]
+    columnas = nodos_de(tabla, parser, "lista_columnas")[0]
+    nombres = nodos_de(columnas, parser, "nombre_columna")
+    assert [n.getText() for n in nombres] == ["a", "b"]
+
+
+@caso
+def arbol_de_acceso_encadenado():
+    arbol, parser = arbol_de('quihubo\nx = gente[2]["edad"]\nchao\n')
+    # el acceso raíz es el único que cuelga dos índices; los índices a su vez
+    # contienen sus propias expresiones (con accesos internos).
+    accesos = [a for a in nodos_de(arbol, parser, "acceso")
+               if len(hijos_regla(a, parser)) == 3]
+    assert len(accesos) == 1, "se esperaba un acceso con dos índices"
+    acceso = accesos[0]
+    assert hijos_regla(acceso, parser) == ["atomo", "indice", "indice"]
+    assert len(nodos_de(acceso, parser, "indice")) == 2
+    base = acceso.getChild(0)
+    assert parser.ruleNames[base.getRuleIndex()] == "atomo"
+    assert hijos_regla(base, parser) == ["nombre_columna"]
+    assert base.getText() == "gente"
+
+
+@caso
+def arbol_de_ciclo_recorra():
+    arbol, parser = arbol_de(
+        "quihubo\nrecorra fila en gente {\n x = 1\n}\nchao\n"
+    )
+    presentes = reglas_en(arbol, parser)
+    for regla in ("ciclo_recorra", "identificador", "bloque"):
+        assert regla in presentes, "falta la regla {0}".format(regla)
+    ciclo = nodos_de(arbol, parser, "ciclo_recorra")[0]
+    terminales = hijos_terminal(ciclo)
+    for palabra in ("recorra", "en"):
+        assert palabra in terminales, "falta el terminal {0}".format(palabra)
+    assert hijos_regla(ciclo, parser) == ["identificador", "identificador", "bloque"]
+
+
+@caso
+def arbol_de_agregue_y_saque():
+    arbol, parser = arbol_de(
+        "quihubo\nagregue 5 en lista\nsaque 1 de lista\nchao\n"
+    )
+    presentes = reglas_en(arbol, parser)
+    for regla in ("instruccion_agregue", "instruccion_saque"):
+        assert regla in presentes, "falta la regla {0}".format(regla)
+    agrega = nodos_de(arbol, parser, "instruccion_agregue")[0]
+    assert "agregue" in hijos_terminal(agrega)
+    assert "en" in hijos_terminal(agrega)
+    assert hijos_regla(agrega, parser) == ["expresion", "identificador"]
+    saca = nodos_de(arbol, parser, "instruccion_saque")[0]
+    assert "saque" in hijos_terminal(saca)
+    assert "de" in hijos_terminal(saca)
+    assert hijos_regla(saca, parser) == ["expresion", "identificador"]
+
+
+@caso
+def arbol_de_lista_y_registro_literal():
+    arbol, parser = arbol_de(
+        'quihubo\nr = {"nombre": "Ana", edad: 30}\nl = [1, 2, 3]\nchao\n'
+    )
+    presentes = reglas_en(arbol, parser)
+    for regla in ("lista_literal", "registro_literal",
+                  "par_registro", "clave_registro"):
+        assert regla in presentes, "falta la regla {0}".format(regla)
+    registro = nodos_de(arbol, parser, "registro_literal")[0]
+    pares = nodos_de(registro, parser, "par_registro")
+    assert len(pares) == 2
+    assert hijos_regla(pares[0], parser) == ["clave_registro", "expresion"]
+    assert ":" in hijos_terminal(pares[0])
+    claves = nodos_de(registro, parser, "clave_registro")
+    assert [c.getText() for c in claves] == ['"nombre"', "edad"]
+    lista = nodos_de(arbol, parser, "lista_literal")[0]
+    assert len(nodos_de(lista, parser, "expresion")) == 3
+    assert hijos_terminal(lista) == ["[", ",", ",", "]"]
 
 
 # ---------------------------------------------------------------------- #
@@ -306,10 +413,25 @@ def parentesis_con_multiplicacion_dentro():
 @caso
 def potencia_asociativa_a_derecha_en_arbol():
     arbol, parser = arbol_de("quihubo\nx = 2 ^ 3 ^ 2\nchao\n")
-    factor = nodos_de(arbol, parser, "factor")[0]
-    assert hijos_terminal(factor) == ["^"]
-    # el segundo '^' está dentro del factor hijo (derecha), no en la raíz
-    assert len(nodos_de(factor, parser, "factor")) >= 2
+    potencia = nodos_de(arbol, parser, "potencia")[0]
+    assert hijos_terminal(potencia) == ["^"]
+    # el segundo '^' está dentro de la potencia hija (derecha), no en la raíz
+    assert len(nodos_de(potencia, parser, "potencia")) >= 2
+
+
+@caso
+def potencia_antes_que_menos_unario():
+    # -2 ^ 2 = -4: el '-' envuelve a la potencia completa, no a la base
+    arbol, parser = arbol_de("quihubo\nx = -2 ^ 2\nchao\n")
+    unarios = [u for u in nodos_de(arbol, parser, "unario")
+               if "-" in hijos_terminal(u)]
+    assert len(unarios) == 1
+    menos = unarios[0]
+    assert hijos_regla(menos, parser) == ["unario"]
+    potencias = [p for p in nodos_de(menos, parser, "potencia")
+                 if "^" in hijos_terminal(p)]
+    assert len(potencias) == 1, "el '-' debe envolver la potencia"
+    assert potencias[0].getText() == "2^2"
 
 
 @caso

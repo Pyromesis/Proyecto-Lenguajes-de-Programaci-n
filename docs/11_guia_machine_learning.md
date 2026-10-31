@@ -572,11 +572,11 @@ bibliotecas externas para lo que verifican.
 
 ```bash
 python3 pruebas/test_ml.py          # solo la suite de ML
-python3 pruebas/test_proyecto.py    # 7 suites, 225 pruebas
+python3 pruebas/test_proyecto.py    # 9 suites, 350 pruebas
 python3 herramientas/chequeo_pruebas.py  # verifica el conteo canónico
 ```
 
-El conteo canónico es `48 + 21 + 43 + 16 + 15 + 51 + 31 = 225`.
+El conteo canónico es `55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 = 350`.
 
 ---
 
@@ -630,5 +630,5 @@ El conteo canónico es `48 + 21 + 43 + 16 + 15 + 51 + 31 = 225`.
 * *Grokking Artificial Intelligence Algorithms*: intuición de los algoritmos
   de clasificación y de los árboles.
 * Documentación del proyecto: `docs/02_catalogo_instrucciones.md` (D12/D13),
-  `docs/03_gramatica_ebnf.md` (§5), `docs/05_arquitectura.md` (§6 y §10),
+  `docs/03_gramatica_ebnf.md` (§6), `docs/05_arquitectura.md` (§6 y §10),
   `docs/09_reglas_semanticas.md` (§9).

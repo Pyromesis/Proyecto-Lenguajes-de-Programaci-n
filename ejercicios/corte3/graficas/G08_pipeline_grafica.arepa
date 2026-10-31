@@ -1,0 +1,22 @@
+# G08 - Pipeline completo hasta la grafica
+# Corte 3: filtrar, calcular, agrupar, resumir y exportar en un flujo.
+# Ejecutar desde la raiz:
+#   python3 src/cli/main.py ejercicios/corte3/graficas/G08_pipeline_grafica.arepa --ejecutar
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+
+resumen = ventas
+|> deje donde unidades > 0 y precio > 0
+|> cree total = unidades * precio
+|> junte por [ciudad]
+|> resuma ingreso = sume(total), promedio = promedie(total)
+
+pinte barras resumen
+titulo "Ingreso promedio por ciudad"
+ejex ciudad
+ejey promedio
+guardela "salidas/ej_g08_pipeline_grafica.png"
+
+chao
