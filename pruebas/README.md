@@ -1,11 +1,12 @@
-# Pruebas AREPA (Linux, 194 en 6 suites)
+# Pruebas AREPA (Linux, 225 en 7 suites)
 
-Corredor maestro más 6 suites independientes. Todo propio, sin
+Corredor maestro más 7 suites independientes. Todo propio, sin
 bibliotecas externas para lo que se prueba.
 
 ```bash
-python3 pruebas/test_proyecto.py          # las 6 suites
+python3 pruebas/test_proyecto.py          # las 7 suites
 python3 pruebas/test_front.py             # una suite sola
+python3 pruebas/test_ml.py                # suite de machine learning
 python3 herramientas/chequeo_pruebas.py   # verifica el conteo canónico
 ```
 
@@ -17,6 +18,7 @@ python3 herramientas/chequeo_pruebas.py   # verifica el conteo canónico
 | Expresiones | `test_expresiones.py` | 16 | aritmética, comparaciones, lógicos, `nada`, bordes |
 | Símbolos | `test_simbolos.py` | 15 | ámbitos, closures, contexto |
 | Runtime | `test_runtime.py` | 51 | programas completos (19 de ciclos) y errores semánticos |
+| Machine learning | `test_ml.py` | 31 | preprocesamiento, métricas, 3 modelos y DSL completo |
 
 Carpetas de apoyo:
 

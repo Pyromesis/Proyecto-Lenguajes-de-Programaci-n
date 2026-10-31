@@ -1,0 +1,36 @@
+# ============================================================
+#  arbol_decision.arepa - Árbol de decisión multiclase (CART/Gini)
+#  Demuestra: entrene ... arbol, clasifique, evalua y guarde.
+#  Datos: datos/riesgo_ml.csv (riesgo: bajo / medio / alto).
+# ============================================================
+
+quihubo
+
+clientes = monte "datos/riesgo_ml.csv" con encabezado
+
+# 'profundidad' limita las preguntas encadenadas y 'min_hojas' exige
+# un mínimo de filas para intentar una división.
+entrene riesgo_cliente = arbol con clientes
+  columnas [edad, ingreso, deuda, historial]
+  objetivo riesgo
+  clases ["bajo", "medio", "alto"]
+  profundidad 5
+  min_hojas 2
+
+clasificados = clientes
+|> clasifique con riesgo_cliente como riesgo_estimado
+
+cuenteme "Árbol aprendido:"
+cuenteme riesgo_cliente
+
+evalua riesgo_cliente con clientes
+
+muestra = clasificados
+|> escoja [edad, ingreso, deuda, historial, riesgo, riesgo_estimado]
+
+cuenteme "Riesgo real y estimado:"
+cuenteme muestra
+
+guarde muestra como "salidas/arbol_riesgo.csv"
+
+chao

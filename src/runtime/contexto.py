@@ -20,6 +20,7 @@ import sys
 
 from datos.tabla import Tabla
 from datos.tipos import es_infinito, es_nada, es_logico, formatear_numero
+from ml.modelo import ModeloML
 from runtime.simbolos import TablaSimbolos
 
 
@@ -31,6 +32,8 @@ def a_texto(valor):
         return "obvio" if valor else "falso"
     if isinstance(valor, Tabla):
         return "\n" + valor.texto_tabla()
+    if isinstance(valor, ModeloML):
+        return "\n" + valor.resumen()
     if es_infinito(valor):
         return formatear_numero(valor)
     if isinstance(valor, float) and valor.is_integer():

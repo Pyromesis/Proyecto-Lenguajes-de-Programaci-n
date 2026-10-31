@@ -63,6 +63,8 @@ _FALLBACK = (
     "junte resuma numero texto logico fecha pinte barras lineas histograma dispersion "
     "cajas titulo ejex ejey leyenda guardela muestrela invente devuelva fijese_si sino "
     "cuenteme describa mientras repita veces desde hasta paso pare siga "
+    "entrene perceptron regresion arbol columnas objetivo clases tasa epocas "
+    "profundidad min_hojas prediga clasifique evalua "
     "obvio falso nada y o no"
 ).split()
 
@@ -105,11 +107,20 @@ PLANTILLAS = {
               "repita i desde 1 hasta 10 {",
               "    cuenteme i",
               "}"],
+    "modelo": ["entrene modelo = regresion con datos",
+               "    columnas [col1, col2]",
+               "    objetivo col3",
+               "    tasa 0.05",
+               "    epocas 1000"],
+    "prediccion": ["con_prediccion = datos",
+                   "|> prediga con modelo como estimado"],
 }
 
 _EJEMPLOS = {"demo": "demo.arepa", "filtros": "filtros.arepa",
              "graficas": "graficas.arepa", "funciones": "funciones.arepa",
-             "ciclos": "ciclos.arepa"}
+             "ciclos": "ciclos.arepa", "regresion": "regresion.arepa",
+             "clasificacion": "clasificacion.arepa",
+             "arbol_decision": "arbol_decision.arepa"}
 
 
 def _archivos(texto):

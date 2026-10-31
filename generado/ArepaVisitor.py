@@ -54,6 +54,31 @@ class ArepaVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArepaParser#instruccion_entrene.
+    def visitInstruccion_entrene(self, ctx:ArepaParser.Instruccion_entreneContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#algoritmo_ml.
+    def visitAlgoritmo_ml(self, ctx:ArepaParser.Algoritmo_mlContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#opciones_ml.
+    def visitOpciones_ml(self, ctx:ArepaParser.Opciones_mlContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#opcion_ml.
+    def visitOpcion_ml(self, ctx:ArepaParser.Opcion_mlContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#instruccion_evalua.
+    def visitInstruccion_evalua(self, ctx:ArepaParser.Instruccion_evaluaContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArepaParser#definicion_funcion.
     def visitDefinicion_funcion(self, ctx:ArepaParser.Definicion_funcionContext):
         return self.visitChildren(ctx)
@@ -131,6 +156,16 @@ class ArepaVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ArepaParser#lista_columnas.
     def visitLista_columnas(self, ctx:ArepaParser.Lista_columnasContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#lista_etiquetas.
+    def visitLista_etiquetas(self, ctx:ArepaParser.Lista_etiquetasContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArepaParser#etiqueta.
+    def visitEtiqueta(self, ctx:ArepaParser.EtiquetaContext):
         return self.visitChildren(ctx)
 
 

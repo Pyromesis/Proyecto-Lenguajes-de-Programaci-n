@@ -96,6 +96,12 @@ def nombre_tipo(valor):
         return "numero"
     if es_texto(valor):
         return "texto"
+    # Los modelos de machine learning declaran su propio nombre de tipo
+    # ('modelo', 'regresion' o 'clasificacion') sin crear un import
+    # circular entre datos y ml.
+    tipo_arepa = getattr(valor, "tipo_arepa", None)
+    if tipo_arepa is not None:
+        return tipo_arepa
     return type(valor).__name__
 
 

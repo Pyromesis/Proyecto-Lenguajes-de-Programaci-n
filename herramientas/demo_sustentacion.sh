@@ -14,8 +14,8 @@ java -version
 echo "### 2. Dependencias"
 python3 -m pip install -r requirements.txt
 
-echo "### 3. Sincronía EBNF <-> ANTLR (46/46 reglas, 59 reservadas)"
-python3 herramientas/chequeo_gramatica.py | grep -q "Sincronizado: 46/46"
+echo "### 3. Sincronía EBNF <-> ANTLR (53/53 reglas, 73 reservadas)"
+python3 herramientas/chequeo_gramatica.py | grep -q "Sincronizado: 53/53"
 
 echo "### 4. Programa válido (demo, 9 sentencias)"
 python3 src/cli/main.py ejemplos/demo.arepa | grep -q "bien escrito"
@@ -49,7 +49,15 @@ echo "### 8b. Tercer programa completo con exportación (filtros)"
 python3 src/cli/main.py ejemplos/filtros.arepa --ejecutar | grep -q "filtros_listos.csv"
 test -f salidas/filtros_listos.csv
 
-echo "### 9. Suite completa (6/6)"
-python3 pruebas/test_proyecto.py 2>&1 | grep -q "6 de 6 suites pasaron"
+echo "### 8c. Machine learning propio (regresión, perceptrón y árbol)"
+python3 src/cli/main.py ejemplos/regresion.arepa --ejecutar | grep -q "regresion_casas.csv"
+python3 src/cli/main.py ejemplos/clasificacion.arepa --ejecutar | grep -q "clasificacion_estudiantes.csv"
+python3 src/cli/main.py ejemplos/arbol_decision.arepa --ejecutar | grep -q "arbol_riesgo.csv"
+test -f salidas/regresion_casas.csv
+test -f salidas/clasificacion_estudiantes.csv
+test -f salidas/arbol_riesgo.csv
+
+echo "### 9. Suite completa (7/7)"
+python3 pruebas/test_proyecto.py 2>&1 | grep -q "7 de 7 suites pasaron"
 
 echo "De una: demo de sustentación completa sin tropiezos."

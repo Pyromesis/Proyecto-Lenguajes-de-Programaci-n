@@ -46,6 +46,8 @@ cierre comparten línea con otras sentencias.
                       | <instruccion_devolver>
                       | <instruccion_cuenteme>
                       | <instruccion_describa>
+                      | <instruccion_entrene>
+                      | <instruccion_evalua>
                       | <instruccion_llamada>
 
 <asignacion>        ::= <identificador> "=" <expresion>
@@ -119,8 +121,8 @@ sentencias nuevas.
 <nombre_columna>     ::= <identificador> | PALABRA_RESERVADA
 ```
 
-`nombre_columna` acepta además cualquier palabra reservada (las 59 de la
-sección 6): los nombres de las columnas provienen de archivos externos y
+`nombre_columna` acepta además cualquier palabra reservada (las 73 de la
+sección 7): los nombres de las columnas provienen de archivos externos y
 pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
 
 ## 4. Operaciones sobre datos
@@ -136,6 +138,8 @@ pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
                        | "convierta" <nombre_columna> "->" <tipo_dato>
                        | "junte" "por" <lista_columnas>
                        | "resuma" [NL] <item_resumen> { "," [NL] <item_resumen> }
+                       | "prediga" "con" <identificador> "como" <nombre_columna>
+                       | "clasifique" "con" <identificador> "como" <nombre_columna>
 
 <instruccion_monte>  ::= "monte" <cadena> [ <opciones_archivo> ]
 
@@ -147,7 +151,44 @@ pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
 <tipo_dato>          ::= "numero" | "texto" | "logico" | "fecha"
 ```
 
-## 5. Visualización
+## 5. Machine learning
+
+```ebnf
+<instruccion_entrene> ::= "entrene" <identificador> "=" <algoritmo_ml> "con"
+                          <identificador> <opciones_ml>
+
+<algoritmo_ml>        ::= "perceptron" | "regresion" | "arbol"
+
+<opciones_ml>         ::= { [NL] <opcion_ml> }
+
+<opcion_ml>           ::= "columnas" <lista_columnas>
+                        | "objetivo" <nombre_columna>
+                        | "clases" <lista_etiquetas>
+                        | "tasa" <expresion_logica>
+                        | "epocas" <expresion_logica>
+                        | "profundidad" <expresion_logica>
+                        | "min_hojas" <expresion_logica>
+
+<instruccion_evalua>  ::= "evalua" <identificador> "con" <identificador>
+
+<lista_etiquetas>     ::= "[" [NL] <etiqueta> { "," [NL] <etiqueta> } [NL] "]"
+<etiqueta>            ::= <cadena> | ENTERO | DECIMAL | "obvio" | "falso"
+```
+
+Reglas semánticas de las opciones:
+
+* `columnas` y `objetivo` son obligatorias; el objetivo no puede repetirse
+  entre las columnas de entrada.
+* `regresion` acepta `tasa` y `epocas`, pero no `clases`, `profundidad` ni
+  `min_hojas`.
+* `perceptron` es binario: acepta `clases` (exactamente dos etiquetas),
+  `tasa` y `epocas`; no acepta opciones de árbol.
+* `arbol` acepta `clases`, `profundidad` y `min_hojas`; no acepta `tasa`
+  ni `epocas`.
+* `prediga` exige un modelo de regresión; `clasifique` exige un modelo de
+  clasificación. Ambos agregan una columna nueva al pipeline.
+
+## 6. Visualización
 
 ```ebnf
 <instruccion_grafica> ::= "pinte" <tipo_grafica> <identificador>
@@ -164,7 +205,7 @@ pueden coincidir con el vocabulario del lenguaje (decisión D5 del catálogo).
                         | "leyenda" [NL] <cadena>
 ```
 
-## 6. Léxico
+## 7. Léxico
 
 ```ebnf
 ENTERO     ::= DÍGITO { DÍGITO }
@@ -179,6 +220,10 @@ PALABRA_RESERVADA ::= "quihubo" | "chao" | "monte" | "guarde" | "como" | "con"
                     | "acomode" | "por" | "pa_arriba" | "pa_abajo" | "cree"
                     | "renombre" | "limpie" | "duplicados" | "vacios"
                     | "convierta" | "junte" | "resuma" | "numero" | "texto"
+                    | "entrene" | "perceptron" | "regresion" | "arbol"
+                    | "columnas" | "objetivo" | "clases" | "tasa" | "epocas"
+                    | "profundidad" | "min_hojas" | "prediga" | "clasifique"
+                    | "evalua"
                     | "logico" | "fecha" | "pinte" | "barras" | "lineas"
                     | "histograma" | "dispersion" | "cajas" | "titulo" | "ejex"
                     | "ejey" | "leyenda" | "guardela" | "muestrela" | "invente"
@@ -188,7 +233,7 @@ PALABRA_RESERVADA ::= "quihubo" | "chao" | "monte" | "guarde" | "como" | "con"
                     | "obvio" | "falso" | "nada" | "y" | "o" | "no"
 ```
 
-Son 59 palabras reservadas en total. Los comentarios pueden aparecer en
+Son 73 palabras reservadas en total. Los comentarios pueden aparecer en
 cualquier línea del programa.
 
 Símbolos y operadores del léxico (tokens de una sola pieza):
@@ -215,7 +260,7 @@ Precedencia léxica: las palabras reservadas se listan antes que la regla de
 identificadores; `DECIMAL` antes que `ENTERO`; `|>` y `->` antes que los
 símbolos simples.
 
-## 7. Correspondencia con ANTLR4
+## 8. Correspondencia con ANTLR4
 
 La regla EBNF `{ X }` equivale a la estrella ANTLR `X*`; `[ X ]` equivale a
 `X?`. Los nombres de reglas coinciden: `programa`, `sentencias`, `sentencia`,

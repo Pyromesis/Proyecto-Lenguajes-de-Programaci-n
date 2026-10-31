@@ -1,7 +1,7 @@
 # Autocompletado de AREPA en consola (Linux, sin internet ni plugins)
 
 Tres herramientas, todas con `Tab`. Palabras tomadas de `gramatica/Arepa.g4`
-(59 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
+(73 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
 
 | Archivo | Qué es |
 |---|---|
@@ -10,7 +10,7 @@ Tres herramientas, todas con `Tab`. Palabras tomadas de `gramatica/Arepa.g4`
 | `palabras_arepa.txt` | diccionario (respaldo del plugin) |
 | `arepa` | lanzador del CLI (`arepa programa.arepa --ejecutar`) |
 | `arepa_bash.sh` | `Tab` en Bash: completa `.arepa` y `--arbol/--tokens/--ejecutar` |
-| `practica.arepa` | hoja de 9 ejercicios de `Tab` (válida: también corre) |
+| `practica.arepa` | hoja de 13 ejercicios de `Tab` (válida: también corre) |
 | REPL | `python3 src/cli/repl.py`: consola AREPA con `Tab` |
 
 ## 1. Vim (editar `.arepa`)
@@ -37,12 +37,17 @@ Ejemplos (modo inserción):
 | `fij` | `ese_si` | `fijese_si` |
 | `bar` | `ras` | `barras` |
 | `guar` | `dela` | `guardela` |
+| `ent` | `rene` | `entrene` |
+| `pre` | `diga` | `prediga` |
+| `clas` | `ifique` | `clasifique` |
 
 Plantillas (modo normal):
 
 ```vim
-:ArepaPlantilla <Tab>     " lista: base monte tuberia resumen pinte funcion fijese ciclo
+:ArepaPlantilla <Tab>     " lista: base monte tuberia resumen pinte funcion fijese ciclo modelo prediccion
 :ArepaPlantilla tuberia   " inserta el bloque |> escoja/deje/cree
+:ArepaPlantilla modelo    " inserta entrene ... columnas/objetivo/tasa/epocas
+:ArepaPlantilla prediccion " inserta el pipeline |> prediga con ... como ...
 ```
 
 `Ctrl-N` / `Ctrl-P` completan además con palabras del archivo abierto.
@@ -63,6 +68,9 @@ arepa> :ver                        # muestra lo escrito
 arepa> :validar                    # valida con el front-end ANTLR
 ¡Quihubo pues! Programa bien escrito.
 arepa> :ejemplo demo               # carga ejemplos/demo.arepa (Tab completa el nombre)
+arepa> :ejemplo regresion          # también clasificacion y arbol_decision
+arepa> :plantilla modelo           # esqueleto de entrene ... regresion
+arepa> :plantilla prediccion       # esqueleto de |> prediga con ... como ...
 arepa> :guardar salidas/<Tab>      # Tab completa archivos .arepa y carpetas
 arepa> :salir
 ```
@@ -91,7 +99,8 @@ arepa practica.arepa --<Tab>  # propone --arbol --tokens --ejecutar --help
 
 ## 4. Practicar
 
-`practica.arepa` trae 9 ejercicios guiados (TAB 1–9). También valida:
+`practica.arepa` trae 13 ejercicios guiados (TAB 1–13), incluidos
+`entrene`, `prediga` y las plantillas de ML. También valida:
 
 ```bash
 arepa herramientas/consola/practica.arepa

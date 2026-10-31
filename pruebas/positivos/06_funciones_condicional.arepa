@@ -5,11 +5,11 @@ invente cuadrado(n) {
     devuelva n * n
 }
 
-invente dolares(valor, tasa) {
+invente dolares(valor, cambio) {
     fijese_si (valor > 1000000) {
-        devuelva valor / tasa * 0.95
+        devuelva valor / cambio * 0.95
     } sino {
-        devuelva valor / tasa
+        devuelva valor / cambio
     }
 }
 

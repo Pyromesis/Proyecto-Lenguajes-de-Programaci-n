@@ -9,6 +9,9 @@ CSV reales que usan los programas de `ejemplos/`, los ejercicios de
 | `ventas.csv` | 12 | `fecha,ciudad,categoria,unidades,precio` | `,` | ciudades con tilde (Bogotá, Medellín); `fecha` es palabra reservada y vale como columna (D5) |
 | `encuesta.csv` | 8 | `id;ciudad;edad;ingreso;fecha_ingreso` | `;` | trae un `ingreso` vacío (`nada`) y fechas `AAAA-MM-DD` para `convierta` |
 | `empleados.csv` | 5 | `nombre,salario,ciudad` | `,` | salarios grandes para `invente`/`describa` |
+| `casas_ml.csv` | 26 | `area,habitaciones,antiguedad,ciudad,precio` | `,` | regresión; trae una antigüedad vacía (imputación) y un precio vacío (se descarta del entrenamiento) |
+| `estudiantes_ml.csv` | 27 | `horas_estudio,asistencia,tareas,aprueba` | `,` | perceptrón binario (`si`/`no`); trae tareas y etiqueta vacías |
+| `riesgo_ml.csv` | 30 | `edad,ingreso,deuda,historial,riesgo` | `,` | árbol multiclase (`bajo`/`medio`/`alto`) con columna categórica |
 
 Uso desde la raíz del proyecto:
 

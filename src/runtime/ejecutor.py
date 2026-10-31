@@ -49,6 +49,7 @@ from datos.tipos import (
     nombre_tipo,
 )
 from errores_base import (
+    ErrorArepa,
     ErrorColumna,
     ErrorEjecucion,
     ErrorSemantico,
@@ -59,6 +60,12 @@ from errores_base import (
     SeguirCiclo,
 )
 from expresiones.evaluador import EvaluadorExpresiones
+from ml import metricas
+from ml.arbol_decision import ArbolDecision
+from ml.modelo import ModeloClasificacion, ModeloML, ModeloRegresion
+from ml.perceptron import Perceptron
+from ml.preprocesamiento import Preprocesador
+from ml.regresion_lineal import RegresionLineal
 from runtime.contexto import ContextoEjecucion, a_texto
 from runtime.simbolos import FuncionArepa
 
@@ -287,7 +294,48 @@ class EjecutorArepa(ArepaVisitor):
         if op.RESUMA() is not None:
             return self._ejecutar_resuma(op, tabla)
 
+        if op.PREDIGA() is not None:
+            modelo = self._obtener_modelo(op.identificador().getText(), op)
+            if not isinstance(modelo, ModeloRegresion):
+                raise ErrorSemantico(
+                    "'prediga' necesita un modelo de regresión (creado con "
+                    "'regresion'); para etiquetas usá 'clasifique'.",
+                    linea=op.start.line,
+                    columna=op.start.column,
+                )
+            return self._agregar_prediccion(
+                tabla, modelo, op.nombre_columna(0).getText(), op
+            )
+
+        if op.CLASIFIQUE() is not None:
+            modelo = self._obtener_modelo(op.identificador().getText(), op)
+            if not isinstance(modelo, ModeloClasificacion):
+                raise ErrorSemantico(
+                    "'clasifique' necesita un modelo de clasificación "
+                    "(perceptron o arbol); para números usá 'prediga'.",
+                    linea=op.start.line,
+                    columna=op.start.column,
+                )
+            return self._agregar_prediccion(
+                tabla, modelo, op.nombre_columna(0).getText(), op
+            )
+
         raise ErrorEjecucion("Operacion de datos no reconocida.")
+
+    def _agregar_prediccion(self, tabla, modelo, nombre_columna, ctx):
+        """Agrega al pipeline una columna con la predicción fila por fila."""
+        if tabla.tiene_columna(nombre_columna):
+            raise ErrorColumna(
+                "La columna '{0}' ya existe en '{1}'; escogé otro nombre para "
+                "la predicción.".format(nombre_columna, tabla.nombre),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        copia = tabla.copiar()
+        copia.crear_columna(
+            nombre_columna, lambda fila: modelo.predecir_fila(fila, tabla)
+        )
+        return copia
 
     @staticmethod
     def _nombres_lista(ctx_lista):
@@ -468,17 +516,16 @@ class EjecutorArepa(ArepaVisitor):
         valor = self._ambito.buscar_opcional(nombre)
         if valor is None:
             raise ErrorVariable(
-                "La variable '{0}' no esta declarada; no hay nada que "
-                "exportar o graficar.".format(nombre),
+                "La variable '{0}' no esta declarada; no hay ninguna tabla "
+                "para usar en esta instruccion.".format(nombre),
                 linea=ctx.start.line,
                 columna=ctx.start.column,
             )
         if not isinstance(valor, Tabla):
             raise ErrorTipos(
                 "'{0}' no es una tabla (es de tipo {1}); esta instruccion "
-                "solo trabaja con tablas cargadas con 'monte'.".format(
-                    nombre, nombre_tipo(valor)
-                ),
+                "solo trabaja con tablas cargadas con 'monte' o producidas "
+                "por un pipeline.".format(nombre, nombre_tipo(valor)),
                 linea=ctx.start.line,
                 columna=ctx.start.column,
             )
@@ -749,6 +796,195 @@ class EjecutorArepa(ArepaVisitor):
                 partes.append("desviacion={0}".format(_num(self._desviacion(valores))))
             lineas.append("  " + ", ".join(partes))
         return "\n".join(lineas)
+
+    # ---------------------------------------------------------------- #
+    # Machine learning: 'entrene' y 'evalua'
+    # ---------------------------------------------------------------- #
+
+    def visitInstruccion_entrene(self, ctx):
+        nombre_modelo = ctx.identificador(0).getText()
+        nombre_tabla = ctx.identificador(1).getText()
+        tabla = self._obtener_tabla(nombre_tabla, ctx)
+        algoritmo = ctx.algoritmo_ml().getText()
+
+        columnas = None
+        objetivo = None
+        clases = None
+        tasa = 0.05
+        epocas = 1000
+        profundidad = 6
+        min_hojas = 2
+        tasa_dada = epocas_dadas = False
+        profundidad_dada = min_hojas_dada = False
+
+        for opcion in ctx.opciones_ml().opcion_ml():
+            if opcion.COLUMNAS() is not None:
+                columnas = self._nombres_lista(opcion.lista_columnas())
+            elif opcion.OBJETIVO() is not None:
+                objetivo = opcion.nombre_columna().getText()
+            elif opcion.CLASES() is not None:
+                clases = [
+                    self._valor_etiqueta(etiqueta)
+                    for etiqueta in opcion.lista_etiquetas().etiqueta()
+                ]
+            elif opcion.TASA() is not None:
+                tasa = self.evaluador.evaluar(opcion.expresion_logica())
+                tasa_dada = True
+            elif opcion.EPOCAS() is not None:
+                epocas = self.evaluador.evaluar(opcion.expresion_logica())
+                epocas_dadas = True
+            elif opcion.PROFUNDIDAD() is not None:
+                profundidad = self.evaluador.evaluar(opcion.expresion_logica())
+                profundidad_dada = True
+            elif opcion.MIN_HOJAS() is not None:
+                min_hojas = self.evaluador.evaluar(opcion.expresion_logica())
+                min_hojas_dada = True
+
+        if columnas is None:
+            raise ErrorSemantico(
+                "'entrene' necesita 'columnas [ ... ]' con las variables de "
+                "entrada del modelo.",
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if objetivo is None:
+            raise ErrorSemantico(
+                "'entrene' necesita 'objetivo columna' con la variable que "
+                "se quiere predecir o clasificar.",
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+
+        if algoritmo == "regresion":
+            if clases is not None:
+                raise ErrorSemantico(
+                    "'regresion' predice números y no usa 'clases [...]'.",
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+            if profundidad_dada or min_hojas_dada:
+                raise ErrorSemantico(
+                    "'profundidad' y 'min_hojas' son opciones de 'arbol', "
+                    "no de 'regresion'.",
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+        elif algoritmo == "perceptron":
+            if profundidad_dada or min_hojas_dada:
+                raise ErrorSemantico(
+                    "'profundidad' y 'min_hojas' son opciones de 'arbol', "
+                    "no de 'perceptron'.",
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+        elif algoritmo == "arbol":
+            if tasa_dada or epocas_dadas:
+                raise ErrorSemantico(
+                    "'tasa' y 'epocas' son opciones de 'regresion' y "
+                    "'perceptron', no de 'arbol'.",
+                    linea=ctx.start.line,
+                    columna=ctx.start.column,
+                )
+
+        try:
+            preprocesador = Preprocesador(tabla, columnas, objetivo)
+            X, y = preprocesador.datos(
+                tabla, estandarizar=(algoritmo != "arbol")
+            )
+            if algoritmo == "regresion":
+                modelo = RegresionLineal(
+                    preprocesador, objetivo, tasa=tasa, epocas=epocas
+                )
+            elif algoritmo == "perceptron":
+                modelo = Perceptron(
+                    preprocesador, objetivo, tasa=tasa, epocas=epocas, clases=clases
+                )
+            else:
+                modelo = ArbolDecision(
+                    preprocesador,
+                    objetivo,
+                    profundidad=profundidad,
+                    min_hojas=min_hojas,
+                    clases=clases,
+                )
+            modelo.nombre = nombre_modelo
+            modelo.entrenar(X, y)
+        except ErrorArepa as problema:
+            self._con_ubicacion(problema, ctx)
+            raise
+
+        self._asignar_variable(nombre_modelo, modelo)
+        self.contexto.imprimir(
+            "[entrene] Modelo '{0}' ({1}) entrenado con {2} fila(s), {3} "
+            "columna(s); objetivo '{4}'.".format(
+                nombre_modelo,
+                algoritmo,
+                len(y),
+                len(columnas),
+                objetivo,
+            )
+        )
+        return modelo
+
+    def visitInstruccion_evalua(self, ctx):
+        nombre_modelo = ctx.identificador(0).getText()
+        nombre_tabla = ctx.identificador(1).getText()
+        modelo = self._obtener_modelo(nombre_modelo, ctx)
+        tabla = self._obtener_tabla(nombre_tabla, ctx)
+        try:
+            reales, predicciones = modelo.evaluar(tabla)
+        except ErrorArepa as problema:
+            self._con_ubicacion(problema, ctx)
+            raise
+
+        if isinstance(modelo, ModeloRegresion):
+            texto = metricas.resumen_regresion(reales, predicciones)
+        else:
+            texto = metricas.resumen_clasificacion(
+                reales, predicciones, getattr(modelo, "clases", None)
+            )
+        self.contexto.imprimir(
+            "[evalua] Modelo '{0}' sobre '{1}':\n{2}".format(
+                nombre_modelo, nombre_tabla, texto
+            )
+        )
+
+    def _obtener_modelo(self, nombre, ctx):
+        valor = self._ambito.buscar_opcional(nombre)
+        if valor is None:
+            raise ErrorVariable(
+                "El modelo '{0}' no está declarado; entrenalo primero con "
+                "'entrene {0} = ...'.".format(nombre),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        if not isinstance(valor, ModeloML):
+            raise ErrorTipos(
+                "'{0}' no es un modelo de machine learning (es de tipo "
+                "{1}).".format(nombre, nombre_tipo(valor)),
+                linea=ctx.start.line,
+                columna=ctx.start.column,
+            )
+        return valor
+
+    def _valor_etiqueta(self, ctx):
+        """Valor de una etiqueta de 'clases [ ... ]'."""
+        if ctx.cadena() is not None:
+            return self.evaluador.evaluar(ctx.cadena())
+        if ctx.ENTERO() is not None:
+            return int(ctx.getText())
+        if ctx.DECIMAL() is not None:
+            return float(ctx.getText())
+        if ctx.OBVIO() is not None:
+            return True
+        return False
+
+    @staticmethod
+    def _con_ubicacion(problema, ctx):
+        if getattr(problema, "linea", -1) == -1:
+            problema.linea = ctx.start.line
+            problema.columna = ctx.start.column
+        return problema
 
     def visitInstruccion_llamada(self, ctx):
         return self.evaluador.evaluar(ctx.llamada_funcion())

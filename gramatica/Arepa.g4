@@ -58,6 +58,8 @@ sentencia
     | instruccion_devolver
     | instruccion_cuenteme
     | instruccion_describa
+    | instruccion_entrene
+    | instruccion_evalua
     | instruccion_llamada
     ;
 
@@ -87,6 +89,42 @@ instruccion_cuenteme
 
 instruccion_describa
     : DESCRIBA identificador
+    ;
+
+// --- Machine learning -------------------------------------------------------
+// "entrene modelo = perceptron con tabla ..." entrena un modelo supervisado
+// con las columnas y el objetivo indicados. Las opciones van en cualquier
+// orden y pueden repartirse en varias líneas:
+//   columnas [x1, x2]  objetivo y  clases ["si", "no"]
+//   tasa 0.1  epocas 200  profundidad 6  min_hojas 2
+// "evalua modelo con tabla" mide el modelo sobre una tabla con el objetivo.
+
+instruccion_entrene
+    : ENTRENE identificador ASIGNACION algoritmo_ml CON identificador opciones_ml
+    ;
+
+algoritmo_ml
+    : PERCEPTRON
+    | REGRESION
+    | ARBOL
+    ;
+
+opciones_ml
+    : (NL* opcion_ml)*
+    ;
+
+opcion_ml
+    : COLUMNAS lista_columnas
+    | OBJETIVO nombre_columna
+    | CLASES lista_etiquetas
+    | TASA expresion_logica
+    | EPOCAS expresion_logica
+    | PROFUNDIDAD expresion_logica
+    | MIN_HOJAS expresion_logica
+    ;
+
+instruccion_evalua
+    : EVALUA identificador CON identificador
     ;
 
 // --- Funciones --------------------------------------------------------------
@@ -163,6 +201,8 @@ operacion_datos
     | CONVIERTA nombre_columna FLECHA tipo_dato
     | JUNTE POR lista_columnas
     | RESUMA NL* item_resumen (COMA NL* item_resumen)*
+    | PREDIGA CON identificador COMO nombre_columna
+    | CLASIFIQUE CON identificador COMO nombre_columna
     ;
 
 instruccion_monte
@@ -185,6 +225,18 @@ direccion
 
 lista_columnas
     : CORCHETE_I NL* nombre_columna (COMA NL* nombre_columna)* NL* CORCHETE_D
+    ;
+
+lista_etiquetas
+    : CORCHETE_I NL* etiqueta (COMA NL* etiqueta)* NL* CORCHETE_D
+    ;
+
+etiqueta
+    : cadena
+    | ENTERO
+    | DECIMAL
+    | OBVIO
+    | FALSO
     ;
 
 item_resumen
@@ -316,6 +368,9 @@ nombre_columna
     | PINTE | BARRAS | LINEAS | HISTOGRAMA | DISPERSION | CAJAS | TITULO
     | EJEX | EJEY | LEYENDA | GUARDELA | MUESTRELA
     | INVENTE | DEVUELVA | FIJESE_SI | SINO | CUENTEME | DESCRIBA
+    | ENTRENE | PERCEPTRON | REGRESION | ARBOL | COLUMNAS | OBJETIVO
+    | CLASES | TASA | EPOCAS | PROFUNDIDAD | MIN_HOJAS | PREDIGA
+    | CLASIFIQUE | EVALUA
     | MIENTRAS | REPITA | VECES | DESDE | HASTA | PASO | PARE | SIGA
     | OBVIO | FALSO | NADA | Y | O | NO
     ;
@@ -358,6 +413,23 @@ CONVIERTA  : 'convierta' ;   // convierte tipos
 
 JUNTE      : 'junte' ;       // agrupa
 RESUMA     : 'resuma' ;      // agrega/resume
+
+// --- Machine learning ---------------------------------------------------------
+
+ENTRENE     : 'entrene' ;      // entrena un modelo supervisado
+PERCEPTRON  : 'perceptron' ;   // clasificador lineal binario
+REGRESION   : 'regresion' ;    // regresión lineal
+ARBOL       : 'arbol' ;        // árbol de decisión CART
+COLUMNAS    : 'columnas' ;     // variables de entrada
+OBJETIVO    : 'objetivo' ;     // variable a predecir
+CLASES      : 'clases' ;       // etiquetas de clasificación
+TASA        : 'tasa' ;         // tasa de aprendizaje
+EPOCAS      : 'epocas' ;       // pasadas de entrenamiento
+PROFUNDIDAD : 'profundidad' ;  // profundidad máxima del árbol
+MIN_HOJAS   : 'min_hojas' ;    // mínimo de filas para dividir un nodo
+PREDIGA     : 'prediga' ;      // predicción numérica en pipeline
+CLASIFIQUE  : 'clasifique' ;   // clasificación en pipeline
+EVALUA      : 'evalua' ;       // métricas de un modelo
 
 // --- Tipos ---------------------------------------------------------------------
 

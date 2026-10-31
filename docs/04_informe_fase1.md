@@ -19,11 +19,11 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
      diseño (`docs/02_catalogo_instrucciones.md`).
    - Gramática formal en BNF/EBNF (`docs/03_gramatica_ebnf.md`).
 2. **Gramática ANTLR4 combinada (lexer + parser)** en `gramatica/Arepa.g4`
-   (~330 líneas de código, 410 con comentarios y blancos): 59 palabras
-   reservadas (53 instrucciones y estructuras, 3 literales especiales y 3
-   operadores lógicos), 22 símbolos y operadores, literales enteros y
-   decimales, cadenas con escapes, comentarios con `#`, saltos de línea
-   significativos e identificadores Unicode.
+   (527 líneas con comentarios y blancos): 73 palabras reservadas (67
+   instrucciones y estructuras, 3 literales especiales y 3 operadores
+   lógicos), 22 símbolos y operadores, literales enteros y decimales,
+   cadenas con escapes, comentarios con `#`, saltos de línea significativos
+   e identificadores Unicode.
 3. **Código generado por ANTLR4** para Python 3 en `generado/`:
    `ArepaLexer.py`, `ArepaParser.py`, `ArepaVisitor.py` y las tablas
    `.tokens/.interp`. Se generó con
@@ -48,11 +48,12 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
    `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
    bibliotecas equivalentes.
-8. **Suite de pruebas** `pruebas/test_proyecto.py`: 6 suites con 194
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: 7 suites con 225
    pruebas en total (48 de front-end, 21 de estructura del árbol, 43 de
-   datos, 16 de expresiones, 15 de símbolos y contexto, y 51 de
-   runtime); todas pasan. (Nota Corte 2: el conteo creció con los ciclos
-   `mientras`/`repita`; el detalle vive en `docs/08_informe_fase2.md`.)
+   datos, 16 de expresiones, 15 de símbolos y contexto, 51 de runtime y 31
+   de machine learning); todas pasan. (Nota Corte 2: el conteo creció con
+   los ciclos `mientras`/`repita` y con la ampliación de ML; el detalle vive
+   en `docs/08_informe_fase2.md` y `docs/11_guia_machine_learning.md`.)
 
 ## 2. Alcance funcional reconocido (mínimo del corte)
 
@@ -97,7 +98,8 @@ proyecto/
 │   ├── test_expresiones.py   suite del evaluador (16)
 │   ├── test_simbolos.py      suite de símbolos y contexto (15)
 │   ├── test_runtime.py       suite del runtime (51)
-│   └── test_proyecto.py      corredor maestro (194)
+│   ├── test_ml.py            suite de machine learning (31)
+│   └── test_proyecto.py      corredor maestro (225)
 ├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
 └── requirements.txt          dependencias (solo ANTLR4)
@@ -125,7 +127,7 @@ python3 src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
 python3 src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas (194)
+# 4. Suite completa de pruebas (225)
 python3 pruebas/test_proyecto.py
 ```
 

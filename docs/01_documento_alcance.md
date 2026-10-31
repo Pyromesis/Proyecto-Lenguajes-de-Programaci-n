@@ -21,6 +21,9 @@ programa, el recorrido completo de un análisis de datos reproducible:
 4. **Visualización**: describir gráficas de barras, líneas, histogramas,
    dispersión y cajas con su título, ejes y leyenda, para mostrarlas en
    pantalla o exportarlas a PNG.
+5. **Aprendizaje automático supervisado**: entrenar modelos propios de
+   regresión lineal, perceptrón y árbol de decisión, predecir o clasificar
+   filas nuevas y evaluar el modelo con métricas de regresión o clasificación.
 
 Queda por fuera del dominio todo lo que no tenga que ver con ese flujo.
 AREPA no pretende ser un lenguaje de propósito general: no busca reemplazar a
@@ -44,6 +47,11 @@ orientada a objetos o acceso a redes.
    convertir tipos y ordenar.
 3. **Comparación de indicadores**: funciones reutilizables (`invente`) para
    convertir unidades y condicionales (`fijese_si`) para validar umbrales.
+4. **Predicción y clasificación**: cargar un histórico, entrenar un modelo
+   (`regresion`, `perceptron` o `arbol`), agregar la predicción como columna
+   del pipeline y exportar el resultado a CSV.
+5. **Evaluación de un modelo**: medir MAE/MSE/RMSE/R² en regresión o
+   exactitud, matriz de confusión, precisión, recall y F1 en clasificación.
 
 ## 4. Entradas
 
@@ -58,8 +66,9 @@ orientada a objetos o acceso a redes.
 * El **árbol de análisis**, si se pide con `--arbol`.
 * Diagnósticos de error léxico y sintáctico que dicen **línea y columna**.
 * (Adicional, con `--ejecutar`) la ejecución del programa con la
-  biblioteca propia: carga CSV, pipeline de datos, agregaciones y
-  exportación, sin usar bibliotecas externas.
+  biblioteca propia: carga CSV, pipeline de datos, agregaciones,
+  entrenamiento y evaluación de modelos, y exportación, sin usar
+  bibliotecas externas.
 
 **Fases 2 y 3:** consolidación semántica, estadísticas ampliadas y
 gráficas PNG generadas con un motor propio.
@@ -103,9 +112,24 @@ mensajes vive en `docs/05_arquitectura.md`.
 | Gramática BNF/EBNF documentada | lista, en `docs/03_gramatica_ebnf.md` |
 | Gramática implementada en ANTLR4 (lexer + parser Python) | lista, en `gramatica/Arepa.g4` y `generado/` |
 | Pruebas léxicas y sintácticas positivas y negativas | 48 de 48 pasan (`pruebas/test_front.py`: 9 positivos, 20 negativos, 10 de diagnóstico y 9 de CLI) |
-| Pruebas de la biblioteca propia (árbol, datos, expresiones, símbolos, runtime) | 146 de 146 pasan (`pruebas/test_proyecto.py`: 194 en total) |
+| Pruebas de la biblioteca propia (árbol, datos, expresiones, símbolos, runtime, ML) | 177 de 177 pasan (`pruebas/test_proyecto.py`: 225 en total) |
 | Reporte de errores comprensibles con línea y columna | listo, en `src/lenguaje/errores.py` y `src/errores_base.py` |
 | Interfaz de línea de comandos | lista, en `src/cli/main.py` |
+
+### 7.1 Ampliación verificada de machine learning
+
+| Capacidad | Evidencia |
+|---|---|
+| Preprocesamiento propio (media/moda, one-hot, estandarización) | `src/ml/preprocesamiento.py`, 5 pruebas |
+| Regresión lineal con descenso de gradiente | `src/ml/regresion_lineal.py`, `ejemplos/regresion.arepa` |
+| Perceptrón binario | `src/ml/perceptron.py`, `ejemplos/clasificacion.arepa` |
+| Árbol de decisión CART/Gini multiclase | `src/ml/arbol_decision.py`, `ejemplos/arbol_decision.arepa` |
+| Métricas propias de regresión y clasificación | `src/ml/metricas.py`, 4 pruebas |
+| Integración con el DSL (`entrene`, `prediga`, `clasifique`, `evalua`) | `src/runtime/ejecutor.py`, 12 pruebas de integración |
+| Evidencia exportada | `salidas/regresion_casas.csv`, `salidas/clasificacion_estudiantes.csv`, `salidas/arbol_riesgo.csv` |
+
+La suite `pruebas/test_ml.py` aporta 31 pruebas y la guía completa está en
+`docs/11_guia_machine_learning.md`.
 
 ## 8. Criterios de éxito
 

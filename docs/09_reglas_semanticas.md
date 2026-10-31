@@ -8,6 +8,9 @@ python3 pruebas/test_proyecto.py
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
 python3 src/cli/main.py ejemplos/ciclos.arepa --ejecutar
 python3 src/cli/main.py ejemplos/filtros.arepa --ejecutar
+python3 src/cli/main.py ejemplos/regresion.arepa --ejecutar
+python3 src/cli/main.py ejemplos/clasificacion.arepa --ejecutar
+python3 src/cli/main.py ejemplos/arbol_decision.arepa --ejecutar
 ```
 
 Referencia de implementación: `docs/05_arquitectura.md` (§4–§6),
@@ -141,15 +144,60 @@ decimal → lógico (`obvio`/`falso`) → texto. Campo vacío → `nada`.
   avisa que la imagen llega en Fase 3. Tipo inválido (`pastel`) →
   error sintáctico.
 
-## 9. Catálogo de errores
+## 9. Machine learning (`entrene`, `prediga`, `clasifique`, `evalua`)
+
+* `entrene ID = ALGORITMO con TABLA`: `ID` debe ser un identificador puro
+  (no una reservada) y `TABLA` debe existir y ser una tabla. `ALGORITMO` es
+  `regresion`, `perceptron` o `arbol`.
+* `columnas [...]` y `objetivo COL` son obligatorias. La lista no puede tener
+  nombres repetidos y el objetivo no puede estar también entre las columnas
+  de entrada (sería usar la respuesta como pista). Toda columna nombrada debe
+  existir; si no, `ErrorColumna` con las columnas disponibles.
+* Opciones por algoritmo: `regresion` acepta `tasa` y `epocas`, no `clases`
+  ni opciones de árbol; `perceptron` acepta `clases`, `tasa` y `epocas`, no
+  opciones de árbol; `arbol` acepta `clases`, `profundidad` y `min_hojas`, no
+  `tasa` ni `epocas`. Una opción incompatible → `ErrorSemantico`.
+* `tasa` debe ser un número > 0; `epocas`, `profundidad` y `min_hojas` deben
+  ser enteros > 0. Los valores por defecto son `tasa 0.05`, `epocas 1000`,
+  `profundidad 6` y `min_hojas 2`.
+* Preprocesamiento: una columna con solo números o lógicos es numérica
+  (faltantes → media, estandarización en regresión/perceptrón); el resto es
+  categórica (faltantes → moda, one-hot encoding). Una categoría desconocida
+  en predicción se codifica como one-hot de ceros. Las filas con el objetivo
+  vacío se descartan; si no queda ninguna, `ErrorSemantico`.
+* `regresion`: el objetivo debe ser numérico; entrena con descenso de
+  gradiente por lotes y devuelve un número en la escala original. No admite
+  `clases`.
+* `perceptron`: es binario. Si se da `clases`, debe tener exactamente dos
+  etiquetas y toda etiqueta del objetivo debe pertenecer a la lista. La
+  primera clase se aprende como `+1` y la segunda como `-1`. Si no se da
+  `clases`, se descubren en orden de aparición; con 3 o más se lanza un error
+  que sugiere `arbol`.
+* `arbol`: clasificación multiclase con CART/Gini. Las columnas categóricas
+  llegan one-hot, así que también aprende preguntas por categoría. Se detiene
+  por pureza, `profundidad`, `min_hojas`, ganancia cero o división vacía; la
+  hoja devuelve la clase mayoritaria.
+* `tabla |> prediga con MODELO como COL`: exige un modelo de regresión.
+  `tabla |> clasifique con MODELO como COL`: exige un perceptrón o un árbol.
+  Ambos devuelven una tabla nueva (no mutan la de entrada) con `COL` agregada;
+  si `COL` ya existe → `ErrorColumna`.
+* `evalua MODELO con TABLA`: exige un modelo y una tabla con la columna
+  objetivo. Descarta las filas con objetivo vacío y, según el tipo de modelo,
+  imprime métricas de regresión (MAE, MSE, RMSE, R²) o de clasificación
+  (exactitud, matriz de confusión, precisión, recall, F1 y soporte).
+* `cuenteme MODELO` imprime el resumen del modelo (objetivo, columnas,
+  preprocesamiento, hiperparámetros, pesos o árbol). Los modelos reportan su
+  tipo como `regresion` o `clasificacion` en los mensajes de error.
+
+## 10. Catálogo de errores
 
 | Clase | Cuándo |
 |---|---|
-| `ErrorVariable` | variable inexistente (con pista de columnas) |
-| `ErrorColumna` | columna inexistente en `escoja/acomode/resuma/pinte/ejes` |
-| `ErrorTipos` | mezcla número-texto, lógico con número, condición no lógica, conversión imposible |
+| `ErrorVariable` | variable inexistente (con pista de columnas); modelo no entrenado |
+| `ErrorColumna` | columna inexistente en `escoja/acomode/resuma/pinte/ejes`; columna de entrada/objetivo inexistente en ML; columna de predicción ya existente |
+| `ErrorTipos` | mezcla número-texto, lógico con número, condición no lógica, conversión imposible; variable que no es modelo |
 | `ErrorOperacion` | operación sin tabla, agregación fuera de `resuma`, `guarde` sobre no-tabla, potencia compleja |
-| `ErrorSemantico` / `ErrorEjecucion` | `devuelva`/`pare`/`siga` fuera de lugar, argumentos incorrectos, tope de ciclos, recursión profunda |
+| `ErrorSemantico` / `ErrorEjecucion` | `devuelva`/`pare`/`siga` fuera de lugar, argumentos incorrectos, tope de ciclos, recursión profunda; opciones de ML incompatibles, clases inválidas, objetivo no numérico |
 | `ErrorArchivo` / `ErrorCSV` | ruta ausente, no UTF-8, fila con exceso de campos, comillas sin cerrar |
 
 Pruebas que los cubren: `test_expresiones.py` (tipos),
@@ -158,4 +206,6 @@ Pruebas que los cubren: `test_expresiones.py` (tipos),
 `operacion_sin_tabla_de_entrada_rechazada`,
 `agregacion_fuera_de_resuma_rechazada`,
 `guarde_sobre_variable_no_tabla_rechazado`,
-`pare/siga fuera de ciclo`, `devuelva_fuera_de_funcion_rechazado`).
+`pare/siga fuera de ciclo`, `devuelva_fuera_de_funcion_rechazado`) y
+`test_ml.py` (preprocesamiento, métricas, modelos y errores semánticos de
+`entrene`/`prediga`/`clasifique`/`evalua`).

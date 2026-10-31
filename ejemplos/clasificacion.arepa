@@ -1,0 +1,35 @@
+# ============================================================
+#  clasificacion.arepa - Perceptrón binario
+#  Demuestra: entrene ... perceptron, clasifique, evalua y guarde.
+#  Datos: datos/estudiantes_ml.csv (aprueba: "si" / "no").
+# ============================================================
+
+quihubo
+
+estudiantes = monte "datos/estudiantes_ml.csv" con encabezado
+
+# La primera clase de 'clases' se aprende como +1 y la segunda como -1.
+entrene aprueba_estudiante = perceptron con estudiantes
+  columnas [horas_estudio, asistencia, tareas]
+  objetivo aprueba
+  clases ["si", "no"]
+  tasa 0.1
+  epocas 300
+
+clasificados = estudiantes
+|> clasifique con aprueba_estudiante como prediccion
+
+cuenteme "Resumen del perceptrón:"
+cuenteme aprueba_estudiante
+
+evalua aprueba_estudiante con estudiantes
+
+muestra = clasificados
+|> escoja [horas_estudio, asistencia, tareas, aprueba, prediccion]
+
+cuenteme "Clasificación de los estudiantes:"
+cuenteme muestra
+
+guarde muestra como "salidas/clasificacion_estudiantes.csv"
+
+chao

@@ -1,0 +1,37 @@
+# ============================================================
+#  regresion.arepa - Regresión lineal con descenso de gradiente
+#  Demuestra: entrene ... regresion, prediga, evalua y guarde.
+#  Datos: datos/casas_ml.csv (precio en millones de pesos).
+# ============================================================
+
+quihubo
+
+casas = monte "datos/casas_ml.csv" con encabezado
+
+# El modelo aprende a predecir el precio con el área, las habitaciones,
+# la antigüedad y la ciudad (la ciudad se codifica one-hot sola).
+entrene precio_casas = regresion con casas
+  columnas [area, habitaciones, antiguedad, ciudad]
+  objetivo precio
+  tasa 0.08
+  epocas 2000
+
+# Cada fila recibe la columna 'precio_estimado'.
+estimadas = casas
+|> prediga con precio_casas como precio_estimado
+
+cuenteme "Resumen del modelo de regresión:"
+cuenteme precio_casas
+
+evalua precio_casas con casas
+
+# Evidencia: tabla con precio real y precio estimado.
+muestra = estimadas
+|> escoja [area, habitaciones, ciudad, precio, precio_estimado]
+
+cuenteme "Primeras estimaciones:"
+cuenteme muestra
+
+guarde muestra como "salidas/regresion_casas.csv"
+
+chao

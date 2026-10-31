@@ -24,10 +24,11 @@ python3 pruebas/test_proyecto.py
 
 * **Archivo:** `gramatica/Arepa.g4` (fuente única, gramática combinada).
   Reglas principales: `programa` (línea 38), `sentencia` (48),
-  `asignacion` (68), `operacion_datos` (127), `instruccion_monte` (140),
-  `instruccion_grafica` (177), `expresion_logica` (205).
+  `asignacion` (74), `instruccion_entrene` (102), `operacion_datos` (193),
+  `instruccion_monte` (208), `instruccion_grafica` (257),
+  `expresion_logica` (285).
 * **Especificación equivalente:** `docs/03_gramatica_ebnf.md`.
-* **Prueba:** las 194 de `python3 pruebas/test_proyecto.py` parsean con
+* **Prueba:** las 225 de `python3 pruebas/test_proyecto.py` parsean con
   esta gramática.
 * **Ejemplo en vivo:** abrir `Arepa.g4` y mostrar `programa` y
   `instruccion_grafica`.
@@ -68,7 +69,7 @@ python3 pruebas/test_proyecto.py
 ## 5. Cómo se detecta un programa inválido
 
 * **Archivo:** `src/lenguaje/errores.py`, `syntaxError` (línea 32) captura
-  todo sin detener el análisis; `_traducir` (línea 153) pasa el mensaje
+  todo sin detener el análisis; `_traducir` (línea 115) pasa el mensaje
   técnico a español.
 * **Gramática:** cualquier desviación produce error del listener; el
   programa nunca se cae con excepciones no controladas (verificado con 10
@@ -90,13 +91,13 @@ python3 pruebas/test_proyecto.py
 
 ## 7. Cómo se implementan asignaciones y expresiones
 
-* **Gramática:** `asignacion` (Arepa.g4:72) y la jerarquía
+* **Gramática:** `asignacion` (Arepa.g4:74) y la jerarquía
   `expresion_logica → conjuncion → negacion → comparacion → aritmetica →
   termino → factor → unario → atomo`, que codifica la precedencia
   documentada (`o < y < no < comparación < +- < */% < ^ derecha < - unario`).
 * **Código propio:** `src/expresiones/evaluador.py` (`evaluar` línea 71,
-  `visitAritmetica` 126) y `src/expresiones/operadores.py`; en el runtime,
-  `src/runtime/ejecutor.py::visitAsignacion` (línea 143).
+  `visitAritmetica` 134) y `src/expresiones/operadores.py`; en el runtime,
+  `src/runtime/ejecutor.py::visitAsignacion` (línea 149).
 * **Prueba:** `test_arbol.py` (precedencia en la forma del árbol),
   `test_expresiones.py` (16 casos: `1 + 2 * 3 == 7`, `2 ^ 3 ^ 2 == 512`,
   `(1 + 2) * 3`, errores de tipos).
@@ -104,9 +105,9 @@ python3 pruebas/test_proyecto.py
 
 ## 8. Cómo se reconoce CSV
 
-* **Gramática:** `instruccion_monte` (Arepa.g4:168): `monte cadena
+* **Gramática:** `instruccion_monte` (Arepa.g4:208): `monte cadena
   opciones_archivo?` con opciones `encabezado` y `separador`.
-* **Código propio:** `src/runtime/ejecutor.py::_cargar` (línea 193) usa el
+* **Código propio:** `src/runtime/ejecutor.py::_cargar` (línea 199) usa el
   lector propio `src/datos/lector_csv.py` (máquina de estados con comillas
   y escape `""`).
 * **Prueba:** `test_runtime.py::monte_carga_csv_real` y los 12 casos
@@ -117,9 +118,9 @@ python3 pruebas/test_proyecto.py
 ## 9. Cómo se reconoce selección
 
 * **Gramática:** alternativa `ESCOJA lista_columnas` dentro de
-  `operacion_datos` (Arepa.g4:155).
+  `operacion_datos` (Arepa.g4:193).
 * **Código propio:** `src/runtime/ejecutor.py::_aplicar_operacion`
-  (línea 215, rama ESCOJA) sobre `Tabla.seleccionar`
+  (línea 218, rama ESCOJA) sobre `Tabla.seleccionar`
   (`src/datos/tabla.py`).
 * **Prueba:** `test_arbol.py::arbol_de_seleccion` (estructura) y
   `test_runtime.py::escoja_selecciona_columnas`.
@@ -138,11 +139,11 @@ python3 pruebas/test_proyecto.py
 
 ## 11. Cómo se reconoce visualización (solo sintáctico)
 
-* **Gramática:** `instruccion_grafica` (Arepa.g4:205): `pinte
+* **Gramática:** `instruccion_grafica` (Arepa.g4:257): `pinte
   tipo_grafica identificador (clausula_estetica)* (final_grafica)?` con
   tipos `barras|lineas|histograma|dispersion|cajas`.
 * **Código propio:** `src/runtime/ejecutor.py::visitInstruccion_grafica`
-  (línea 433): valida que la tabla exista y que las columnas de
+  (línea 492): valida que la tabla exista y que las columnas de
   `ejex`/`ejey` existan; avisa que la imagen llega en la Fase 3.
 * **Prueba:** `test_arbol.py::arbol_de_visualizacion` (estructura con
   cláusulas y cierre), negativas `n09_pinte_tipo_invalido` y

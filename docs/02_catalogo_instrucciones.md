@@ -48,8 +48,19 @@ lo que significa en el día a día se parece a lo que hace la instrucción:
 | `y` | "a y b" | conjunción lógica |
 | `o` | "a o b" | disyunción lógica |
 | `no` | "no pasa" | negación lógica |
+| `entrene` | "entrene el modelo" | entrena un modelo supervisado |
+| `perceptron` | clasificador de una neurona | perceptrón binario |
+| `regresion` | "ajuste la recta" | regresión lineal |
+| `arbol` | "decida por ramas" | árbol de decisión CART |
+| `columnas` / `objetivo` | entradas / respuesta | variables de entrada y variable a predecir |
+| `clases` | etiquetas posibles | clases de un clasificador |
+| `tasa` / `epocas` | ritmo / pasadas | hiperparámetros del descenso de gradiente |
+| `profundidad` / `min_hojas` | tamaño del árbol | límites del árbol de decisión |
+| `prediga` | "prediga el número" | predicción numérica en un pipeline |
+| `clasifique` | "clasifique la fila" | clasificación en un pipeline |
+| `evalua` | "evalúe el modelo" | métricas sobre una tabla |
 
-Con estas últimas, el vocabulario reservado queda en **59 palabras**: 53
+Con estas últimas, el vocabulario reservado queda en **73 palabras**: 67
 instrucciones y estructuras, 3 literales especiales (`obvio`, `falso`,
 `nada`) y 3 operadores lógicos (`y`, `o`, `no`).
 
@@ -142,7 +153,40 @@ Sentencia directa:
 |---|---|
 | `describa ID` | resumen estadístico de la tabla |
 
-### 3.4 Visualización (solo reconocimiento en Cortes 1–2)
+### 3.4 Machine learning (ampliación)
+
+Todos los algoritmos están implementados desde cero en `src/ml/`; la única
+dependencia externa del proyecto sigue siendo ANTLR4.
+
+| Sentencia | Sintaxis | Ejemplo |
+|---|---|---|
+| Entrenar | `entrene ID = ALGORITMO con TABLA OPCIONES` | `entrene m = regresion con casas columnas [area] objetivo precio` |
+| Predecir número | `\|> prediga con MODELO como COL` | `\|> prediga con m como precio_estimado` |
+| Clasificar | `\|> clasifique con MODELO como COL` | `\|> clasifique con m como riesgo_estimado` |
+| Evaluar | `evalua MODELO con TABLA` | `evalua m con casas` |
+
+`ALGORITMO` ∈ { `regresion`, `perceptron`, `arbol` }. Opciones (en cualquier
+orden, repartidas en varias líneas):
+
+| Opción | Valor | Algoritmos |
+|---|---|---|
+| `columnas [COL, …]` | variables de entrada (obligatoria) | todos |
+| `objetivo COL` | variable a predecir (obligatoria) | todos |
+| `clases [ETIQUETA, …]` | etiquetas; el perceptrón exige exactamente 2 | `perceptron`, `arbol` |
+| `tasa N` | tasa de aprendizaje > 0 (por defecto 0.05) | `regresion`, `perceptron` |
+| `epocas N` | pasadas de entrenamiento (entero > 0) | `regresion`, `perceptron` |
+| `profundidad N` | profundidad máxima del árbol (por defecto 6) | `arbol` |
+| `min_hojas N` | mínimo de filas para dividir (por defecto 2) | `arbol` |
+
+Preprocesamiento automático: los faltantes numéricos se imputan con la media,
+los categóricos con la moda; las columnas categóricas pasan a one-hot; la
+regresión y el perceptrón estandarizan las entradas. La primera etiqueta de
+`clases` se aprende como `+1` en el perceptrón.
+
+Ejemplos completos: `ejemplos/regresion.arepa`, `ejemplos/clasificacion.arepa`
+y `ejemplos/arbol_decision.arepa`.
+
+### 3.5 Visualización (solo reconocimiento en Cortes 1–2)
 
 ```text
 pinte TIPO TABLA
@@ -162,7 +206,7 @@ ejey ingreso
 guardela "salidas/ingresos.png"
 ```
 
-### 3.5 Abstracción y control
+### 3.6 Abstracción y control
 
 | Constructo | Sintaxis |
 |---|---|
@@ -171,7 +215,7 @@ guardela "salidas/ingresos.png"
 | Condicional | `fijese_si (EXPR) { … } sino { … }` (el `sino` puede encadenar otro `fijese_si`) |
 | Impresión | `cuenteme ARG, ARG, …` |
 
-### 3.6 Ciclos (ampliación del Corte 2)
+### 3.7 Ciclos (ampliación del Corte 2)
 
 Los ciclos son una **ampliación** sobre el mínimo del enunciado (que solo
 exige funciones y condicionales): sirven para acumulaciones iterativas y
@@ -279,6 +323,8 @@ cocina: una etapa por línea.
 | D9 | Sin acceso con punto (`tabla.columna`) | En el pipeline la tabla implícita es la etapa anterior; el punto queda como ampliación |
 | D10 | Errores en español con línea y columna | Requisito del componente "Errores y diagnóstico"; mejora la comprensibilidad |
 | D11 | Ciclos como ampliación acotada (no copia de Python) | El enunciado pide no convertir el DSL en Python completo; por eso los ciclos son solo `mientras`/`repita` con `pare`/`siga`, sin `for` clásico estilo C: la forma `repita i desde A hasta B` lee como receta y el `paso` es opcional |
+| D12 | Machine learning como instrucciones propias (`entrene`, `prediga`, `clasifique`, `evalua`) | El DSL debía agrupar, clasificar, predecir y exportar CSV sin bibliotecas externas; la sintaxis mantiene el estilo declarativo y separa claramente entrenamiento (`entrene`) de uso (`prediga`/`clasifique`) y medición (`evalua`) |
+| D13 | `min_hojas` en vez de `minimo` | `minimo()` ya existe como agregación del lenguaje; usar `min_hojas` evita ambigüedad léxica y describe mejor el parámetro del árbol |
 
 ---
 

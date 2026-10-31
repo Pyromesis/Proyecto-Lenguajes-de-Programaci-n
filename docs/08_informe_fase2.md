@@ -8,7 +8,7 @@ Este documento mapea cada exigencia del Corte 2 del enunciado a su evidencia
 verificable en el repositorio. Todo se comprueba con:
 
 ```bash
-python pruebas/test_proyecto.py   # 6 suites, 194 pruebas, todas pasan
+python pruebas/test_proyecto.py   # 7 suites, 225 pruebas, todas pasan
 ```
 
 ---
@@ -29,7 +29,7 @@ python pruebas/test_proyecto.py   # 6 suites, 194 pruebas, todas pasan
 | Renombre y conversión (preparación) | `renombre COL -> NUEVA`, `convierta COL -> tipo` (calendario propio AAAA-MM-DD) |
 | Agrupamiento y agregaciones | `junte por` + `resuma` → `Tabla.agrupar` + `cuente/sume/promedie/mediana/minimo/maximo/desviacion` propios (mediana por inserción, desviación poblacional) |
 | Validaciones semánticas | `src/errores_base.py` (`ErrorVariable`, `ErrorColumna`, `ErrorTipos`, `ErrorOperacion`, `ErrorSemantico`, `ErrorEjecucion`, `ErrorArchivo`, `ErrorCSV`) |
-| Pruebas | `pruebas/test_proyecto.py` (corredor) + 6 suites: front-end 48, árbol 21, datos 43, expresiones 16, símbolos 15, runtime 51 |
+| Pruebas | `pruebas/test_proyecto.py` (corredor) + 7 suites: front-end 48, árbol 21, datos 43, expresiones 16, símbolos 15, runtime 51, machine learning 31 |
 
 Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 
@@ -74,7 +74,8 @@ acumulaciones iterativas y búsquedas con parada temprana sin recursión manual,
 sin convertir el DSL en una copia de Python (no hay `for` estilo C).
 
 * Gramática: `ciclo_mientras`, `ciclo_repita`, `instruccion_pare`,
-  `instruccion_siga` en `gramatica/Arepa.g4` (+8 reservadas: 51 → 59);
+  `instruccion_siga` en `gramatica/Arepa.g4` (+8 reservadas: 51 → 59;
+  la ampliación de ML sumó 14 más, total 73);
   código regenerado en `generado/` con ANTLR 4.13.2.
 * Semántica: `docs/02` §3.6 y `docs/05` §6 (condición lógica, conteo entero
   ≥ 0, rango inclusive con paso por defecto 1/-1, sin ámbito propio en el
@@ -107,6 +108,6 @@ resumen correctamente exportada (p. ej. `salidas/resumen_ciudades.csv` con
 
 | Herramienta | Qué garantiza | Cómo correrla |
 |---|---|---|
-| `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 46/46 reglas y 59 reservadas en ambas direcciones (hace real el "chequeo" citado en `docs/06` R10/R23) | `python herramientas/chequeo_gramatica.py` |
-| `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, negativo con línea/columna, ejecución + CSV, ciclos, suite 6/6); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
+| `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 53/53 reglas y 73 reservadas en ambas direcciones (hace real el "chequeo" citado en `docs/06` R10/R23) | `python herramientas/chequeo_gramatica.py` |
+| `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, negativo con línea/columna, ejecución + CSV, ciclos, suite 7/7); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
 | Tubería cerrada | `arepa demo.arepa --arbol \| head` sale limpio (código 0, sin volcado) en Linux | `test_front.py` CLI: "tubería cerrada sale limpio sin traceback" |

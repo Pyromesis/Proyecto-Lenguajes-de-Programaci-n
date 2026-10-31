@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """AREPA - Chequeo del conteo de pruebas (Linux).
 
-Fuente única de verdad del número de pruebas: ejecuta las 6 suites,
+Fuente única de verdad del número de pruebas: ejecuta las 7 suites,
 extrae el "N de N" reportado por cada una y lo compara contra el conteo
 canónico. Si algún total cambia (nueva prueba agregada o eliminada),
 este script falla y obliga a actualizar el conteo en un solo lugar:
 la tabla ESPERADO de abajo y los documentos que la citan
-(README §Pruebas, docs/04 §1, docs/05 §8, docs/08 §1-§2, docs/10 §1-§2).
+(README §Pruebas, docs/04 §1, docs/05 §8, docs/08 §1-§2, docs/10 §1-§2,
+docs/11 §10).
 
 Uso:
     python3 herramientas/chequeo_pruebas.py
@@ -20,7 +21,7 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Conteo canónico: (archivo de suite, pruebas esperadas).
-# Total: 48 + 21 + 43 + 16 + 15 + 51 = 194.
+# Total: 48 + 21 + 43 + 16 + 15 + 51 + 31 = 225.
 ESPERADO = (
     ("test_front.py", 48),
     ("test_arbol.py", 21),
@@ -28,6 +29,7 @@ ESPERADO = (
     ("test_expresiones.py", 16),
     ("test_simbolos.py", 15),
     ("test_runtime.py", 51),
+    ("test_ml.py", 31),
 )
 
 PATRON = re.compile(r"Resultado:\s*(\d+)\s+de\s+(\d+)")
@@ -79,7 +81,7 @@ def main():
     if not ok or total != canonico:
         print("DESUNIFICADO: actualizá ESPERADO aquí y los docs que citan el conteo.")
         return 1
-    print("Unificado: 6 suites, 194 pruebas.")
+    print("Unificado: 7 suites, 225 pruebas.")
     return 0
 
 

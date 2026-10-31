@@ -39,4 +39,13 @@ guardela "salidas/practica.png"
 #        y verás "te" en gris; Tab lo acepta y deja "pinte".
 guarde resumen como "salidas/practica.csv"
 
+# TAB 12: borra "entrene" y escribe "ent" + Tab
+# TAB 13: borra "prediga" y escribe "pre" + Tab
+entrene modelo_ventas = regresion con limpias
+  columnas [unidades, precio]
+  objetivo total
+
+pronostico = limpias
+|> prediga con modelo_ventas como total_estimado
+
 chao

@@ -7,7 +7,12 @@ python3 pruebas/test_proyecto.py
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
 python3 src/cli/main.py ejemplos/ciclos.arepa --ejecutar
 python3 src/cli/main.py ejemplos/filtros.arepa --ejecutar
-ls -l salidas/resumen_ciudades.csv salidas/resumen_ciclos.csv salidas/filtros_listos.csv
+python3 src/cli/main.py ejemplos/regresion.arepa --ejecutar
+python3 src/cli/main.py ejemplos/clasificacion.arepa --ejecutar
+python3 src/cli/main.py ejemplos/arbol_decision.arepa --ejecutar
+ls -l salidas/resumen_ciudades.csv salidas/resumen_ciclos.csv \
+      salidas/filtros_listos.csv salidas/regresion_casas.csv \
+      salidas/clasificacion_estudiantes.csv salidas/arbol_riesgo.csv
 ```
 
 Reglas aplicadas: `docs/09_reglas_semanticas.md`.
@@ -33,7 +38,7 @@ Motor: `docs/05_arquitectura.md` (§4–§6).
 | Estadísticas descriptivas | `ejecutor.py` | `visitInstruccion_describa` | `test_runtime.py::describa_produce_resumen_propio` |
 | Escritura CSV | `datos/escritor_csv.py` | `EscritorCSV.escribir` (UTF-8) | `test_runtime.py::guarde_escribe_csv_legible` |
 | Validaciones semánticas | `src/errores_base.py` | `ErrorVariable/Columna/Tipos/Operacion/Semantico/Ejecucion/Archivo/CSV` | `test_expresiones.py` + `test_runtime.py` (errores) |
-| Pruebas unitarias e integración | `pruebas/` | 6 suites, 194 pruebas | `python3 pruebas/test_proyecto.py` → 6/6 |
+| Pruebas unitarias e integración | `pruebas/` | 7 suites, 225 pruebas | `python3 pruebas/test_proyecto.py` → 7/7 |
 
 ## 2. Alcance mínimo del Corte 2
 
@@ -60,3 +65,19 @@ Motor: `docs/05_arquitectura.md` (§4–§6).
 Los tres validan (`python3 src/cli/main.py ejemplos/<n>.arepa`) y corren
 (`--ejecutar`). Los CSV están exceptuados en `.gitignore` y se versionan
 como evidencia.
+
+## 4. Ampliación de machine learning (implementación propia)
+
+| Requisito | Módulo | Función / clase | Prueba | Evidencia |
+|---|---|---|---|---|
+| Preprocesamiento (media/moda, one-hot, estandarización) | `src/ml/preprocesamiento.py` | `Preprocesador` | `test_ml.py::preprocesador_*` (5) | `ejemplos/regresion.arepa` |
+| Regresión lineal por descenso de gradiente | `src/ml/regresion_lineal.py` | `RegresionLineal.entrenar`, `predecir` | `test_ml.py::regresion_*` (2) | `salidas/regresion_casas.csv` |
+| Perceptrón binario | `src/ml/perceptron.py` | `Perceptron.entrenar`, `predecir` | `test_ml.py::perceptron_*` (3) | `salidas/clasificacion_estudiantes.csv` |
+| Árbol de decisión CART/Gini | `src/ml/arbol_decision.py` | `ArbolDecision._construir`, `_mejor_division`, `_gini` | `test_ml.py::arbol_*` (3) | `salidas/arbol_riesgo.csv` |
+| Métricas de regresión y clasificación | `src/ml/metricas.py` | `resumen_regresion`, `resumen_clasificacion` | `test_ml.py::metricas_*` (4) | salida de `evalua` |
+| Sentencias `entrene` y `evalua` | `src/runtime/ejecutor.py` | `visitInstruccion_entrene`, `visitInstruccion_evalua` | `test_ml.py::dsl_*` (12) | los tres ejemplos |
+| Etapas `prediga` y `clasifique` | `src/runtime/ejecutor.py` | `_agregar_prediccion`, `_obtener_modelo` | `test_ml.py::dsl_*` | CSV con columna estimada |
+| Resumen legible del modelo | `src/runtime/contexto.py` | `a_texto` → `ModeloML.resumen()` | `test_ml.py::a_texto_muestra_resumen_del_modelo` | salida de `cuenteme` |
+
+La suite completa de ML es `pruebas/test_ml.py` (31 pruebas) y el detalle
+conceptual y matemático está en `docs/11_guia_machine_learning.md`.

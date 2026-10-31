@@ -2,9 +2,9 @@
 # Medio: la funcion captura el ambito donde se definio (closure).
 
 quihubo
-tasa = 4000
+cambio = 4000
 invente dolares(pesos) {
-    devuelva pesos / tasa
+    devuelva pesos / cambio
 }
 cuenteme "2500000 pesos son:", dolares(2500000)
 chao

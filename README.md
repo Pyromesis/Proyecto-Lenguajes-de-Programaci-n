@@ -11,13 +11,15 @@
 AREPA significa **A**nálisis **R**eproducible de datos **E**scrito con
 **P**alabras **A**utóctonas: un lenguaje de dominio específico (DSL) cuyo
 vocabulario sale del español hablado en Colombia, para describir flujos de
-ciencia de datos (cargar CSV, filtrar, calcular, resumir y graficar) en un
-solo programa legible.
+ciencia de datos (cargar CSV, filtrar, calcular, agrupar, resumir, graficar,
+**entrenar modelos, clasificar, predecir y exportar**) en un solo programa
+legible.
 
 Proyecto de la materia *Lenguajes de Programación y Transducción*
 (Universidad Sergio Arboleda, 2026-2). El front-end se genera con **ANTLR4**
-(herramienta exigida por el curso) y la biblioteca del lenguaje está
-implementada desde cero por el equipo.
+(herramienta exigida por el curso) y la biblioteca del lenguaje —incluidos
+el preprocesamiento, la regresión lineal, el perceptrón, el árbol de decisión
+y las métricas— está implementada desde cero por el equipo.
 
 ## Qué problema resuelve
 
@@ -51,6 +53,31 @@ chao
 
 Es `ejemplos/demo.arepa` (completo con `cuenteme`, `fijese_si` e `invente`).
 
+El mismo lenguaje también entrena modelos y usa sus predicciones dentro del
+pipeline:
+
+```text
+quihubo
+casas = monte "datos/casas_ml.csv" con encabezado
+
+entrene precio_casas = regresion con casas
+  columnas [area, habitaciones, antiguedad, ciudad]
+  objetivo precio
+  tasa 0.08
+  epocas 2000
+
+estimadas = casas
+|> prediga con precio_casas como precio_estimado
+
+evalua precio_casas con casas
+guarde estimadas como "salidas/regresion_casas.csv"
+chao
+```
+
+Es `ejemplos/regresion.arepa`; los equivalentes de clasificación están en
+`ejemplos/clasificacion.arepa` (perceptrón) y
+`ejemplos/arbol_decision.arepa` (árbol multiclase).
+
 ## Estado exacto (Cortes 1 y 2, Linux-only)
 
 **Corte 1 — Especificación y front-end (verificado):**
@@ -65,7 +92,7 @@ Es `ejemplos/demo.arepa` (completo con `cuenteme`, `fijese_si` e `invente`).
 * árbol de análisis legible (`--arbol`) y tabla de tokens (`--tokens`);
 * diagnóstico de errores léxicos y sintácticos en español con línea y
   columna;
-* CLI con códigos de salida 0/1/2 y 194 pruebas en 6 suites.
+* CLI con códigos de salida 0/1/2 y 225 pruebas en 7 suites.
 
 **Corte 2 — Semántica y procesamiento de datos (verificado):**
 
@@ -86,6 +113,207 @@ reconocen y se validan (tabla y columnas existentes) pero **no generan
 imágenes** (Fase 3).
 
 **No pertenece a esta fase:** motor de gráficas y exportación PNG.
+
+**Ampliación verificada — Machine learning (todo propio):**
+
+* `src/ml/` implementa desde cero preprocesamiento (imputación por media/moda,
+  one-hot encoding y estandarización), regresión lineal por descenso de
+  gradiente, perceptrón binario, árbol de decisión CART/Gini y métricas
+  (MAE, MSE, RMSE, R², exactitud, matriz de confusión, precisión, recall y F1);
+* nuevas instrucciones `entrene`, `prediga`, `clasifique` y `evalua`, con
+  validación semántica de hiperparámetros y de tipos de modelo;
+* 3 conjuntos de datos (`casas_ml.csv`, `estudiantes_ml.csv`,
+  `riesgo_ml.csv`), 3 ejemplos ejecutables y 3 CSV de evidencia en `salidas/`;
+* guía dedicada: `docs/11_guia_machine_learning.md`.
+
+## Cómo funciona AREPA
+
+### 1. Arquitectura general
+
+```mermaid
+flowchart TB
+  subgraph Entrada
+    A["Programa .arepa"]
+  end
+  subgraph Frontend["Front-end (ANTLR4)"]
+    B["Lexer"]
+    C["Parser"]
+    D["Árbol de análisis"]
+  end
+  subgraph Nucleo["Núcleo propio"]
+    E["Visitor / Ejecutor"]
+    F["Tabla de símbolos"]
+    G["Evaluador de expresiones"]
+    H["Operaciones de datos"]
+    I["Motor de machine learning"]
+  end
+  subgraph Bibliotecas["Bibliotecas propias"]
+    J["Tabla · Fila · Columna"]
+    K["Lector y escritor CSV"]
+    L["Preprocesamiento"]
+    M["Regresión · Perceptrón · Árbol"]
+    N["Métricas"]
+  end
+  A --> B --> C --> D --> E
+  E --> F
+  E --> G
+  E --> H
+  E --> I
+  H --> J
+  H --> K
+  I --> L
+  I --> M
+  I --> N
+  E --> O["Salida por consola"]
+  H --> P["CSV de salida"]
+  I --> P
+  E -.->|Fase 3| Q["Gráficas PNG"]
+```
+
+El programa entra como texto, ANTLR4 produce el árbol de análisis y el
+Visitor propio lo ejecuta. Todo el estado vive en estructuras del equipo:
+`Tabla` para los datos, `TablaSimbolos` para variables y funciones,
+`ContextoEjecucion` para la salida y el motor `src/ml/` para los modelos.
+
+### 2. Recorrido de una instrucción
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as Usuario
+  participant CLI as CLI
+  participant A as Lexer + Parser
+  participant V as Visitor
+  participant S as Símbolos y contexto
+  participant T as Tabla propia
+  participant M as Modelo ML
+  U->>CLI: programa.arepa --ejecutar
+  CLI->>A: texto fuente
+  A-->>CLI: árbol de análisis o errores
+  CLI->>V: visitar(árbol)
+  V->>S: declarar variables y funciones
+  V->>T: cargar, filtrar, agrupar
+  V->>M: entrenar, predecir, evaluar
+  M-->>V: predicciones y métricas
+  V-->>U: consola + CSV
+```
+
+El CLI solo orquesta: el lexer/parser generan el árbol, el Visitor ejecuta y
+delega los datos en `Tabla`, el estado en `TablaSimbolos` y los modelos en
+`src/ml/`. Los errores se acumulan en el contexto y se reportan con línea y
+columna.
+
+### 3. Ciclo de vida de machine learning
+
+```mermaid
+flowchart LR
+  A["monte ... CSV"] --> B["columnas + objetivo"]
+  B --> C["Preprocesador"]
+  C --> C1["Imputar media / moda"]
+  C --> C2["One-hot encoding"]
+  C --> C3["Estandarizar"]
+  C1 --> D["Entrenamiento"]
+  C2 --> D
+  C3 --> D
+  D --> E{"Algoritmo"}
+  E -->|regresion| F["Descenso de gradiente"]
+  E -->|perceptron| G["Regla del perceptrón"]
+  E -->|arbol| H["CART / Gini"]
+  F --> I["Modelo entrenado"]
+  G --> I
+  H --> I
+  I --> J["evalua"]
+  I --> K["prediga / clasifique"]
+  K --> L["CSV de salida"]
+```
+
+El modelo se entrena una vez y se reutiliza: el preprocesador aprende la
+codificación con la tabla de entrenamiento, los tres algoritmos comparten la
+interfaz `ModeloML` y `evalua` o `prediga` aplican exactamente la misma
+transformación a las filas nuevas.
+
+### 4. Jerarquía de modelos
+
+```mermaid
+classDiagram
+  class ModeloML {
+    +objetivo
+    +preprocesador
+    +entrenar(X, y)
+    +predecir(vector)
+    +predecir_fila(fila, tabla)
+    +evaluar(tabla)
+  }
+  class ModeloRegresion
+  class ModeloClasificacion
+  class RegresionLineal {
+    +pesos
+    +sesgo
+    +tasa
+    +epocas
+  }
+  class Perceptron {
+    +pesos
+    +sesgo
+    +clases
+  }
+  class ArbolDecision {
+    +raiz
+    +profundidad
+    +min_hojas
+  }
+  class Preprocesador {
+    +transformar_fila()
+    +datos()
+  }
+  ModeloML <|-- ModeloRegresion
+  ModeloML <|-- ModeloClasificacion
+  ModeloRegresion <|-- RegresionLineal
+  ModeloClasificacion <|-- Perceptron
+  ModeloClasificacion <|-- ArbolDecision
+  ModeloML --> Preprocesador
+```
+
+`ModeloML` define el contrato; `ModeloRegresion` y `ModeloClasificacion`
+separan las tareas, y cada algoritmo implementa `entrenar`, `predecir` y
+`resumen`. El preprocesador es el mismo para todos.
+
+### 5. Cómo decide un árbol
+
+```mermaid
+flowchart TD
+  A["Conjunto de filas"] --> B{"¿Nodo puro o<br/>límite alcanzado?"}
+  B -->|sí| C["Hoja: clase mayoritaria"]
+  B -->|no| D["Probar columnas y umbrales"]
+  D --> E["Calcular Gini ponderado"]
+  E --> F["Escoger la mayor ganancia"]
+  F --> G["Repartir las filas"]
+  G --> H["Rama izquierda"]
+  G --> I["Rama derecha"]
+  H --> A
+  I --> A
+```
+
+El árbol prueba cortes `columna <= umbral`, calcula la ganancia de Gini y se
+detiene por pureza, `profundidad`, `min_hojas`, ganancia cero o división
+vacía. Cada hoja devuelve la clase mayoritaria.
+
+### 6. Qué modelo escoger
+
+```mermaid
+flowchart TD
+  A["¿Qué querés predecir?"] --> B{"¿Un número continuo?"}
+  B -->|sí| C["regresion"]
+  B -->|no| D{"¿Cuántas clases?"}
+  D -->|2| E["perceptron"]
+  D -->|"3 o más"| F["arbol"]
+  C --> H["prediga"]
+  E --> G["clasifique"]
+  F --> G
+```
+
+Regla práctica: un número continuo pide `regresion`; dos etiquetas, `perceptron`;
+tres o más, `arbol`. `prediga` produce números y `clasifique` produce etiquetas.
 
 ## Requisitos
 
@@ -136,7 +364,8 @@ python3 -m pip install -r requirements.txt
 | Python | 3.11+ (probado 3.13) | lenguaje anfitrión |
 | `antlr4-python3-runtime` | 4.13.2 | ejecutar el lexer/parser generados (única externa) |
 
-Sin pandas, NumPy, Matplotlib ni equivalentes.
+Sin pandas, NumPy, Matplotlib, scikit-learn ni equivalentes: los algoritmos
+de machine learning también son código propio.
 
 ## Ejecución
 
@@ -175,13 +404,17 @@ python3 src/cli/repl.py --simple   # modo clásico
   `muestrela`.
 * **Control**: `fijese_si` / `sino`, `mientras (cond)`, `repita N veces`,
   `repita i desde A hasta B (paso P)`, `pare` (rompe), `siga` (sigue).
+* **Machine learning**: `entrene modelo = regresion|perceptron|arbol con tabla`
+  con opciones `columnas [...]`, `objetivo col`, `clases [...]`, `tasa`,
+  `epocas`, `profundidad` y `min_hojas`; etapas `prediga con modelo como col`
+  y `clasifique con modelo como col`; medición con `evalua modelo con tabla`.
 * **Operadores**: `+ - * / % ^`, comparaciones `== != < <= > >=`, lógicos
   `y`, `o`, `no`, pipeline `|>`, flecha `->`, asignación `=`.
 * **Literales**: enteros (`42`), decimales (`3.14`), cadenas con escapes
   (`"dice \"hola\""`), booleanos (`obvio`/`falso`) y faltante (`nada`).
 * **Comentarios**: `#` hasta fin de línea, permitidos en cualquier posición.
 
-Lista completa: `docs/02_catalogo_instrucciones.md` (59 reservadas y 22
+Lista completa: `docs/02_catalogo_instrucciones.md` (73 reservadas y 22
 símbolos) y tabla de tokens con `--tokens`.
 
 ## Gramática
@@ -246,16 +479,17 @@ Salida (extracto real):
 python3 pruebas/test_proyecto.py
 ```
 
-Ejecuta las 6 suites (194 pruebas): front-end (48: 9 positivos, 20
+Ejecuta las 7 suites (225 pruebas): front-end (48: 9 positivos, 20
 negativos, 10 de diagnóstico, 9 de CLI), estructura del árbol (21), datos
-(43), expresiones (16), símbolos y contexto (15) y runtime (51). Cada
-suite también corre sola, por ejemplo `python3 pruebas/test_front.py`.
+(43), expresiones (16), símbolos y contexto (15), runtime (51) y machine
+learning (31). Cada suite también corre sola, por ejemplo
+`python3 pruebas/test_front.py` o `python3 pruebas/test_ml.py`.
 
 El conteo es único y verificable (fuente de verdad):
 
 ```bash
 python3 herramientas/chequeo_pruebas.py
-# Unificado: 6 suites, 194 pruebas.
+# Unificado: 7 suites, 225 pruebas.
 ```
 
 ## Errores (ejemplos reales)
@@ -265,7 +499,7 @@ Programa con `@` y con una variable llamada `y`:
 ```text
 Encontré 2 problema(s), revisá esto:
   [léxico] Línea 2, Columna 6: Hay un símbolo '@' que no hace parte del lenguaje AREPA
-  [sintáctico] Línea 2, Columna 0: No esperaba 'y' por ahí; revisá si sobra. En esa posición se esperaba 'chao', 'guarde', 'pinte', 'invente', 'devuelva', 'fijese_si', entre otras opciones. Ojo: el operador lógico 'y' (conjunción) es una palabra reservada, no puede usarse como nombre de variable; escogé otro nombre.
+  [sintáctico] Línea 2, Columna 0: No esperaba 'y' por ahí; revisá si sobra. En esa posición se esperaba 'chao', 'guarde', 'entrene', 'evalua', 'pinte', 'invente', entre otras opciones. Ojo: el operador lógico 'y' (conjunción) es una palabra reservada, no puede usarse como nombre de variable; escogé otro nombre.
 ```
 
 Programa con un tipo de gráfica inválido:
@@ -285,16 +519,17 @@ proyecto/
 │   ├── datos/                propia: Tabla, Columna, Fila, CSV, tipos
 │   ├── expresiones/          propia: operadores y evaluador
 │   ├── runtime/              propia: símbolos, contexto y ejecutor
+│   ├── ml/                   propia: preprocesamiento, modelos y métricas
 │   ├── errores_base.py       jerarquía propia de errores
 │   └── cli/                  main.py (validar y --ejecutar) y repl.py
-├── datos/                    CSV de ejemplo para los programas
-├── ejemplos/                 demo + filtros + graficas + funciones + ciclos
+├── datos/                    CSV de ejemplo (incluye 3 para ML)
+├── ejemplos/                 demo, filtros, gráficas, funciones, ciclos y 3 de ML
 ├── Ejercicios_Problemas/     187 ejercicios (índice en su README.md)
-├── salidas/                  evidencia Corte 2 (3 CSV versionados)
-├── pruebas/                  6 suites (194) + programas positivos/negativos
+├── salidas/                  evidencia de datos y ML (6 CSV versionados)
+├── pruebas/                  7 suites (225) + programas positivos/negativos
 ├── herramientas/             chequeos, demo de sustentación y consola
 ├── docs/                     alcance, catálogo, EBNF, informes, arquitectura,
-│                             reglas semánticas (09) y trazabilidad Corte 2 (10)
+│                             reglas semánticas, trazabilidad y guía de ML (11)
 ├── generar_gramatica.sh      regeneración en Linux
 ├── requirements.txt          antlr4-python3-runtime==4.13.2
 └── Proyecto_LP.pdf           enunciado del curso
@@ -322,7 +557,14 @@ trazabilidad funcionalidad → archivo → función → prueba):
 * contexto de ejecución propio (salida formateada, registro de errores);
 * sistema de errores propio (léxicos, sintácticos, semánticos, de datos);
 * agregaciones propias (`cuente`, `sume`, `promedie`, `mediana`, `minimo`,
-  `maximo`, `desviacion`) ejecutadas por `junte`/`resuma` y `describa`.
+  `maximo`, `desviacion`) ejecutadas por `junte`/`resuma` y `describa`;
+* preprocesamiento propio para ML: imputación por media/moda, one-hot
+  encoding, estandarización y transformación consistente de tablas nuevas;
+* regresión lineal múltiple propia con descenso de gradiente por lotes;
+* perceptrón binario propio con la regla clásica de actualización;
+* árbol de decisión propio CART/Gini con `profundidad` y `min_hojas`;
+* métricas propias de regresión (MAE, MSE, RMSE, R²) y de clasificación
+  (exactitud, matriz de confusión, precisión, recall, F1 y soporte).
 
 ## Ejemplos
 
@@ -333,9 +575,12 @@ trazabilidad funcionalidad → archivo → función → prueba):
 | `ejemplos/graficas.arepa` | los cinco tipos de visualización (sintáctico) | — (validación, PNG en Fase 3) |
 | `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` | — |
 | `ejemplos/ciclos.arepa` | `mientras`, `repita`, `pare`/`siga` + flujo de datos | `salidas/resumen_ciclos.csv` |
+| `ejemplos/regresion.arepa` | regresión lineal, `prediga` y `evalua` | `salidas/regresion_casas.csv` |
+| `ejemplos/clasificacion.arepa` | perceptrón binario y `clasifique` | `salidas/clasificacion_estudiantes.csv` |
+| `ejemplos/arbol_decision.arepa` | árbol multiclase CART/Gini | `salidas/arbol_riesgo.csv` |
 
 Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
-con `--ejecutar`. Los 3 CSV de evidencia están versionados (exceptuados en
+con `--ejecutar`. Los 6 CSV de evidencia están versionados (exceptuados en
 `.gitignore`).
 
 ## Ejercicios
@@ -351,8 +596,8 @@ python3 src/cli/main.py Ejercicios_Problemas/faciles/F12_deje_donde_simple.arepa
 ## Herramientas
 
 ```bash
-python3 herramientas/chequeo_gramatica.py   # EBNF <-> .g4: 46/46 reglas, 59 reservadas
-python3 herramientas/chequeo_pruebas.py     # conteo único: 6 suites, 194 pruebas
+python3 herramientas/chequeo_gramatica.py   # EBNF <-> .g4: 53/53 reglas, 73 reservadas
+python3 herramientas/chequeo_pruebas.py     # conteo único: 7 suites, 225 pruebas
 bash herramientas/demo_sustentacion.sh      # demo de sustentación paso a paso
 ```
 
@@ -368,5 +613,6 @@ Autocompletado por Tab (Vim, REPL y Bash): `herramientas/consola/README.md`.
 * [Informe de la Fase 2 (Semántica y Corte 2)](docs/08_informe_fase2.md)
 * [Reglas semánticas (Corte 2)](docs/09_reglas_semanticas.md)
 * [Matriz de trazabilidad del Corte 2](docs/10_matriz_trazabilidad_corte2.md)
+* [Guía de machine learning](docs/11_guia_machine_learning.md)
 * [Guía de sustentación](docs/07_guia_sustentacion.md)
 * [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)

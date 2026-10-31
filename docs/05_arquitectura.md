@@ -31,6 +31,14 @@ src/
 │   ├── operadores.py    aritméticos, relacionales y lógicos con tipos
 │   └── evaluador.py     recorrido del árbol de ANTLR y cálculo
 │
+├── ml/                  BIBLIOTECA PROPIA DE MACHINE LEARNING
+│   ├── preprocesamiento.py  imputación, one-hot y estandarización
+│   ├── modelo.py        interfaz común y validación de hiperparámetros
+│   ├── regresion_lineal.py  descenso de gradiente por lotes
+│   ├── perceptron.py    clasificador lineal binario
+│   ├── arbol_decision.py    CART/Gini multiclase
+│   └── metricas.py      MAE, MSE, RMSE, R², exactitud, matriz, F1
+│
 ├── runtime/             BIBLIOTECA PROPIA DE EJECUCIÓN
 │   ├── simbolos.py      ámbitos encadenados + funciones 'invente'
 │   ├── contexto.py      estado global: símbolos, salida, tablas y errores
@@ -49,9 +57,10 @@ conversiones) y la orquestación de asignaciones/pipeline está en
 exactamente dónde queda cada funcionalidad.
 
 Dependencias entre capas (de abajo hacia arriba): `errores_base` →
-`datos` → `expresiones` → `runtime` → `cli`. Solo `lenguaje` toca el
-runtime de ANTLR4. Los módulos de `datos` y `expresiones` no importan
-ninguna biblioteca externa.
+`datos` → `expresiones` → `ml` → `runtime` → `cli`. `ml` solo depende de
+`datos` y `errores_base`; el runtime lo usa para las sentencias de machine
+learning. Solo `lenguaje` toca el runtime de ANTLR4. Los módulos de `datos`,
+`expresiones` y `ml` no importan ninguna biblioteca externa.
 
 ---
 
@@ -227,8 +236,46 @@ un visitor propio.
 * **`pinte`**: valida que la tabla exista y que las columnas de
   `ejex`/`ejey` existan (validado desde el Corte 1) y avisa que la
   imagen llega en la Fase 3.
+* **Machine learning**: `entrene` valida las opciones, construye el
+  `Preprocesador`, obtiene `X`/`y` (descartando objetivos vacíos), crea el
+  modelo (`RegresionLineal`, `Perceptron` o `ArbolDecision`), lo entrena y lo
+  guarda en la tabla de símbolos como un valor más. `prediga`/`clasifique`
+  verifican el tipo de modelo y agregan la columna de predicción sobre una
+  copia de la tabla (`_agregar_prediccion`). `evalua` recalcula las
+  predicciones sobre la tabla indicada y elige el resumen de métricas según
+  la tarea. `cuenteme MODELO` usa `ModeloML.resumen()` a través de
+  `contexto.a_texto`.
 * **`monte`/`guarde`**: usan el lector y escritor CSV propios; los
   errores de archivo y de formato incluyen la ruta y la línea.
+
+### Motor de machine learning (`ml/`)
+
+**Qué hace:** implementa desde cero el ciclo supervisado completo:
+preprocesamiento, entrenamiento, predicción y métricas. No usa pandas,
+NumPy ni scikit-learn.
+
+**Cómo funciona:**
+
+* `Preprocesador` aprende por columna si es numérica (media/desviación) o
+  categórica (categorías/moda), imputa faltantes, aplica one-hot y
+  estandariza cuando el modelo lo pide. La misma codificación se reutiliza en
+  predicción; una categoría desconocida queda como one-hot de ceros.
+* `RegresionLineal` entrena con descenso de gradiente por lotes: pesos desde
+  0, sesgo desde la media del objetivo, gradiente `2/n`, parada temprana si el
+  MSE cambia menos de `1e-14`.
+* `Perceptron` aplica la regla clásica (`w += tasa*y*x`, `b += tasa*y`) cuando
+  `y*(w·x+b) <= 0`; la primera clase es `+1` y la segunda `-1`; exige
+  exactamente dos clases y se detiene al llegar a cero errores.
+* `ArbolDecision` construye nodos CART: prueba umbrales (puntos medios, máximo
+  64 cortes por columna), mide Gini ponderado, escoge la mayor ganancia y se
+  detiene por pureza, `profundidad`, `min_hojas`, ganancia cero o división
+  vacía.
+* `metricas` calcula MAE, MSE, RMSE, R², exactitud, matriz de confusión,
+  precisión, recall, F1 y soporte con operaciones propias.
+
+**Limitaciones:** perceptrón binario; sin validación cruzada ni partición
+automática; árbol de clasificación sin poda; los modelos no se guardan en
+disco. El detalle completo está en `docs/11_guia_machine_learning.md`.
 
 ---
 
@@ -253,7 +300,7 @@ del dato sí es exacta.
 
 ## 8. Pruebas
 
-`python3 pruebas/test_proyecto.py` ejecuta las seis suites:
+`python3 pruebas/test_proyecto.py` ejecuta las siete suites:
 
 | Suite | Archivo | Pruebas |
 |---|---|---|
@@ -263,8 +310,9 @@ del dato sí es exacta.
 | Evaluador de expresiones propio | `test_expresiones.py` | 16 |
 | Tabla de símbolos y contexto propios | `test_simbolos.py` | 15 |
 | Runtime propio (programas completos) | `test_runtime.py` | 51 |
+| Machine learning propio | `test_ml.py` | 31 |
 
-Total: **194 pruebas** (fuente única verificable con
+Total: **225 pruebas** (fuente única verificable con
 `python3 herramientas/chequeo_pruebas.py`, que falla si algún total
 cambia). Las 48 de front-end desglosan en: 9 programas
 positivos, 20 negativos, 10 de diagnóstico (línea/columna exactas,
@@ -272,7 +320,9 @@ robustez, comentarios, números incompletos y ausencia de duplicados) y 9
 de CLI. Las 21 de árbol verifican la estructura jerárquica y la
 precedencia recorriendo el árbol programáticamente. Las 51 de runtime
 incluyen 19 de ciclos (`mientras`, `repita`, `pare`/`siga`) y 1 de
-columnas con nombre reservado (D5). Ninguna
+columnas con nombre reservado (D5). Las 31 de machine learning cubren
+preprocesamiento, métricas, los tres modelos y la integración completa
+`entrene`/`prediga`/`clasifique`/`evalua`. Ninguna
 prueba usa bibliotecas externas para el trabajo que se prueba.
 
 ### Matriz de cobertura del primer corte
@@ -310,7 +360,8 @@ prueba usa bibliotecas externas para el trabajo que se prueba.
 
 No hay más dependencias. En particular: no hay pandas, NumPy,
 Matplotlib, Polars, tabulate, openpyxl ni equivalentes, ni en el código
-ni en los planes de las siguientes fases.
+ni en los planes de las siguientes fases. El preprocesamiento, los tres
+modelos y las métricas de `src/ml/` son implementaciones propias.
 
 ---
 
@@ -369,5 +420,13 @@ implementada, con su prueba asociada.
 | Diagnóstico léxico/sintáctico | `lenguaje/errores.py` | `ErroresArepa`, `_traducir` | `test_front.py` (20 negativas) |
 | Árbol de análisis | `lenguaje/arbol.py` | `imprimir_arbol` | `test_front.py` (CLI `--arbol`) |
 | Errores semánticos y de ejecución | `errores_base.py` | jerarquía `ErrorArepa` | `test_simbolos.py::contexto_registra_errores` |
-| Integración DSL → árbol → biblioteca propia | `runtime/ejecutor.py` | flujo completo | `test_runtime.py` (48 casos) |
+| Integración DSL → árbol → biblioteca propia | `runtime/ejecutor.py` | flujo completo | `test_runtime.py` (51 casos) |
 | Ciclos `mientras`/`repita` | `runtime/ejecutor.py` | `visitCiclo_mientras`, `visitCiclo_repita`, `visitInstruccion_pare/siga` | `test_runtime.py` (19 casos de ciclos) + `09_ciclos.arepa`, `n18`, `n19`, `n20` |
+| Preprocesamiento ML | `ml/preprocesamiento.py` | `Preprocesador` (media/moda, one-hot, estandarización) | `test_ml.py::preprocesador_*` |
+| Regresión lineal | `ml/regresion_lineal.py` | `RegresionLineal.entrenar`/`predecir` | `test_ml.py::regresion_*` + `ejemplos/regresion.arepa` |
+| Perceptrón binario | `ml/perceptron.py` | `Perceptron.entrenar`/`predecir` | `test_ml.py::perceptron_*` + `ejemplos/clasificacion.arepa` |
+| Árbol de decisión | `ml/arbol_decision.py` | `ArbolDecision._construir`, `_mejor_division`, `_gini` | `test_ml.py::arbol_*` + `ejemplos/arbol_decision.arepa` |
+| Métricas de ML | `ml/metricas.py` | `resumen_regresion`, `resumen_clasificacion` | `test_ml.py::metricas_*` |
+| `entrene` / `evalua` | `runtime/ejecutor.py` | `visitInstruccion_entrene`, `visitInstruccion_evalua` | `test_ml.py::dsl_*` |
+| `prediga` / `clasifique` | `runtime/ejecutor.py` | `_agregar_prediccion`, `_obtener_modelo` | `test_ml.py::dsl_*` |
+| Resumen de modelo | `runtime/contexto.py` + `ml/modelo.py` | `a_texto` → `ModeloML.resumen()` | `test_ml.py::a_texto_muestra_resumen_del_modelo` |

@@ -20,6 +20,9 @@ let s:palabras = ['quihubo', 'chao', 'monte', 'guarde', 'como', 'con',
       \ 'encabezado', 'separador', 'escoja', 'deje', 'donde', 'acomode',
       \ 'por', 'pa_arriba', 'pa_abajo', 'cree', 'renombre', 'limpie',
       \ 'duplicados', 'vacios', 'convierta', 'junte', 'resuma', 'numero',
+      \ 'entrene', 'perceptron', 'regresion', 'arbol', 'columnas', 'objetivo',
+      \ 'clases', 'tasa', 'epocas', 'profundidad', 'min_hojas', 'prediga',
+      \ 'clasifique', 'evalua',
       \ 'texto', 'logico', 'fecha', 'pinte', 'barras', 'lineas',
       \ 'histograma', 'dispersion', 'cajas', 'titulo', 'ejex', 'ejey',
       \ 'leyenda', 'guardela', 'muestrela', 'invente', 'devuelva',
@@ -58,6 +61,7 @@ if has("syntax")
   syntax keyword arepaDatos monte guarde como con encabezado separador
   syntax keyword arepaTrans escoja deje donde acomode por pa_arriba pa_abajo
   syntax keyword arepaTrans cree renombre limpie duplicados vacios convierta junte resuma
+  syntax keyword arepaML entrene perceptron regresion arbol columnas objetivo clases tasa epocas profundidad min_hojas prediga clasifique evalua
   syntax keyword arepaTipos numero texto logico fecha
   syntax keyword arepaGraf pinte barras lineas histograma dispersion cajas titulo ejex ejey leyenda guardela muestrela
   syntax keyword arepaControl invente devuelva fijese_si sino cuenteme describa mientras repita veces desde hasta paso pare siga
@@ -65,6 +69,7 @@ if has("syntax")
   highlight default link arepaEstructura Structure
   highlight default link arepaDatos Keyword
   highlight default link arepaTrans Function
+  highlight default link arepaML Function
   highlight default link arepaTipos Type
   highlight default link arepaGraf String
   highlight default link arepaControl Conditional
@@ -178,6 +183,13 @@ let g:arepa_plantillas = {
       \ 'ciclo': ['mientras (x > 0) {',
       \           '    x = x - 1',
       \           '}'],
+      \ 'modelo': ['entrene modelo = regresion con datos',
+      \            '    columnas [col1, col2]',
+      \            '    objetivo col3',
+      \            '    tasa 0.05',
+      \            '    epocas 1000'],
+      \ 'prediccion': ['con_prediccion = datos',
+      \                '|> prediga con modelo como estimado'],
       \ }
 
 function! ArepaListaPlantillas(A, L, P) abort
