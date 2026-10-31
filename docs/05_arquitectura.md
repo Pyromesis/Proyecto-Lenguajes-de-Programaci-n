@@ -358,8 +358,10 @@ NumPy ni scikit-learn.
   precisión, recall, F1 y soporte con operaciones propias.
 
 **Limitaciones:** perceptrón binario; sin validación cruzada ni partición
-automática; árbol de clasificación sin poda; los modelos no se guardan en
-disco. El detalle completo está en `docs/11_guia_machine_learning.md`.
+automática desde el DSL, pero `herramientas/partir_datos.py` genera una
+partición reproducible para evaluar con `evalua` sobre datos no usados en el
+ajuste; árbol de clasificación sin poda; los modelos no se guardan en disco. El
+detalle completo está en `docs/11_guia_machine_learning.md`.
 
 ### 6.1 Flujo de una tabla en memoria
 
@@ -411,7 +413,7 @@ externas. Reemplaza a matplotlib para los cinco tipos del DSL.
   funciones públicas para poder probar la estadística sin mirar píxeles.
 
 **Integración:** `EjecutorArepa.visitInstruccion_grafica`
-(`runtime/ejecutor.py:502`) resuelve las cláusulas, aplica los valores por
+(`runtime/ejecutor.py:550`) resuelve las cláusulas, aplica los valores por
 defecto, arma una `Serie` por columna de `ejey`, llama a
 `dibujar(tipo, series, ancho=800, alto=480)` y escribe el PNG. Los fallos
 se lanzan como `ErrorGrafica` con línea y columna.

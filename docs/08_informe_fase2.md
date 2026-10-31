@@ -51,7 +51,7 @@ Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 
 ---
 
-## 3. Programas completos (mínimo 3 exigidos; hay 6)
+## 3. Programas completos (mínimo 3 exigidos; hay 9)
 
 | Programa | Qué ejercita |
 |---|---|
@@ -61,6 +61,9 @@ Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 | `ejemplos/graficas.arepa` | los cinco tipos de visualización (desde el Corte 3 genera 5 PNG) |
 | `ejemplos/ciclos.arepa` | ciclos + pipeline + `describa` + `guarde` |
 | `ejemplos/memoria.arepa` | listas, registros, `arme`, acceso 1-based, `recorra` y agregaciones en memoria |
+| `ejemplos/regresion.arepa` | `entrene` regresión, `prediga`, `evalua` y CSV con predicciones |
+| `ejemplos/clasificacion.arepa` | perceptrón binario, `clasifique` y métricas |
+| `ejemplos/arbol_decision.arepa` | árbol CART multiclase, `clasifique` y métricas |
 
 Todos validan (`python src/cli/main.py ejemplos/<nombre>.arepa`) y corren
 (`--ejecutar`). Evidencia de transformación y exportación: `salidas/*.csv` y
@@ -77,7 +80,7 @@ sin convertir el DSL en una copia de Python (no hay `for` estilo C).
 
 * Gramática: `ciclo_mientras`, `ciclo_repita`, `instruccion_pare`,
   `instruccion_siga` en `gramatica/Arepa.g4` (+8 reservadas: 51 → 59;
-  la ampliación de ML sumó 14 más, total 73);
+  la ampliación de ML sumó 20 más, total 79);
   código regenerado en `generado/` con ANTLR 4.13.2.
 * Semántica: `docs/02` §3.6 y `docs/05` §6 (condición lógica, conteo entero
   ≥ 0, rango inclusive con paso por defecto 1/-1, sin ámbito propio en el

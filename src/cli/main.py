@@ -8,9 +8,9 @@ Dos modos:
     los errores con línea y columna.
 
   * Ejecución (--ejecutar): tras validar, interpreta el programa con el
-    runtime propio (runtime/, datos/, expresiones/) y produce los
-    archivos que pida el programa: CSV con 'guarde' y PNG con 'pinte'
-    (Fase 3: motor gráfico propio). Con '--sin-ventana' no se abre
+    runtime propio (runtime/, datos/, expresiones/, ml/, graficas/) y
+    produce los archivos que pida el programa: CSV con 'guarde' y PNG con
+    'pinte' (Fase 3: motor gráfico propio). Con '--sin-ventana' no se abre
     ningún visor externo, útil en CI o en demostraciones sin entorno
     gráfico.
 
@@ -127,7 +127,7 @@ def main():
         description=(
             "Front-end y runtime del lenguaje AREPA.\n"
             "Valida el programa y, con --ejecutar, lo corre con la biblioteca\n"
-            "propia (datos, expresiones, runtime y motor gráfico)."
+            "propia (datos, expresiones, runtime, gráficas y machine learning)."
         ),
         epilog=(
             "Ejemplos:\n"
@@ -161,7 +161,10 @@ def main():
     analizador.add_argument(
         "--ejecutar",
         action="store_true",
-        help="ejecuta el programa con la biblioteca propia (datos, expresiones, runtime)",
+        help=(
+            "ejecuta el programa con la biblioteca propia "
+            "(datos, expresiones, runtime, gráficas y machine learning)"
+        ),
     )
     analizador.add_argument(
         "--sin-ventana",

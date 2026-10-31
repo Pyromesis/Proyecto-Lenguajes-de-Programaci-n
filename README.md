@@ -143,6 +143,9 @@ Es `ejemplos/regresion.arepa`; los equivalentes de clasificación están en
   validación semántica de hiperparámetros y de tipos de modelo;
 * 3 conjuntos de datos (`casas_ml.csv`, `estudiantes_ml.csv`,
   `riesgo_ml.csv`), 3 ejemplos ejecutables y 3 CSV de evidencia en `salidas/`;
+* partición reproducible entrenamiento/prueba con
+  `herramientas/partir_datos.py` y evaluación honesta sobre datos no usados en
+  el ajuste (ver `docs/11_guia_machine_learning.md` §2.4);
 * guía dedicada: `docs/11_guia_machine_learning.md`.
 
 ## Cómo funciona AREPA
@@ -151,53 +154,44 @@ Es `ejemplos/regresion.arepa`; los equivalentes de clasificación están en
 
 ```mermaid
 flowchart TB
-  subgraph Entrada
-    A["Programa .arepa"]
+  subgraph Desarrollo["Desarrollo: generar el front-end (solo al cambiar la gramática)"]
+    G4["gramatica/Arepa.g4"] --> ANTLR["ANTLR 4.13.2"]
+    ANTLR --> GEN["generado/<br/>ArepaLexer · ArepaParser · ArepaVisitor"]
   end
-  subgraph Frontend["Front-end (ANTLR4)"]
-    B["Lexer"]
-    C["Parser"]
-    D["Árbol de análisis"]
+  subgraph Ejecucion["Ejecución: correr un programa"]
+    A["Programa .arepa"] --> B["CLI"]
+    B --> C["analizador.py"]
+    GEN -.->|import| C
+    C --> D["Árbol de análisis"]
+    D --> E["Visitor / Ejecutor"]
+    E --> F["Tabla de símbolos"]
+    E --> G["Evaluador de expresiones"]
+    E --> H["Operaciones de datos"]
+    E --> I["Motor de machine learning"]
+    E --> I2["Motor de gráficas"]
+    H --> J["Tabla · Fila · Columna"]
+    H --> K["Lector y escritor CSV"]
+    I --> L["Preprocesamiento"]
+    I --> M["Regresión · Perceptrón · Árbol"]
+    I --> N["Métricas"]
+    I2 --> R["Lienzo · PNG · escalas"]
+    E --> O["cuenteme → consola"]
+    H --> P["guarde → CSV"]
+    I --> P
+    I2 --> Q["pinte → gráfica en memoria"]
+    Q --> Q1["guardela → PNG en la ruta"]
+    Q --> Q2["muestrela → PNG en salidas/"]
   end
-  subgraph Nucleo["Núcleo propio"]
-    E["Visitor / Ejecutor"]
-    F["Tabla de símbolos"]
-    G["Evaluador de expresiones"]
-    H["Operaciones de datos"]
-    I["Motor de machine learning"]
-    I2["Motor de gráficas"]
-  end
-  subgraph Bibliotecas["Bibliotecas propias"]
-    J["Tabla · Fila · Columna"]
-    K["Lector y escritor CSV"]
-    L["Preprocesamiento"]
-    M["Regresión · Perceptrón · Árbol"]
-    N["Métricas"]
-    R["Lienzo · PNG · escalas"]
-  end
-  A --> B --> C --> D --> E
-  E --> F
-  E --> G
-  E --> H
-  E --> I
-  E --> I2
-  H --> J
-  H --> K
-  I --> L
-  I --> M
-  I --> N
-  I2 --> R
-  E --> O["Salida por consola"]
-  H --> P["CSV de salida"]
-  I --> P
-  I2 --> Q["Gráficas PNG"]
 ```
 
-El programa entra como texto, ANTLR4 produce el árbol de análisis y el
-Visitor propio lo ejecuta. Todo el estado vive en estructuras del equipo:
-`Tabla` para los datos, `TablaSimbolos` para variables y funciones,
-`ContextoEjecucion` para la salida, el motor `src/ml/` para los modelos y
-`src/graficas/` para los PNG.
+La generación con ANTLR ocurre **antes** de ejecutar: `analizador.py` importa
+`ArepaLexer` y `ArepaParser` ya generados, no lee el `.g4` en cada corrida. En
+ejecución, el programa entra como texto, se produce el árbol y el Visitor
+propio lo recorre. Todo el estado vive en estructuras del equipo: `Tabla` para
+los datos, `TablaSimbolos` para variables y funciones, `ContextoEjecucion` para
+la salida, el motor `src/ml/` para los modelos y `src/graficas/` para los PNG.
+Las salidas están separadas: `guarde` escribe CSV; `pinte` construye la
+gráfica y `guardela` o `muestrela` deciden su destino PNG.
 
 ### 2. Recorrido de una instrucción
 
@@ -239,22 +233,28 @@ flowchart LR
   C1 --> D["Entrenamiento"]
   C2 --> D
   C3 --> D
-  D --> E{"Algoritmo"}
+  D --> E{"algoritmo_ml"}
   E -->|regresion| F["Descenso de gradiente"]
   E -->|perceptron| G["Regla del perceptrón"]
   E -->|arbol| H["CART / Gini"]
   F --> I["Modelo entrenado"]
   G --> I
   H --> I
-  I --> J["evalua"]
+  I --> S["Tabla de símbolos<br/>(el modelo es una variable)"]
   I --> K["prediga / clasifique"]
   K --> L["CSV de salida"]
+  I --> EV["evalua: modelo.evaluar(tabla)"]
+  EV --> MET["métricas: reales + predicciones"]
 ```
 
 El modelo se entrena una vez y se reutiliza: el preprocesador aprende la
 codificación con la tabla de entrenamiento, los tres algoritmos comparten la
 interfaz `ModeloML` y `evalua` o `prediga` aplican exactamente la misma
-transformación a las filas nuevas.
+transformación a las filas nuevas. El ejecutor es quien calcula las métricas:
+obtiene los valores reales y las predicciones y llama a `metricas`. Si `evalua`
+recibe la misma tabla del entrenamiento, el resultado es una métrica de
+entrenamiento; la guía de ML explica cómo evaluar sobre una partición de prueba
+reproducible.
 
 ### 4. Jerarquía de modelos
 

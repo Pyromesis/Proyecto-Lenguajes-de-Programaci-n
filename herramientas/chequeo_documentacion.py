@@ -32,6 +32,31 @@ CONTEOS = {
     "ejemplos": 9,
 }
 
+# Documentos que deben reflejar el estado actual (no los informes históricos).
+DOCS_VIGENTES = (
+    "README.md",
+    "docs/README.md",
+    "docs/05_arquitectura.md",
+    "docs/07_guia_sustentacion.md",
+    "docs/11_guia_machine_learning.md",
+    "docs/12_matriz_trazabilidad_corte3.md",
+    "docs/manuales/tecnico.md",
+    "docs/manuales/usuario.md",
+    "herramientas/README.md",
+    "pruebas/README.md",
+)
+
+# Cifras que quedaron obsoletas tras la ampliación de machine learning.
+CIFRAS_OBSOLETAS = (
+    "57/57",
+    "57 reglas",
+    "65 reservadas",
+    "65 palabras reservadas",
+    "8 suites",
+    "319 pruebas",
+    "170 programas",
+)
+
 ENLACE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 REFERENCIA = re.compile(
     r"(?P<archivo>[A-Za-z0-9_./-]+\.py)::(?P<simbolo>[A-Za-z_][A-Za-z0-9_]*)"
@@ -154,6 +179,22 @@ def revisar_conteos():
     return errores
 
 
+def revisar_cifras_vigentes():
+    """Falla si un documento vigente conserva cifras anteriores a ML."""
+    errores = []
+    for nombre in DOCS_VIGENTES:
+        ruta = RAIZ / nombre
+        if not ruta.is_file():
+            continue
+        texto = ruta.read_text(encoding="utf-8", errors="replace")
+        for cifra in CIFRAS_OBSOLETAS:
+            if cifra in texto:
+                errores.append(
+                    "{0}: conserva la cifra obsoleta '{1}'".format(nombre, cifra)
+                )
+    return errores
+
+
 def main():
     total_enlaces, errores_enlaces = revisar_enlaces()
     total_refs, errores_refs = revisar_referencias()
@@ -162,6 +203,7 @@ def main():
         + errores_refs
         + revisar_rutas_viejas()
         + revisar_conteos()
+        + revisar_cifras_vigentes()
     )
     if errores:
         print("Documentación y estructura con problemas:")

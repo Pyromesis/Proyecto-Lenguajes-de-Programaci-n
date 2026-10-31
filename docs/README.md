@@ -14,6 +14,7 @@ convención.
 | [`05_arquitectura.md`](05_arquitectura.md) | arquitectura por capas y matriz funcionalidad → código → prueba |
 | [`07_guia_sustentacion.md`](07_guia_sustentacion.md) | guion de la demostración y verificación paso a paso |
 | [`09_reglas_semanticas.md`](09_reglas_semanticas.md) | reglas de tipos, errores y decisiones semánticas |
+| [`11_guia_machine_learning.md`](11_guia_machine_learning.md) | machine learning propio: modelos, métricas y evaluación con partición de prueba |
 
 ## Informes y matrices por corte
 
@@ -42,9 +43,9 @@ convención.
 ## Verificación rápida
 
 ```bash
-python3 herramientas/chequeo_gramatica.py      # 57/57 reglas, 65 reservadas
-python3 herramientas/chequeo_pruebas.py        # 8 suites, 319 pruebas
-python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/6
-bash herramientas/regresion_programas.sh       # 170 programas
+python3 herramientas/chequeo_gramatica.py      # 64/64 reglas, 79 reservadas
+python3 herramientas/chequeo_pruebas.py        # 9 suites, 350 pruebas
+python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/9
+bash herramientas/regresion_programas.sh       # 173 programas
 bash herramientas/demo_sustentacion.sh         # demo completa
 ```

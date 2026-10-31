@@ -35,10 +35,12 @@ flowchart TB
   end
   subgraph Runtime["Runtime propio"]
     E["Ejecutor (visitor)"]
-    F["Tabla propia"]
+    F["Tabla de entrenamiento"]
+    S["TablaSimbolos<br/>(el modelo es una variable)"]
   end
   subgraph ML["src/ml (todo propio)"]
     G["Preprocesador"]
+    SEL{"algoritmo_ml"}
     H["RegresionLineal"]
     I["Perceptron"]
     J["ArbolDecision"]
@@ -47,20 +49,28 @@ flowchart TB
   A --> F
   B --> E
   E --> G
-  G --> H
-  G --> I
-  G --> J
+  G --> SEL
+  SEL -->|regresion| H
+  SEL -->|perceptron| I
+  SEL -->|arbol| J
+  H --> S
+  I --> S
+  J --> S
   C --> E
-  E --> H
-  E --> I
-  E --> J
+  E --> S
   D --> E
-  H --> K
-  I --> K
-  J --> K
+  E -->|"modelo.evaluar(tabla)"| K
+  K -->|"resumen_regresion / resumen_clasificacion"| E
   E --> F
-  F --> G
 ```
+
+El nodo `algoritmo_ml` es una **selección**, no una conexión múltiple: el
+ejecutor construye exactamente uno de los tres modelos según lo que pida
+`entrene`. Las métricas tampoco las calcula el modelo por su cuenta: el
+ejecutor obtiene `(reales, predicciones)` con `modelo.evaluar(tabla)` y llama a
+`metricas.resumen_regresion()` o `metricas.resumen_clasificacion()`. La
+`TablaSimbolos` es la tabla de símbolos del lenguaje (donde vive la variable
+`modelo`), distinta de la `Tabla` de datos que alimenta al preprocesador.
 
 La idea central es que el modelo es **un valor más del lenguaje**: se guarda
 en la tabla de símbolos como cualquier variable y se pasa a las etapas del
@@ -140,6 +150,65 @@ chao
 
 Es `ejemplos/regresion.arepa`. Los equivalentes de clasificación están en
 `ejemplos/clasificacion.arepa` y `ejemplos/arbol_decision.arepa`.
+
+### 2.4 Evaluación con datos de prueba (partición reproducible)
+
+`evalua` **no** parte los datos: mide sobre la tabla que recibe. Si se le pasa
+la misma tabla del entrenamiento, el resultado es una métrica de entrenamiento
+y no una estimación de generalización. Para obtener una métrica honesta, el
+proyecto incluye `herramientas/partir_datos.py`, que separa un CSV de forma
+determinista con SHA-256 (misma semilla → mismos archivos, en cualquier
+sistema):
+
+```bash
+python3 herramientas/partir_datos.py datos/casas_ml.csv
+# Partición reproducible: 26 fila(s) → 21 entrenamiento + 5 prueba.
+#   datos/particiones/casas_ml_entrenamiento.csv
+#   datos/particiones/casas_ml_prueba.csv
+```
+
+El programa de evaluación queda así:
+
+```text
+quihubo
+train = monte "datos/particiones/casas_ml_entrenamiento.csv" con encabezado
+test  = monte "datos/particiones/casas_ml_prueba.csv" con encabezado
+
+entrene precio_casas = regresion con train
+  columnas [area, habitaciones, antiguedad, ciudad]
+  objetivo precio
+  tasa 0.08
+  epocas 2000
+
+cuenteme "Entrenamiento:"
+evalua precio_casas con train
+
+cuenteme "Prueba (datos no usados en el ajuste):"
+evalua precio_casas con test
+
+chao
+```
+
+Con la semilla por defecto (`2026`) y 20 % de prueba, los resultados medidos
+son:
+
+| Modelo | Métrica | Entrenamiento | Prueba |
+|---|---|---:|---:|
+| Regresión lineal | R² | 0.9903 | 0.9661 |
+| Regresión lineal | MAE | 9.3700 | 8.3265 |
+| Perceptrón | exactitud | 1.0 | **0.6** |
+| Árbol CART | exactitud | 1.0 | 1.0 (6 filas) |
+
+Lectura: el perceptrón pasa de 1.0 a 0.6; la exactitud perfecta de
+entrenamiento no era evidencia de que predijera bien datos nuevos. El árbol
+acierta las 6 filas de prueba, pero con 6 filas no se puede concluir mucho. La
+regresión mantiene un R² alto, aunque el conjunto de prueba también es pequeño
+(5 filas). Para una conclusión seria hacen falta más datos y validación
+cruzada, que el proyecto **no** implementa.
+
+Los tres conjuntos tienen su partición generada en `datos/particiones/`
+(`casas_ml`, `estudiantes_ml` y `riesgo_ml`), y el comando es repetible para
+cualquier CSV con encabezado.
 
 ---
 
@@ -265,10 +334,11 @@ flowchart TD
   R²   = 0.9902511314317267
 ```
 
-Interpretación: el R² de 0.99 indica que el modelo explica el 99 % de la
-variación del precio en los datos de entrenamiento; el MAE de 8.5 millones de
-pesos es el error absoluto promedio (el `precio` de `casas_ml.csv` está en
-millones). La columna `precio_estimado` queda en
+Interpretación: **en entrenamiento**, el R² de 0.99 indica que el modelo
+explica el 99 % de la variación del precio; el MAE de 8.5 millones de pesos es
+el error absoluto promedio (el `precio` de `casas_ml.csv` está en millones).
+No es una estimación de generalización: la evaluación sobre la partición de
+prueba está en §2.4 (R² 0.966, MAE 8.33). La columna `precio_estimado` queda en
 `salidas/regresion_casas.csv` junto al precio real.
 
 ---
@@ -337,7 +407,9 @@ flowchart TD
 ```
 
 La salida `salidas/clasificacion_estudiantes.csv` contiene la etiqueta real y
-la predicha para cada estudiante.
+la predicha para cada estudiante. La exactitud de 1 es **de entrenamiento**; en
+la partición de prueba baja a 0.6 (§2.4), que es la evidencia honesta de su
+capacidad de generalización.
 
 ---
 
@@ -414,7 +486,10 @@ Detalles de la implementación (`src/ml/arbol_decision.py`):
 ```
 
 El árbol aprendido se puede leer como una serie de preguntas de negocio. La
-salida `salidas/arbol_riesgo.csv` guarda el riesgo real y el estimado.
+exactitud de 1 es **de entrenamiento**; en la partición de prueba acierta las 6
+filas, pero esa muestra es demasiado pequeña para concluir que generaliza
+(§2.4). La salida `salidas/arbol_riesgo.csv` guarda el riesgo real y el
+estimado.
 
 ---
 
@@ -492,24 +567,33 @@ sequenceDiagram
   autonumber
   participant P as Programa
   participant E as Ejecutor
-  participant T as Tabla
+  participant T as Tabla de datos
+  participant PP as Preprocesador
   participant M as Modelo
-  participant S as Salida
+  participant S as TablaSimbolos
+  participant O as Salida
   P->>E: entrene modelo = ... con tabla
   E->>T: leer columnas y objetivo
-  E->>M: crear y entrenar
+  E->>PP: crear y ajustar con la tabla de entrenamiento
+  PP-->>E: X, y (imputados, one-hot, estandarizados)
+  E->>M: crear según algoritmo_ml
+  E->>M: entrenar(X, y)
   M-->>E: modelo entrenado
-  E->>S: resumen [entrene]
+  E->>S: declarar 'modelo' como variable
+  E->>O: resumen [entrene]
   P->>E: tabla |> prediga/clasifique con modelo como col
+  E->>S: buscar 'modelo'
   E->>T: copiar tabla
   E->>M: predecir_fila(fila, tabla)
   M-->>E: valor
   E->>T: crear columna
-  E-->>S: tabla nueva
+  E-->>O: tabla nueva
   P->>E: evalua modelo con tabla
+  E->>S: buscar 'modelo'
   E->>M: evaluar(tabla)
   M-->>E: reales y predicciones
-  E->>S: métricas
+  E->>E: metricas.resumen_regresion / resumen_clasificacion
+  E-->>O: métricas
 ```
 
 Errores semánticos cubiertos:
@@ -600,9 +684,11 @@ El conteo canónico es `55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 = 350`.
 ### Limitaciones
 
 * El perceptrón es binario; para 3 o más clases se usa `arbol`.
-* No hay validación cruzada ni división automática entrenamiento/prueba: las
-  métricas de `evalua` se calculan sobre la tabla que se le pasa (si es la de
-  entrenamiento, son métricas de entrenamiento).
+* No hay validación cruzada ni división automática desde el DSL: `evalua` mide
+  sobre la tabla que recibe. Para una métrica de generalización se usa
+  `herramientas/partir_datos.py` y se pasa la partición de prueba a `evalua`
+  (§2.4). El proyecto no presenta las métricas de entrenamiento como capacidad
+  predictiva.
 * El árbol es de clasificación; no hay árbol de regresión.
 * No hay poda posterior del árbol; los límites son `profundidad` y
   `min_hojas`.

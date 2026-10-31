@@ -144,7 +144,7 @@ python3 pruebas/test_proyecto.py
 * **Gramática:** `instruccion_grafica` (Arepa.g4:276): `pinte
   tipo_grafica identificador (clausula_estetica)* (final_grafica)?` con
   tipos `barras|lineas|histograma|dispersion|cajas`; `ejey` admite lista
-  (`clausula_estetica`, Arepa.g4:237).
+  (`clausula_estetica`, Arepa.g4:289).
 * **Código propio:** `src/runtime/ejecutor.py::visitInstruccion_grafica`
   (línea 550) valida la tabla y las columnas, aplica los valores por defecto
   y delega el dibujo en `src/graficas/` (motor propio).
@@ -231,7 +231,7 @@ bash herramientas/demo_sustentacion.sh           # todo de punta a punta
 Qué mostrar:
 
 * El **tipo de gráfica** y las cláusulas (`titulo`, `ejex`, `ejey`, `leyenda`,
-  `guardela`/`muestrela`) en `gramatica/Arepa.g4:224-247`.
+  `guardela`/`muestrela`) en `gramatica/Arepa.g4:276-299`.
 * Que el PNG es **propio**: `src/graficas/png.py` (chunks, CRC-32 y Adler-32
   propios, DEFLATE fijo + LZ77), sin matplotlib ni PIL.
 * El **error con caret**: `n01_falta_chao.arepa` reporta `Línea 7, Columna 0` y

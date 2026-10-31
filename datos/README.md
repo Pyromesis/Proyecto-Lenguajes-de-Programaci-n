@@ -13,6 +13,10 @@ CSV reales que usan los programas de `ejemplos/`, los ejercicios de
 | `estudiantes_ml.csv` | 27 | `horas_estudio,asistencia,tareas,aprueba` | `,` | perceptrón binario (`si`/`no`); trae tareas y etiqueta vacías |
 | `riesgo_ml.csv` | 30 | `edad,ingreso,deuda,historial,riesgo` | `,` | árbol multiclase (`bajo`/`medio`/`alto`) con columna categórica |
 
+Las particiones reproducibles de entrenamiento/prueba de los tres conjuntos de
+ML están en `datos/particiones/` (semilla 2026, 20 % de prueba) y se regeneran
+con `python3 herramientas/partir_datos.py datos/<archivo>.csv`.
+
 Uso desde la raíz del proyecto:
 
 ```bash

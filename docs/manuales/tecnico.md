@@ -2,14 +2,19 @@
 
 Documento de referencia para quien mantiene o extiende el intérprete. Explica
 cómo está organizado el código, cómo funciona la cadena completa (gramática →
-árbol → Visitor → datos → gráficas) y cómo añadir una instrucción o un tipo de
-gráfica. Todas las referencias `archivo:línea` corresponden al estado del
-repositorio en la entrega del Corte 3.
+árbol → Visitor → datos → machine learning → gráficas) y cómo añadir una
+instrucción o un tipo de gráfica. Las referencias `archivo:línea` corresponden
+al estado actual del repositorio (la entrega que contiene este manual) y se
+comprueban con `python3 herramientas/chequeo_documentacion.py`.
 
-* Versión: `AREPA v0.4 (Fase 3 - visualizacion y producto final)`.
+* Versión: `AREPA v0.4 (Fase 3 - visualizacion y producto final)` con la
+  ampliación de machine learning.
+* Cifras canónicas de esta versión: **64 reglas**, **79 palabras reservadas**,
+  **9 suites**, **350 pruebas** y **173 programas** ejecutables.
 * Documentos relacionados: `docs/05_arquitectura.md` (algoritmos y matriz de
-  trazabilidad), `docs/09_reglas_semanticas.md` (semántica), `docs/11_informe_fase3.md`
-  (informe del motor gráfico), `usuario.md` (uso).
+  trazabilidad), `docs/09_reglas_semanticas.md` (semántica),
+  `docs/11_guia_machine_learning.md` (ML), `docs/11_informe_fase3.md`
+  (informe histórico del motor gráfico) y `usuario.md` (uso).
 
 ---
 
@@ -36,6 +41,13 @@ src/
 ├── expresiones/
 │   ├── operadores.py     aritméticos, relacionales y lógicos con tipos
 │   └── evaluador.py      EvaluadorExpresiones(ArepaVisitor)
+├── ml/                   BIBLIOTECA PROPIA DE MACHINE LEARNING
+│   ├── preprocesamiento.py  imputación, one-hot y estandarización
+│   ├── modelo.py         interfaz ModeloML y validación de hiperparámetros
+│   ├── regresion_lineal.py  descenso de gradiente por lotes
+│   ├── perceptron.py     clasificador lineal binario
+│   ├── arbol_decision.py CART/Gini multiclase
+│   └── metricas.py       MAE, MSE, RMSE, R², exactitud, F1 y matriz
 ├── runtime/
 │   ├── simbolos.py       TablaSimbolos, FuncionArepa
 │   ├── contexto.py       ContextoEjecucion (salida, tablas, errores, archivos)
@@ -51,59 +63,119 @@ src/
 ```
 
 **Dependencias entre capas** (de abajo hacia arriba):
-`errores_base` → `datos` → `expresiones` → `runtime` → `cli`. El motor gráfico
-depende solo de `errores_base` (y de la biblioteca estándar); `runtime` lo usa
-desde el ejecutor. Solo `lenguaje/` toca el runtime de ANTLR4. Ni `datos`,
-ni `expresiones`, ni `graficas` importan bibliotecas externas.
+`errores_base` → `datos` → `expresiones` → `ml` → `runtime` → `cli`. El motor
+gráfico depende solo de `errores_base` (y de la biblioteca estándar);
+`runtime` usa tanto `ml` como `graficas` desde el ejecutor. Solo `lenguaje/`
+toca el runtime de ANTLR4. Ni `datos`, ni `expresiones`, ni `ml`, ni
+`graficas` importan bibliotecas externas.
 
-### 1.1 Flujo completo de una instrucción
+### 1.1 Dos procesos: generación y ejecución
+
+La gramática no se interpreta en tiempo de ejecución: ANTLR la convierte
+**antes** en clases Python. Por eso el diagrama separa el proceso de
+desarrollo (generar el front-end) del proceso de ejecución (correr un
+programa). Mezclarlos hacía parecer que `analizador.py` leía el `.g4` en cada
+corrida, y no es así.
+
+**a) Generación del front-end (solo al cambiar la gramática)**
+
+```mermaid
+flowchart LR
+  G4["gramatica/Arepa.g4"] --> ANTLR["ANTLR 4.13.2"]
+  ANTLR --> LEX["generado/ArepaLexer.py"]
+  ANTLR --> PAR["generado/ArepaParser.py"]
+  ANTLR --> VIS["generado/ArepaVisitor.py"]
+```
+
+**b) Ejecución de un programa**
+
+```mermaid
+flowchart TB
+  P["programa.arepa"] --> CLI["src/cli/main.py"]
+  CLI --> ANA["src/lenguaje/analizador.py"]
+  LEX -.->|import| ANA
+  PAR -.->|import| ANA
+  ANA --> ARB["árbol de análisis"]
+  ARB --> EJ["src/runtime/ejecutor.py<br/>EjecutorArepa"]
+  EJ --> EXP["src/expresiones/"]
+  EJ --> DAT["src/datos/"]
+  EJ --> SIM["src/runtime/simbolos.py<br/>TablaSimbolos"]
+  EJ --> ML["src/ml/"]
+  EJ --> GRA["src/graficas/"]
+  EJ --> CONS["cuenteme → consola"]
+  DAT --> CSV["guarde → CSV"]
+  ML --> CSV
+  GRA --> PNG["pinte + guardela/muestrela → PNG"]
+```
+
+Las salidas no se mezclan: `guarde` es la única operación que escribe CSV;
+`pinte` construye la gráfica en memoria y `guardela` o `muestrela` deciden su
+destino PNG. `muestrela` escribe en `salidas/` e intenta abrir el archivo,
+mientras que `guardela` respeta la ruta indicada.
+
+### 1.2 Secuencia general de una ejecución
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as Usuario
+  participant CLI as CLI
+  participant A as analizador.py
+  participant E as EjecutorArepa
+  participant S as TablaSimbolos
+  participant D as Tabla / CSV
+  participant M as src/ml
+  participant G as src/graficas
+  U->>CLI: programa.arepa --ejecutar
+  CLI->>A: leer y analizar el texto
+  A-->>CLI: árbol + errores
+  CLI->>E: ejecutar(árbol)
+  E->>S: declarar variables y funciones
+  E->>D: monte, escoja, filtre, junte, resuma
+  E->>M: entrene, prediga, clasifique, evalua
+  M-->>E: modelo, predicciones y métricas
+  E->>G: pinte y guardela / muestrela
+  G-->>E: PNG escrito
+  E-->>U: consola + CSV + PNG
+```
+
+### 1.3 Flujo histórico en una sola imagen
+
+El esquema anterior reemplaza al diagrama que mezclaba la generación de
+ANTLR con la ejecución y terminaba en `PNG / CSV`. Para una vista compacta:
 
 ```text
-   programa.arepa
-        │
-        ▼
- ┌──────────────┐   analizar()          ┌───────────────┐
- │  gramatica/  │ ────────────────────▶ │ src/lenguaje/ │  listener de errores
- │  Arepa.g4    │  ANTLR lexer+parser   │ analizador.py │  (errores.py)
- └──────┬───────┘                       └───────┬───────┘
-        │ generado/ (Lexer, Parser, Visitor)    │ árbol + errores
-        ▼                                        ▼
- ┌──────────────┐                        ┌───────────────┐
- │  src/cli/    │  --arbol/--tokens      │  árbol de     │
- │  main.py     │ ◀──────────────────────│  análisis     │
- └──────┬───────┘                        └───────┬───────┘
-        │ --ejecutar                             │
-        ▼                                        ▼
- ┌────────────────────────────────────────────────────────┐
- │  src/runtime/ejecutor.py  (EjecutorArepa, Visitor)     │
- │    ├── asignaciones/funciones/ciclos → simbolos.py     │
- │    ├── expresiones                    → evaluador.py   │
- │    ├── pipeline y agregaciones        → datos/tabla.py │
- │    ├── monte/guarde                   → lector/escritor │
- │    └── pinte                          → graficas/      │
- └───────────────┬───────────────────────────┬────────────┘
-                 │ cuenteme                  │ guardela
-                 ▼                           ▼
-        salida del programa          PNG / CSV en disco
+DESARROLLO:  Arepa.g4 ──ANTLR──▶ generado/*.py
+EJECUCIÓN:   programa.arepa ──▶ CLI ──▶ analizador ──▶ árbol ──▶ EjecutorArepa
+                                                                    ├─▶ datos/ ──▶ guarde ──▶ CSV
+                                                                    ├─▶ ml/ ────▶ evalua / prediga
+                                                                    └─▶ graficas/ ─▶ pinte ─▶ guardela | muestrela ─▶ PNG
 ```
+
 
 ---
 
 ## 2. Gramática y regeneración
 
-* Fuente única: `gramatica/Arepa.g4` (527 líneas), gramática **combinada**
+* Fuente única: `gramatica/Arepa.g4` (599 líneas), gramática **combinada**
   lexer + parser para ANTLR 4.13.2.
 * Especificación formal equivalente: `docs/03_gramatica_ebnf.md`.
 * Regla inicial: `programa : NL* QUIHUBO NL+ sentencias? NL* CHAO NL* EOF`
   (`Arepa.g4:38`).
-* El vocabulario tiene **57 reglas** y **65 palabras reservadas**.
+* El vocabulario tiene **64 reglas** y **79 palabras reservadas**.
 
 Sincronía verificable:
 
 ```bash
 python3 herramientas/chequeo_gramatica.py
-# Sincronizado: 57/57 reglas y 65 reservadas.
+# Sincronizado: 64/64 producciones equivalentes y 79 reservadas.
 ```
+
+El verificador ya no compara solo nombres: traduce cada producción del `.g4`
+y de la EBNF a un árbol canónico y exige que coincidan las alternativas, su
+orden, las secuencias, los opcionales, las repeticiones y los terminales.
+También comprueba la lista ordenada de la sección 10 y expande
+`PALABRA_RESERVADA` para comparar `nombre_columna`.
 
 Regeneración (requiere **Java 11+** y el jar de ANTLR 4.13.2):
 
@@ -248,16 +320,65 @@ para las pruebas. La función de entrada es `dibujar(tipo, series, **opciones)`
 
 ### 6.6 Integración con el runtime
 
-`EjecutorArepa.visitInstruccion_grafica` (`src/runtime/ejecutor.py:502`) hace
+`EjecutorArepa.visitInstruccion_grafica` (`src/runtime/ejecutor.py:550`) hace
 toda la orquestación: valida la tabla y las columnas, aplica los valores por
 defecto, construye las `Serie`, llama a `dibujar(..., ancho=800, alto=480)` y
 cierra con `guardela` o `muestrela`. Auxiliares clave: `_columnas_de_clausula`
-(749), `_indice_columna` (760), `_primera_columna_categorica` (774),
-`_es_numerica` (782), `_columnas_numericas` (816), `_validar_eje_x` (825),
-`_guardar_png` (847) y `_abrir_grafica` (863). Los fallos propios del dibujo y de la
+(797), `_indice_columna` (808), `_primera_columna_categorica` (822),
+`_es_numerica` (830), `_columnas_numericas` (864), `_validar_eje_x` (873),
+`_guardar_png` (895) y `_abrir_grafica` (911). Los fallos propios del dibujo y de la
 escritura lanzan `ErrorGrafica` (`src/errores_base.py:83`); una variable
 inexistente sigue siendo `ErrorVariable` y una columna inexistente,
 `ErrorColumna`.
+
+### 6.7 Motor de machine learning (`src/ml/`)
+
+El runtime trata un modelo como **un valor más del lenguaje**: `entrene`
+construye y entrena el modelo, lo guarda en la `TablaSimbolos` y desde ese
+momento se pasa por nombre a `prediga`, `clasifique` o `evalua`.
+
+```mermaid
+flowchart LR
+  A["monte ... CSV"] --> B["Tabla de entrenamiento"]
+  B --> C["Preprocesador<br/>(aprende medias, modas y categorías)"]
+  C --> D["X e y"]
+  D --> E{"algoritmo_ml"}
+  E -->|regresion| F["RegresionLineal"]
+  E -->|perceptron| G["Perceptron"]
+  E -->|arbol| H["ArbolDecision"]
+  F --> I["Modelo entrenado"]
+  G --> I
+  H --> I
+  I --> J["TablaSimbolos<br/>(variable del programa)"]
+  J --> K["prediga / clasifique<br/>copia la tabla y agrega columna"]
+  J --> L["evalua<br/>modelo.evaluar(tabla)"]
+  L --> M["reales + predicciones"]
+  M --> N["metricas.resumen_regresion / resumen_clasificacion"]
+```
+
+* `src/ml/preprocesamiento.py`: imputación por media o moda, one-hot encoding
+  y estandarización. Aprende **solo** con la tabla de entrenamiento y reaplica
+  la misma codificación a las filas nuevas.
+* `src/ml/modelo.py`: interfaz `ModeloML`, jerarquía regresión/clasificación y
+  validación de hiperparámetros. `evaluar(tabla)` devuelve `(reales,
+  predicciones)`.
+* `src/ml/regresion_lineal.py`, `perceptron.py` y `arbol_decision.py`: los tres
+  algoritmos, sin numpy ni scikit-learn.
+* `src/ml/metricas.py`: MAE, MSE, RMSE, R², exactitud, matriz de confusión,
+  precisión, recall y F1.
+
+La selección de algoritmo ocurre en el ejecutor: `entrene` lee
+`algoritmo_ml` y construye **un solo** modelo. Las métricas no las calcula el
+modelo: el ejecutor obtiene los valores reales y las predicciones con
+`modelo.evaluar(tabla)` y llama a `metricas.resumen_regresion` o
+`metricas.resumen_clasificacion`.
+
+**Limitación metodológica:** `evalua` mide sobre la tabla que recibe. Si esa
+tabla es la misma del entrenamiento, el resultado es una métrica de
+entrenamiento y no una estimación de generalización. La guía de ML explica
+cómo generar una partición reproducible con
+`herramientas/partir_datos.py` y evaluar sobre el conjunto de prueba.
+
 
 ---
 
@@ -265,8 +386,8 @@ inexistente sigue siendo `ErrorVariable` y una columna inexistente,
 
 * `main` (línea 121) define los argumentos: `--ayuda/--help/-h`, `--version`,
   `--arbol`, `--tokens`, `--ejecutar` y `--sin-ventana` (que fija
-  `AREPA_SIN_VENTANA=1`, líneas 176-177).
-* `_ejecutar` (231) corre el programa con el runtime propio.
+  `AREPA_SIN_VENTANA=1`, líneas 179-180).
+* `_ejecutar` (234) corre el programa con el runtime propio.
 * `_mostrar_contexto` (74) imprime el fragmento de la línea con el caret `^`.
 * `_resumen_archivos` (105) imprime el bloque final `Archivos generados:` con
   ruta, tipo y bytes, a partir del registro del `ContextoEjecucion`.
@@ -300,8 +421,8 @@ convierte en error semántico solo si escapan de su contexto.
 
 ## 9. Pruebas
 
-* Corredor maestro: `pruebas/test_proyecto.py` (8 suites).
-* **319 pruebas** en total; el conteo canónico está en
+* Corredor maestro: `pruebas/test_proyecto.py` (9 suites).
+* **350 pruebas** en total; el conteo canónico está en
   `herramientas/chequeo_pruebas.py`.
 
 | Suite | Archivo | Pruebas |
@@ -314,10 +435,11 @@ convierte en error semántico solo si escapan de su contexto.
 | Símbolos | `test_simbolos.py` | 15 |
 | Runtime | `test_runtime.py` | 51 |
 | Gráficas | `test_graficas.py` | 63 |
+| Machine learning | `test_ml.py` | 31 |
 
 ```bash
-.venv/bin/python herramientas/chequeo_pruebas.py   # 8 suites, 319 pruebas
-python3 herramientas/chequeo_gramatica.py          # 57/57 reglas, 65 reservadas
+.venv/bin/python herramientas/chequeo_pruebas.py   # 9 suites, 350 pruebas
+python3 herramientas/chequeo_gramatica.py          # 64/64 reglas, 79 reservadas
 ```
 
 La suite de gráficas cubre el codificador PNG (20), la fuente (3), el lienzo
@@ -338,7 +460,7 @@ integración con el runtime (11) y el caso de estudio (4).
 3. **EBNF**: replica la producción en `docs/03_gramatica_ebnf.md` con el mismo
    nombre de no terminal y añade la palabra reservada a `PALABRA_RESERVADA`.
 4. **Comprobar sincronía**: `python3 herramientas/chequeo_gramatica.py` debe dar
-   57/57 → ahora N/N reglas y las reservadas nuevas.
+   64/64 → ahora N/N reglas y las reservadas nuevas.
 5. **Ejecutor**: implementa `visit<Regla>` en `src/runtime/ejecutor.py`
    (o en el evaluador si es una expresión). Usa `ContextoEjecucion` para la
    salida y `TablaSimbolos` para los nombres.
@@ -352,7 +474,7 @@ integración con el runtime (11) y el caso de estudio (4).
 
 ### 10.2 Añadir un tipo de gráfica
 
-1. **Gramática**: añade el literal a `tipo_grafica` (`Arepa.g4:229`) y su token
+1. **Gramática**: añade el literal a `tipo_grafica` (`Arepa.g4:281`) y su token
    en el lexer; añade la palabra a `PALABRA_RESERVADA` en la EBNF.
 2. **Motor**: añade el nombre a `TIPOS` (`tipos_grafica.py:54`) e implementa
    `_dibujar_<tipo>` (línea aprox. junto a los otros cinco) y su rama en
@@ -381,6 +503,10 @@ integración con el runtime (11) y el caso de estudio (4).
   descendentes g, p, q, y, j se dibujan dentro de la caja).
 * **Sin escalas logarítmicas ni de fechas**: las fechas se grafican como texto
   o como índice continuo.
+* **Sin partición automática dentro del DSL**: `evalua` mide sobre la tabla
+  que recibe. Para una métrica de generalización hay que generar una partición
+  reproducible con `herramientas/partir_datos.py` y pasar la tabla de prueba a
+  `evalua`; la guía de ML lo documenta paso a paso.
 * Determinismo: LZ77 voraz + Huffman fijo y fuente sin aleatoriedad hacen que
   dos ejecuciones produzcan el mismo PNG (verificable con `sha256sum`).
 
