@@ -1,10 +1,10 @@
-# Pruebas AREPA (Linux, 350 en 9 suites)
+# Pruebas AREPA (Linux, 370 en 10 suites)
 
-Corredor maestro más 9 suites independientes. Todo propio, sin
+Corredor maestro más 10 suites independientes. Todo propio, sin
 bibliotecas externas para lo que se prueba.
 
 ```bash
-python3 pruebas/test_proyecto.py           # las 9 suites (usa .venv si existe)
+python3 pruebas/test_proyecto.py           # las 10 suites (usa .venv si existe)
 .venv/bin/python pruebas/test_ml.py        # una suite sola (necesita antlr4)
 .venv/bin/python pruebas/test_graficas.py  # motor gráfico y caso de estudio
 python3 herramientas/chequeo_pruebas.py    # verifica el conteo canónico
@@ -24,9 +24,10 @@ automáticamente si existe; para correr una suite suelta, active el entorno
 | Símbolos | `test_simbolos.py` | 15 | ámbitos, closures, contexto |
 | Runtime | `test_runtime.py` | 51 | programas completos (19 de ciclos) y errores semánticos |
 | Machine learning | `test_ml.py` | 31 | preprocesamiento, métricas, 3 modelos y DSL completo |
+| Utilidades | `test_utiles.py` | 20 | `src/utiles/`: matemática, texto, bytes y SHA-256 propios (reemplazan a `math`, `re`, `unicodedata`, `struct` y `hashlib`) y verificación de que `src/` no importa módulos reemplazados |
 | Gráficas | `test_graficas.py` | 63 | motor gráfico propio: PNG (20), fuente (3), lienzo (7), escalas (4), cinco dibujos (14), integración con `pinte` (11) y caso de estudio (4) |
 
-Total: 55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 = 350.
+Total: 55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 + 20 = 370.
 
 Carpetas de apoyo:
 

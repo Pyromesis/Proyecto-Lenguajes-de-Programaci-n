@@ -51,7 +51,7 @@ Motor: `docs/05_arquitectura.md` (§4–§6).
 | Regresión pipeline en `cuenteme` | `evaluador.py::visitExpresion` + `ejecutor.py::evaluar_expresion` | callback `evaluar_expresion` | `test_estructuras.py::cuenteme_pipeline_imprime_la_tabla` |
 | Regresión de precedencia | `gramatica/Arepa.g4` (`unario`, `potencia`, `acceso`) | `-2 ^ 2 = -4` | `test_estructuras.py::potencias_precedencia_y_signo`, `test_arbol.py::potencia_antes_que_menos_unario` |
 | Suite de estructuras | `pruebas/test_estructuras.py` | 48 pruebas | `python3 pruebas/test_estructuras.py` → 48/48 |
-| Pruebas unitarias e integración | `pruebas/` | 9 suites, 350 pruebas (el Corte 3 agregó `test_graficas.py` con 63 y la ampliación ML `test_ml.py` con 31) | `python3 pruebas/test_proyecto.py` → 9/9 |
+| Pruebas unitarias e integración | `pruebas/` | 10 suites, 370 pruebas (el Corte 3 agregó `test_graficas.py` con 63 y la ampliación ML `test_ml.py` con 31) | `python3 pruebas/test_proyecto.py` → 9/9 |
 
 ## 2. Alcance mínimo del Corte 2
 
@@ -109,6 +109,6 @@ conceptual y matemático está en `docs/11_guia_machine_learning.md`.
 
 ---
 
-Conteos vigentes a la fecha (Corte 3 + ML): 64 reglas, 79 reservadas, 9 suites,
-350 pruebas, 173 programas. La visualización completa y el caso de estudio se
+Conteos vigentes a la fecha (Corte 3 + ML): 64 reglas, 79 reservadas, 10 suites,
+370 pruebas, 173 programas. La visualización completa y el caso de estudio se
 documentan en `docs/11_informe_fase3.md` y `docs/12_matriz_trazabilidad_corte3.md`.

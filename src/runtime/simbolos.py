@@ -20,16 +20,15 @@ Decisiones:
   * los bloques de fijese_si NO crean ámbito propio; solo las funciones.
 """
 
-import re
 
 from errores_base import ErrorSemantico, ErrorVariable
+from utiles.texto import es_identificador
 
-PATRON_IDENTIFICADOR = re.compile(r"^[^\W\d]\w*$", re.UNICODE)
 
 
 def validar_identificador(nombre):
     """Lanza ErrorSemantico si el nombre no es un identificador válido."""
-    if not PATRON_IDENTIFICADOR.match(nombre):
+    if not es_identificador(nombre):
         raise ErrorSemantico(
             "'{0}' no es un nombre válido para una variable: debe iniciar con "
             "una letra y contener solo letras, dígitos o guion bajo.".format(nombre)

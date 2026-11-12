@@ -33,7 +33,8 @@ Limitaciones:
 """
 
 import os
-import struct
+
+from utiles.binario import GRANDE, PEQUENO, bytes_a_entero, entero_a_bytes
 
 # ---------------------------------------------------------------------- #
 # Constantes del formato
@@ -423,7 +424,7 @@ def _comprimir_guardado(datos):
         escritor.escribir(1, 1)  # BFINAL = 1
         escritor.escribir(0, 2)  # BTYPE = 00
         escritor.alinear()
-        escritor.escribir_bytes(struct.pack("<HH", 0, 0xFFFF))
+        escritor.escribir_bytes(entero_a_bytes(0, 2, PEQUENO) + entero_a_bytes(0xFFFF, 2, PEQUENO))
         return escritor.terminar()
 
     inicio = 0
@@ -437,7 +438,8 @@ def _comprimir_guardado(datos):
         escritor.escribir(0, 2)
         escritor.alinear()
         escritor.escribir_bytes(
-            struct.pack("<HH", len(trozo), len(trozo) ^ 0xFFFF)
+            entero_a_bytes(len(trozo), 2, PEQUENO)
+            + entero_a_bytes(len(trozo) ^ 0xFFFF, 2, PEQUENO)
         )
         escritor.escribir_bytes(trozo)
         inicio = fin
@@ -446,7 +448,7 @@ def _comprimir_guardado(datos):
 
 def _envolver_deflate(comprimido, original):
     """Envoltura de flujo comprimido de RFC 1950 con Adler-32 final."""
-    return b"\x78\x01" + comprimido + struct.pack(">I", adler32(original))
+    return b"\x78\x01" + comprimido + entero_a_bytes(adler32(original), 4, GRANDE)
 
 
 # ---------------------------------------------------------------------- #
@@ -458,10 +460,10 @@ def _chunk(tipo, datos):
     if len(tipo) != 4:
         raise ValueError("el tipo de chunk debe medir 4 bytes ASCII.")
     return (
-        struct.pack(">I", len(datos))
+        entero_a_bytes(len(datos), 4, GRANDE)
         + tipo
         + datos
-        + struct.pack(">I", crc32(tipo + datos))
+        + entero_a_bytes(crc32(tipo + datos), 4, GRANDE)
     )
 
 
@@ -540,15 +542,18 @@ def codificar_png(ancho, alto, pixeles, compresion="fijo"):
         comprimido = _comprimir_guardado(crudo)
     flujo = _envolver_deflate(comprimido, crudo)
 
-    ihdr = struct.pack(
-        ">IIBBBBB",
-        ancho,
-        alto,
-        _PROFUNDIDAD,
-        _TIPO_COLOR_RGB,
-        _COMPRESION_PNG,
-        _FILTRO_PNG,
-        _INTERLACE_NINGUNO,
+    ihdr = (
+        entero_a_bytes(ancho, 4, GRANDE)
+        + entero_a_bytes(alto, 4, GRANDE)
+        + bytes(
+            (
+                _PROFUNDIDAD,
+                _TIPO_COLOR_RGB,
+                _COMPRESION_PNG,
+                _FILTRO_PNG,
+                _INTERLACE_NINGUNO,
+            )
+        )
     )
     return (
         FIRMA
@@ -592,22 +597,16 @@ def leer_cabecera(datos):
     if datos[:8] != FIRMA:
         raise ValueError("la firma no corresponde a un PNG válido.")
 
-    longitud = struct.unpack(">I", datos[8:12])[0]
+    longitud = bytes_a_entero(datos[8:12], GRANDE)
     tipo = datos[12:16]
     if tipo != b"IHDR" or longitud != 13:
         raise ValueError("el primer chunk debe ser un IHDR de 13 bytes.")
     if len(datos) < 8 + 12 + 13:
         raise ValueError("el IHDR está incompleto.")
 
-    (
-        ancho,
-        alto,
-        profundidad,
-        tipo_color,
-        compresion,
-        filtro,
-        interlace,
-    ) = struct.unpack(">IIBBBBB", datos[16:29])
+    ancho = bytes_a_entero(datos[16:20], GRANDE)
+    alto = bytes_a_entero(datos[20:24], GRANDE)
+    profundidad, tipo_color, compresion, filtro, interlace = datos[24:29]
     if ancho <= 0 or alto <= 0:
         raise ValueError("el IHDR declara un tamaño inválido.")
     if compresion != _COMPRESION_PNG or filtro != _FILTRO_PNG:

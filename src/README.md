@@ -28,8 +28,12 @@ solo `lenguaje/` toca el runtime de ANTLR4.
 | `runtime/` | `simbolos.py` | ámbitos encadenados + closures `invente` |
 | `runtime/` | `contexto.py` | símbolos raíz, salida de `cuenteme`, registro de errores y archivos |
 | `runtime/` | `ejecutor.py` | intérprete Visitor: pipeline, agregaciones, funciones, ciclos y `pinte` |
+| `utiles/` | `matematica.py` | `piso`, `techo`, `raiz_entera`, `raiz_cuadrada`, `exponente_decimal`, `es_finito` (sin `math`) |
+| `utiles/` | `texto.py` | `es_identificador`, `colapsar_espacios`, `quitar_tildes` con tabla propia (sin `re` ni `unicodedata`) |
+| `utiles/` | `binario.py` | enteros ↔ bytes big/little-endian con desplazamientos (sin `struct`) |
+| `utiles/` | `sha256.py` | SHA-256 propio con constantes calculadas (sin `hashlib`); lo usa `herramientas/partir_datos.py` |
 | raíz | `errores_base.py` | jerarquía `ErrorVariable/Columna/Tipos/Operacion/...` y señales de flujo |
-| `cli/` | `main.py` | CLI: validar, `--arbol`, `--tokens`, `--ejecutar` (códigos 0/1/2) |
+| `cli/` | `main.py` | CLI: validar, `--arbol`, `--tokens`, `--ejecutar` (códigos 0/1/2); analizador de argumentos propio (sin `argparse`) |
 | `cli/` | `repl.py` | consola interactiva con Tab (usa `herramientas/consola/`) |
 
 Detalle de algoritmos, decisiones y matriz

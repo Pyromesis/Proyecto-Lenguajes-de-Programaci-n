@@ -446,7 +446,7 @@ del dato sí es exacta.
 
 ## 8. Pruebas
 
-`python3 pruebas/test_proyecto.py` ejecuta las nueve suites:
+`python3 pruebas/test_proyecto.py` ejecuta las diez suites:
 
 | Suite | Archivo | Pruebas |
 |---|---|---|
@@ -459,8 +459,9 @@ del dato sí es exacta.
 | Runtime propio (programas completos) | `test_runtime.py` | 51 |
 | Motor gráfico y visualización propia | `test_graficas.py` | 63 |
 | Machine learning propio | `test_ml.py` | 31 |
+| Utilidades propias (matemática, texto, bytes, SHA-256) | `test_utiles.py` | 20 |
 
-Total: **350 pruebas** (fuente única verificable con
+Total: **370 pruebas** (fuente única verificable con
 `python3 herramientas/chequeo_pruebas.py`, que falla si algún total
 cambia). Las 55 de front-end desglosan en: 10 programas
 positivos, 22 negativos, 10 de diagnóstico (línea/columna exactas,

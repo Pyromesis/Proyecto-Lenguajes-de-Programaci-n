@@ -537,7 +537,7 @@ igual queda guardada.
 `salidas/<nombre_tabla>_<tipo>.png`.
 
 **¿Cómo sé cuántas pruebas tiene el proyecto?** Con
-`python3 herramientas/chequeo_pruebas.py` (9 suites, 350 pruebas).
+`python3 herramientas/chequeo_pruebas.py` (10 suites, 370 pruebas).
 
 **¿La gramática y la documentación están sincronizadas?** Con
 `python3 herramientas/chequeo_gramatica.py` (64 reglas, 79 reservadas).

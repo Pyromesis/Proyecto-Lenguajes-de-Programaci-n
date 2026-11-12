@@ -33,7 +33,6 @@ Limitaciones:
     se reporta la posicion donde inicia la expresion.
 """
 
-import re
 
 from datos import acceso
 from datos.lista import Lista
@@ -42,13 +41,13 @@ from datos.tabla import Tabla
 from datos.tipos import NADA
 from errores_base import ErrorArepa, ErrorSemantico, ErrorTipos, ErrorVariable
 from expresiones import operadores as ops
+from utiles.texto import es_identificador
 
 from ArepaVisitor import ArepaVisitor
 
-# Un identificador simple del DSL (letras/underscore y luego letras,
-# digitos y underscore). Se usa para aceptar nombres de columna sin
-# confundirlos con variables.
-_PATRON_IDENTIFICADOR = re.compile(r"^[^\W\d]\w*$")
+# es_identificador (utiles/texto.py) reconoce un identificador simple del
+# DSL (letra o guion bajo y luego letras, digitos o guion bajo). Se usa
+# para aceptar nombres de columna sin confundirlos con variables.
 
 OPERADORES_RELACIONALES = {
     "==": ops.igual,
@@ -370,7 +369,7 @@ class EvaluadorExpresiones(ArepaVisitor):
         try:
             primero = self._evaluar_expresion(expresiones[0])
         except ErrorVariable:
-            if not _PATRON_IDENTIFICADOR.match(expresiones[0].getText()):
+            if not es_identificador(expresiones[0].getText()):
                 raise
             raise ErrorSemantico(
                 "La agregacion '{0}' necesita una tabla o una lista como "
@@ -391,6 +390,6 @@ class EvaluadorExpresiones(ArepaVisitor):
         texto = ctx.getText()
         if len(texto) >= 2 and texto.startswith('"') and texto.endswith('"'):
             return self._desescapar(texto[1:-1])
-        if _PATRON_IDENTIFICADOR.match(texto):
+        if es_identificador(texto):
             return texto
         return self._evaluar_expresion(ctx)

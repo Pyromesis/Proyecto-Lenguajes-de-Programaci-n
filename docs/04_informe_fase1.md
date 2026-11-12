@@ -48,7 +48,7 @@ lenguaje con vocabulario colombiano para flujos de datos reproducibles:
    y escritor CSV, tipos), `src/expresiones/` (operadores y evaluador) y
    `src/runtime/` (símbolos, contexto y ejecutor). Sin pandas, NumPy ni
    bibliotecas equivalentes.
-8. **Suite de pruebas** `pruebas/test_proyecto.py`: **9 suites y 350
+8. **Suite de pruebas** `pruebas/test_proyecto.py`: **10 suites y 370
    pruebas** en total (55 de front-end, 28 de estructura del árbol, 43 de
    datos, 48 de estructuras propias, 16 de expresiones, 15 de símbolos y
    contexto, 51 de runtime, 63 de gráficas y 31 de machine learning); todas
@@ -101,7 +101,7 @@ proyecto/
 │   ├── test_runtime.py       suite del runtime (51)
 │   ├── test_graficas.py      suite del motor gráfico y caso de estudio (63)
 │   ├── test_ml.py            suite de machine learning (31)
-│   └── test_proyecto.py      corredor maestro (350)
+│   └── test_proyecto.py      corredor maestro (370)
 ├── docs/                     alcance, catálogo, EBNF, informe y arquitectura
 ├── README.md                 guía rápida
 └── requirements.txt          dependencias (solo ANTLR4)
@@ -129,7 +129,7 @@ python3 src/cli/main.py ejemplos/demo.arepa --arbol      # árbol de análisis
 python3 src/cli/main.py ejemplos/demo.arepa --tokens     # tabla de tokens
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar   # corre con la biblioteca propia
 
-# 4. Suite completa de pruebas (9 suites, 350 pruebas)
+# 4. Suite completa de pruebas (10 suites, 370 pruebas)
 python3 pruebas/test_proyecto.py
 ```
 

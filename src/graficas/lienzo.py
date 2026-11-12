@@ -17,7 +17,7 @@ Decisiones propias documentadas:
     gráficas;
   * el grosor de una línea se implementa con un sello cuadrado de
     grosor x grosor píxeles centrado en cada punto de Bresenham;
-  * el círculo relleno se dibuja por filas con math.isqrt, sin coma
+  * el círculo relleno se dibuja por filas con raiz_entera, sin coma
     flotante y sin acumular error;
   * los rellenos escriben por franjas con asignación de slices, que en
     Python puro es bastante más rápido que píxel a píxel;
@@ -31,7 +31,7 @@ Limitaciones:
   * no se implementan rotaciones ni transparencias.
 """
 
-import math
+from utiles.matematica import raiz_entera
 
 from graficas import png
 from graficas.fuente import (
@@ -220,7 +220,7 @@ class Lienzo:
             return
         cuadrado = radio * radio
         for desplazamiento in range(-radio, radio + 1):
-            medio = math.isqrt(cuadrado - desplazamiento * desplazamiento)
+            medio = raiz_entera(cuadrado - desplazamiento * desplazamiento)
             self._rellenar(
                 cx - medio, cy + desplazamiento, 2 * medio + 1, 1, rgb
             )

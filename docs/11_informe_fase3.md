@@ -9,7 +9,7 @@
 > commit `9c49b63`: sus cifras son **319 pruebas**, **8 suites** y **170
 > programas**, y sus referencias de línea corresponden a ese commit. Después se
 > agregó la ampliación de machine learning (commits `2b3dba0` y `ecb316d`), que
-> dejó el estado actual en **350 pruebas**, **9 suites** y **173 programas**.
+> dejó el estado actual en **370 pruebas**, **10 suites** y **173 programas**.
 > Para el inventario vigente, ver `README.md`, `docs/05_arquitectura.md` §8 y
 > `docs/12_matriz_trazabilidad_corte3.md`. No uses este informe como conteo
 > actual.

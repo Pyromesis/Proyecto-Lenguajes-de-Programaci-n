@@ -34,7 +34,7 @@ Limitaciones:
   * el texto se dibuja horizontal: etiquetas muy largas se recortan.
 """
 
-import math
+from utiles.matematica import es_finito, piso, raiz_entera, techo
 
 from graficas.escalas import (
     EscalaBanda,
@@ -95,7 +95,7 @@ def _numero(valor):
         return float(valor)
     if isinstance(valor, (int, float)):
         numero = float(valor)
-        return numero if math.isfinite(numero) else None
+        return numero if es_finito(numero) else None
     if isinstance(valor, str):
         texto = valor.strip()
         if not texto or texto.lower() == "nada":
@@ -104,7 +104,7 @@ def _numero(valor):
             numero = float(texto)
         except ValueError:
             return None
-        return numero if math.isfinite(numero) else None
+        return numero if es_finito(numero) else None
     return None
 
 
@@ -146,8 +146,8 @@ def _limites(valores, incluir_cero=False, cantidad=5):
         maximo += delta
 
     paso = paso_bonito(maximo - minimo, cantidad)
-    bajo = math.floor(minimo / paso + 1e-9) * paso
-    alto = math.ceil(maximo / paso - 1e-9) * paso
+    bajo = piso(minimo / paso + 1e-9) * paso
+    alto = techo(maximo / paso - 1e-9) * paso
     if bajo == alto:
         alto = bajo + paso
     return round(bajo, 10), round(alto, 10)
@@ -241,7 +241,7 @@ def _seleccionar_etiquetas(posiciones, etiquetas, max_ancho):
     ancho_etiqueta = max(anchos)
     salto = max(
         2,
-        int(math.ceil((ancho_etiqueta + margen) / hueco_minimo)),
+        int(techo((ancho_etiqueta + margen) / hueco_minimo)),
     )
     indices = list(range(0, total, salto))
 
@@ -312,8 +312,8 @@ def _cuantil(ordenados, proporcion):
     if len(ordenados) == 1:
         return float(ordenados[0])
     posicion = (len(ordenados) - 1) * proporcion
-    inferior = int(math.floor(posicion))
-    superior = int(math.ceil(posicion))
+    inferior = int(piso(posicion))
+    superior = int(techo(posicion))
     if inferior == superior:
         return float(ordenados[inferior])
     peso = posicion - inferior
@@ -349,7 +349,10 @@ def cantidad_cubetas(total):
         raise ValueError("'total' debe ser un entero.")
     if total < 1:
         raise ValueError("'total' debe ser mayor que cero.")
-    return max(5, min(20, int(math.ceil(math.sqrt(total)))))
+    raiz = raiz_entera(total)
+    if raiz * raiz < total:
+        raiz += 1  # techo de la raíz, sin coma flotante
+    return max(5, min(20, raiz))
 
 
 def cubetas_histograma(valores, cantidad=None):

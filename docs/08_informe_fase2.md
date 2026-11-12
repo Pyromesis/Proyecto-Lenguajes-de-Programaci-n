@@ -8,7 +8,7 @@ Este documento mapea cada exigencia del Corte 2 del enunciado a su evidencia
 verificable en el repositorio. Todo se comprueba con:
 
 ```bash
-python pruebas/test_proyecto.py   # 9 suites, 350 pruebas, todas pasan
+python pruebas/test_proyecto.py   # 10 suites, 370 pruebas, todas pasan
 ```
 
 ---
@@ -29,7 +29,7 @@ python pruebas/test_proyecto.py   # 9 suites, 350 pruebas, todas pasan
 | Renombre y conversión (preparación) | `renombre COL -> NUEVA`, `convierta COL -> tipo` (calendario propio AAAA-MM-DD) |
 | Agrupamiento y agregaciones | `junte por` + `resuma` → `Tabla.agrupar` + `cuente/sume/promedie/mediana/minimo/maximo/desviacion` propios (mediana por inserción, desviación poblacional) |
 | Validaciones semánticas | `src/errores_base.py` (`ErrorVariable`, `ErrorColumna`, `ErrorTipos`, `ErrorOperacion`, `ErrorSemantico`, `ErrorEjecucion`, `ErrorArchivo`, `ErrorCSV`) |
-| Pruebas | `pruebas/test_proyecto.py` (corredor) + 9 suites: front-end 55, árbol 28, datos 43, estructuras 48, expresiones 16, símbolos 15, runtime 51, gráficas 63, machine learning 31 (350 en total) |
+| Pruebas | `pruebas/test_proyecto.py` (corredor) + 10 suites: front-end 55, árbol 28, datos 43, estructuras 48, expresiones 16, símbolos 15, runtime 51, gráficas 63, machine learning 31, utilidades 20 (370 en total) |
 
 Detalle de algoritmos y decisiones: `docs/05_arquitectura.md`.
 

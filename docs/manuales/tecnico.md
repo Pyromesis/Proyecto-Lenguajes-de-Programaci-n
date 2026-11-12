@@ -10,7 +10,7 @@ comprueban con `python3 herramientas/chequeo_documentacion.py`.
 * Versión: `AREPA v0.4 (Fase 3 - visualizacion y producto final)` con la
   ampliación de machine learning.
 * Cifras canónicas de esta versión: **64 reglas**, **79 palabras reservadas**,
-  **9 suites**, **350 pruebas** y **173 programas** ejecutables.
+  **10 suites**, **370 pruebas** y **173 programas** ejecutables.
 * Documentos relacionados: `docs/05_arquitectura.md` (algoritmos y matriz de
   trazabilidad), `docs/09_reglas_semanticas.md` (semántica),
   `docs/11_guia_machine_learning.md` (ML), `docs/11_informe_fase3.md`
@@ -221,14 +221,14 @@ El intérprete es un **Visitor**:
 
 ## 4. Tabla de símbolos y contexto
 
-* `src/runtime/simbolos.py::TablaSimbolos` (línea 53): ámbitos encadenados
+* `src/runtime/simbolos.py::TablaSimbolos` (línea 52): ámbitos encadenados
   hijo → padre; `declarar` escribe en el ámbito actual y `buscar`/`asignar`
   suben por la cadena. `x = valor` declara si no existe en ningún ámbito visible
   y asigna si existe.
-* `src/runtime/simbolos.py::FuncionArepa` (línea 113): guarda el cuerpo de una
+* `src/runtime/simbolos.py::FuncionArepa` (línea 112): guarda el cuerpo de una
   función `invente` y el ámbito donde se definió (closure), lo que permite
   recursión.
-* `src/runtime/simbolos.py::validar_identificador` (línea 30): letra Unicode
+* `src/runtime/simbolos.py::validar_identificador` (línea 29): letra Unicode
   (ñ, tildes) o `_` al inicio.
 * `src/runtime/contexto.py::ContextoEjecucion` (línea 86): estado global —
   símbolos raíz, salida de `cuenteme`, tablas y registro de errores y de
@@ -421,8 +421,8 @@ convierte en error semántico solo si escapan de su contexto.
 
 ## 9. Pruebas
 
-* Corredor maestro: `pruebas/test_proyecto.py` (9 suites).
-* **350 pruebas** en total; el conteo canónico está en
+* Corredor maestro: `pruebas/test_proyecto.py` (10 suites).
+* **370 pruebas** en total; el conteo canónico está en
   `herramientas/chequeo_pruebas.py`.
 
 | Suite | Archivo | Pruebas |
@@ -438,7 +438,7 @@ convierte en error semántico solo si escapan de su contexto.
 | Machine learning | `test_ml.py` | 31 |
 
 ```bash
-.venv/bin/python herramientas/chequeo_pruebas.py   # 9 suites, 350 pruebas
+.venv/bin/python herramientas/chequeo_pruebas.py   # 10 suites, 370 pruebas
 python3 herramientas/chequeo_gramatica.py          # 64/64 reglas, 79 reservadas
 ```
 

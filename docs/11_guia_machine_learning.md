@@ -656,11 +656,11 @@ bibliotecas externas para lo que verifican.
 
 ```bash
 python3 pruebas/test_ml.py          # solo la suite de ML
-python3 pruebas/test_proyecto.py    # 9 suites, 350 pruebas
+python3 pruebas/test_proyecto.py    # 10 suites, 370 pruebas
 python3 herramientas/chequeo_pruebas.py  # verifica el conteo canónico
 ```
 
-El conteo canónico es `55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 = 350`.
+El conteo canónico es `55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 + 20 = 370`.
 
 ---
 

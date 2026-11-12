@@ -1,7 +1,7 @@
 """
 AREPA - Corredor maestro de pruebas
 -----------------------------------
-Ejecuta las nueve suites del proyecto en orden:
+Ejecuta las diez suites del proyecto en orden:
   1. front-end (lexer/parser ANTLR4 + diagnóstico propio);
   2. estructura del árbol de análisis;
   3. biblioteca propia de datos (lector CSV, Tabla, tipos);
@@ -10,7 +10,8 @@ Ejecuta las nueve suites del proyecto en orden:
   6. tabla de símbolos y contexto propios;
   7. runtime propio (programas completos del DSL);
   8. motor gráfico y visualización propia (PNG, escalas, lienzo);
-  9. biblioteca propia de machine learning (src/ml).
+  9. biblioteca propia de machine learning (src/ml);
+ 10. utilidades propias (matemática, texto, bytes y SHA-256 en src/utiles).
 
 Uso:
     python3 pruebas/test_proyecto.py
@@ -38,6 +39,7 @@ SUITES = (
     ("Runtime propio (programas completos)", "test_runtime.py"),
     ("Motor gráfico y visualización propia", "test_graficas.py"),
     ("Machine learning propio (src/ml)", "test_ml.py"),
+    ("Utilidades propias (matemática, texto, bytes, SHA-256)", "test_utiles.py"),
 )
 
 

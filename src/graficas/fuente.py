@@ -8,8 +8,8 @@ bibliotecas externas.
 Qué hace:
   * define GLIFOS: un glifo por cada carácter ASCII imprimible (32..126),
     con 7 filas de 5 bits (el bit 4 es la columna izquierda);
-  * normaliza el texto a ASCII imprimible con unicodedata (NFD) para
-    quitar tildes y diéresis, y con un mapa propio para los signos que
+  * normaliza el texto a ASCII imprimible con la tabla propia de
+    utiles/texto.py (quitar_tildes) para quitar tildes y diéresis, y con un mapa propio para los signos que
     no se descomponen (¿, ¡, rayas, comillas tipográficas, ...);
   * mide cadenas (ancho_texto / alto_texto) con separación de 1 píxel
     entre caracteres, que es la misma que usa el lienzo al dibujar.
@@ -17,7 +17,7 @@ Qué hace:
 Decisiones propias documentadas:
   * el glifo de reemplazo es '?' y se usa para cualquier carácter no
     representable: así una etiqueta con emojis nunca rompe el dibujo;
-  * la ñ se resuelve sola con NFD (n + tilde combinada); el resto de
+  * la ñ se resuelve con la tabla propia de tildes (ñ -> n); el resto de
     letras acentuadas sigue el mismo camino;
   * las minúsculas ocupan las cinco filas inferiores (altura de x) para
     que se distingan de las mayúsculas, que ocupan las siete;
@@ -30,7 +30,7 @@ Limitaciones:
   * no se rotan textos: las etiquetas largas se recortan con "...".
 """
 
-import unicodedata
+from utiles.texto import quitar_tildes
 
 # ---------------------------------------------------------------------- #
 # Medidas de la fuente
@@ -43,7 +43,7 @@ SEPARACION = 1
 CARACTER_REEMPLAZO = "?"
 
 # ---------------------------------------------------------------------- #
-# Mapa de caracteres que NFD no descompone en ASCII
+# Mapa de signos que no son letras acentuadas
 # ---------------------------------------------------------------------- #
 
 _ESPECIALES = {
@@ -220,7 +220,7 @@ _verificar_tabla()
 def normalizar_texto(texto):
     """Convierte 'texto' a ASCII imprimible dibujable.
 
-    Descompone con NFD para quitar tildes y diéresis (á -> a, ü -> u,
+    Usa quitar_tildes (tabla propia) para quitar tildes y diéresis (á -> a, ü -> u,
     ñ -> n), traduce los signos que no se descomponen (¿, ¡, rayas,
     comillas tipográficas, ...) y sustituye por '?' lo que no se pueda
     representar. Los saltos de línea se conservan.
@@ -231,9 +231,7 @@ def normalizar_texto(texto):
         texto = str(texto)
 
     salida = []
-    for caracter in unicodedata.normalize("NFD", texto):
-        if unicodedata.combining(caracter):
-            continue  # tilde o diéresis ya separada de su letra
+    for caracter in quitar_tildes(texto):
         if caracter == "\n":
             salida.append(caracter)
             continue

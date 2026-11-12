@@ -9,7 +9,7 @@ La traducción de mensajes es código propio del equipo; la captura se
 apoya en la interfaz de listeners de ANTLR4 (uso autorizado).
 """
 
-import re
+from utiles.texto import colapsar_espacios
 
 from antlr4.error.ErrorListener import ErrorListener
 
@@ -148,7 +148,7 @@ def _limpiar_texto(texto):
     if texto is None:
         return texto
     limpio = texto.replace("\\n", " ").replace("\\r", "").replace("\\t", " ")
-    limpio = re.sub(r"\s+", " ", limpio).strip()
+    limpio = colapsar_espacios(limpio)
     limpio = limpio.strip("'").strip()
     if limpio in SIMBOLOS:
         return SIMBOLOS[limpio]

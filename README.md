@@ -381,6 +381,20 @@ python3 -m pip install -r requirements.txt
 Sin pandas, NumPy, Matplotlib, scikit-learn ni equivalentes: los algoritmos
 de machine learning también son código propio.
 
+La biblioteca (`src/`) tampoco importa módulos auxiliares de la biblioteca
+estándar de Python: lo que antes hacían `math`, `re`, `unicodedata`,
+`struct`, `hashlib`, `csv`, `argparse`, `glob` y `codecs` está reimplementado
+en `src/utiles/` (matemática, texto, empaquetado binario y SHA-256 propios),
+en el lector/escritor CSV propio y en el analizador de argumentos del CLI.
+Solo quedan `os`, `sys`, `shutil` y `subprocess` (y `readline`/`termios` en
+la consola interactiva), que no son algoritmos sino la puerta al sistema
+operativo: abrir archivos, leer la terminal y lanzar el visor de imágenes.
+La prueba `test_utiles.py::la_biblioteca_no_importa_modulos_reemplazados`
+falla si alguien vuelve a importar uno de esos módulos en `src/`. Las suites
+de `pruebas/` sí usan `zlib`, `hashlib` o `math`, pero únicamente como
+oráculo independiente para comprobar que el código propio da el resultado
+correcto.
+
 ## Ejecución
 
 ```bash
@@ -507,10 +521,10 @@ Salida (extracto real):
 python3 pruebas/test_proyecto.py
 ```
 
-Ejecuta las 9 suites (350 pruebas): front-end (55: 10 positivos, 22
+Ejecuta las 10 suites (370 pruebas): front-end (55: 10 positivos, 22
 negativos, 10 de diagnóstico, 13 de CLI), estructura del árbol (28), datos
 (43), estructuras propias (48), expresiones (16), símbolos y contexto (15),
-runtime (51), gráficas (63) y machine learning (31). Cada suite también
+runtime (51), gráficas (63), machine learning (31) y utilidades propias (20). Cada suite también
 corre sola con el entorno activado, por ejemplo
 `python3 pruebas/test_estructuras.py` o `python3 pruebas/test_ml.py`.
 
@@ -518,7 +532,7 @@ El conteo es único y verificable (fuente de verdad):
 
 ```bash
 python3 herramientas/chequeo_pruebas.py
-# Unificado: 9 suites, 350 pruebas.
+# Unificado: 10 suites, 370 pruebas.
 ```
 
 Además, los 173 programas de regresión (164 ejercicios + 9 ejemplos) validan
@@ -560,7 +574,7 @@ proyecto/
 ├── ejercicios/               164 ejercicios por corte (1: 32, 2: 120, 3: 12)
 ├── caso_estudio/             caso reproducible: programa.arepa + datos/ + 5 PNG + CSV
 ├── salidas/                  evidencia: 7 CSV versionados y PNG temporales
-├── pruebas/                  9 suites (350) + positivos/negativos
+├── pruebas/                  10 suites (370) + positivos/negativos
 ├── herramientas/             chequeos, demo de sustentación y consola
 ├── docs/                     índice (README.md), alcance, catálogo, EBNF,
 │                             informes, arquitectura, reglas, manuales, guía de ML y PDF
@@ -669,7 +683,7 @@ bash herramientas/regresion_programas.sh
 
 ```bash
 python3 herramientas/chequeo_gramatica.py      # EBNF <-> .g4: 64/64 reglas, 79 reservadas
-python3 herramientas/chequeo_pruebas.py        # conteo único: 9 suites, 350 pruebas
+python3 herramientas/chequeo_pruebas.py        # conteo único: 10 suites, 370 pruebas
 python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/9
 bash herramientas/regresion_programas.sh       # 173 programas (164 + 9 ejemplos)
 bash herramientas/demo_sustentacion.sh         # demo de sustentación paso a paso

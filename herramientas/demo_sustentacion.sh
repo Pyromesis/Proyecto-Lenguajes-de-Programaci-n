@@ -96,7 +96,7 @@ done
 
 echo "### 9. Suite completa (9/9)"
 suite=$("$PYTHON" pruebas/test_proyecto.py 2>&1)
-printf '%s\n' "$suite" | grep -q "9 de 9 suites pasaron"
+printf '%s\n' "$suite" | grep -q "10 de 10 suites pasaron"
 
 echo "### 9b. Documentación y estructura"
 "$PYTHON" herramientas/chequeo_documentacion.py | grep -q "0 rutas antiguas"

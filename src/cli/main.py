@@ -24,7 +24,6 @@ Códigos de salida:
     2 - no se pudo leer el archivo
 """
 
-import argparse
 import os
 import sys
 
@@ -35,8 +34,9 @@ for _ruta in (_RAIZ_SRC, os.path.join(_RAIZ_SRC, "..", "generado")):
     if _absoluta not in sys.path:
         sys.path.insert(0, _absoluta)
 
-if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+for _flujo in (sys.stdout, sys.stderr):
+    if hasattr(_flujo, "reconfigure"):
+        _flujo.reconfigure(encoding="utf-8", errors="replace")
 
 from lenguaje.analizador import analizar  # noqa: E402
 from lenguaje.arbol import contar_sentencias, imprimir_arbol  # noqa: E402
@@ -118,63 +118,98 @@ def _resumen_archivos(contexto):
         )
 
 
+AYUDA = """uso: arepa <archivo> [opciones]
+
+Front-end y runtime del lenguaje AREPA.
+Valida el programa y, con --ejecutar, lo corre con la biblioteca
+propia (datos, expresiones, runtime, gráficas y machine learning).
+
+argumentos:
+  archivo              programa fuente (.arepa)
+
+opciones:
+  -h, --ayuda, --help  muestra esta ayuda y sale
+  --version            muestra la versión y sale
+  --arbol              muestra el árbol de análisis
+  --tokens             muestra la lista de tokens
+  --ejecutar           ejecuta el programa con la biblioteca propia (datos,
+                       expresiones, runtime, gráficas y machine learning)
+  --sin-ventana        no abre visores externos para las gráficas (CI o
+                       demostración sin entorno gráfico); equivale a
+                       AREPA_SIN_VENTANA=1
+
+Ejemplos:
+  arepa ejemplos/demo.arepa --ejecutar
+  arepa ejemplos/graficas.arepa --ejecutar --sin-ventana
+  arepa ejemplos/demo.arepa --arbol --tokens"""
+
+# Opción de la línea de comandos -> nombre del atributo que enciende.
+_BANDERAS = {
+    "--arbol": "arbol",
+    "--tokens": "tokens",
+    "--ejecutar": "ejecutar",
+    "--sin-ventana": "sin_ventana",
+}
+
+
+class Argumentos:
+    """Resultado de leer la línea de comandos (analizador propio)."""
+
+    def __init__(self):
+        self.archivo = None
+        self.arbol = False
+        self.tokens = False
+        self.ejecutar = False
+        self.sin_ventana = False
+
+
+class ErrorDeUso(Exception):
+    """La línea de comandos está mal escrita."""
+
+
+def leer_argumentos(lista):
+    """Analiza los argumentos del CLI sin bibliotecas (ni argparse).
+
+    Devuelve ("ayuda", None), ("version", None) o ("correr", Argumentos).
+    Lanza ErrorDeUso si falta el archivo, sobra un argumento o hay una
+    opción desconocida. Las opciones pueden ir antes o después del archivo.
+    """
+    argumentos = Argumentos()
+    for texto in lista:
+        if texto in ("-h", "--ayuda", "--help"):
+            return "ayuda", None
+        if texto == "--version":
+            return "version", None
+    for texto in lista:
+        if texto in _BANDERAS:
+            setattr(argumentos, _BANDERAS[texto], True)
+        elif texto.startswith("-") and texto != "-":
+            raise ErrorDeUso("no conozco la opción '{0}'".format(texto))
+        elif argumentos.archivo is None:
+            argumentos.archivo = texto
+        else:
+            raise ErrorDeUso(
+                "solo se recibe un archivo; sobra '{0}'".format(texto)
+            )
+    if argumentos.archivo is None:
+        raise ErrorDeUso("falta el archivo del programa (.arepa)")
+    return "correr", argumentos
+
+
 def main():
-    analizador = argparse.ArgumentParser(
-        prog="arepa",
-        usage="arepa <archivo> [opciones]",
-        add_help=False,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=(
-            "Front-end y runtime del lenguaje AREPA.\n"
-            "Valida el programa y, con --ejecutar, lo corre con la biblioteca\n"
-            "propia (datos, expresiones, runtime, gráficas y machine learning)."
-        ),
-        epilog=(
-            "Ejemplos:\n"
-            "  arepa ejemplos/demo.arepa --ejecutar\n"
-            "  arepa ejemplos/graficas.arepa --ejecutar --sin-ventana\n"
-            "  arepa ejemplos/demo.arepa --arbol --tokens"
-        ),
-    )
-    analizador._positionals.title = "argumentos"
-    analizador._optionals.title = "opciones"
-    analizador.add_argument("archivo", help="programa fuente (.arepa)")
-    analizador.add_argument(
-        "-h",
-        "--ayuda",
-        "--help",
-        action="help",
-        help="muestra esta ayuda y sale",
-    )
-    analizador.add_argument(
-        "--version",
-        action="version",
-        version=VERSION,
-        help="muestra la versión y sale",
-    )
-    analizador.add_argument(
-        "--arbol", action="store_true", help="muestra el árbol de análisis"
-    )
-    analizador.add_argument(
-        "--tokens", action="store_true", help="muestra la lista de tokens"
-    )
-    analizador.add_argument(
-        "--ejecutar",
-        action="store_true",
-        help=(
-            "ejecuta el programa con la biblioteca propia "
-            "(datos, expresiones, runtime, gráficas y machine learning)"
-        ),
-    )
-    analizador.add_argument(
-        "--sin-ventana",
-        action="store_true",
-        help=(
-            "no abre visores externos para las gráficas (CI o demostración "
-            "sin entorno gráfico); equivale a AREPA_SIN_VENTANA=1"
-        ),
-    )
-    argumentos = analizador.parse_args()
+    try:
+        accion, argumentos = leer_argumentos(sys.argv[1:])
+    except ErrorDeUso as problema:
+        print("uso: arepa <archivo> [opciones]", file=sys.stderr)
+        print("arepa: error: {0}.".format(problema), file=sys.stderr)
+        print("Pruebe 'arepa --ayuda' para ver las opciones.", file=sys.stderr)
+        return 2
+    if accion == "ayuda":
+        print(AYUDA)
+        return 0
+    if accion == "version":
+        print(VERSION)
+        return 0
 
     if argumentos.sin_ventana:
         os.environ["AREPA_SIN_VENTANA"] = "1"

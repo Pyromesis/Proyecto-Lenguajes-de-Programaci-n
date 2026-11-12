@@ -10,7 +10,7 @@ REQUISITO → DOCUMENTACIÓN → REGLA EBNF → REGLA Arepa.g4 → CÓDIGO → P
 Convenciones: "EBNF" remite a `docs/03_gramatica_ebnf.md`; "ANTLR" remite a
 `gramatica/Arepa.g4` con su línea; "Prueba" remite a `pruebas/`. Todas las
 filas tienen estado **VERIFICADO** con la ejecución de
-`python3 pruebas/test_proyecto.py` (conteo vigente: 9 suites, 350 pruebas →
+`python3 pruebas/test_proyecto.py` (conteo vigente: 10 suites, 370 pruebas →
 ver §8 de `docs/05_arquitectura.md` y el README).
 
 | ID | Requisito | Documento | Regla EBNF | Regla ANTLR (línea) | Código | Prueba | Ejemplo | Estado |
@@ -38,7 +38,7 @@ ver §8 de `docs/05_arquitectura.md` y el README).
 | R21 | Catálogo de instrucciones | `docs/02` completo | — | — | — | — | — | VERIFICADO |
 | R22 | Archivo `.g4` | README (Gramática) | — | `gramatica/Arepa.g4` | — | `test_proyecto.py` completo | — | VERIFICADO |
 | R23 | Código generado por ANTLR | README (Estructura) | — | — | `generado/` (Lexer, Parser, Visitor, `.tokens`) | sincronía 64/64 reglas y 79 reservadas | — | VERIFICADO |
-| R24 | Pruebas léxicas y sintácticas | `docs/04` §5 | — | — | `pruebas/` (9 suites; en el Corte 1 eran 7) | `python3 pruebas/test_proyecto.py` | — | VERIFICADO |
+| R24 | Pruebas léxicas y sintácticas | `docs/04` §5 | — | — | `pruebas/` (10 suites; en el Corte 1 eran 7) | `python3 pruebas/test_proyecto.py` | — | VERIFICADO |
 | R25 | Ejemplos | README (Ejemplos) | — | — | — | validación de los 9 con la CLI | `ejemplos/` | VERIFICADO |
 | R26 | README | `README.md` completo | — | — | — | comandos ejecutados uno a uno | — | VERIFICADO |
 | R27 | Árbol de análisis | README (Árbol), `docs/06` §4 | — | — | `src/lenguaje/arbol.py::imprimir_arbol` (46) | `test_arbol.py` (28) + CLI `--arbol` | salida real en README | VERIFICADO |
@@ -64,4 +64,4 @@ Notas de decisiones intencionales (no son contradicciones):
   `docs/11_informe_fase3.md`).
 
 Conteos vigentes a la fecha de este informe: 64 reglas, 79 reservadas, 9
-suites, 350 pruebas, 173 programas.
+suites, 370 pruebas, 173 programas.

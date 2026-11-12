@@ -44,7 +44,7 @@ convención.
 
 ```bash
 python3 herramientas/chequeo_gramatica.py      # 64/64 reglas, 79 reservadas
-python3 herramientas/chequeo_pruebas.py        # 9 suites, 350 pruebas
+python3 herramientas/chequeo_pruebas.py        # 10 suites, 370 pruebas
 python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/9
 bash herramientas/regresion_programas.sh       # 173 programas
 bash herramientas/demo_sustentacion.sh         # demo completa

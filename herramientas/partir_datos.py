@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """AREPA - Partición reproducible de un CSV en entrenamiento y prueba.
 
-La separación se hace por hash SHA-256 de ``semilla:indice``. Así el
+La separación se hace por hash SHA-256 de ``semilla:indice`` (SHA-256, lector CSV y análisis de
+argumentos propios: sin ``hashlib``, ``csv`` ni ``argparse``). Así el
 resultado no depende del sistema operativo, de la versión de Python ni del
 orden de un generador pseudoaleatorio: la misma entrada, semilla y proporción
 producen siempre los mismos archivos.
@@ -17,15 +18,70 @@ directorio indicado (por defecto ``datos/particiones``).
 
 from __future__ import annotations
 
-import argparse
-import csv
-import hashlib
 import pathlib
 import sys
 
+_RAIZ = pathlib.Path(__file__).resolve().parent.parent
+if str(_RAIZ / "src") not in sys.path:
+    sys.path.insert(0, str(_RAIZ / "src"))
+
+from utiles.sha256 import sha256_hex  # noqa: E402  (SHA-256 propio)
+
 
 def _clave(semilla: int, indice: int) -> str:
-    return hashlib.sha256("{0}:{1}".format(semilla, indice).encode("utf-8")).hexdigest()
+    return sha256_hex("{0}:{1}".format(semilla, indice).encode("utf-8"))
+
+
+def leer_csv_crudo(texto: str):
+    """Lector CSV propio (máquina de estados): devuelve filas de textos.
+
+    Respeta campos entre comillas dobles, comillas escapadas ("") y saltos
+    de línea dentro de un campo entrecomillado. No convierte tipos: aquí
+    solo se reparten filas, así que cada celda se conserva como texto.
+    """
+    filas, fila, campo = [], [], []
+    en_comillas = False
+    hubo_contenido = False
+    i, total = 0, len(texto)
+    while i < total:
+        c = texto[i]
+        if en_comillas:
+            if c == '"':
+                if i + 1 < total and texto[i + 1] == '"':
+                    campo.append('"')
+                    i += 1
+                else:
+                    en_comillas = False
+            else:
+                campo.append(c)
+        elif c == '"':
+            en_comillas = True
+            hubo_contenido = True
+        elif c == ",":
+            fila.append("".join(campo))
+            campo = []
+            hubo_contenido = True
+        elif c == "\n" or c == "\r":
+            if c == "\r" and i + 1 < total and texto[i + 1] == "\n":
+                i += 1
+            if hubo_contenido or campo:
+                fila.append("".join(campo))
+                filas.append(fila)
+            fila, campo, hubo_contenido = [], [], False
+        else:
+            campo.append(c)
+        i += 1
+    if hubo_contenido or campo:
+        fila.append("".join(campo))
+        filas.append(fila)
+    return filas
+
+
+def _celda_csv(valor: str) -> str:
+    """Entrecomilla la celda solo si hace falta (coma, comilla o salto)."""
+    if any(c in valor for c in (",", '"', "\n", "\r")):
+        return '"' + valor.replace('"', '""') + '"'
+    return valor
 
 
 def partir(filas, proporcion_prueba: float, semilla: int):
@@ -48,8 +104,7 @@ def partir(filas, proporcion_prueba: float, semilla: int):
 
 def _leer(ruta: pathlib.Path):
     with ruta.open("r", encoding="utf-8-sig", newline="") as fh:
-        lector = csv.reader(fh)
-        filas = list(lector)
+        filas = leer_csv_crudo(fh.read())
     if not filas:
         raise ValueError("el archivo está vacío: {0}".format(ruta))
     return filas[0], filas[1:]
@@ -58,36 +113,76 @@ def _leer(ruta: pathlib.Path):
 def _escribir(ruta: pathlib.Path, encabezado, filas):
     ruta.parent.mkdir(parents=True, exist_ok=True)
     with ruta.open("w", encoding="utf-8", newline="") as fh:
-        escritor = csv.writer(fh, lineterminator="\n")
-        escritor.writerow(encabezado)
-        escritor.writerows(filas)
+        for fila in [encabezado] + list(filas):
+            fh.write(",".join(_celda_csv(celda) for celda in fila) + "\n")
+
+
+USO = """uso: partir_datos.py <archivo.csv> [--salida-dir DIR]
+                       [--proporcion-prueba P] [--semilla N]
+
+  archivo               CSV de entrada
+  --salida-dir DIR      directorio de salida (por defecto: datos/particiones)
+  --proporcion-prueba P fracción de filas para prueba, entre 0 y 1 (0.2)
+  --semilla N           semilla del hash determinista (2026)
+  -h, --ayuda           muestra esta ayuda"""
+
+
+class _Argumentos:
+    def __init__(self):
+        self.archivo = None
+        self.salida_dir = "datos/particiones"
+        self.proporcion_prueba = 0.2
+        self.semilla = 2026
+
+
+def _leer_argumentos(lista):
+    """Analizador propio de la línea de comandos (None = pidió ayuda)."""
+    argumentos = _Argumentos()
+    i = 0
+    while i < len(lista):
+        texto = lista[i]
+        if texto in ("-h", "--ayuda", "--help"):
+            return None
+        if texto in ("--salida-dir", "--proporcion-prueba", "--semilla"):
+            if i + 1 >= len(lista):
+                raise ValueError("a la opción {0} le falta su valor".format(texto))
+            valor = lista[i + 1]
+            i += 1
+            try:
+                if texto == "--salida-dir":
+                    argumentos.salida_dir = valor
+                elif texto == "--proporcion-prueba":
+                    argumentos.proporcion_prueba = float(valor)
+                else:
+                    argumentos.semilla = int(valor)
+            except ValueError:
+                raise ValueError(
+                    "el valor '{0}' no sirve para {1}".format(valor, texto)
+                )
+        elif texto.startswith("--"):
+            raise ValueError("no conozco la opción {0}".format(texto))
+        elif argumentos.archivo is None:
+            argumentos.archivo = texto
+        else:
+            raise ValueError("solo se recibe un archivo; sobra '{0}'".format(texto))
+        i += 1
+    if argumentos.archivo is None:
+        raise ValueError("falta el archivo CSV de entrada")
+    return argumentos
 
 
 def main(argv=None):
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    analizador = argparse.ArgumentParser(
-        description="Divide un CSV en entrenamiento y prueba de forma reproducible."
-    )
-    analizador.add_argument("archivo", help="CSV de entrada")
-    analizador.add_argument(
-        "--salida-dir",
-        default="datos/particiones",
-        help="directorio de salida (por defecto: datos/particiones)",
-    )
-    analizador.add_argument(
-        "--proporcion-prueba",
-        type=float,
-        default=0.2,
-        help="fracción de filas para prueba, entre 0 y 1 (por defecto: 0.2)",
-    )
-    analizador.add_argument(
-        "--semilla",
-        type=int,
-        default=2026,
-        help="semilla del hash determinista (por defecto: 2026)",
-    )
-    argumentos = analizador.parse_args(argv)
+    try:
+        argumentos = _leer_argumentos(sys.argv[1:] if argv is None else argv)
+    except ValueError as exc:
+        print("Paila: {0}.".format(exc))
+        print(USO)
+        return 2
+    if argumentos is None:
+        print(USO)
+        return 0
 
     entrada = pathlib.Path(argumentos.archivo)
     if not entrada.is_file():

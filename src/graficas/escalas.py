@@ -30,7 +30,7 @@ Limitaciones:
     distintas (el motor de gráficas sí las unifica al agrupar).
 """
 
-import math
+from utiles.matematica import es_finito, exponente_decimal, techo
 
 # ---------------------------------------------------------------------- #
 # Validaciones y utilidades numéricas
@@ -43,7 +43,7 @@ def _a_float(valor, nombre="valor"):
             "'{0}' debe ser un número; recibí {1!r}.".format(nombre, valor)
         )
     numero = float(valor)
-    if not math.isfinite(numero):
+    if not es_finito(numero):
         raise ValueError(
             "'{0}' debe ser un número finito; recibí {1!r}.".format(nombre, valor)
         )
@@ -56,7 +56,7 @@ def _clave_categoria(categoria):
         return ("n", float(categoria))
     if isinstance(categoria, (int, float)):
         numero = float(categoria)
-        if math.isfinite(numero):
+        if es_finito(numero):
             return ("n", numero)
         return ("s", str(categoria))
     if categoria is None:
@@ -74,9 +74,9 @@ def _clave_categoria(categoria):
 
 def _decimales(paso):
     """Decimales necesarios para escribir múltiplos de 'paso' sin ruido."""
-    if paso <= 0 or not math.isfinite(paso):
+    if paso <= 0 or not es_finito(paso):
         return 0
-    exponente = math.floor(math.log10(paso))
+    exponente = exponente_decimal(paso)
     return max(0, -exponente) + 2
 
 
@@ -103,7 +103,7 @@ def paso_bonito(rango, cantidad=5):
         return 1.0
 
     bruto = rango / cantidad
-    magnitud = 10.0 ** math.floor(math.log10(bruto))
+    magnitud = 10.0 ** exponente_decimal(bruto)
     fraccion = bruto / magnitud
     if fraccion <= 1:
         factor = 1
@@ -130,7 +130,7 @@ def formatear(valor):
         numero = float(valor)
     except (TypeError, ValueError):
         return str(valor)
-    if not math.isfinite(numero):
+    if not es_finito(numero):
         return "nada"
     if numero == 0:
         return "0"
@@ -203,7 +203,7 @@ class EscalaLineal:
             raise ValueError("'cantidad' debe ser mayor que cero.")
 
         paso = paso_bonito(self.dominio_max - self.dominio_min, cantidad)
-        inicio = math.ceil(self.dominio_min / paso - 1e-9) * paso
+        inicio = techo(self.dominio_min / paso - 1e-9) * paso
         marcas = []
         valor = inicio
         # El tope con holgura relativa evita perder la última marca por

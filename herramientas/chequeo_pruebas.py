@@ -24,7 +24,7 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Conteo canónico: (archivo de suite, pruebas esperadas).
-# Total: 55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 = 350.
+# Total: 55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 + 20 = 370.
 ESPERADO = (
     ("test_front.py", 55),
     ("test_arbol.py", 28),
@@ -35,6 +35,7 @@ ESPERADO = (
     ("test_runtime.py", 51),
     ("test_graficas.py", 63),
     ("test_ml.py", 31),
+    ("test_utiles.py", 20),
 )
 
 PATRON = re.compile(r"Resultado:\s*(\d+)\s+de\s+(\d+)")

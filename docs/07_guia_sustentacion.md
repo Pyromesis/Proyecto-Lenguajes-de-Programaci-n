@@ -28,7 +28,7 @@ python3 pruebas/test_proyecto.py
   `instruccion_monte` (227), `instruccion_grafica` (276),
   `expresion_logica` (304).
 * **Especificación equivalente:** `docs/03_gramatica_ebnf.md`.
-* **Prueba:** las 350 de `python3 pruebas/test_proyecto.py` parsean con
+* **Prueba:** las 370 de `python3 pruebas/test_proyecto.py` parsean con
   esta gramática.
 * **Ejemplo en vivo:** abrir `Arepa.g4` y mostrar `programa` y
   `instruccion_grafica`.
@@ -222,8 +222,8 @@ python3 src/cli/main.py --ayuda
 python3 src/cli/main.py --version
 
 # 5. Regresión y conteo único
-python3 pruebas/test_proyecto.py                 # 9 de 9 suites
-python3 herramientas/chequeo_pruebas.py          # 9 suites, 350 pruebas
+python3 pruebas/test_proyecto.py                 # 10 de 10 suites
+python3 herramientas/chequeo_pruebas.py          # 10 suites, 370 pruebas
 bash herramientas/regresion_programas.sh        # 173 programas (164 + 9 ejemplos)
 bash herramientas/demo_sustentacion.sh           # todo de punta a punta
 ```
@@ -238,7 +238,7 @@ Qué mostrar:
   señala la posición.
 * El **caso de estudio**: el bloque `Archivos generados:` con los 6 archivos
   (5 PNG + 1 CSV) y el indicador `Total pasajeros: 40363`.
-* Que `pruebas/test_proyecto.py` cierra con `9 de 9 suites pasaron`.
+* Que `pruebas/test_proyecto.py` cierra con `10 de 10 suites pasaron`.
 
 ---
 

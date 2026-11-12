@@ -24,8 +24,6 @@ Dentro:
     :salir           sale (Ctrl-D también sale)
 """
 
-import codecs
-import glob
 import os
 import sys
 
@@ -123,9 +121,52 @@ _EJEMPLOS = {"demo": "demo.arepa", "filtros": "filtros.arepa",
              "arbol_decision": "arbol_decision.arepa"}
 
 
+class _DecodificadorUTF8:
+    """Decodificador UTF-8 incremental propio (sin 'codecs').
+
+    Recibe los bytes de uno en uno y devuelve "" hasta completar el
+    carácter: el primer byte dice cuántos bytes de continuación faltan
+    (0xxxxxxx = 0, 110xxxxx = 1, 1110xxxx = 2, 11110xxx = 3).
+    """
+
+    def __init__(self):
+        self._pendiente = b""
+        self._faltan = 0
+
+    def decode(self, dato):
+        for byte in dato:
+            if self._faltan == 0:
+                if byte < 0x80:
+                    return chr(byte)
+                if byte >> 5 == 0b110:
+                    self._faltan = 1
+                elif byte >> 4 == 0b1110:
+                    self._faltan = 2
+                elif byte >> 3 == 0b11110:
+                    self._faltan = 3
+                else:
+                    return "\ufffd"  # byte suelto inválido
+                self._pendiente = bytes([byte])
+            else:
+                self._pendiente += bytes([byte])
+                self._faltan -= 1
+                if self._faltan == 0:
+                    completo, self._pendiente = self._pendiente, b""
+                    return completo.decode("utf-8", errors="replace")
+        return ""
+
+
 def _archivos(texto):
     """Completa rutas para :guardar (solo .arepa y directorios)."""
-    cands = glob.glob(texto + "*")
+    carpeta, prefijo = os.path.split(texto)
+    try:
+        nombres = os.listdir(carpeta or ".")
+    except OSError:
+        return []
+    cands = [
+        os.path.join(carpeta, n) for n in nombres
+        if n.startswith(prefijo) and (prefijo.startswith(".") or not n.startswith("."))
+    ]
     sal = []
     for c in sorted(cands):
         if os.path.isdir(c):
@@ -254,7 +295,7 @@ def _leer_con_fantasma(prompt, historial):
     """
     fd = sys.stdin.fileno()
     viejo = _termios.tcgetattr(fd)
-    dec = codecs.getincrementaldecoder("utf-8")()
+    dec = _DecodificadorUTF8()
     buf, pos = [], 0
     idx = len(historial)
     guardada = ""
