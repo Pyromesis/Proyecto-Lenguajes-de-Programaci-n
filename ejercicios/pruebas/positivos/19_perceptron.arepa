@@ -1,0 +1,12 @@
+# Ejemplo verificable: 19_perceptron
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, clase] con [[1, "A"], [2, "A"], [8, "B"], [9, "B"]]
+entrene modelo = perceptron con t
+columnas [x]
+objetivo clase
+epocas 100
+prueba = arme [x, clase] con [[1.5, "A"], [8.5, "B"]]
+r = prueba |> clasifique con modelo como predicha
+evalua modelo con prueba
+chao

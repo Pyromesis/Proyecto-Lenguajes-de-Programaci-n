@@ -1,0 +1,12 @@
+# M16_seleccion_orden_columnas - Orden de selección
+# Enunciado: Reorganizar una tabla para mostrar precio antes de producto.
+# Esperado: {"r":{"columnas":["precio","producto"],"filas":[[10,"A"]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M16_seleccion_orden_columnas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, precio, stock] con [["A", 10, 2]]
+r = t |> escoja [precio, producto]
+cuenteme r
+
+chao

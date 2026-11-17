@@ -1,0 +1,13 @@
+# Ejemplo verificable: 18_regresion
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, respuesta] con [[1, 5], [2, 7], [3, 9], [4, 11], [5, 13], [6, 15]]
+entrene modelo = regresion con t
+columnas [x]
+objetivo respuesta
+tasa 0.1
+epocas 3000
+prueba = arme [x, respuesta] con [[7, 17], [8, 19]]
+r = prueba |> prediga con modelo como estimado
+evalua modelo con prueba
+chao

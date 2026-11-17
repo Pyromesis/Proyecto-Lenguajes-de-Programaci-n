@@ -1,0 +1,7 @@
+# Ejemplo verificado; resultados en ../esperados.json
+quihubo
+t = arme [x] con [[1], [nada], [3]]
+filtrada = t |> deje donde x > 1
+vacia = t |> deje donde x > 99
+r = vacia |> resuma n = cuente(), menor = minimo(x), mayor = maximo(x), mitad = mediana(x), desv = desviacion(x)
+chao

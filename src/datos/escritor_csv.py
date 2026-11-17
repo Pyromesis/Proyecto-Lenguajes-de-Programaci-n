@@ -18,7 +18,7 @@ Limitaciones:
 
 import os
 
-from datos.tipos import es_infinito, es_nada, formatear_numero
+from datos.tipos import es_infinito, es_nada, formatear_numero, texto_a_valor, es_numero
 
 
 class EscritorCSV:
@@ -44,16 +44,21 @@ class EscritorCSV:
 
     def _campo_texto(self, valor):
         if es_nada(valor):
-            texto = ""
+            # Una fila con una sola celda nada no puede confundirse con una
+            # línea vacía, que el lector ignora. El texto "nada" se cita.
+            texto = "nada"
         elif isinstance(valor, bool):
             texto = "obvio" if valor else "falso"
         elif es_infinito(valor):
             texto = formatear_numero(valor)
-        elif isinstance(valor, float) and valor.is_integer():
-            texto = str(int(valor))
+        elif es_numero(valor):
+            texto = formatear_numero(valor)
         else:
             texto = str(valor)
-        if (self.separador in texto or '"' in texto or "\n" in texto
+        ambiguo = (isinstance(valor, str) and
+                   (not texto or texto != texto.strip() or texto == "nada" or
+                    not isinstance(texto_a_valor(texto), str)))
+        if (ambiguo or self.separador in texto or '"' in texto or "\n" in texto
                 or "\r" in texto):
             texto = '"' + texto.replace('"', '""') + '"'
         return texto

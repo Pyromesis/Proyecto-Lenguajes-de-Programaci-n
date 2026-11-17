@@ -1,0 +1,19 @@
+# F25_lluvia_estacion - Lluvia por estación
+# Enunciado: Comparar mediciones de lluvia en dos estaciones.
+# Esperado: {"t":{"columnas":["estacion","lluvia"],"filas":[["A",5],["A",10],["A",20],["B",2],["B",8],["B",30]]}}
+# PNG esperados: salidas/c3_F25_lluvia_estacion.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F25_lluvia_estacion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [estacion, lluvia] con [["A", 5], ["A", 10], ["A", 20], ["B", 2], ["B", 8], ["B", 30]]
+cuenteme t
+
+pinte cajas t
+titulo "Lluvia por estación"
+ejex estacion
+ejey lluvia
+leyenda "Serie observada"
+guardela "salidas/c3_F25_lluvia_estacion.png"
+
+chao

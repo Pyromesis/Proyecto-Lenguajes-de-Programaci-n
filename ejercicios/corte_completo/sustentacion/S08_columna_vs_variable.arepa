@@ -1,0 +1,16 @@
+# S08_columna_vs_variable - Resolución de nombres
+# Enunciado: Si hay una columna x y una variable x, ¿cuál usa un pipeline?
+# Sustentación: En una expresión por fila se busca primero la columna; fuera del pipeline se usa la variable.
+# Esperado: {"x":100,"fuera":200,"r":{"columnas":["x","doble"],"filas":[[2,4],[3,6]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S08_columna_vs_variable.arepa --ejecutar --sin-ventana
+
+quihubo
+
+x = 100
+t = arme [x] con [[2], [3]]
+r = t |> cree doble = x * 2
+fuera = x * 2
+cuenteme r
+cuenteme fuera
+
+chao

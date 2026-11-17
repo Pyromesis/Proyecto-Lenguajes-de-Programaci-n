@@ -1,0 +1,14 @@
+# F25_reasignacion_saldo - Actualización de saldo
+# Enunciado: Partir de 100, retirar 25 y depositar 40.
+# Esperado: {"resultado":115}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F25_reasignacion_saldo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+saldo = 100
+saldo = saldo - 25
+saldo = saldo + 40
+resultado = saldo
+cuenteme resultado
+
+chao

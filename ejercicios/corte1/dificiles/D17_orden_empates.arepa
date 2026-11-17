@@ -1,0 +1,12 @@
+# D17_orden_empates - Orden estable
+# Enunciado: Ordenar por puntuación sin invertir las filas empatadas.
+# Esperado: {"r":{"columnas":["id","puntos"],"filas":[["B",1],["A",2],["C",2]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D17_orden_empates.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [id, puntos] con [["A", 2], ["B", 1], ["C", 2]]
+r = t |> acomode por [puntos]
+cuenteme r
+
+chao

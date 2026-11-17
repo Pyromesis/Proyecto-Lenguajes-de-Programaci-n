@@ -99,7 +99,7 @@ python3 pruebas/test_proyecto.py
   unario (`-2 ^ 2 = -4`) y asocia a la derecha (`2 ^ 3 ^ 2 = 512`).
 * **Código propio:** `src/expresiones/evaluador.py` (`evaluar` línea 98,
   `visitAritmetica` 179) y `src/expresiones/operadores.py`; en el runtime,
-  `src/runtime/ejecutor.py::visitAsignacion` (línea 167).
+  `src/runtime/ejecutor.py::visitAsignacion` (línea 113).
 * **Prueba:** `test_arbol.py` (precedencia en la forma del árbol),
   `test_expresiones.py` (16 casos: `1 + 2 * 3 == 7`, `2 ^ 3 ^ 2 == 512`,
   `(1 + 2) * 3`, errores de tipos).
@@ -109,7 +109,7 @@ python3 pruebas/test_proyecto.py
 
 * **Gramática:** `instruccion_monte` (Arepa.g4:227): `monte cadena
   opciones_archivo?` con opciones `encabezado` y `separador`.
-* **Código propio:** `src/runtime/ejecutor.py::_cargar` (línea 251) usa el
+* **Código propio:** `src/runtime/ejecucion_datos.py::_cargar` (línea 25) usa el
   lector propio `src/datos/lector_csv.py` (máquina de estados con comillas
   y escape `""`).
 * **Prueba:** `test_runtime.py::monte_carga_csv_real` y los 12 casos
@@ -145,8 +145,8 @@ python3 pruebas/test_proyecto.py
   tipo_grafica identificador (clausula_estetica)* (final_grafica)?` con
   tipos `barras|lineas|histograma|dispersion|cajas`; `ejey` admite lista
   (`clausula_estetica`, Arepa.g4:289).
-* **Código propio:** `src/runtime/ejecutor.py::visitInstruccion_grafica`
-  (línea 550) valida la tabla y las columnas, aplica los valores por defecto
+* **Código propio:** `src/runtime/ejecucion_graficas.py::visitInstruccion_grafica`
+  (línea 15) valida la tabla y las columnas, aplica los valores por defecto
   y delega el dibujo en `src/graficas/` (motor propio).
 * **Prueba:** `test_arbol.py::arbol_de_visualizacion` (estructura con
   cláusulas y cierre), negativas `n09_pinte_tipo_invalido` y
@@ -224,7 +224,7 @@ python3 src/cli/main.py --version
 # 5. Regresión y conteo único
 python3 pruebas/test_proyecto.py                 # 10 de 10 suites
 python3 herramientas/chequeo_pruebas.py          # 10 suites, 370 pruebas
-bash herramientas/regresion_programas.sh        # 173 programas (164 + 9 ejemplos)
+bash herramientas/regresion_programas.sh        # 358 programas (349 + 9 ejemplos)
 bash herramientas/demo_sustentacion.sh           # todo de punta a punta
 ```
 
@@ -254,3 +254,13 @@ Qué mostrar:
 * **Cadena completa requisito → documento → gramática → código → prueba →
   ejemplo:** `docs/01` (requisitos), `docs/02` (diseño), `docs/03` (EBNF),
   `gramatica/Arepa.g4`, `src/`, `pruebas/`, `ejemplos/`.
+
+## Práctica adicional resuelta
+
+El [corte completo](../ejercicios/corte_completo/README.md) incluye 12
+integradores y 25 posibles preguntas con respuesta, código y resultados
+esperados. Son propuestas de práctica, no preguntas oficiales del docente.
+
+```bash
+python ejercicios/pruebas/ejecutar.py --completo
+```

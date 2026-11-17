@@ -26,6 +26,7 @@ Códigos de salida:
 
 import os
 import sys
+import errno
 
 _RUTA_AQUI = os.path.dirname(os.path.abspath(__file__))
 _RAIZ_SRC = os.path.dirname(_RUTA_AQUI)
@@ -40,7 +41,8 @@ for _flujo in (sys.stdout, sys.stderr):
 
 from lenguaje.analizador import analizar  # noqa: E402
 from lenguaje.arbol import contar_sentencias, imprimir_arbol  # noqa: E402
-from errores_base import ErrorArepa, RetornoFuncion  # noqa: E402
+from errores_base import ErrorArepa, ErrorArchivo, RetornoFuncion  # noqa: E402
+from cli.diagnosticos import ayuda_error, ayuda_sintaxis  # noqa: E402
 
 VERSION = "AREPA v0.4 (Fase 3 - visualizacion y producto final)"
 LINEA = "=" * 62
@@ -88,10 +90,13 @@ def _mostrar_contexto(texto, linea, columna):
         return
 
     lineas = texto.splitlines()
-    if linea > len(lineas):
+    if linea == len(lineas) + 1:
+        original = "(fin del archivo)"
+        columna = 0
+    elif linea > len(lineas):
         return
-
-    original = lineas[linea - 1]
+    else:
+        original = lineas[linea - 1]
     columna = min(columna, len(original))
     fuente = original.replace("\t", " " * SANGRIAS_TAB)
     prefijo = "  Línea {0}: ".format(linea)
@@ -118,6 +123,53 @@ def _resumen_archivos(contexto):
         )
 
 
+def _texto_diagnostico(valor):
+    """Un valor de datos no debe partir las líneas del diagnóstico."""
+    return str(valor).replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t")
+
+
+def _mostrar_error(problema, texto="", archivo=""):
+    clase = type(problema).__name__
+    etapa = {
+        "ErrorSemantico": "semántico", "ErrorVariable": "semántico",
+        "ErrorColumna": "semántico", "ErrorTipos": "de tipos",
+        "ErrorOperacion": "de operación", "ErrorGrafica": "gráfico",
+        "ErrorArchivo": "de archivo", "ErrorCSV": "de CSV",
+    }.get(clase, "de ejecución")
+    print("\nError {0} [{1}]:".format(etapa, clase))
+    if archivo:
+        print("  Archivo fuente: {0}".format(archivo))
+    print("  Causa: {0}".format(_texto_diagnostico(problema)))
+    if problema.archivo_datos:
+        print("  Archivo de datos: {0}".format(problema.archivo_datos))
+    if getattr(problema, "linea_archivo", -1) >= 1:
+        print("  Línea del CSV: {0}".format(problema.linea_archivo))
+    if problema.contexto:
+        print("  Contexto de datos: {0}".format(_texto_diagnostico(problema.contexto)))
+    _mostrar_contexto(texto, problema.linea, problema.columna)
+    for nombre, linea, columna in problema.llamadas:
+        print("  Llamada a '{0}' desde Línea {1}, Columna {2}.".format(nombre, linea, columna))
+    print("  Cómo corregir: {0}".format(ayuda_error(problema)))
+
+
+def _mostrar_advertencias(contexto, texto):
+    if not contexto.advertencias:
+        return
+    print("\nAvisos de ejecución (el programa puede continuar):")
+    for aviso in contexto.advertencias[:8]:
+        print("  [{0}] Línea {1}, Columna {2}: {3}".format(
+            aviso["codigo"], aviso["linea"], aviso["columna"], aviso["mensaje"]))
+        _mostrar_contexto(texto, aviso["linea"], aviso["columna"])
+        if aviso["contexto"]:
+            print("  Contexto: {0}".format(aviso["contexto"]))
+        if aviso["veces"] > 1:
+            print("  Esta causa se repitió {0} veces en esta ubicación.".format(aviso["veces"]))
+        print("  Qué revisar: {0}".format(aviso["ayuda"]))
+    if len(contexto.advertencias) > 8:
+        print("  Hay {0} ubicaciones adicionales con avisos; revisá las operaciones similares.".format(
+            len(contexto.advertencias) - 8))
+
+
 AYUDA = """uso: arepa <archivo> [opciones]
 
 Front-end y runtime del lenguaje AREPA.
@@ -141,7 +193,17 @@ opciones:
 Ejemplos:
   arepa ejemplos/demo.arepa --ejecutar
   arepa ejemplos/graficas.arepa --ejecutar --sin-ventana
-  arepa ejemplos/demo.arepa --arbol --tokens"""
+  arepa ejemplos/demo.arepa --arbol --tokens
+
+Pruebas completas (desde la raíz del proyecto):
+  python ejercicios/pruebas/ejecutar.py --completo
+  Verifica ejemplos, ejercicios, caso de estudio y suites internas.
+
+Diagnósticos:
+  Los errores indican causa, ubicación y cómo corregirla.
+  Dividir por cero produce un aviso y conserva infinito/nada según AREPA.
+  Salidas: 0 = válido (puede tener avisos), 1 = error de programa,
+           2 = error de argumentos o lectura del archivo fuente."""
 
 # Opción de la línea de comandos -> nombre del atributo que enciende.
 _BANDERAS = {
@@ -202,7 +264,7 @@ def main():
     except ErrorDeUso as problema:
         print("uso: arepa <archivo> [opciones]", file=sys.stderr)
         print("arepa: error: {0}.".format(problema), file=sys.stderr)
-        print("Pruebe 'arepa --ayuda' para ver las opciones.", file=sys.stderr)
+        print("Cómo corregir: usá arepa <archivo.arepa> [opciones]; probá 'arepa --ayuda' para ver las opciones.", file=sys.stderr)
         return 2
     if accion == "ayuda":
         print(AYUDA)
@@ -219,11 +281,20 @@ def main():
     print(LINEA)
 
     if not os.path.isfile(argumentos.archivo):
-        print("Paila: no encontré el archivo '{0}'.".format(argumentos.archivo))
+        _mostrar_error(ErrorArchivo("No encontré el archivo fuente '{0}' o la ruta no corresponde a un archivo.".format(argumentos.archivo)))
         return 2
 
-    with open(argumentos.archivo, "r", encoding="utf-8-sig") as manejador:
-        texto = manejador.read()
+    try:
+        with open(argumentos.archivo, "r", encoding="utf-8-sig") as manejador:
+            texto = manejador.read()
+    except UnicodeError:
+        _mostrar_error(ErrorArchivo("El programa fuente no está codificado en UTF-8."),
+                       archivo=argumentos.archivo)
+        return 2
+    except (OSError, ValueError) as problema:
+        _mostrar_error(ErrorArchivo("No pude leer el programa: {0}.".format(problema)),
+                       archivo=argumentos.archivo)
+        return 2
 
     print("Archivo : {0}".format(argumentos.archivo))
 
@@ -231,6 +302,7 @@ def main():
         parser, arbol, errores = analizar(texto)
     except Exception as problema:  # protección ante fallos internos
         print("Error interno del front-end: {0}".format(problema))
+        print("Conservá el archivo para revisar el intérprete; este fallo no confirma un error en tu programa.")
         return 1
 
     if argumentos.tokens:
@@ -245,7 +317,8 @@ def main():
                 )
             )
             _mostrar_contexto(texto, e["linea"], e["columna"])
-        print("\nChévere lo intentaste, pero el programa quedó mal escrito. Corregí y volvé a intentar.")
+            print("  Cómo corregir: {0}".format(ayuda_sintaxis(e)))
+        print("\nLa ejecución no empezó porque el programa contiene errores léxicos o sintácticos.")
         return 1
 
     sentencias = contar_sentencias(arbol)
@@ -261,12 +334,12 @@ def main():
         print("\n" + "-" * 62)
         print(" Ejecución con la biblioteca propia")
         print("-" * 62)
-        return _ejecutar(arbol, texto)
+        return _ejecutar(arbol, texto, argumentos.archivo)
 
     return 0
 
 
-def _ejecutar(arbol, texto=""):
+def _ejecutar(arbol, texto="", archivo=""):
     """Corre el programa con el runtime propio y reporta errores claros."""
     from runtime.ejecutor import EjecutorArepa
 
@@ -275,34 +348,33 @@ def _ejecutar(arbol, texto=""):
         ejecutor.ejecutar(arbol)
     except ErrorArepa as problema:
         ejecutor.contexto.registrar_error(problema)
-        etiqueta = type(problema).__name__
-        mapa = {
-            "ErrorSemantico": "semántico",
-            "ErrorVariable": "semántico",
-            "ErrorColumna": "semántico",
-            "ErrorTipos": "semántico",
-            "ErrorOperacion": "semántico",
-            "ErrorGrafica": "gráfico",
-            "ErrorEjecucion": "ejecución",
-            "ErrorArchivo": "ejecución",
-            "ErrorCSV": "ejecución",
-        }
-        print("\nError de {0} durante la ejecución:".format(mapa.get(etiqueta, "ejecución")))
-        print("  {0}".format(problema))
-        if problema.contexto:
-            print("  Contexto: {0}".format(problema.contexto))
-        if problema.linea >= 0:
-            _mostrar_contexto(texto, problema.linea, problema.columna)
+        _mostrar_advertencias(ejecutor.contexto, texto)
+        _mostrar_error(problema, texto, archivo)
         _resumen_archivos(ejecutor.contexto)
-        print("\nUy, el programa se cayó. Corregí y volvé a intentar.")
+        print("\nLa ejecución se detuvo en la instrucción indicada; las siguientes no se ejecutaron.")
         return 1
     except RetornoFuncion:
         _resumen_archivos(ejecutor.contexto)
         print("\nError semántico: 'devuelva' solo funciona dentro de una función.")
         return 1
+    except Exception as problema:
+        # La tubería cerrada se maneja en el punto de entrada, como antes.
+        if isinstance(problema, OSError) and problema.errno in (errno.EPIPE, errno.EINVAL):
+            raise
+        _mostrar_advertencias(ejecutor.contexto, texto)
+        print("\nError interno de ejecución [{0}]: {1}".format(type(problema).__name__, problema))
+        _mostrar_contexto(texto, *ejecutor._ultima_ubicacion)
+        print("  Conservá el archivo '{0}' y este diagnóstico para revisar el intérprete.".format(archivo or "AREPA"))
+        print("  Este fallo interno no confirma que tu programa esté mal escrito.")
+        _resumen_archivos(ejecutor.contexto)
+        return 1
 
+    _mostrar_advertencias(ejecutor.contexto, texto)
     _resumen_archivos(ejecutor.contexto)
-    print("\n¡De una! El programa corrió completo sin tropiezos.")
+    if ejecutor.contexto.advertencias:
+        print("\nEl programa terminó con avisos; se conservaron los resultados definidos por AREPA.")
+    else:
+        print("\n¡De una! El programa corrió completo sin tropiezos.")
     return 0
 
 

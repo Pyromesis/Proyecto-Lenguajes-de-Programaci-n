@@ -1,0 +1,15 @@
+# S20_desviacion_poblacional - Desviación estándar
+# Enunciado: ¿La desviación divide entre n o entre n menos uno?
+# Sustentación: AREPA calcula la desviación poblacional: divide entre n; para 1 y 3 devuelve uno.
+# Esperado: {"media":2,"desv":1,"manual":1}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S20_desviacion_poblacional.arepa --ejecutar --sin-ventana
+
+quihubo
+
+datos = [1, 3]
+media = promedie(datos)
+desv = desviacion(datos)
+manual = (((1 - media) ^ 2 + (3 - media) ^ 2) / 2) ^ 0.5
+cuenteme media, desv, manual
+
+chao

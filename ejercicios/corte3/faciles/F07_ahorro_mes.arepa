@@ -1,0 +1,19 @@
+# F07_ahorro_mes - Ahorro mensual
+# Enunciado: Representar el saldo acumulado durante cuatro meses.
+# Esperado: {"t":{"columnas":["mes","saldo"],"filas":[[1,50],[2,120],[3,180],[4,260]]}}
+# PNG esperados: salidas/c3_F07_ahorro_mes.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F07_ahorro_mes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [mes, saldo] con [[1, 50], [2, 120], [3, 180], [4, 260]]
+cuenteme t
+
+pinte lineas t
+titulo "Ahorro mensual"
+ejex mes
+ejey saldo
+leyenda "Serie observada"
+guardela "salidas/c3_F07_ahorro_mes.png"
+
+chao

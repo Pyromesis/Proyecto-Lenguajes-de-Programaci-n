@@ -1,0 +1,15 @@
+# S16_indices_desde_uno - Acceso a listas y tablas
+# Enunciado: ¿Cuál es el primer índice y cómo se accede a una celda?
+# Sustentación: El primer índice es uno; una celda se consulta con fila y nombre de columna.
+# Esperado: {"a":10,"b":20}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S16_indices_desde_uno.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valores = [10, 20]
+t = arme [nombre, edad] con [["Ana", 20]]
+a = valores[1]
+b = t[1]["edad"]
+cuenteme a, b
+
+chao

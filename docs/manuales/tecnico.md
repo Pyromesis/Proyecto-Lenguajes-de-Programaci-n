@@ -10,7 +10,7 @@ comprueban con `python3 herramientas/chequeo_documentacion.py`.
 * Versión: `AREPA v0.4 (Fase 3 - visualizacion y producto final)` con la
   ampliación de machine learning.
 * Cifras canónicas de esta versión: **64 reglas**, **79 palabras reservadas**,
-  **10 suites**, **370 pruebas** y **173 programas** ejecutables.
+  **10 suites**, **370 pruebas** y **358 programas** ejecutables.
 * Documentos relacionados: `docs/05_arquitectura.md` (algoritmos y matriz de
   trazabilidad), `docs/09_reglas_semanticas.md` (semántica),
   `docs/11_guia_machine_learning.md` (ML), `docs/11_informe_fase3.md`
@@ -51,7 +51,12 @@ src/
 ├── runtime/
 │   ├── simbolos.py       TablaSimbolos, FuncionArepa
 │   ├── contexto.py       ContextoEjecucion (salida, tablas, errores, archivos)
-│   └── ejecutor.py       EjecutorArepa(ArepaVisitor): intérprete
+│   ├── ejecutor.py       punto de entrada del Visitor
+│   ├── ejecucion_datos.py       datos, agregaciones y CSV
+│   ├── ejecucion_graficas.py    visualización
+│   ├── ejecucion_control.py    funciones y ciclos
+│   ├── ejecucion_estructuras.py estructuras y builtins
+│   └── ejecucion_modelos.py    modelos y métricas
 ├── graficas/             MOTOR GRÁFICO PROPIO (Fase 3)
 │   ├── png.py            PNG: chunks, CRC-32, Adler-32, DEFLATE fijo + LZ77
 │   ├── fuente.py         fuente bitmap 5x7 propia
@@ -209,9 +214,9 @@ versión del runtime debe coincidir (`antlr4-python3-runtime==4.13.2` en
 
 El intérprete es un **Visitor**:
 
-* `src/runtime/ejecutor.py::EjecutorArepa(ArepaVisitor)` (línea 92) recorre el
+* `src/runtime/ejecutor.py::EjecutorArepa` recorre el
   programa.
-* `src/expresiones/evaluador.py::EvaluadorExpresiones(ArepaVisitor)` (línea 81)
+* `src/expresiones/evaluador.py::EvaluadorExpresiones`
   calcula expresiones. El evaluador **no** usa `eval()`/`exec()`: la
   precedencia ya está codificada en la forma del árbol por la gramática. Para
   las expresiones que pueden ser un pipeline completo, delega en el callback
@@ -320,7 +325,7 @@ para las pruebas. La función de entrada es `dibujar(tipo, series, **opciones)`
 
 ### 6.6 Integración con el runtime
 
-`EjecutorArepa.visitInstruccion_grafica` (`src/runtime/ejecutor.py:550`) hace
+`EjecutorArepa.visitInstruccion_grafica` (`src/runtime/ejecucion_graficas.py`) hace
 toda la orquestación: valida la tabla y las columnas, aplica los valores por
 defecto, construye las `Serie`, llama a `dibujar(..., ancho=800, alto=480)` y
 cierra con `guardela` o `muestrela`. Auxiliares clave: `_columnas_de_clausula`
@@ -512,3 +517,32 @@ integración con el runtime (11) y el caso de estudio (4).
 
 El detalle ampliado de cada limitación está en `docs/11_informe_fase3.md` §4 y
 en `docs/05_arquitectura.md`.
+
+## Organización y contratos del cierre técnico
+
+`src/runtime/ejecutor.py` conserva el estado y coordina el Visitor. Se compone
+con cinco visitantes por responsabilidad: `ejecucion_datos.py`,
+`ejecucion_graficas.py`, `ejecucion_control.py`, `ejecucion_estructuras.py` y
+`ejecucion_modelos.py`. Todos comparten el mismo contexto; no hay un segundo
+intérprete ni duplicación de algoritmos. Las definiciones de las tablas de
+trazabilidad apuntan al módulo que realmente implementa cada operación.
+
+Los nombres de columna son únicos. En CSV, los campos citados son texto
+explícito; se conservan espacios, cadenas vacías y textos numéricos como
+"001". Los campos no citados mantienen la inferencia, con `nada` para un
+faltante. El escritor cita textos ambiguos para conservar valores y tipos,
+incluso cuando una fila contiene solamente una celda vacía o faltante.
+
+Los enteros decimales se leen y escriben por bloques de nueve dígitos en
+`src/utiles/enteros.py`, sin modificar límites globales de Python. Los modelos
+y sus métricas operan con decimales finitos: rechazan NaN, infinitos,
+desbordamiento y entrenamiento divergente en vez de anunciar éxito. Media,
+desviación, MAE, RMSE y R² usan escalas de cálculo que evitan desbordamientos
+intermedios cuando el resultado es representable. Un modelo con pocas épocas
+puede seguir siendo válido sin haber alcanzado un ajuste preciso.
+
+`python herramientas/verificar_entrega.py` comprueba gramática, documentación
+y todas las pruebas. `python herramientas/crear_entrega.py --probar` empaqueta
+los archivos actuales, valida un manifiesto SHA-256 e instala y prueba la
+entrega en un entorno virtual nuevo. La ejecución automatizada está en
+`.github/workflows/verificacion.yml`.

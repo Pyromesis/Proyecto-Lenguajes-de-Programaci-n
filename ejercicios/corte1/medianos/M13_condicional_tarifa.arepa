@@ -1,0 +1,13 @@
+# M13_condicional_tarifa - Tarifa según edad
+# Enunciado: Cobrar 5 a un niño de 10 años y 10 al resto.
+# Esperado: {"tarifa":5}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M13_condicional_tarifa.arepa --ejecutar --sin-ventana
+
+quihubo
+
+edad = 10
+tarifa = 10
+fijese_si (edad < 12) { tarifa = 5 } sino { tarifa = 10 }
+cuenteme tarifa
+
+chao

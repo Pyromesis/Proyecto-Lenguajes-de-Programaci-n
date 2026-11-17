@@ -1,0 +1,19 @@
+# M14_sin_faltantes - Muestra sin faltantes
+# Enunciado: Eliminar valores nada antes de representar tiempos.
+# Esperado: {"r":{"columnas":["tiempo"],"filas":[[2],[3],[5]]}}
+# PNG esperados: salidas/c3_M14_sin_faltantes.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M14_sin_faltantes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [tiempo] con [[2], [nada], [3], [5], [nada]]
+r = t |> limpie vacios
+cuenteme r
+
+pinte histograma r
+titulo "Muestra sin faltantes"
+ejey tiempo
+leyenda "Serie observada"
+guardela "salidas/c3_M14_sin_faltantes.png"
+
+chao

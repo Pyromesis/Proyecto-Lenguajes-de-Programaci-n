@@ -1,0 +1,19 @@
+# F22_notas_curso - Notas por curso
+# Enunciado: Comparar medianas y variación de notas en dos cursos.
+# Esperado: {"t":{"columnas":["curso","nota"],"filas":[["A",2],["A",3],["A",5],["B",3],["B",4],["B",5]]}}
+# PNG esperados: salidas/c3_F22_notas_curso.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F22_notas_curso.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [curso, nota] con [["A", 2], ["A", 3], ["A", 5], ["B", 3], ["B", 4], ["B", 5]]
+cuenteme t
+
+pinte cajas t
+titulo "Notas por curso"
+ejex curso
+ejey nota
+leyenda "Serie observada"
+guardela "salidas/c3_F22_notas_curso.png"
+
+chao

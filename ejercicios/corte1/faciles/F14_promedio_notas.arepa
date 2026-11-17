@@ -1,0 +1,11 @@
+# F14_promedio_notas - Promedio de notas
+# Enunciado: Promediar 3, 4 y 5 respetando los paréntesis.
+# Esperado: {"resultado":4}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F14_promedio_notas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = (3 + 4 + 5) / 3
+cuenteme resultado
+
+chao

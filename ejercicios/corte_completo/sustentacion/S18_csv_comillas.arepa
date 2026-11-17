@@ -1,0 +1,15 @@
+# S18_csv_comillas - Separadores dentro de campos
+# Enunciado: ¿Cómo se conserva una coma y una comilla dentro de un campo CSV?
+# Sustentación: El escritor entrecomilla el campo y duplica comillas internas; el lector reconstruye el texto.
+# Esperado: {"r":{"columnas":["nombre","nota"],"filas":[["Ana, Pérez","dijo \"hola\""]]}}
+# CSV esperados: salidas/sustentacion_S18.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S18_csv_comillas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nombre, nota] con [["Ana, Pérez", "dijo \"hola\""]]
+guarde t como "salidas/sustentacion_S18.csv"
+r = monte "salidas/sustentacion_S18.csv" con encabezado
+cuenteme r
+
+chao

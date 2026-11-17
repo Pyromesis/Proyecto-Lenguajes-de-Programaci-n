@@ -1,0 +1,28 @@
+# D02_regresion_predicciones - Regresión y contraste
+# Enunciado: Aprender una recta y comparar valores reales y predichos sobre datos nuevos.
+# Esperado: {"r":{"columnas":["x","respuesta","estimado"],"filas":[[6,15,15],[7,17,17],[8,19,19]]}}
+# PNG esperados: salidas/c3_D02_regresion_predicciones.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D02_regresion_predicciones.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x, respuesta] con [[1, 5], [2, 7], [3, 9], [4, 11], [5, 13]]
+entrene modelo = regresion con t
+columnas [x]
+objetivo respuesta
+tasa 0.1
+epocas 3000
+prueba = arme [x, respuesta] con [[6, 15], [7, 17], [8, 19]]
+r = prueba |> prediga con modelo como estimado
+evalua modelo con prueba
+
+cuenteme r
+
+pinte lineas r
+titulo "Regresión y contraste"
+ejex x
+ejey [respuesta, estimado]
+leyenda "Serie observada"
+guardela "salidas/c3_D02_regresion_predicciones.png"
+
+chao

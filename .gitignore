@@ -6,6 +6,9 @@ __pycache__/
 .venv/
 venv/
 
+# Paquetes de entrega y sus huellas (se pueden regenerar)
+output/entregas/
+
 # Salidas de ejecución (gráficas y CSV generados)
 # Se ignora todo lo generado, EXCEPTO la evidencia verificable de datos y ML
 salidas/*

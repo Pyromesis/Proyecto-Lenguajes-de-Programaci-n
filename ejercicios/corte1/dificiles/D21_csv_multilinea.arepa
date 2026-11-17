@@ -1,0 +1,13 @@
+# D21_csv_multilinea - CSV con campos multilínea
+# Enunciado: Leer comillas y saltos de línea dentro de campos CSV.
+# Esperado: {"filas":2,"nota":"línea 1\nlínea 2"}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D21_csv_multilinea.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = monte "ejercicios/pruebas/datos/comillas.csv" con encabezado
+filas = largo(t)
+nota = t[2]["nota"]
+cuenteme filas, nota
+
+chao

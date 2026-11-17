@@ -1,0 +1,21 @@
+# S22_barras_agrupacion - Barras y categorías repetidas
+# Enunciado: ¿Cómo se hace explícita la suma de observaciones con igual categoría?
+# Sustentación: Agrupar y resumir produce una fila por categoría y hace verificable la altura esperada de cada barra.
+# Esperado: {"r":{"columnas":["ciudad","total"],"filas":[["A",5],["B",4]]}}
+# PNG esperados: salidas/sustentacion_S22.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S22_barras_agrupacion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [ciudad, valor] con [["A", 2], ["A", 3], ["B", 4]]
+r = t |> junte por [ciudad] |> resuma total = sume(valor)
+cuenteme r
+
+pinte barras r
+titulo "Resultados"
+ejex ciudad
+ejey total
+leyenda "Serie observada"
+guardela "salidas/sustentacion_S22.png"
+
+chao

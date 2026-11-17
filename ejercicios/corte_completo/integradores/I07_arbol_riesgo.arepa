@@ -1,0 +1,32 @@
+# I07_arbol_riesgo - Riesgo con tres clases
+# Enunciado: Aprender tres niveles de riesgo con un árbol y resumir las clases de datos nuevos.
+# Esperado: {"resumen":{"columnas":["predicha","personas"],"filas":[["bajo",1],["medio",1],["alto",1]]}}
+# PNG esperados: salidas/completo_I07_arbol_riesgo.png
+# CSV esperados: salidas/completo_I07_arbol_riesgo.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I07_arbol_riesgo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [deuda, riesgo] con [[1, "bajo"], [2, "bajo"], [5, "medio"], [6, "medio"], [9, "alto"], [10, "alto"]]
+entrene modelo = arbol con t
+columnas [deuda]
+objetivo riesgo
+profundidad 4
+min_hojas 1
+prueba = arme [deuda, riesgo] con [[1.5, "bajo"], [5.5, "medio"], [9.5, "alto"]]
+p = prueba |> clasifique con modelo como predicha
+resumen = p |> junte por [predicha] |> resuma personas = cuente()
+evalua modelo con prueba
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I07_arbol_riesgo.csv"
+
+pinte barras resumen
+titulo "Riesgo con tres clases"
+ejex predicha
+ejey personas
+leyenda "Serie observada"
+guardela "salidas/completo_I07_arbol_riesgo.png"
+
+chao

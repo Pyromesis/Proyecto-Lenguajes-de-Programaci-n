@@ -24,6 +24,7 @@ Limitaciones:
 """
 
 from errores_base import ErrorTipos
+from utiles.enteros import entero_a_texto, texto_a_entero
 
 
 class ValorNulo:
@@ -66,7 +67,9 @@ def formatear_numero(valor):
     if valor == MENOS_INFINITO:
         return "-infinito"
     if isinstance(valor, float) and valor.is_integer():
-        return str(int(valor))
+        return entero_a_texto(int(valor))
+    if isinstance(valor, int) and not isinstance(valor, bool):
+        return entero_a_texto(valor)
     return str(valor)
 
 
@@ -211,7 +214,7 @@ def _parsear_numero(texto):
     if bajo in ("nan", "+nan", "-nan"):
         raise ValueError("indefinido")
     try:
-        return int(texto)
+        return texto_a_entero(texto)
     except ValueError:
         return float(texto)
 

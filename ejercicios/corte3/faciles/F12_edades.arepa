@@ -1,0 +1,18 @@
+# F12_edades - Distribución de edades
+# Enunciado: Observar la distribución de edades de ocho personas.
+# Esperado: {"t":{"columnas":["edad"],"filas":[[18],[20],[20],[25],[30],[35],[40],[60]]}}
+# PNG esperados: salidas/c3_F12_edades.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F12_edades.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [edad] con [[18], [20], [20], [25], [30], [35], [40], [60]]
+cuenteme t
+
+pinte histograma t
+titulo "Distribución de edades"
+ejey edad
+leyenda "Serie observada"
+guardela "salidas/c3_F12_edades.png"
+
+chao

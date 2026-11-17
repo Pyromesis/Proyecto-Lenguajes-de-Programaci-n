@@ -1,0 +1,13 @@
+# F33_recorrido_lista - Recorrer una lista
+# Enunciado: Sumar los cuadrados de 1, 2 y 3.
+# Esperado: {"total":14}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F33_recorrido_lista.arepa --ejecutar --sin-ventana
+
+quihubo
+
+total = 0
+numeros = [1, 2, 3]
+recorra n en numeros { total = total + n ^ 2 }
+cuenteme total
+
+chao

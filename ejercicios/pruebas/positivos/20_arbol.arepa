@@ -1,0 +1,13 @@
+# Ejemplo verificable: 20_arbol
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, clase] con [[1, "A"], [2, "A"], [8, "B"], [9, "B"]]
+entrene modelo = arbol con t
+columnas [x]
+objetivo clase
+profundidad 3
+min_hojas 1
+prueba = arme [x, clase] con [[1.5, "A"], [8.5, "B"]]
+r = prueba |> clasifique con modelo como predicha
+evalua modelo con prueba
+chao

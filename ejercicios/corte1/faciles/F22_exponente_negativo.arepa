@@ -1,0 +1,11 @@
+# F22_exponente_negativo - Exponente negativo
+# Enunciado: Calcular el inverso de ocho usando una potencia.
+# Esperado: {"resultado":0.125}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F22_exponente_negativo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = 2 ^ -3
+cuenteme resultado
+
+chao

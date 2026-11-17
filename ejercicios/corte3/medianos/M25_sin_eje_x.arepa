@@ -1,0 +1,18 @@
+# M25_sin_eje_x - Cajas de dos series
+# Enunciado: Comparar dos columnas numéricas sin columna de agrupación x.
+# Esperado: {"r":{"columnas":["antes","despues"],"filas":[[2,3],[4,5],[6,8],[8,10]]}}
+# PNG esperados: salidas/c3_M25_sin_eje_x.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M25_sin_eje_x.arepa --ejecutar --sin-ventana
+
+quihubo
+
+r = arme [antes, despues] con [[2, 3], [4, 5], [6, 8], [8, 10]]
+cuenteme r
+
+pinte cajas r
+titulo "Cajas de dos series"
+ejey [antes, despues]
+leyenda "Serie observada"
+guardela "salidas/c3_M25_sin_eje_x.png"
+
+chao

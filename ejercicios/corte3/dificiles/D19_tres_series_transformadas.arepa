@@ -1,0 +1,21 @@
+# D19_tres_series_transformadas - Tres transformaciones
+# Enunciado: Comparar funciones lineal, cuadrática y cúbica para entradas con negativos.
+# Esperado: {"r":{"columnas":["x","lineal","cuadrado","cubo"],"filas":[[-2,-2,4,-8],[-1,-1,1,-1],[0,0,0,0],[1,1,1,1],[2,2,4,8]]}}
+# PNG esperados: salidas/c3_D19_tres_series_transformadas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D19_tres_series_transformadas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[-2], [-1], [0], [1], [2]]
+r = t |> cree lineal = x |> cree cuadrado = x ^ 2 |> cree cubo = x ^ 3
+
+cuenteme r
+
+pinte lineas r
+titulo "Tres transformaciones"
+ejex x
+ejey [lineal, cuadrado, cubo]
+leyenda "Serie observada"
+guardela "salidas/c3_D19_tres_series_transformadas.png"
+
+chao

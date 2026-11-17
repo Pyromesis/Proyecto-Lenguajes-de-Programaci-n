@@ -1,0 +1,22 @@
+# D20_exportar_releer - Exportar y volver a graficar
+# Enunciado: Exportar un resumen y generar una gráfica desde el CSV releído.
+# Esperado: {"r":{"columnas":["ciudad","ingreso"],"filas":[["Bogotá",30],["Cali",15]]}}
+# PNG esperados: salidas/c3_D20_exportar_releer.png
+# CSV esperados: salidas/c3_D20.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D20_exportar_releer.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [ciudad, unidades, precio] con [["Bogotá", 2, 10], ["Cali", 3, 5], ["Bogotá", 1, 10]]
+resumen = t |> cree total = unidades * precio |> junte por [ciudad] |> resuma ingreso = sume(total)
+guarde resumen como "salidas/c3_D20.csv"
+r = monte "salidas/c3_D20.csv" con encabezado
+
+pinte barras r
+titulo "Resultados"
+ejex ciudad
+ejey ingreso
+leyenda "Serie observada"
+guardela "salidas/c3_D20_exportar_releer.png"
+
+chao

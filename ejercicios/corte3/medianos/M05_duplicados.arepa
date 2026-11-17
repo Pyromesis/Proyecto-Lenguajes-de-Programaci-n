@@ -1,0 +1,20 @@
+# M05_duplicados - Conteo sin duplicados
+# Enunciado: Eliminar filas duplicadas antes de contar personas por ciudad.
+# Esperado: {"r":{"columnas":["ciudad","personas"],"filas":[["A",1],["B",1]]}}
+# PNG esperados: salidas/c3_M05_duplicados.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M05_duplicados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [persona, ciudad] con [["Ana", "A"], ["Ana", "A"], ["Luis", "B"]]
+r = t |> limpie duplicados |> junte por [ciudad] |> resuma personas = cuente()
+cuenteme r
+
+pinte barras r
+titulo "Conteo sin duplicados"
+ejex ciudad
+ejey personas
+leyenda "Serie observada"
+guardela "salidas/c3_M05_duplicados.png"
+
+chao

@@ -1,0 +1,19 @@
+# F24_precio_tienda - Precios por tienda
+# Enunciado: Comparar la distribución de precios de dos tiendas.
+# Esperado: {"t":{"columnas":["tienda","precio"],"filas":[["Norte",10],["Norte",12],["Norte",15],["Sur",8],["Sur",14],["Sur",20]]}}
+# PNG esperados: salidas/c3_F24_precio_tienda.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F24_precio_tienda.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [tienda, precio] con [["Norte", 10], ["Norte", 12], ["Norte", 15], ["Sur", 8], ["Sur", 14], ["Sur", 20]]
+cuenteme t
+
+pinte cajas t
+titulo "Precios por tienda"
+ejex tienda
+ejey precio
+leyenda "Serie observada"
+guardela "salidas/c3_F24_precio_tienda.png"
+
+chao

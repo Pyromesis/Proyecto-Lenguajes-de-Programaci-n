@@ -1,0 +1,21 @@
+# M20_funcion_cuadratica - Función cuadrática
+# Enunciado: Usar una función para calcular los puntos de una parábola.
+# Esperado: {"r":{"columnas":["x","valor"],"filas":[[-2,4],[-1,1],[0,0],[1,1],[2,4]]}}
+# PNG esperados: salidas/c3_M20_funcion_cuadratica.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M20_funcion_cuadratica.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente cuadrado(n) { devuelva n ^ 2 }
+t = arme [x] con [[-2], [-1], [0], [1], [2]]
+r = t |> cree valor = cuadrado(x)
+cuenteme r
+
+pinte dispersion r
+titulo "Función cuadrática"
+ejex x
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_M20_funcion_cuadratica.png"
+
+chao

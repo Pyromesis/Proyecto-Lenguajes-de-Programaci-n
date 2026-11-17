@@ -1,0 +1,16 @@
+# S21_promedios_ponderados - Promedio de promedios
+# Enunciado: ¿Se puede promediar la media de grupos de distinto tamaño?
+# Sustentación: Solo con ponderación por cantidad se obtiene la media global; el promedio simple puede sesgar el resultado.
+# Esperado: {"simple":20,"ponderada":15,"global_media":15}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S21_promedios_ponderados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 10], ["A", 10], ["A", 10], ["B", 30]]
+r = t |> junte por [grupo] |> resuma media = promedie(valor), n = cuente() |> cree peso = media * n
+simple = promedie(r, media)
+ponderada = sume(r, peso) / sume(r, n)
+global_media = promedie(t, valor)
+cuenteme simple, ponderada, global_media
+
+chao

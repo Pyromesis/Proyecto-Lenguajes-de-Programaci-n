@@ -1,0 +1,19 @@
+# M11_notas_validas - Notas válidas
+# Enunciado: Descartar notas fuera del intervalo entre cero y cinco.
+# Esperado: {"r":{"columnas":["nota"],"filas":[[2],[3],[4],[5]]}}
+# PNG esperados: salidas/c3_M11_notas_validas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M11_notas_validas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nota] con [[-1], [2], [3], [4], [5], [6]]
+r = t |> deje donde nota >= 0 y nota <= 5
+cuenteme r
+
+pinte histograma r
+titulo "Notas válidas"
+ejey nota
+leyenda "Serie observada"
+guardela "salidas/c3_M11_notas_validas.png"
+
+chao

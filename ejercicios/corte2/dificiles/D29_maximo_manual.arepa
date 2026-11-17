@@ -1,0 +1,13 @@
+# D29_maximo_manual - Máximo sin builtin
+# Enunciado: Hallar el máximo de una lista que contiene solo negativos.
+# Esperado: {"mayor":-2}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D29_maximo_manual.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valores = [-8, -2, -10, -3]
+mayor = valores[1]
+recorra n en valores { fijese_si (n > mayor) { mayor = n } }
+cuenteme mayor
+
+chao

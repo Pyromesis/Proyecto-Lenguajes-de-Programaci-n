@@ -1,0 +1,25 @@
+# D13_tarifa_por_tramos - Tarifa escalonada
+# Enunciado: Calcular facturas con primeros diez consumos a dos y el resto a tres.
+# Esperado: {"r":{"columnas":["consumo","cobro"],"filas":[[0,0],[5,10],[10,20],[15,35],[20,50]]}}
+# PNG esperados: salidas/c3_D13_tarifa_por_tramos.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D13_tarifa_por_tramos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente factura(consumo) {
+ fijese_si (consumo <= 10) { devuelva consumo * 2 }
+ devuelva 20 + (consumo - 10) * 3
+}
+t = arme [consumo] con [[0], [5], [10], [15], [20]]
+r = t |> cree cobro = factura(consumo)
+
+cuenteme r
+
+pinte lineas r
+titulo "Tarifa escalonada"
+ejex consumo
+ejey cobro
+leyenda "Serie observada"
+guardela "salidas/c3_D13_tarifa_por_tramos.png"
+
+chao

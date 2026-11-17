@@ -1,0 +1,19 @@
+# F20_altura_peso - Altura y peso
+# Enunciado: Explorar la relación entre altura y peso en cuatro observaciones.
+# Esperado: {"t":{"columnas":["altura","peso"],"filas":[[150,48],[160,57],[170,68],[180,80]]}}
+# PNG esperados: salidas/c3_F20_altura_peso.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F20_altura_peso.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [altura, peso] con [[150, 48], [160, 57], [170, 68], [180, 80]]
+cuenteme t
+
+pinte dispersion t
+titulo "Altura y peso"
+ejex altura
+ejey peso
+leyenda "Serie observada"
+guardela "salidas/c3_F20_altura_peso.png"
+
+chao

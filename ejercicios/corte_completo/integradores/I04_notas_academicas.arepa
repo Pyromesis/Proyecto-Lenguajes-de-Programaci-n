@@ -1,0 +1,29 @@
+# I04_notas_academicas - Informe académico
+# Enunciado: Limpiar notas, clasificar aprobados y calcular estadísticas por curso.
+# Esperado: {"resumen":{"columnas":["curso","media","mitad","aprobados","estudiantes"],"filas":[["A",3,3,1,2],["B",4,4,2,2]]}}
+# PNG esperados: salidas/completo_I04_notas_academicas.png
+# CSV esperados: salidas/completo_I04_notas_academicas.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I04_notas_academicas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente indicador(nota) {
+ fijese_si (nota >= 3) { devuelva 1 }
+ devuelva 0
+}
+t = arme [curso, nota] con [["A", 2], ["A", 4], ["A", nada], ["B", 3], ["B", 5]]
+limpia = t |> limpie vacios |> cree aprueba = indicador(nota)
+resumen = limpia |> junte por [curso] |> resuma media = promedie(nota), mitad = mediana(nota), aprobados = sume(aprueba), estudiantes = cuente()
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I04_notas_academicas.csv"
+
+pinte barras resumen
+titulo "Informe académico"
+ejex curso
+ejey [media, mitad]
+leyenda "Serie observada"
+guardela "salidas/completo_I04_notas_academicas.png"
+
+chao

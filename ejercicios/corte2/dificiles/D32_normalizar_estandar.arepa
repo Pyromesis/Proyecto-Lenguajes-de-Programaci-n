@@ -1,0 +1,14 @@
+# D32_normalizar_estandar - Estandarización manual
+# Enunciado: Normalizar 2, 4 y 6 restando su media y dividiendo por su desviación.
+# Esperado: {"r":{"columnas":["x","z"],"filas":[[2,-1.224744871391589],[4,0],[6,1.224744871391589]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D32_normalizar_estandar.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[2], [4], [6]]
+media = promedie(t, x)
+desv = desviacion(t, x)
+r = t |> cree z = (x - media) / desv
+cuenteme r
+
+chao

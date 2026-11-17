@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
 #  AREPA - Regresión de todos los programas
-#  Ejecuta los .arepa de ejercicios/ (164) y ejemplos/ (9) con --ejecutar.
+#  Ejecuta los .arepa de los cortes (349) y ejemplos/ (9) con --ejecutar.
 #  Falla si alguno termina con código distinto de 0.
 # ============================================================
 set -euo pipefail
@@ -25,9 +25,10 @@ detalle=""
 c1=$(find ejercicios/corte1 -name '*.arepa' -type f | wc -l)
 c2=$(find ejercicios/corte2 -name '*.arepa' -type f | wc -l)
 c3=$(find ejercicios/corte3 -name '*.arepa' -type f | wc -l)
+completo=$(find ejercicios/corte_completo -name '*.arepa' -type f | wc -l)
 ejemplos=$(find ejemplos -name '*.arepa' -type f | wc -l)
-if [ "$c1" -ne 32 ] || [ "$c2" -ne 120 ] || [ "$c3" -ne 12 ] || [ "$ejemplos" -ne 9 ]; then
-  echo "Conteo inesperado: C1=$c1 (32), C2=$c2 (120), C3=$c3 (12), ejemplos=$ejemplos (9)."
+if [ "$c1" -ne 75 ] || [ "$c2" -ne 150 ] || [ "$c3" -ne 87 ] || [ "$completo" -ne 37 ] || [ "$ejemplos" -ne 9 ]; then
+  echo "Conteo inesperado: C1=$c1 (75), C2=$c2 (150), C3=$c3 (87), completo=$completo (37), ejemplos=$ejemplos (9)."
   exit 1
 fi
 
@@ -42,10 +43,10 @@ while IFS= read -r archivo; do
     echo "FALLÓ: ${archivo}"
     sed -n '1,12p' "$log"
   fi
-done < <(find ejercicios ejemplos -name '*.arepa' -type f | sort)
+done < <(find ejercicios/corte1 ejercicios/corte2 ejercicios/corte3 ejercicios/corte_completo ejemplos -name '*.arepa' -type f | sort)
 
-if [ "$total" -ne 173 ]; then
-  echo "Conteo total inesperado: ${total} programas (esperados 173: 164 ejercicios + 9 ejemplos)."
+if [ "$total" -ne 358 ]; then
+  echo "Conteo total inesperado: ${total} programas (esperados 358: 349 ejercicios + 9 ejemplos)."
   exit 1
 fi
 

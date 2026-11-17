@@ -1,0 +1,17 @@
+# S12_recursion_base - Recursión con caso base
+# Enunciado: ¿Qué garantiza que factorial termina y qué devuelve para cero?
+# Sustentación: El caso base n menor o igual que uno devuelve uno; cada llamada reduce n.
+# Esperado: {"a":1,"b":120}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S12_recursion_base.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente factorial(n) {
+ fijese_si (n <= 1) { devuelva 1 }
+ devuelva n * factorial(n - 1)
+}
+a = factorial(0)
+b = factorial(5)
+cuenteme a, b
+
+chao

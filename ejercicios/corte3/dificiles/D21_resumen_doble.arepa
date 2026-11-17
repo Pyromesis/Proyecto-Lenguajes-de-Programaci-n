@@ -1,0 +1,22 @@
+# D21_resumen_doble - Agrupación en dos niveles
+# Enunciado: Obtener subtotales por región y producto antes de resumir por región.
+# Esperado: {"r":{"columnas":["region","total","productos"],"filas":[["Norte",9,2],["Sur",6,1]]}}
+# PNG esperados: salidas/c3_D21_resumen_doble.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D21_resumen_doble.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [region, producto, valor] con [["Norte", "A", 2], ["Norte", "A", 3], ["Norte", "B", 4], ["Sur", "A", 6]]
+parcial = t |> junte por [region, producto] |> resuma subtotal = sume(valor)
+r = parcial |> junte por [region] |> resuma total = sume(subtotal), productos = cuente()
+
+cuenteme r
+
+pinte barras r
+titulo "Agrupación en dos niveles"
+ejex region
+ejey total
+leyenda "Serie observada"
+guardela "salidas/c3_D21_resumen_doble.png"
+
+chao

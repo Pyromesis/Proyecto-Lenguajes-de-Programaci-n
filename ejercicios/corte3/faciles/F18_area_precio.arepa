@@ -1,0 +1,19 @@
+# F18_area_precio - Área y precio
+# Enunciado: Comparar áreas y precios de cuatro viviendas.
+# Esperado: {"t":{"columnas":["area","precio"],"filas":[[40,100],[60,150],[80,190],[100,260]]}}
+# PNG esperados: salidas/c3_F18_area_precio.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F18_area_precio.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [area, precio] con [[40, 100], [60, 150], [80, 190], [100, 260]]
+cuenteme t
+
+pinte dispersion t
+titulo "Área y precio"
+ejex area
+ejey precio
+leyenda "Serie observada"
+guardela "salidas/c3_F18_area_precio.png"
+
+chao

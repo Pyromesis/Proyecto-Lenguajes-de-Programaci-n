@@ -1,0 +1,20 @@
+# M08_saldo_neto - Saldo neto
+# Enunciado: Crear una serie de ingreso menos gasto por mes.
+# Esperado: {"r":{"columnas":["mes","neto"],"filas":[[1,20],[2,30],[3,40]]}}
+# PNG esperados: salidas/c3_M08_saldo_neto.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M08_saldo_neto.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [mes, ingreso, gasto] con [[1, 100, 80], [2, 120, 90], [3, 150, 110]]
+r = t |> cree neto = ingreso - gasto |> escoja [mes, neto]
+cuenteme r
+
+pinte lineas r
+titulo "Saldo neto"
+ejex mes
+ejey neto
+leyenda "Serie observada"
+guardela "salidas/c3_M08_saldo_neto.png"
+
+chao

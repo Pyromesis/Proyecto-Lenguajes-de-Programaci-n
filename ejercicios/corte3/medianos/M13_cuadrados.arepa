@@ -1,0 +1,19 @@
+# M13_cuadrados - Distribución de cuadrados
+# Enunciado: Crear una columna cuadrado y mostrar su distribución.
+# Esperado: {"r":{"columnas":["cuadrado"],"filas":[[1],[4],[9],[16]]}}
+# PNG esperados: salidas/c3_M13_cuadrados.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M13_cuadrados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[1], [2], [3], [4]]
+r = t |> cree cuadrado = x ^ 2 |> escoja [cuadrado]
+cuenteme r
+
+pinte histograma r
+titulo "Distribución de cuadrados"
+ejey cuadrado
+leyenda "Serie observada"
+guardela "salidas/c3_M13_cuadrados.png"
+
+chao

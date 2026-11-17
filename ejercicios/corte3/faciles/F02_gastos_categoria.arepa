@@ -1,0 +1,19 @@
+# F02_gastos_categoria - Gastos por categoría
+# Enunciado: Comparar gastos de alimentación, transporte y vivienda.
+# Esperado: {"t":{"columnas":["categoria","gasto"],"filas":[["Alimentación",200],["Transporte",80],["Vivienda",500]]}}
+# PNG esperados: salidas/c3_F02_gastos_categoria.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F02_gastos_categoria.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [categoria, gasto] con [["Alimentación", 200], ["Transporte", 80], ["Vivienda", 500]]
+cuenteme t
+
+pinte barras t
+titulo "Gastos por categoría"
+ejex categoria
+ejey gasto
+leyenda "Serie observada"
+guardela "salidas/c3_F02_gastos_categoria.png"
+
+chao

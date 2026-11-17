@@ -1,0 +1,19 @@
+# Ejemplo verificable: 04_ciclos
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+suma = 0
+repita i desde 1 hasta 10 {
+    fijese_si (i == 8) { pare }
+    fijese_si (i % 2 == 0) { siga }
+    suma = suma + i
+}
+descendente = 0
+repita j desde 5 hasta 1 paso -2 {
+    descendente = descendente + j
+}
+contador = 0
+mientras (contador < 3) { contador = contador + 1 }
+repita 2 veces { contador = contador + 10 }
+repita 0 veces { contador = 999 }
+cuenteme suma, descendente, contador
+chao

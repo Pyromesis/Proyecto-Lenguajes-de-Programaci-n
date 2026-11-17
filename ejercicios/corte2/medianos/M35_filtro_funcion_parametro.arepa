@@ -1,0 +1,14 @@
+# M35_filtro_funcion_parametro - Filtro reutilizable
+# Enunciado: Comparar cada precio con un umbral guardado en el entorno.
+# Esperado: {"r":{"columnas":["precio"],"filas":[[20],[30]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M35_filtro_funcion_parametro.arepa --ejecutar --sin-ventana
+
+quihubo
+
+umbral = 15
+invente supera(precio) { devuelva precio > umbral }
+t = arme [precio] con [[10], [20], [30]]
+r = t |> deje donde supera(precio)
+cuenteme r
+
+chao

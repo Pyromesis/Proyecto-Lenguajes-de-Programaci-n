@@ -1,0 +1,21 @@
+# D23_intervalos_estadisticos - Comparar estadísticos de grupos
+# Enunciado: Mostrar media, mediana y desviación calculadas sobre cada grupo.
+# Esperado: {"r":{"columnas":["grupo","media","mitad","desv"],"filas":[["A",2,2,1],["B",4,4,2]]}}
+# PNG esperados: salidas/c3_D23_intervalos_estadisticos.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D23_intervalos_estadisticos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 1], ["A", 3], ["B", 2], ["B", 6]]
+r = t |> junte por [grupo] |> resuma media = promedie(valor), mitad = mediana(valor), desv = desviacion(valor)
+
+cuenteme r
+
+pinte barras r
+titulo "Comparar estadísticos de grupos"
+ejex grupo
+ejey [media, mitad, desv]
+leyenda "Serie observada"
+guardela "salidas/c3_D23_intervalos_estadisticos.png"
+
+chao

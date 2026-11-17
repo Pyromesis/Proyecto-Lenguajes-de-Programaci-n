@@ -1,0 +1,9 @@
+# Ejemplo verificable: 17_muestrela
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, valor] con [[1, 2], [2, 4], [3, 3]]
+pinte lineas t
+ejex x
+ejey valor
+muestrela
+chao

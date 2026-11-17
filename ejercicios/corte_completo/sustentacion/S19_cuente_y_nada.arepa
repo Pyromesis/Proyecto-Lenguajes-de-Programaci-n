@@ -1,0 +1,13 @@
+# S19_cuente_y_nada - Contar filas o datos presentes
+# Enunciado: ¿Por qué cuente() y cuente(columna) pueden dar resultados diferentes?
+# Sustentación: El primero cuenta filas y el segundo valores presentes; las demás agregaciones ignoran nada.
+# Esperado: {"r":{"columnas":["grupo","filas","presentes","total"],"filas":[["A",3,2,4]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S19_cuente_y_nada.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 1], ["A", nada], ["A", 3]]
+r = t |> junte por [grupo] |> resuma filas = cuente(), presentes = cuente(valor), total = sume(valor)
+cuenteme r
+
+chao

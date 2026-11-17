@@ -1,0 +1,11 @@
+# F23_raiz_por_potencia - Raíz mediante potencia
+# Enunciado: Calcular la raíz cuadrada de 81.
+# Esperado: {"resultado":9}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F23_raiz_por_potencia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = 81 ^ 0.5
+cuenteme resultado
+
+chao

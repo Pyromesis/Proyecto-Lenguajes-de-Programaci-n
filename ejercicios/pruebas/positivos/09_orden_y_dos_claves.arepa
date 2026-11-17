@@ -1,0 +1,7 @@
+# Ejemplo verificable: 09_orden_y_dos_claves
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [grupo, valor, id] con [["B", 1, 1], ["A", 2, 2], ["A", 2, 3], ["A", nada, 4], ["A", 1, 5]]
+orden = t |> acomode por [grupo, valor]
+grupos = t |> junte por [grupo, valor] |> resuma n = cuente()
+chao

@@ -1,0 +1,12 @@
+# D18_renombre_reservada - Columna con nombre reservado
+# Enunciado: Leer una columna llamada numero y renombrarla.
+# Esperado: {"r":{"columnas":["codigo","valor"],"filas":[[1,10],[2,20]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D18_renombre_reservada.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [numero, valor] con [[1, 10], [2, 20]]
+r = t |> renombre numero -> codigo
+cuenteme r
+
+chao

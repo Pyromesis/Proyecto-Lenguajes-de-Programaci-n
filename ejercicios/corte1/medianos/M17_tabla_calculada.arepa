@@ -1,0 +1,12 @@
+# M17_tabla_calculada - Importe por fila
+# Enunciado: Multiplicar unidades por precio en dos filas.
+# Esperado: {"r":{"columnas":["unidades","precio","importe"],"filas":[[2,10,20],[3,4,12]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M17_tabla_calculada.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [unidades, precio] con [[2, 10], [3, 4]]
+r = t |> cree importe = unidades * precio
+cuenteme r
+
+chao

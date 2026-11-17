@@ -1,0 +1,15 @@
+# D23_closure_actualizada - Captura del entorno
+# Enunciado: Definir una función y comprobar que ve la reasignación de base.
+# Esperado: {"a":7,"b":12}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D23_closure_actualizada.arepa --ejecutar --sin-ventana
+
+quihubo
+
+base = 5
+invente suma_base(x) { devuelva x + base }
+a = suma_base(2)
+base = 10
+b = suma_base(2)
+cuenteme a, b
+
+chao

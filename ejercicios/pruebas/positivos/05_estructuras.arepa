@@ -1,0 +1,21 @@
+# Ejemplo verificable: 05_estructuras
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+lista = [10, 20, 30]
+lista[2] = 25
+agregue 40 en lista
+saque 1 de lista
+persona = {nombre: "Ana", edad: 20}
+persona["edad"] = 21
+matriz = [[1, 2], [3, 4]]
+esquina = matriz[2][1]
+gente = arme [nombre, edad] con [["Ana", 20], ["Luis", 30]]
+gente[1]["edad"] = 22
+agregue {nombre: "Marta", edad: 40} en gente
+saque 2 de gente
+total = 0
+recorra fila en gente { total = total + fila["edad"] }
+cabeceras = columnas(gente)
+edades = columna(gente, edad)
+longitud = largo(lista)
+chao

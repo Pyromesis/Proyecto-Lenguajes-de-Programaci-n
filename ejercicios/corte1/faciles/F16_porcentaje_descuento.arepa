@@ -1,0 +1,12 @@
+# F16_porcentaje_descuento - Descuento comercial
+# Enunciado: Aplicar 15 por ciento de descuento a 200.
+# Esperado: {"resultado":170}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F16_porcentaje_descuento.arepa --ejecutar --sin-ventana
+
+quihubo
+
+precio = 200
+resultado = precio * (1 - 15 / 100)
+cuenteme resultado
+
+chao

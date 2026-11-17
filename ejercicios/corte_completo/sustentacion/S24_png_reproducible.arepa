@@ -1,0 +1,19 @@
+# S24_png_reproducible - Exportación reproducible
+# Enunciado: ¿Cómo se demuestra que pinte genera un PNG válido y reproducible?
+# Sustentación: Exportar con guardela y ejecutar las pruebas que verifican CRC, descompresión, tamaño y repetición byte a byte.
+# Esperado: {"t":{"columnas":["x","valor"],"filas":[[1,2],[2,4],[3,3]]}}
+# PNG esperados: salidas/sustentacion_S24.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S24_png_reproducible.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x, valor] con [[1, 2], [2, 4], [3, 3]]
+
+pinte lineas t
+titulo "Demostración reproducible"
+ejex x
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/sustentacion_S24.png"
+
+chao

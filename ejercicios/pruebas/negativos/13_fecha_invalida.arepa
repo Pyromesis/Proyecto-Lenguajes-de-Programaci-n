@@ -1,0 +1,5 @@
+# Debe rechazarse: ErrorTipos
+quihubo
+t = arme [dia] con [["2023-02-29"]]
+r = t |> convierta dia -> fecha
+chao

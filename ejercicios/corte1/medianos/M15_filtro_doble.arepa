@@ -1,0 +1,12 @@
+# M15_filtro_doble - Filtro de inventario
+# Enunciado: Conservar artículos con existencias positivas y precio menor que 20.
+# Esperado: {"r":{"columnas":["producto","stock","precio"],"filas":[["A",2,10]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M15_filtro_doble.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, stock, precio] con [["A", 2, 10], ["B", 0, 5], ["C", 3, 25]]
+r = t |> deje donde stock > 0 y precio < 20
+cuenteme r
+
+chao

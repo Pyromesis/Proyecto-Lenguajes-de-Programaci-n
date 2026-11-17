@@ -15,6 +15,7 @@ fila con exactamente la misma codificación usada en el entrenamiento.
 
 from datos.tipos import NADA, es_nada, es_numero, formatear_numero
 from errores_base import ErrorSemantico
+from utiles.matematica import es_finito
 
 
 class ModeloML:
@@ -53,7 +54,7 @@ class ModeloML:
         X, y = self.preprocesador.datos(tabla, estandarizar=self.estandarizar)
         if isinstance(self, ModeloRegresion):
             self.validar_objetivo(y)
-        predicciones = [self.predecir(vector) for vector in X]
+        predicciones = [self._valor_seguro(self.predecir(vector)) for vector in X]
         return y, predicciones
 
     # ---------------------------------------------------------------- #
@@ -76,9 +77,10 @@ class ModeloML:
         ]
 
     def _valor_seguro(self, valor):
-        """Convierte NaN/infinito en 'nada' para no romper una tabla."""
-        if isinstance(valor, float) and (valor != valor or valor in (float("inf"), float("-inf"))):
-            return NADA
+        """No oculta como faltante una predicción numéricamente inválida."""
+        if es_numero(valor) and not es_finito(valor):
+            raise ErrorSemantico("El modelo produjo una predicción no finita; "
+                                 "revisá la escala de los datos y el entrenamiento.")
         return valor
 
 
@@ -98,6 +100,7 @@ class ModeloRegresion(ModeloML):
                     "encontré '{0}'. Para etiquetas usá 'perceptron' o "
                     "'arbol'.".format(valor)
                 )
+            exigir_numero_finito(valor, "objetivo de regresión")
 
 
 class ModeloClasificacion(ModeloML):
@@ -133,7 +136,22 @@ def exigir_numero_positivo(valor, nombre, contexto=""):
                 nombre, _donde(contexto)
             )
         )
-    return float(valor)
+    return exigir_numero_finito(valor, nombre)
+
+
+def exigir_numero_finito(valor, nombre):
+    """Valida el tipo y el rango decimal que consumen los modelos."""
+    if not es_numero(valor) or not es_finito(valor):
+        raise ErrorSemantico("'{0}' debe ser un número finito; "
+                             "no admite infinito, nada ni NaN.".format(nombre))
+    try:
+        numero = float(valor)
+    except (OverflowError, ValueError):
+        raise ErrorSemantico("'{0}' excede el rango decimal del modelo; "
+                             "reducí la escala de los datos.".format(nombre)) from None
+    if not es_finito(numero):
+        raise ErrorSemantico("'{0}' excede el rango decimal del modelo.".format(nombre))
+    return numero
 
 
 def _donde(contexto):

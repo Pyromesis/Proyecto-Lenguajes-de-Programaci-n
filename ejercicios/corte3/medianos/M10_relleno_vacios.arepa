@@ -1,0 +1,20 @@
+# M10_relleno_vacios - Rellenar una serie
+# Enunciado: Reemplazar una observación faltante por cero antes de graficar.
+# Esperado: {"r":{"columnas":["dia","valor"],"filas":[[1,10],[2,0],[3,30]]}}
+# PNG esperados: salidas/c3_M10_relleno_vacios.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M10_relleno_vacios.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia, valor] con [[1, 10], [2, nada], [3, 30]]
+r = t |> limpie vacios con 0
+cuenteme r
+
+pinte lineas r
+titulo "Rellenar una serie"
+ejex dia
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_M10_relleno_vacios.png"
+
+chao

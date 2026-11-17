@@ -34,6 +34,7 @@ from datos.tipos import (
     es_texto,
     es_logico,
     nombre_tipo,
+    formatear_numero,
 )
 from errores_base import ErrorOperacion, ErrorTipos
 
@@ -116,7 +117,8 @@ def potenciar(a, b):
         return _infinito_con_signo(a, b)
     if isinstance(resultado, complex):
         raise ErrorOperacion(
-            "La potencia {0} ^ {1} no tiene resultado real.".format(a, b)
+            "La potencia {0} ^ {1} no tiene resultado real.".format(
+                formatear_numero(a), formatear_numero(b))
         )
     if resultado == INFINITO:
         return INFINITO

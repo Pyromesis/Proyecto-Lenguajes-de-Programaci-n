@@ -36,8 +36,18 @@ class Tabla:
     """Conjunto de datos propio: columnas con nombre y filas de valores."""
 
     def __init__(self, nombres_columnas, filas=None, nombre="tabla", origen=""):
+        nombres_columnas = list(nombres_columnas)
         if not nombres_columnas:
-            raise ValueError("Una tabla necesita al menos una columna.")
+            raise ErrorColumna("Una tabla necesita al menos una columna.")
+        vistos = set()
+        for columna in nombres_columnas:
+            if not isinstance(columna, str) or not columna:
+                raise ErrorColumna("Cada columna necesita un nombre de texto no vacío.")
+            if columna in vistos:
+                raise ErrorColumna(
+                    "El nombre de columna '{0}' está repetido; cada columna "
+                    "debe tener un nombre único.".format(columna))
+            vistos.add(columna)
         self.columnas = [Columna(n) for n in nombres_columnas]
         self.filas = list(filas) if filas else []
         self.nombre = nombre
@@ -317,7 +327,9 @@ class Tabla:
         resultado = []
         i = j = 0
         while i < len(izquierda) and j < len(derecha):
-            if Tabla._menor(izquierda[i], derecha[j], criterios):
+            # Ante claves iguales sale primero la fila de la mitad izquierda.
+            # Así la mezcla conserva el orden original (ordenamiento estable).
+            if not Tabla._menor(derecha[j], izquierda[i], criterios):
                 resultado.append(izquierda[i])
                 i += 1
             else:

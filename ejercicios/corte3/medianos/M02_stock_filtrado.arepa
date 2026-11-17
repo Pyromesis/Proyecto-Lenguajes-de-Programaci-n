@@ -1,0 +1,20 @@
+# M02_stock_filtrado - Stock disponible
+# Enunciado: Eliminar productos sin stock antes de graficar.
+# Esperado: {"r":{"columnas":["producto","stock"],"filas":[["A",2],["C",5]]}}
+# PNG esperados: salidas/c3_M02_stock_filtrado.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M02_stock_filtrado.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, stock] con [["A", 2], ["B", 0], ["C", 5]]
+r = t |> deje donde stock > 0
+cuenteme r
+
+pinte barras r
+titulo "Stock disponible"
+ejex producto
+ejey stock
+leyenda "Serie observada"
+guardela "salidas/c3_M02_stock_filtrado.png"
+
+chao

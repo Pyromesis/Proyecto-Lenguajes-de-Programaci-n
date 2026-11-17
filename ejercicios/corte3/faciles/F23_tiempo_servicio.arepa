@@ -1,0 +1,19 @@
+# F23_tiempo_servicio - Atención por servicio
+# Enunciado: Comparar tiempos de dos servicios con tres observaciones cada uno.
+# Esperado: {"t":{"columnas":["servicio","minutos"],"filas":[["Caja",2],["Caja",3],["Caja",4],["Consulta",5],["Consulta",8],["Consulta",12]]}}
+# PNG esperados: salidas/c3_F23_tiempo_servicio.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F23_tiempo_servicio.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [servicio, minutos] con [["Caja", 2], ["Caja", 3], ["Caja", 4], ["Consulta", 5], ["Consulta", 8], ["Consulta", 12]]
+cuenteme t
+
+pinte cajas t
+titulo "Atención por servicio"
+ejex servicio
+ejey minutos
+leyenda "Serie observada"
+guardela "salidas/c3_F23_tiempo_servicio.png"
+
+chao

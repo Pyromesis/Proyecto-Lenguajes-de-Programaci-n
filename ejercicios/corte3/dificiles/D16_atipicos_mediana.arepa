@@ -1,0 +1,22 @@
+# D16_atipicos_mediana - Media frente a mediana
+# Enunciado: Comparar el efecto de un valor extremo en dos grupos antes de dibujar cajas.
+# Esperado: {"estadisticas":{"columnas":["grupo","media","mitad"],"filas":[["Base",2.5,2.5],["Extremo",26.5,2.5]]}}
+# PNG esperados: salidas/c3_D16_atipicos_mediana.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D16_atipicos_mediana.arepa --ejecutar --sin-ventana
+
+quihubo
+
+r = arme [grupo, valor] con [["Base", 1], ["Base", 2], ["Base", 3], ["Base", 4], ["Extremo", 1], ["Extremo", 2], ["Extremo", 3], ["Extremo", 100]]
+estadisticas = r |> junte por [grupo] |> resuma media = promedie(valor), mitad = mediana(valor)
+cuenteme estadisticas
+
+cuenteme r
+
+pinte cajas r
+titulo "Media frente a mediana"
+ejex grupo
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_D16_atipicos_mediana.png"
+
+chao

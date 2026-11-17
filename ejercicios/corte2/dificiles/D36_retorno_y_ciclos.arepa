@@ -1,0 +1,18 @@
+# D36_retorno_y_ciclos - Retorno temprano desde ciclos
+# Enunciado: Encontrar el primer múltiplo de 7 mayor que 20 y devolver nada si no existe.
+# Esperado: {"a":21,"b":null}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D36_retorno_y_ciclos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente buscar(inicio, fin) {
+ repita n desde inicio hasta fin {
+  fijese_si (n % 7 == 0) { devuelva n }
+ }
+ devuelva nada
+}
+a = buscar(21, 30)
+b = buscar(22, 25)
+cuenteme a, b
+
+chao

@@ -26,9 +26,10 @@ RUTAS_VIEJAS = (
 )
 
 CONTEOS = {
-    "ejercicios/corte1": 32,
-    "ejercicios/corte2": 120,
-    "ejercicios/corte3": 12,
+    "ejercicios/corte1": 75,
+    "ejercicios/corte2": 150,
+    "ejercicios/corte3": 87,
+    "ejercicios/corte_completo": 37,
     "ejemplos": 9,
 }
 
@@ -176,6 +177,13 @@ def revisar_conteos():
             errores.append(
                 "{0}: {1} .arepa (esperados {2})".format(carpeta, obtenido, esperado)
             )
+    for corte in ("corte1", "corte2", "corte3"):
+        for nivel in ("faciles", "medianos", "dificiles"):
+            carpeta = RAIZ / "ejercicios" / corte / nivel
+            obtenido = len(list(carpeta.glob("*.arepa")))
+            if obtenido < 25:
+                errores.append("{0}/{1}: {2} ejercicios (mínimo 25)".format(
+                    corte, nivel, obtenido))
     return errores
 
 
@@ -213,7 +221,7 @@ def main():
     print(
         "Documentación y estructura: {0} enlaces relativos, "
         "{1} referencias de código, 0 rutas antiguas, "
-        "conteos 32/120/12/9.".format(total_enlaces, total_refs)
+        "conteos 75/150/87/37/9; mínimo 25 por nivel.".format(total_enlaces, total_refs)
     )
     return 0
 

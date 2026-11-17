@@ -1,0 +1,31 @@
+# I06_clasificacion_estudiantes - Clasificación de estudiantes
+# Enunciado: Aprender dos clases y exportar predicciones de estudiantes nuevos con métricas.
+# Esperado: {"p":{"columnas":["horas","asistencia","clase","predicha"],"filas":[[1.5,55,"no","no"],[8.5,92,"si","si"]]},"resumen":{"columnas":["predicha","cantidad"],"filas":[["no",1],["si",1]]}}
+# PNG esperados: salidas/completo_I06_clasificacion_estudiantes.png
+# CSV esperados: salidas/completo_I06_clasificacion_estudiantes.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I06_clasificacion_estudiantes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [horas, asistencia, clase] con [[1, 50, "no"], [2, 60, "no"], [8, 90, "si"], [9, 95, "si"]]
+entrene modelo = perceptron con t
+columnas [horas, asistencia]
+objetivo clase
+epocas 100
+prueba = arme [horas, asistencia, clase] con [[1.5, 55, "no"], [8.5, 92, "si"]]
+p = prueba |> clasifique con modelo como predicha
+resumen = p |> junte por [predicha] |> resuma cantidad = cuente()
+evalua modelo con prueba
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I06_clasificacion_estudiantes.csv"
+
+pinte barras resumen
+titulo "Clasificación de estudiantes"
+ejex predicha
+ejey cantidad
+leyenda "Serie observada"
+guardela "salidas/completo_I06_clasificacion_estudiantes.png"
+
+chao

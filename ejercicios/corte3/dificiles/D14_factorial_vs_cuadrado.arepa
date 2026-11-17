@@ -1,0 +1,25 @@
+# D14_factorial_vs_cuadrado - Comparar órdenes de crecimiento
+# Enunciado: Generar factorial y cuadrado para los enteros de uno a cinco.
+# Esperado: {"r":{"columnas":["n","factorial_n","cuadrado"],"filas":[[1,1,1],[2,2,4],[3,6,9],[4,24,16],[5,120,25]]}}
+# PNG esperados: salidas/c3_D14_factorial_vs_cuadrado.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D14_factorial_vs_cuadrado.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente factorial(n) {
+ fijese_si (n <= 1) { devuelva 1 }
+ devuelva n * factorial(n - 1)
+}
+r = arme [n, factorial_n, cuadrado]
+repita n desde 1 hasta 5 { agregue [n, factorial(n), n ^ 2] en r }
+
+cuenteme r
+
+pinte lineas r
+titulo "Comparar órdenes de crecimiento"
+ejex n
+ejey [factorial_n, cuadrado]
+leyenda "Serie observada"
+guardela "salidas/c3_D14_factorial_vs_cuadrado.png"
+
+chao

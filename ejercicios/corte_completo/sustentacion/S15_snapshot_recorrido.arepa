@@ -1,0 +1,17 @@
+# S15_snapshot_recorrido - Mutación durante recorrido
+# Enunciado: ¿Agregar elementos durante recorra provoca un ciclo infinito?
+# Sustentación: El recorrido usa una instantánea de los elementos iniciales; las inserciones no añaden vueltas.
+# Esperado: {"vueltas":3,"valores":[1,2,3,10,20,30]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S15_snapshot_recorrido.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valores = [1, 2, 3]
+vueltas = 0
+recorra n en valores {
+ vueltas = vueltas + 1
+ agregue n * 10 en valores
+}
+cuenteme vueltas, valores
+
+chao

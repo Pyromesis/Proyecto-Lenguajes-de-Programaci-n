@@ -23,6 +23,8 @@ Decisiones:
 
 from datos.tipos import es_logico, es_nada, es_numero
 from errores_base import ErrorColumna, ErrorSemantico, ErrorTipos
+from utiles.matematica import es_finito
+from ml.modelo import exigir_numero_finito
 
 
 class InfoColumna:
@@ -122,9 +124,17 @@ class Preprocesador:
         if all(es_numero(v) or es_logico(v) for v in presentes):
             info = InfoColumna(nombre, "numerica")
             numeros = [_a_numero(v) for v in presentes]
-            info.media = sum(numeros) / len(numeros)
-            varianza = sum((v - info.media) ** 2 for v in numeros) / len(numeros)
-            info.desviacion = varianza ** 0.5
+            # Calcular sobre una escala común evita desbordar al elevar
+            # números grandes al cuadrado o sumar magnitudes cercanas al límite.
+            escala = max(abs(v) for v in numeros) or 1.0
+            normalizados = [v / escala for v in numeros]
+            media_normalizada = sum(normalizados) / len(numeros)
+            info.media = media_normalizada * escala
+            varianza = sum((v - media_normalizada) ** 2 for v in normalizados) / len(numeros)
+            info.desviacion = (varianza ** 0.5) * escala
+            if not es_finito(info.media) or not es_finito(info.desviacion):
+                raise ErrorSemantico("Las estadísticas de '{0}' exceden el rango "
+                                     "decimal del modelo; reducí su escala.".format(nombre))
             if info.desviacion == 0:
                 info.desviacion = 1.0
             return info
@@ -150,7 +160,10 @@ class Preprocesador:
             if info.tipo == "numerica":
                 numero = info.media if es_nada(valor) else _a_numero(valor)
                 if estandarizar:
-                    numero = (numero - info.media) / info.desviacion
+                    numero = numero / info.desviacion - info.media / info.desviacion
+                if not es_finito(numero):
+                    raise ErrorSemantico("La transformación de '{0}' produjo un "
+                                         "valor no finito; revisá su escala.".format(info.nombre))
                 vector.append(numero)
             else:
                 categoria = info.moda if es_nada(valor) else valor
@@ -233,7 +246,7 @@ def _a_numero(valor):
     if es_logico(valor):
         return 1.0 if valor else 0.0
     if es_numero(valor):
-        return float(valor)
+        return exigir_numero_finito(valor, "valor de columna numérica")
     raise ErrorTipos(
         "La columna numérica contiene un valor que no es número: {0}.".format(valor)
     )

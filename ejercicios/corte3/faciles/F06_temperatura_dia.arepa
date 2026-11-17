@@ -1,0 +1,19 @@
+# F06_temperatura_dia - Temperatura diaria
+# Enunciado: Representar la evolución de temperatura durante cuatro días.
+# Esperado: {"t":{"columnas":["dia","temperatura"],"filas":[[1,18],[2,20],[3,19],[4,22]]}}
+# PNG esperados: salidas/c3_F06_temperatura_dia.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F06_temperatura_dia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia, temperatura] con [[1, 18], [2, 20], [3, 19], [4, 22]]
+cuenteme t
+
+pinte lineas t
+titulo "Temperatura diaria"
+ejex dia
+ejey temperatura
+leyenda "Serie observada"
+guardela "salidas/c3_F06_temperatura_dia.png"
+
+chao

@@ -1,0 +1,15 @@
+# D24_recursion_suma - Suma recursiva
+# Enunciado: Sumar los enteros de 1 a 10 con caso base.
+# Esperado: {"r":55}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D24_recursion_suma.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente suma(n) {
+ fijese_si (n <= 0) { devuelva 0 }
+ devuelva n + suma(n - 1)
+}
+r = suma(10)
+cuenteme r
+
+chao

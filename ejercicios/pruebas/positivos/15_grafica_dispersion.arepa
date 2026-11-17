@@ -1,0 +1,12 @@
+# Ejemplo verificable: 15_grafica_dispersion
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, valor] con [[1, 2], [1, 4], [2, 3], [2, 5], [3, 6], [3, 8]]
+t = t |> cree doble = valor * 2
+pinte dispersion t
+titulo "Prueba dispersion"
+ejex x
+ejey valor
+leyenda "Valores"
+guardela "salidas/dispersion.png"
+chao

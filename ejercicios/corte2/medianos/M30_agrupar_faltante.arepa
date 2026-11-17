@@ -1,0 +1,12 @@
+# M30_agrupar_faltante - Agrupación con clave faltante
+# Enunciado: Agrupar las dos filas cuya categoría es nada.
+# Esperado: {"r":{"columnas":["grupo","total","n"],"filas":[[null,7,2],["A",3,1]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M30_agrupar_faltante.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [[nada, 2], ["A", 3], [nada, 5]]
+r = t |> junte por [grupo] |> resuma total = sume(valor), n = cuente()
+cuenteme r
+
+chao

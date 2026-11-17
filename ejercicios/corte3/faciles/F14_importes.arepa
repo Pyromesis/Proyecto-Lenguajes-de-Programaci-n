@@ -1,0 +1,18 @@
+# F14_importes - Importes de compras
+# Enunciado: Representar la distribución de importes de ocho compras.
+# Esperado: {"t":{"columnas":["importe"],"filas":[[10],[15],[20],[20],[25],[30],[50],[80]]}}
+# PNG esperados: salidas/c3_F14_importes.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F14_importes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [importe] con [[10], [15], [20], [20], [25], [30], [50], [80]]
+cuenteme t
+
+pinte histograma t
+titulo "Importes de compras"
+ejey importe
+leyenda "Serie observada"
+guardela "salidas/c3_F14_importes.png"
+
+chao

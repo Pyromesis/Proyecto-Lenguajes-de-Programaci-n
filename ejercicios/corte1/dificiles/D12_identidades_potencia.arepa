@@ -1,0 +1,11 @@
+# D12_identidades_potencia - Identidades y signo
+# Enunciado: Comprobar exponentes cero, uno, negativos y potencias encadenadas.
+# Esperado: {"r":[1,5,0.25,-16,-8]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D12_identidades_potencia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+r = [5 ^ 0, 5 ^ 1, 4 ^ -1, -2 ^ 4, (-2) ^ 3]
+cuenteme r
+
+chao

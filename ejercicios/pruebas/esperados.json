@@ -1,0 +1,817 @@
+{
+  "positivos": [
+    {
+      "archivo": "positivos/01_potencias.arepa",
+      "variables": {
+        "a": 512,
+        "b": -4,
+        "c": 4,
+        "d": 0.125,
+        "e": 3,
+        "f": 3,
+        "g": 14,
+        "h": 20
+      },
+      "salida": [
+        "512 -4 4 0.125 3 3 14 20"
+      ]
+    },
+    {
+      "archivo": "positivos/02_logica_y_nada.arepa",
+      "variables": {
+        "a": true,
+        "b": true,
+        "c": true,
+        "d": true,
+        "e": null,
+        "f": null,
+        "g": "infinito",
+        "h": "-infinito",
+        "i": null,
+        "j": null
+      },
+      "salida": [
+        "obvio obvio obvio obvio nada nada infinito -infinito nada nada"
+      ]
+    },
+    {
+      "archivo": "positivos/03_funciones_y_recursion.arepa",
+      "variables": {
+        "potencia": 81,
+        "factorial_cero": 1,
+        "factorial_seis": 720,
+        "antes": 12,
+        "despues": 22
+      },
+      "salida": [
+        "81 1 720 12 22"
+      ]
+    },
+    {
+      "archivo": "positivos/04_ciclos.arepa",
+      "variables": {
+        "suma": 16,
+        "descendente": 9,
+        "contador": 23
+      },
+      "salida": [
+        "16 9 23"
+      ]
+    },
+    {
+      "archivo": "positivos/05_estructuras.arepa",
+      "variables": {
+        "lista": [
+          25,
+          30,
+          40
+        ],
+        "persona": {
+          "nombre": "Ana",
+          "edad": 21
+        },
+        "esquina": 3,
+        "gente": {
+          "columnas": [
+            "nombre",
+            "edad"
+          ],
+          "filas": [
+            [
+              "Ana",
+              22
+            ],
+            [
+              "Marta",
+              40
+            ]
+          ]
+        },
+        "total": 62,
+        "cabeceras": [
+          "nombre",
+          "edad"
+        ],
+        "edades": [
+          22,
+          40
+        ],
+        "longitud": 3
+      }
+    },
+    {
+      "archivo": "positivos/06_pipeline_no_muta.arepa",
+      "variables": {
+        "original": {
+          "columnas": [
+            "ciudad",
+            "unidades",
+            "precio"
+          ],
+          "filas": [
+            [
+              "A",
+              2,
+              10
+            ],
+            [
+              "B",
+              0,
+              5
+            ],
+            [
+              "A",
+              3,
+              4
+            ]
+          ]
+        },
+        "preparada": {
+          "columnas": [
+            "ciudad",
+            "unidades",
+            "precio",
+            "ingreso"
+          ],
+          "filas": [
+            [
+              "A",
+              2,
+              10,
+              20
+            ],
+            [
+              "A",
+              3,
+              4,
+              12
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/07_limpieza_y_conversion.arepa",
+      "variables": {
+        "limpia": {
+          "columnas": [
+            "nombre",
+            "valor"
+          ],
+          "filas": [
+            [
+              "A",
+              10
+            ],
+            [
+              "B",
+              0
+            ],
+            [
+              "C",
+              30
+            ]
+          ]
+        },
+        "sin_vacios": {
+          "columnas": [
+            "nombre",
+            "valor"
+          ],
+          "filas": [
+            [
+              "A",
+              "10"
+            ],
+            [
+              "A",
+              "10"
+            ],
+            [
+              "C",
+              "30"
+            ]
+          ]
+        },
+        "textos": {
+          "columnas": [
+            "nombre",
+            "valor"
+          ],
+          "filas": [
+            [
+              "A",
+              "10"
+            ],
+            [
+              "B",
+              "0"
+            ],
+            [
+              "C",
+              "30"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/08_estadisticas.arepa",
+      "variables": {
+        "r": {
+          "columnas": [
+            "grupo",
+            "filas",
+            "validos",
+            "total",
+            "media",
+            "mitad",
+            "menor",
+            "mayor",
+            "desv"
+          ],
+          "filas": [
+            [
+              "A",
+              3,
+              2,
+              4,
+              2,
+              2,
+              1,
+              3,
+              1
+            ],
+            [
+              "B",
+              2,
+              2,
+              6,
+              3,
+              3,
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "mediana_par": 2.5,
+        "mediana_impar": 3,
+        "sin_datos": {
+          "columnas": [
+            "cantidad",
+            "total",
+            "media"
+          ],
+          "filas": [
+            [
+              0,
+              null,
+              null
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/09_orden_y_dos_claves.arepa",
+      "variables": {
+        "orden": {
+          "columnas": [
+            "grupo",
+            "valor",
+            "id"
+          ],
+          "filas": [
+            [
+              "A",
+              1,
+              5
+            ],
+            [
+              "A",
+              2,
+              2
+            ],
+            [
+              "A",
+              2,
+              3
+            ],
+            [
+              "A",
+              null,
+              4
+            ],
+            [
+              "B",
+              1,
+              1
+            ]
+          ]
+        },
+        "grupos": {
+          "columnas": [
+            "grupo",
+            "valor",
+            "n"
+          ],
+          "filas": [
+            [
+              "B",
+              1,
+              1
+            ],
+            [
+              "A",
+              2,
+              2
+            ],
+            [
+              "A",
+              null,
+              1
+            ],
+            [
+              "A",
+              1,
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/10_csv_ida_y_vuelta.arepa",
+      "variables": {
+        "releida": {
+          "columnas": [
+            "nombre",
+            "nota"
+          ],
+          "filas": [
+            [
+              "Ana, Pérez",
+              "Dijo \"hola\""
+            ],
+            [
+              "Luis",
+              "línea 1\nlínea 2"
+            ]
+          ]
+        }
+      },
+      "csv": {
+        "salidas/comillas.csv": [
+          [
+            "nombre",
+            "nota"
+          ],
+          [
+            "Ana, Pérez",
+            "Dijo \"hola\""
+          ],
+          [
+            "Luis",
+            "línea 1\nlínea 2"
+          ]
+        ]
+      }
+    },
+    {
+      "archivo": "positivos/11_flujo_completo.arepa",
+      "variables": {
+        "resumen": {
+          "columnas": [
+            "ciudad",
+            "ingreso",
+            "registros"
+          ],
+          "filas": [
+            [
+              "Bogotá",
+              25,
+              2
+            ],
+            [
+              "Cali",
+              12,
+              1
+            ]
+          ]
+        },
+        "releida": {
+          "columnas": [
+            "ciudad",
+            "ingreso",
+            "registros"
+          ],
+          "filas": [
+            [
+              "Bogotá",
+              25,
+              2
+            ],
+            [
+              "Cali",
+              12,
+              1
+            ]
+          ]
+        }
+      },
+      "csv": {
+        "salidas/resumen.csv": [
+          [
+            "ciudad",
+            "ingreso",
+            "registros"
+          ],
+          [
+            "Bogotá",
+            "25",
+            "2"
+          ],
+          [
+            "Cali",
+            "12",
+            "1"
+          ]
+        ]
+      },
+      "png": [
+        "salidas/resumen.png"
+      ]
+    },
+    {
+      "archivo": "positivos/12_grafica_barras.arepa",
+      "png": [
+        "salidas/barras.png"
+      ]
+    },
+    {
+      "archivo": "positivos/13_grafica_lineas.arepa",
+      "png": [
+        "salidas/lineas.png"
+      ]
+    },
+    {
+      "archivo": "positivos/14_grafica_histograma.arepa",
+      "png": [
+        "salidas/histograma.png"
+      ]
+    },
+    {
+      "archivo": "positivos/15_grafica_dispersion.arepa",
+      "png": [
+        "salidas/dispersion.png"
+      ]
+    },
+    {
+      "archivo": "positivos/16_grafica_cajas.arepa",
+      "png": [
+        "salidas/cajas.png"
+      ]
+    },
+    {
+      "archivo": "positivos/17_muestrela.arepa",
+      "png": [
+        "salidas/t_lineas.png"
+      ]
+    },
+    {
+      "archivo": "positivos/18_regresion.arepa",
+      "variables": {
+        "r": {
+          "columnas": [
+            "x",
+            "respuesta",
+            "estimado"
+          ],
+          "filas": [
+            [
+              7,
+              17,
+              17
+            ],
+            [
+              8,
+              19,
+              19
+            ]
+          ]
+        }
+      },
+      "contiene_salida": [
+        "Métricas de regresión"
+      ]
+    },
+    {
+      "archivo": "positivos/19_perceptron.arepa",
+      "variables": {
+        "r": {
+          "columnas": [
+            "x",
+            "clase",
+            "predicha"
+          ],
+          "filas": [
+            [
+              1.5,
+              "A",
+              "A"
+            ],
+            [
+              8.5,
+              "B",
+              "B"
+            ]
+          ]
+        }
+      },
+      "contiene_salida": [
+        "exactitud = 1",
+        "Matriz de confusión"
+      ]
+    },
+    {
+      "archivo": "positivos/20_arbol.arepa",
+      "variables": {
+        "r": {
+          "columnas": [
+            "x",
+            "clase",
+            "predicha"
+          ],
+          "filas": [
+            [
+              1.5,
+              "A",
+              "A"
+            ],
+            [
+              8.5,
+              "B",
+              "B"
+            ]
+          ]
+        }
+      },
+      "contiene_salida": [
+        "exactitud = 1",
+        "Matriz de confusión"
+      ]
+    },
+    {
+      "archivo": "positivos/21_csv_sin_encabezado.arepa",
+      "variables": {
+        "t": {
+          "columnas": [
+            "columna_1",
+            "columna_2"
+          ],
+          "filas": [
+            [
+              "Ana",
+              2
+            ],
+            [
+              "Luis",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/22_filtro_nada_y_vacio.arepa",
+      "variables": {
+        "filtrada": {
+          "columnas": [
+            "x"
+          ],
+          "filas": [
+            [
+              3
+            ]
+          ]
+        },
+        "vacia": {
+          "columnas": [
+            "x"
+          ],
+          "filas": []
+        },
+        "r": {
+          "columnas": [
+            "n",
+            "menor",
+            "mayor",
+            "mitad",
+            "desv"
+          ],
+          "filas": [
+            [
+              0,
+              null,
+              null,
+              null,
+              null
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/23_orden_descendente_estable.arepa",
+      "variables": {
+        "r": {
+          "columnas": [
+            "x",
+            "id"
+          ],
+          "filas": [
+            [
+              2,
+              "A"
+            ],
+            [
+              2,
+              "C"
+            ],
+            [
+              1,
+              "D"
+            ],
+            [
+              null,
+              "B"
+            ],
+            [
+              null,
+              "E"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "archivo": "positivos/24_unicode_y_literales.arepa",
+      "variables": {
+        "año": 2026,
+        "piña": 2.5,
+        "saludo": "Bogotá",
+        "largo_texto": 6,
+        "nombre": "Ana Pérez",
+        "contenido": "dijo \"hola\"\nsegunda línea"
+      }
+    }
+  ],
+  "negativos": [
+    {
+      "archivo": "negativos/01_variable.arepa",
+      "error": "ErrorVariable",
+      "mensaje": "desconocida"
+    },
+    {
+      "archivo": "negativos/02_columna.arepa",
+      "error": "ErrorColumna",
+      "mensaje": "ausente"
+    },
+    {
+      "archivo": "negativos/03_tipos.arepa",
+      "error": "ErrorTipos",
+      "mensaje": "tipo"
+    },
+    {
+      "archivo": "negativos/04_potencia_compleja.arepa",
+      "error": "ErrorOperacion",
+      "mensaje": "potencia"
+    },
+    {
+      "archivo": "negativos/05_condicion.arepa",
+      "error": "ErrorTipos",
+      "mensaje": "condici"
+    },
+    {
+      "archivo": "negativos/06_indice_cero.arepa",
+      "error": "ErrorOperacion",
+      "mensaje": "desde 1"
+    },
+    {
+      "archivo": "negativos/07_indice_fuera.arepa",
+      "error": "ErrorOperacion",
+      "mensaje": "desde 1"
+    },
+    {
+      "archivo": "negativos/08_fila_incompleta.arepa",
+      "error": "ErrorTipos",
+      "mensaje": "fila"
+    },
+    {
+      "archivo": "negativos/09_pare_fuera.arepa",
+      "error": "ErrorSemantico",
+      "mensaje": "pare"
+    },
+    {
+      "archivo": "negativos/10_devuelva_fuera.arepa",
+      "error": "ErrorSemantico",
+      "mensaje": "devuelva"
+    },
+    {
+      "archivo": "negativos/11_archivo_ausente.arepa",
+      "error": "ErrorArchivo",
+      "mensaje": "no_existe"
+    },
+    {
+      "archivo": "negativos/12_guarde_numero.arepa",
+      "error": "ErrorTipos",
+      "mensaje": "no es una tabla"
+    },
+    {
+      "archivo": "negativos/13_fecha_invalida.arepa",
+      "error": "ErrorTipos",
+      "mensaje": "fecha"
+    },
+    {
+      "archivo": "negativos/14_grafica_vacia.arepa",
+      "error": "ErrorGrafica",
+      "mensaje": "no tiene filas"
+    },
+    {
+      "archivo": "negativos/15_grafica_texto.arepa",
+      "error": "ErrorGrafica",
+      "mensaje": "num"
+    },
+    {
+      "archivo": "negativos/16_extension_grafica.arepa",
+      "error": "ErrorGrafica",
+      "mensaje": ".png"
+    },
+    {
+      "archivo": "negativos/17_argumentos.arepa",
+      "error": "ErrorSemantico",
+      "mensaje": "parametro"
+    },
+    {
+      "archivo": "negativos/18_paso_cero.arepa",
+      "error": "ErrorSemantico",
+      "mensaje": "paso"
+    },
+    {
+      "archivo": "negativos/19_siga_fuera.arepa",
+      "error": "ErrorSemantico",
+      "mensaje": "siga"
+    },
+    {
+      "archivo": "negativos/20_sin_chao.arepa",
+      "error": "sintaxis",
+      "mensaje": ""
+    },
+    {
+      "archivo": "negativos/21_simbolo.arepa",
+      "error": "sintaxis",
+      "mensaje": ""
+    },
+    {
+      "archivo": "negativos/22_cadena_abierta.arepa",
+      "error": "sintaxis",
+      "mensaje": ""
+    },
+    {
+      "archivo": "negativos/23_modelo_inexistente.arepa",
+      "error": "ErrorVariable",
+      "mensaje": "fantasma"
+    },
+    {
+      "archivo": "negativos/24_logico_numero.arepa",
+      "error": "ErrorTipos",
+      "mensaje": "l"
+    },
+    {
+      "archivo": "negativos/25_histograma_dos_series.arepa",
+      "error": "ErrorGrafica",
+      "mensaje": "histograma"
+    },
+    {
+      "archivo": "negativos/26_clausula_repetida.arepa",
+      "error": "ErrorGrafica",
+      "mensaje": "titulo"
+    },
+    {
+      "archivo": "negativos/27_csv_exceso.arepa",
+      "error": "ErrorCSV",
+      "mensaje": "campos"
+    },
+    {
+      "archivo": "negativos/28_csv_sin_cierre.arepa",
+      "error": "ErrorCSV",
+      "mensaje": "Comillas sin cerrar"
+    },
+    {
+      "archivo": "negativos/29_csv_vacio.arepa",
+      "error": "ErrorCSV",
+      "mensaje": "vacío"
+    }
+  ]
+}

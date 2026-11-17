@@ -1,0 +1,12 @@
+# D31_fibonacci_iterativo - Fibonacci sin recursión
+# Enunciado: Calcular los diez primeros términos desde cero.
+# Esperado: {"serie":[0,1,1,2,3,5,8,13,21,34]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D31_fibonacci_iterativo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+serie = [0, 1]
+repita n desde 3 hasta 10 { agregue serie[n - 1] + serie[n - 2] en serie }
+cuenteme serie
+
+chao

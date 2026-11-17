@@ -1,0 +1,19 @@
+# F17_estudio_nota - Estudio y nota
+# Enunciado: Explorar la relación entre horas de estudio y nota obtenida.
+# Esperado: {"t":{"columnas":["horas","nota"],"filas":[[1,2],[2,3],[3,4],[4,5]]}}
+# PNG esperados: salidas/c3_F17_estudio_nota.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F17_estudio_nota.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [horas, nota] con [[1, 2], [2, 3], [3, 4], [4, 5]]
+cuenteme t
+
+pinte dispersion t
+titulo "Estudio y nota"
+ejex horas
+ejey nota
+leyenda "Serie observada"
+guardela "salidas/c3_F17_estudio_nota.png"
+
+chao

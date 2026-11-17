@@ -1,5 +1,8 @@
 # Documentación de AREPA
 
+El [cierre técnico de la auditoría](13_cierre_tecnico.md) reúne las correcciones,
+los criterios técnicos sin sustentación y los comandos de verificación final.
+
 Índice de la documentación del proyecto. Los documentos conservan su número
 (`docs/01`, `docs/02`, …) porque el resto de informes los cita con esa
 convención.
@@ -36,7 +39,7 @@ convención.
 * [`Proyecto_LP.pdf`](Proyecto_LP.pdf): enunciado del curso.
 * [`../caso_estudio/README.md`](../caso_estudio/README.md): caso de estudio
   reproducible con AirPassengers.
-* [`../ejercicios/README.md`](../ejercicios/README.md): 164 ejercicios por corte.
+* [`../ejercicios/README.md`](../ejercicios/README.md): 349 ejercicios por corte.
 * [`../salidas/README.md`](../salidas/README.md): evidencias CSV y PNG
   temporales.
 
@@ -45,7 +48,7 @@ convención.
 ```bash
 python3 herramientas/chequeo_gramatica.py      # 64/64 reglas, 79 reservadas
 python3 herramientas/chequeo_pruebas.py        # 10 suites, 370 pruebas
-python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/9
-bash herramientas/regresion_programas.sh       # 173 programas
+python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 75/150/87/37/9
+bash herramientas/regresion_programas.sh       # 358 programas
 bash herramientas/demo_sustentacion.sh         # demo completa
 ```

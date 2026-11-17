@@ -1,0 +1,19 @@
+# F10_distancia_tiempo - Distancia y tiempo
+# Enunciado: Representar la distancia recorrida por un móvil a velocidad constante.
+# Esperado: {"t":{"columnas":["tiempo","distancia"],"filas":[[0,0],[1,5],[2,10],[3,15]]}}
+# PNG esperados: salidas/c3_F10_distancia_tiempo.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F10_distancia_tiempo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [tiempo, distancia] con [[0, 0], [1, 5], [2, 10], [3, 15]]
+cuenteme t
+
+pinte lineas t
+titulo "Distancia y tiempo"
+ejex tiempo
+ejey distancia
+leyenda "Serie observada"
+guardela "salidas/c3_F10_distancia_tiempo.png"
+
+chao

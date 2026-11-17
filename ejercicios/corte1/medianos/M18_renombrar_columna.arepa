@@ -1,0 +1,12 @@
+# M18_renombrar_columna - Renombre de una variable tabular
+# Enunciado: Renombrar precio como valor sin perder filas.
+# Esperado: {"r":{"columnas":["producto","valor"],"filas":[["A",10],["B",20]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M18_renombrar_columna.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, precio] con [["A", 10], ["B", 20]]
+r = t |> renombre precio -> valor
+cuenteme r
+
+chao

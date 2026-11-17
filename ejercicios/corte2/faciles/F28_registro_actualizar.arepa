@@ -1,0 +1,12 @@
+# F28_registro_actualizar - Actualizar un registro
+# Enunciado: Cumplir un año y conservar el nombre de una persona.
+# Esperado: {"persona":{"nombre":"Ana","edad":21}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F28_registro_actualizar.arepa --ejecutar --sin-ventana
+
+quihubo
+
+persona = {nombre: "Ana", edad: 20}
+persona["edad"] = persona["edad"] + 1
+cuenteme persona
+
+chao

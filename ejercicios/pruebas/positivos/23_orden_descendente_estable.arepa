@@ -1,0 +1,5 @@
+# Ejemplo verificado; resultados en ../esperados.json
+quihubo
+t = arme [x, id] con [[2, "A"], [nada, "B"], [2, "C"], [1, "D"], [nada, "E"]]
+r = t |> acomode por [x] pa_abajo
+chao

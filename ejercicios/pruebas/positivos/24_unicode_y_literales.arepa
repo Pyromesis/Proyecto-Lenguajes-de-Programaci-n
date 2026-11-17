@@ -1,0 +1,10 @@
+# Ejemplo verificado; resultados en ../esperados.json
+quihubo
+año = 2026
+piña = 2.5
+saludo = "Bogotá"
+contenido = "dijo \"hola\"\nsegunda línea"
+largo_texto = largo(saludo)
+registro = {"nombre completo": "Ana Pérez"}
+nombre = registro["nombre completo"]
+chao

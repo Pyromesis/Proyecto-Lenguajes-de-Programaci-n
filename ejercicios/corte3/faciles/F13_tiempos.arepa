@@ -1,0 +1,18 @@
+# F13_tiempos - Tiempos de atención
+# Enunciado: Representar la distribución de ocho tiempos de atención.
+# Esperado: {"t":{"columnas":["minutos"],"filas":[[2],[3],[3],[4],[5],[5],[7],[10]]}}
+# PNG esperados: salidas/c3_F13_tiempos.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F13_tiempos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [minutos] con [[2], [3], [3], [4], [5], [5], [7], [10]]
+cuenteme t
+
+pinte histograma t
+titulo "Tiempos de atención"
+ejey minutos
+leyenda "Serie observada"
+guardela "salidas/c3_F13_tiempos.png"
+
+chao

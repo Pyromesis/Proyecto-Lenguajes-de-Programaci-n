@@ -4,7 +4,8 @@ Todo el DSL es código propio del equipo **excepto** el lexer/parser
 generados por ANTLR4 (ver `generado/README.md`). Sin pandas, NumPy,
 Matplotlib ni equivalentes. Capas de abajo hacia arriba:
 `errores_base` → `datos` → `graficas` → `expresiones` → `runtime` → `cli`;
-solo `lenguaje/` toca el runtime de ANTLR4.
+`lenguaje/` orquesta el lexer y el parser; `expresiones/` y `runtime/`
+recorren el árbol heredando del Visitor generado por ANTLR4.
 
 | Módulo | Archivo | Responsabilidad |
 |---|---|---|
@@ -27,7 +28,13 @@ solo `lenguaje/` toca el runtime de ANTLR4.
 | `expresiones/` | `evaluador.py` | recorre el árbol y calcula (sin `eval`/`exec`) |
 | `runtime/` | `simbolos.py` | ámbitos encadenados + closures `invente` |
 | `runtime/` | `contexto.py` | símbolos raíz, salida de `cuenteme`, registro de errores y archivos |
-| `runtime/` | `ejecutor.py` | intérprete Visitor: pipeline, agregaciones, funciones, ciclos y `pinte` |
+| `runtime/` | `ejecutor.py` | entrada del Visitor: contexto, símbolos y coordinación de expresiones |
+| `runtime/` | `ejecucion_datos.py` | carga, pipelines, agrupación, estadísticas y exportación CSV |
+| `runtime/` | `ejecucion_graficas.py` | validación de cláusulas, creación y publicación de PNG |
+| `runtime/` | `ejecucion_control.py` | condicionales, ciclos, funciones y llamadas |
+| `runtime/` | `ejecucion_estructuras.py` | mutación, índices y funciones de listas, registros y tablas |
+| `runtime/` | `ejecucion_modelos.py` | opciones de entrenamiento, predicción y evaluación |
+| `utiles/` | `enteros.py` | conversión decimal por bloques, incluidos enteros de más de 4.300 dígitos |
 | `utiles/` | `matematica.py` | `piso`, `techo`, `raiz_entera`, `raiz_cuadrada`, `exponente_decimal`, `es_finito` (sin `math`) |
 | `utiles/` | `texto.py` | `es_identificador`, `colapsar_espacios`, `quitar_tildes` con tabla propia (sin `re` ni `unicodedata`) |
 | `utiles/` | `binario.py` | enteros ↔ bytes big/little-endian con desplazamientos (sin `struct`) |

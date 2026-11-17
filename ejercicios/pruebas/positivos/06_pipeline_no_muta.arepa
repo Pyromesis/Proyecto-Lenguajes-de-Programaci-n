@@ -1,0 +1,6 @@
+# Ejemplo verificable: 06_pipeline_no_muta
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+original = arme [ciudad, unidades, precio] con [["A", 2, 10], ["B", 0, 5], ["A", 3, 4]]
+preparada = original |> escoja [ciudad, unidades, precio] |> deje donde unidades > 0 y precio >= 4 |> cree total = unidades * precio |> renombre total -> ingreso |> acomode por [ingreso] pa_abajo
+chao

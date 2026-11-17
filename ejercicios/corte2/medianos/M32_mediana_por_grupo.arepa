@@ -1,0 +1,12 @@
+# M32_mediana_por_grupo - Medianas por categoría
+# Enunciado: Comparar una categoría con cantidad par y otra impar.
+# Esperado: {"r":{"columnas":["grupo","mitad"],"filas":[["A",5],["B",3]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M32_mediana_por_grupo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 2], ["A", 8], ["B", 1], ["B", 3], ["B", 9]]
+r = t |> junte por [grupo] |> resuma mitad = mediana(valor)
+cuenteme r
+
+chao

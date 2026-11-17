@@ -1,0 +1,26 @@
+# D11_interes_compuesto - Interés compuesto
+# Enunciado: Simular tres años al diez por ciento y contrastar con una fórmula de potencia.
+# Esperado: {"final":133.1,"r":{"columnas":["anio","saldo"],"filas":[[0,100],[1,110],[2,121],[3,133.1]]}}
+# PNG esperados: salidas/c3_D11_interes_compuesto.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D11_interes_compuesto.arepa --ejecutar --sin-ventana
+
+quihubo
+
+capital = 100
+r = arme [anio, saldo]
+repita anio desde 0 hasta 3 {
+ saldo = capital * 1.1 ^ anio
+ agregue [anio, saldo] en r
+}
+final = r[4]["saldo"]
+
+cuenteme r
+
+pinte lineas r
+titulo "Interés compuesto"
+ejex anio
+ejey saldo
+leyenda "Serie observada"
+guardela "salidas/c3_D11_interes_compuesto.png"
+
+chao

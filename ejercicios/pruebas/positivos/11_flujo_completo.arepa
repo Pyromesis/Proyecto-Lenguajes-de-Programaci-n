@@ -1,0 +1,15 @@
+# Ejemplo verificable: 11_flujo_completo
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+ventas = monte "ejercicios/pruebas/datos/ventas.csv" con encabezado, separador ";"
+resumen = ventas |> deje donde unidades > 0 |> cree total = unidades * precio |> junte por [ciudad] |> resuma ingreso = sume(total), registros = cuente() |> acomode por [ciudad]
+describa resumen
+guarde resumen como "salidas/resumen.csv"
+releida = monte "salidas/resumen.csv" con encabezado
+pinte barras resumen
+titulo "Ingresos por ciudad"
+ejex ciudad
+ejey ingreso
+leyenda "Ingreso"
+guardela "salidas/resumen.png"
+chao

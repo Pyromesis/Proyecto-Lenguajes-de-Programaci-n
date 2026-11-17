@@ -1,0 +1,33 @@
+# I03_inventario - Inventario y reposición
+# Enunciado: Actualizar existencias con movimientos, marcar necesidades y exportar las cantidades finales.
+# Esperado: {"resumen":{"columnas":["producto","stock"],"filas":[["A",7],["B",9],["C",1]]},"alertas":{"columnas":["producto","stock"],"filas":[["C",1]]}}
+# PNG esperados: salidas/completo_I03_inventario.png
+# CSV esperados: salidas/completo_I03_inventario.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I03_inventario.arepa --ejecutar --sin-ventana
+
+quihubo
+
+inventario = {A: 10, B: 5, C: 2}
+movimientos = arme [producto, cantidad] con [["A", -3], ["B", 4], ["C", -1]]
+recorra fila en movimientos {
+ clave = fila["producto"]
+ inventario[clave] = inventario[clave] + fila["cantidad"]
+}
+resumen = arme [producto, stock]
+productos = ["A", "B", "C"]
+recorra producto en productos { agregue [producto, inventario[producto]] en resumen }
+invente necesita(stock) { devuelva stock < 3 }
+alertas = resumen |> deje donde necesita(stock)
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I03_inventario.csv"
+
+pinte barras resumen
+titulo "Inventario y reposición"
+ejex producto
+ejey stock
+leyenda "Serie observada"
+guardela "salidas/completo_I03_inventario.png"
+
+chao

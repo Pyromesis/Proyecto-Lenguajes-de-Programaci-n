@@ -1,0 +1,14 @@
+# D20_filtro_demorgan - Lógica equivalente
+# Enunciado: Comparar dos filtros equivalentes por De Morgan.
+# Esperado: {"a":{"columnas":["x"],"filas":[[0],[5]]},"b":{"columnas":["x"],"filas":[[0],[5]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D20_filtro_demorgan.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[-1], [0], [5], [11]]
+a = t |> deje donde no (x < 0 o x > 10)
+b = t |> deje donde x >= 0 y x <= 10
+cuenteme a
+cuenteme b
+
+chao

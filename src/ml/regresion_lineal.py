@@ -17,7 +17,8 @@ La salida se devuelve en la escala original del objetivo.
 from datos.tipos import formatear_numero
 from errores_base import ErrorSemantico
 
-from ml.modelo import ModeloRegresion, exigir_entero_positivo, exigir_numero_positivo
+from ml.modelo import ModeloRegresion, exigir_entero_positivo, exigir_numero_positivo, exigir_numero_finito
+from utiles.matematica import es_finito
 
 
 class RegresionLineal(ModeloRegresion):
@@ -32,6 +33,7 @@ class RegresionLineal(ModeloRegresion):
         self.entrenado = False
 
     def entrenar(self, X, y):
+        self.entrenado = False
         if not X:
             raise ErrorSemantico("La regresión lineal no recibió filas para entrenar.")
         dimension = len(X[0])
@@ -45,11 +47,18 @@ class RegresionLineal(ModeloRegresion):
                 "coincidir.".format(len(X), len(y))
             )
         self.validar_objetivo(y)
+        X = [[exigir_numero_finito(v, "entrada de regresión") for v in fila] for fila in X]
+        y = [exigir_numero_finito(v, "objetivo de regresión") for v in y]
 
         self.pesos = [0.0 for _ in range(dimension)]
-        self.sesgo = sum(y) / len(y)
+        self.sesgo = sum(v / len(y) for v in y)
+        if not es_finito(self.sesgo):
+            self._divergencia()
+        self.historial = []
+        self.epocas_reales = 0
         n = len(X)
         error_previo = None
+        aumentos = 0
 
         for epoca in range(1, self.epocas + 1):
             predicciones = [
@@ -74,6 +83,15 @@ class RegresionLineal(ModeloRegresion):
             self.sesgo -= self.tasa * gradiente_sesgo
 
             mse = sum(error * error for error in errores) / n
+            if (not es_finito(mse) or not es_finito(self.sesgo) or
+                    any(not es_finito(peso) for peso in self.pesos)):
+                self._divergencia()
+            if error_previo is not None and mse > error_previo * (1 + 1e-10):
+                aumentos += 1
+            else:
+                aumentos = 0
+            if aumentos >= 3:
+                self._divergencia()
             self.historial.append(mse)
             self.epocas_reales = epoca
 
@@ -93,7 +111,14 @@ class RegresionLineal(ModeloRegresion):
                     len(vector), len(self.pesos)
                 )
             )
-        return self._producto_punto(self.pesos, vector) + self.sesgo
+        vector = [exigir_numero_finito(v, "entrada de predicción") for v in vector]
+        return self._valor_seguro(self._producto_punto(self.pesos, vector) + self.sesgo)
+
+    def _divergencia(self):
+        raise ErrorSemantico(
+            "El entrenamiento de regresión divergió o excedió el rango decimal: "
+            "el error aumenta o aparecen valores no finitos. Reducí la tasa "
+            "de aprendizaje o la escala del objetivo; el modelo no quedó entrenado.")
 
     def resumen(self):
         lineas = self._encabezado_resumen()

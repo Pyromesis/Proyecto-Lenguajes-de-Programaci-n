@@ -1,0 +1,25 @@
+# D10_crecimiento_relativo - Crecimiento porcentual
+# Enunciado: Calcular la variación porcentual entre periodos sucesivos.
+# Esperado: {"r":{"columnas":["periodo","crecimiento"],"filas":[[2,20],[3,25],[4,20]]}}
+# PNG esperados: salidas/c3_D10_crecimiento_relativo.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D10_crecimiento_relativo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+ventas = [100, 120, 150, 180]
+r = arme [periodo, crecimiento]
+repita i desde 2 hasta largo(ventas) {
+ porcentaje = (ventas[i] - ventas[i - 1]) / ventas[i - 1] * 100
+ agregue [i, porcentaje] en r
+}
+
+cuenteme r
+
+pinte lineas r
+titulo "Crecimiento porcentual"
+ejex periodo
+ejey crecimiento
+leyenda "Serie observada"
+guardela "salidas/c3_D10_crecimiento_relativo.png"
+
+chao

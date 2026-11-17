@@ -1,0 +1,32 @@
+# I05_regresion_vivienda - Predicción de precio
+# Enunciado: Entrenar con cinco viviendas y evaluar tres áreas nuevas sin usarlas en el ajuste.
+# Esperado: {"resumen":{"columnas":["area","precio","estimado"],"filas":[[30,70,70],[70,150,150],[110,230,230]]}}
+# PNG esperados: salidas/completo_I05_regresion_vivienda.png
+# CSV esperados: salidas/completo_I05_regresion_vivienda.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I05_regresion_vivienda.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [area, precio] con [[20, 50], [40, 90], [60, 130], [80, 170], [100, 210]]
+entrene modelo = regresion con t
+columnas [area]
+objetivo precio
+tasa 0.1
+epocas 3000
+prueba = arme [area, precio] con [[30, 70], [70, 150], [110, 230]]
+resumen = prueba |> prediga con modelo como estimado
+evalua modelo con prueba
+
+describa resumen
+cuenteme resumen
+exportable = resumen |> escoja [area, precio]
+guarde exportable como "salidas/completo_I05_regresion_vivienda.csv"
+
+pinte lineas resumen
+titulo "Predicción de precio"
+ejex area
+ejey [precio, estimado]
+leyenda "Serie observada"
+guardela "salidas/completo_I05_regresion_vivienda.png"
+
+chao

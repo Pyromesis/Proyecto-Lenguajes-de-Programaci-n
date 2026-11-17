@@ -1,0 +1,19 @@
+# F16_publicidad_ventas - Publicidad y ventas
+# Enunciado: Explorar la relación entre inversión publicitaria y ventas.
+# Esperado: {"t":{"columnas":["inversion","ventas"],"filas":[[10,30],[20,45],[30,65],[40,80]]}}
+# PNG esperados: salidas/c3_F16_publicidad_ventas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F16_publicidad_ventas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [inversion, ventas] con [[10, 30], [20, 45], [30, 65], [40, 80]]
+cuenteme t
+
+pinte dispersion t
+titulo "Publicidad y ventas"
+ejex inversion
+ejey ventas
+leyenda "Serie observada"
+guardela "salidas/c3_F16_publicidad_ventas.png"
+
+chao

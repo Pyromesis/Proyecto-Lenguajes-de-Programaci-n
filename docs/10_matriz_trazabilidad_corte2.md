@@ -110,5 +110,5 @@ conceptual y matemático está en `docs/11_guia_machine_learning.md`.
 ---
 
 Conteos vigentes a la fecha (Corte 3 + ML): 64 reglas, 79 reservadas, 10 suites,
-370 pruebas, 173 programas. La visualización completa y el caso de estudio se
+370 pruebas, 358 programas. La visualización completa y el caso de estudio se
 documentan en `docs/11_informe_fase3.md` y `docs/12_matriz_trazabilidad_corte3.md`.

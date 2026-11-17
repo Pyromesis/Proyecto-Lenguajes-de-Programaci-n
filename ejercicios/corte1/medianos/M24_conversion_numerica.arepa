@@ -1,0 +1,13 @@
+# M24_conversion_numerica - Conversión de textos numéricos
+# Enunciado: Convertir textos 10 y 20 a números y sumarlos.
+# Esperado: {"total":30}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M24_conversion_numerica.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [valor] con [["10"], ["20"]]
+r = t |> convierta valor -> numero
+total = sume(r, valor)
+cuenteme total
+
+chao

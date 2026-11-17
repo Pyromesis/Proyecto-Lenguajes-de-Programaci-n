@@ -1,0 +1,24 @@
+# I11_estadisticas_robustas - Media y mediana ante extremos
+# Enunciado: Contrastar media, mediana y rango de dos muestras, una con dato extremo.
+# Esperado: {"resumen":{"columnas":["grupo","media","mitad","menor","mayor","rango"],"filas":[["A",2.5,2.5,1,4,3],["B",26.5,2.5,1,100,99]]}}
+# PNG esperados: salidas/completo_I11_estadisticas_robustas.png
+# CSV esperados: salidas/completo_I11_estadisticas_robustas.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I11_estadisticas_robustas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 1], ["A", 2], ["A", 3], ["A", 4], ["B", 1], ["B", 2], ["B", 3], ["B", 100]]
+resumen = t |> junte por [grupo] |> resuma media = promedie(valor), mitad = mediana(valor), menor = minimo(valor), mayor = maximo(valor) |> cree rango = mayor - menor
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I11_estadisticas_robustas.csv"
+
+pinte barras resumen
+titulo "Media y mediana ante extremos"
+ejex grupo
+ejey [media, mitad]
+leyenda "Serie observada"
+guardela "salidas/completo_I11_estadisticas_robustas.png"
+
+chao

@@ -1,0 +1,11 @@
+# F12_potencia_cuadrado - Cuadrado de un número
+# Enunciado: Elevar 7 al cuadrado y mostrar 49.
+# Esperado: {"resultado":49}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F12_potencia_cuadrado.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = 7 ^ 2
+cuenteme resultado
+
+chao

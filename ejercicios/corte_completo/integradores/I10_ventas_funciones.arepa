@@ -1,0 +1,29 @@
+# I10_ventas_funciones - Funciones y descuentos
+# Enunciado: Aplicar descuento por volumen a cada línea y resumir el ingreso por producto.
+# Esperado: {"resumen":{"columnas":["producto","ingreso"],"filas":[["A",22],["B",15]]}}
+# PNG esperados: salidas/completo_I10_ventas_funciones.png
+# CSV esperados: salidas/completo_I10_ventas_funciones.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I10_ventas_funciones.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente total_linea(unidades, precio) {
+ bruto = unidades * precio
+ fijese_si (unidades >= 10) { devuelva bruto * 0.9 }
+ devuelva bruto
+}
+t = arme [producto, unidades, precio] con [["A", 10, 2], ["A", 2, 2], ["B", 5, 3]]
+resumen = t |> cree neto = total_linea(unidades, precio) |> junte por [producto] |> resuma ingreso = sume(neto)
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I10_ventas_funciones.csv"
+
+pinte barras resumen
+titulo "Funciones y descuentos"
+ejex producto
+ejey ingreso
+leyenda "Serie observada"
+guardela "salidas/completo_I10_ventas_funciones.png"
+
+chao

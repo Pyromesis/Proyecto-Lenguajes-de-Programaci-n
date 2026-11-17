@@ -1,0 +1,13 @@
+# M21_funcion_area - Área reutilizable
+# Enunciado: Definir una función de área y usarla con dos rectángulos.
+# Esperado: {"a":12,"b":10}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M21_funcion_area.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente area(ancho, alto) { devuelva ancho * alto }
+a = area(3, 4)
+b = area(5, 2)
+cuenteme a, b
+
+chao

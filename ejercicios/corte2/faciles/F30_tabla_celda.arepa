@@ -1,0 +1,12 @@
+# F30_tabla_celda - Actualizar una celda
+# Enunciado: Cambiar el stock del primer producto de 2 a 5.
+# Esperado: {"t":{"columnas":["producto","stock"],"filas":[["A",5]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F30_tabla_celda.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, stock] con [["A", 2]]
+t[1]["stock"] = 5
+cuenteme t
+
+chao

@@ -1,0 +1,5 @@
+# Debe rechazarse: ErrorColumna
+quihubo
+t = arme [x] con [[1]]
+r = t |> escoja [ausente]
+chao

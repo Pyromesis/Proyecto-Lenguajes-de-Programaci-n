@@ -1,0 +1,16 @@
+# M31_condicion_en_funcion - Etiquetar filas
+# Enunciado: Clasificar como aprueba las notas desde 3.
+# Esperado: {"r":{"columnas":["nota","estado_nota"],"filas":[[2,"pierde"],[3,"aprueba"],[5,"aprueba"]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M31_condicion_en_funcion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente estado(n) {
+ fijese_si (n >= 3) { devuelva "aprueba" }
+ devuelva "pierde"
+}
+t = arme [nota] con [[2], [3], [5]]
+r = t |> cree estado_nota = estado(nota)
+cuenteme r
+
+chao

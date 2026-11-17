@@ -1,0 +1,13 @@
+# F31_lista_estadisticas - Estadísticas de lista
+# Enunciado: Calcular suma y media de 2, 4 y 6.
+# Esperado: {"total":12,"media":4}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F31_lista_estadisticas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+lista = [2, 4, 6]
+total = sume(lista)
+media = promedie(lista)
+cuenteme total, media
+
+chao

@@ -1,0 +1,18 @@
+# F15_estaturas - Estaturas de una muestra
+# Enunciado: Representar la distribución de ocho estaturas en centímetros.
+# Esperado: {"t":{"columnas":["estatura"],"filas":[[150],[155],[160],[165],[165],[170],[175],[180]]}}
+# PNG esperados: salidas/c3_F15_estaturas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F15_estaturas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [estatura] con [[150], [155], [160], [165], [165], [170], [175], [180]]
+cuenteme t
+
+pinte histograma t
+titulo "Estaturas de una muestra"
+ejey estatura
+leyenda "Serie observada"
+guardela "salidas/c3_F15_estaturas.png"
+
+chao

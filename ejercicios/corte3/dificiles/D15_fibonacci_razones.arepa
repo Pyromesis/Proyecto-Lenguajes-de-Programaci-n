@@ -1,0 +1,23 @@
+# D15_fibonacci_razones - Razones de Fibonacci
+# Enunciado: Construir términos consecutivos y representar sus cocientes.
+# Esperado: {"r":{"columnas":["n","razon"],"filas":[[2,1],[3,2],[4,1.5],[5,1.6666666666666667],[6,1.6],[7,1.625],[8,1.6153846153846154]]}}
+# PNG esperados: salidas/c3_D15_fibonacci_razones.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D15_fibonacci_razones.arepa --ejecutar --sin-ventana
+
+quihubo
+
+serie = [1, 1]
+repita n desde 3 hasta 8 { agregue serie[n - 1] + serie[n - 2] en serie }
+r = arme [n, razon]
+repita n desde 2 hasta 8 { agregue [n, serie[n] / serie[n - 1]] en r }
+
+cuenteme r
+
+pinte lineas r
+titulo "Razones de Fibonacci"
+ejex n
+ejey razon
+leyenda "Serie observada"
+guardela "salidas/c3_D15_fibonacci_razones.png"
+
+chao

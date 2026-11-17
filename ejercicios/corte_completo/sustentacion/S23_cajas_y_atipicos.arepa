@@ -1,0 +1,21 @@
+# S23_cajas_y_atipicos - Elegir una gráfica de cajas
+# Enunciado: ¿Por qué usar cajas para comparar grupos con valores extremos?
+# Sustentación: Permiten comparar medianas y dispersión; la media cambia mucho con un extremo y la mediana puede mantenerse.
+# Esperado: {"r":{"columnas":["grupo","media","mitad"],"filas":[["A",2,2],["B",34.333333333333336,2]]}}
+# PNG esperados: salidas/sustentacion_S23.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S23_cajas_y_atipicos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 1], ["A", 2], ["A", 3], ["B", 1], ["B", 2], ["B", 100]]
+r = t |> junte por [grupo] |> resuma media = promedie(valor), mitad = mediana(valor)
+cuenteme r
+
+pinte cajas t
+titulo "Resultados"
+ejex grupo
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/sustentacion_S23.png"
+
+chao

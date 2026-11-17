@@ -1,0 +1,14 @@
+# M25_pipeline_inmutable - Inmutabilidad de un pipeline
+# Enunciado: Crear una columna sin cambiar el número de columnas del origen.
+# Esperado: {"original":1,"transformada":2,"r":{"columnas":["x","cuadrado"],"filas":[[2,4],[3,9]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M25_pipeline_inmutable.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[2], [3]]
+r = t |> cree cuadrado = x ^ 2
+original = largo(columnas(t))
+transformada = largo(columnas(r))
+cuenteme original, transformada
+
+chao

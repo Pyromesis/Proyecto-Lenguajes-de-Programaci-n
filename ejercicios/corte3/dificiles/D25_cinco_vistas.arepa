@@ -1,0 +1,48 @@
+# D25_cinco_vistas - Cinco vistas de un análisis
+# Enunciado: Crear un resumen y las cinco visualizaciones del mismo conjunto de datos.
+# Esperado: {"resumen":{"columnas":["grupo","total","media"],"filas":[["A",12,4],["B",17,5.666666666666667]]}}
+# PNG esperados: salidas/c3_D25_barras.png, salidas/c3_D25_lineas.png, salidas/c3_D25_histograma.png, salidas/c3_D25_dispersion.png, salidas/c3_D25_cajas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D25_cinco_vistas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, x, valor] con [["A", 1, 2], ["A", 2, 4], ["A", 3, 6], ["B", 4, 3], ["B", 5, 5], ["B", 6, 9]]
+r = t |> cree doble = valor * 2
+resumen = r |> junte por [grupo] |> resuma total = sume(valor), media = promedie(valor)
+cuenteme resumen
+
+pinte barras r
+titulo "Vista barras"
+ejex grupo
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_D25_barras.png"
+
+pinte lineas r
+titulo "Vista lineas"
+ejex x
+ejey [valor, doble]
+leyenda "Serie observada"
+guardela "salidas/c3_D25_lineas.png"
+
+pinte histograma r
+titulo "Vista histograma"
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_D25_histograma.png"
+
+pinte dispersion r
+titulo "Vista dispersion"
+ejex x
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_D25_dispersion.png"
+
+pinte cajas r
+titulo "Vista cajas"
+ejex grupo
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_D25_cajas.png"
+
+chao

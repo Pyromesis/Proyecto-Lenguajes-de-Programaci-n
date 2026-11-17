@@ -1,0 +1,11 @@
+# M14_comparaciones_seis - Seis relaciones
+# Enunciado: Evaluar las seis comparaciones numéricas con valores conocidos.
+# Esperado: {"r":[true,true,true,true,true,true]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M14_comparaciones_seis.arepa --ejecutar --sin-ventana
+
+quihubo
+
+r = [2 < 3, 2 <= 2, 3 > 2, 3 >= 3, 4 == 4, 4 != 5]
+cuenteme r
+
+chao

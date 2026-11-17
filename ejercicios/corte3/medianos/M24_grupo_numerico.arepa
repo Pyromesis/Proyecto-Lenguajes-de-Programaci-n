@@ -1,0 +1,19 @@
+# M24_grupo_numerico - Cajas con clave numérica
+# Enunciado: Comparar observaciones de dos grupos identificados por números.
+# Esperado: {"r":{"columnas":["grupo","valor"],"filas":[[1,2],[1,4],[1,6],[2,3],[2,5],[2,9]]}}
+# PNG esperados: salidas/c3_M24_grupo_numerico.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M24_grupo_numerico.arepa --ejecutar --sin-ventana
+
+quihubo
+
+r = arme [grupo, valor] con [[1, 2], [1, 4], [1, 6], [2, 3], [2, 5], [2, 9]]
+cuenteme r
+
+pinte cajas r
+titulo "Cajas con clave numérica"
+ejex grupo
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_M24_grupo_numerico.png"
+
+chao
