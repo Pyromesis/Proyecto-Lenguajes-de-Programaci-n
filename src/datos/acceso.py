@@ -28,8 +28,8 @@ Decisiones propias documentadas:
 
 Limitaciones:
   * no hay índices negativos ni acceso por rebanadas (slices);
-  * no se valida la duplicación de columnas al construir una Tabla con
-    'arme' (esa validación corresponde a Tabla).
+  * Tabla valida que los nombres de columna sean únicos antes de permitir
+    cualquier acceso por fila o selección.
 """
 
 from datos.fila import Fila

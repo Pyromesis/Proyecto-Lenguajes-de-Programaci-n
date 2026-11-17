@@ -1,0 +1,19 @@
+# F09_poblacion_anio - Población anual
+# Enunciado: Mostrar el crecimiento de una población durante cuatro años.
+# Esperado: {"t":{"columnas":["anio","habitantes"],"filas":[[2023,1000],[2024,1050],[2025,1120],[2026,1200]]}}
+# PNG esperados: salidas/c3_F09_poblacion_anio.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F09_poblacion_anio.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [anio, habitantes] con [[2023, 1000], [2024, 1050], [2025, 1120], [2026, 1200]]
+cuenteme t
+
+pinte lineas t
+titulo "Población anual"
+ejex anio
+ejey habitantes
+leyenda "Serie observada"
+guardela "salidas/c3_F09_poblacion_anio.png"
+
+chao

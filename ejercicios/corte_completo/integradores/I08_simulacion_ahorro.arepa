@@ -1,0 +1,30 @@
+# I08_simulacion_ahorro - Plan de ahorro
+# Enunciado: Simular un saldo inicial de cien con depósitos de veinte en cuatro meses.
+# Esperado: {"saldo":180,"meses_meta":2,"resumen":{"columnas":["mes","saldo"],"filas":[[1,120],[2,140],[3,160],[4,180]]}}
+# PNG esperados: salidas/completo_I08_simulacion_ahorro.png
+# CSV esperados: salidas/completo_I08_simulacion_ahorro.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I08_simulacion_ahorro.arepa --ejecutar --sin-ventana
+
+quihubo
+
+saldo = 100
+resumen = arme [mes, saldo]
+repita mes desde 1 hasta 4 {
+ saldo = saldo + 20
+ agregue [mes, saldo] en resumen
+}
+meta = resumen |> deje donde saldo >= 160
+meses_meta = largo(meta)
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I08_simulacion_ahorro.csv"
+
+pinte lineas resumen
+titulo "Plan de ahorro"
+ejex mes
+ejey saldo
+leyenda "Serie observada"
+guardela "salidas/completo_I08_simulacion_ahorro.png"
+
+chao

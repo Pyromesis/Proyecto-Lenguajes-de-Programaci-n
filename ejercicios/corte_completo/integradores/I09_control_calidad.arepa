@@ -1,0 +1,28 @@
+# I09_control_calidad - Control de calidad
+# Enunciado: Clasificar mediciones dentro de tolerancia y calcular el porcentaje aceptado por lote.
+# Esperado: {"resumen":{"columnas":["lote","aceptadas","total"],"filas":[["A",2,3],["B",2,3]]}}
+# PNG esperados: salidas/completo_I09_control_calidad.png
+# CSV esperados: salidas/completo_I09_control_calidad.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I09_control_calidad.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente aceptable(n) {
+ fijese_si (n >= 9 y n <= 11) { devuelva 1 }
+ devuelva 0
+}
+t = arme [lote, medida] con [["A", 9], ["A", 10], ["A", 12], ["B", 10], ["B", 11], ["B", 8]]
+resumen = t |> cree cumple = aceptable(medida) |> junte por [lote] |> resuma aceptadas = sume(cumple), total = cuente()
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I09_control_calidad.csv"
+
+pinte barras resumen
+titulo "Control de calidad"
+ejex lote
+ejey [aceptadas, total]
+leyenda "Serie observada"
+guardela "salidas/completo_I09_control_calidad.png"
+
+chao

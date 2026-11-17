@@ -1,0 +1,20 @@
+# M07_orden_temporal - Ordenar el tiempo
+# Enunciado: Ordenar días desordenados antes de unir los puntos.
+# Esperado: {"r":{"columnas":["dia","valor"],"filas":[[1,10],[2,20],[3,30]]}}
+# PNG esperados: salidas/c3_M07_orden_temporal.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M07_orden_temporal.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia, valor] con [[3, 30], [1, 10], [2, 20]]
+r = t |> acomode por [dia]
+cuenteme r
+
+pinte lineas r
+titulo "Ordenar el tiempo"
+ejex dia
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_M07_orden_temporal.png"
+
+chao

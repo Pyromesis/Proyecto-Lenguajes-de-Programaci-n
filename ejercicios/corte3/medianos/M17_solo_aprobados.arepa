@@ -1,0 +1,20 @@
+# M17_solo_aprobados - Estudio de aprobados
+# Enunciado: Filtrar estudiantes aprobados antes de relacionar horas y nota.
+# Esperado: {"r":{"columnas":["horas","nota"],"filas":[[2,3],[3,4],[4,5]]}}
+# PNG esperados: salidas/c3_M17_solo_aprobados.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M17_solo_aprobados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [horas, nota] con [[1, 2], [2, 3], [3, 4], [4, 5]]
+r = t |> deje donde nota >= 3
+cuenteme r
+
+pinte dispersion r
+titulo "Estudio de aprobados"
+ejex horas
+ejey nota
+leyenda "Serie observada"
+guardela "salidas/c3_M17_solo_aprobados.png"
+
+chao

@@ -1,0 +1,20 @@
+# M18_renombre_ejes - Renombrar ejes
+# Enunciado: Cambiar x e y por nombres de dominio y utilizarlos como ejes.
+# Esperado: {"r":{"columnas":["horas","consumo"],"filas":[[1,2],[2,4],[3,6]]}}
+# PNG esperados: salidas/c3_M18_renombre_ejes.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M18_renombre_ejes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x, z] con [[1, 2], [2, 4], [3, 6]]
+r = t |> renombre x -> horas |> renombre z -> consumo
+cuenteme r
+
+pinte dispersion r
+titulo "Renombrar ejes"
+ejex horas
+ejey consumo
+leyenda "Serie observada"
+guardela "salidas/c3_M18_renombre_ejes.png"
+
+chao

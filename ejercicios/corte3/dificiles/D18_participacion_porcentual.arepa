@@ -1,0 +1,23 @@
+# D18_participacion_porcentual - Participación del ingreso
+# Enunciado: Agrupar categorías y calcular qué porcentaje del total representa cada una.
+# Esperado: {"suma_porcentajes":100,"r":{"columnas":["categoria","subtotal","porcentaje"],"filas":[["A",25,25],["B",25,25],["C",50,50]]}}
+# PNG esperados: salidas/c3_D18_participacion_porcentual.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D18_participacion_porcentual.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [categoria, ingreso] con [["A", 10], ["A", 15], ["B", 25], ["C", 50]]
+total = sume(t, ingreso)
+r = t |> junte por [categoria] |> resuma subtotal = sume(ingreso) |> cree porcentaje = subtotal / total * 100
+suma_porcentajes = sume(r, porcentaje)
+
+cuenteme r
+
+pinte barras r
+titulo "Participación del ingreso"
+ejex categoria
+ejey porcentaje
+leyenda "Serie observada"
+guardela "salidas/c3_D18_participacion_porcentual.png"
+
+chao

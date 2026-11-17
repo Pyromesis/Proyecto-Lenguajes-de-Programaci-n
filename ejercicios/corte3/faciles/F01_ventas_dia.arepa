@@ -1,0 +1,19 @@
+# F01_ventas_dia - Ventas por día
+# Enunciado: Comparar las ventas de lunes, martes y miércoles.
+# Esperado: {"t":{"columnas":["dia","ventas"],"filas":[["Lunes",12],["Martes",18],["Miércoles",15]]}}
+# PNG esperados: salidas/c3_F01_ventas_dia.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F01_ventas_dia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia, ventas] con [["Lunes", 12], ["Martes", 18], ["Miércoles", 15]]
+cuenteme t
+
+pinte barras t
+titulo "Ventas por día"
+ejex dia
+ejey ventas
+leyenda "Serie observada"
+guardela "salidas/c3_F01_ventas_dia.png"
+
+chao

@@ -20,7 +20,9 @@ from ml.modelo import (
     ModeloClasificacion,
     exigir_entero_positivo,
     exigir_numero_positivo,
+    exigir_numero_finito,
 )
+from utiles.matematica import es_finito
 
 
 class Perceptron(ModeloClasificacion):
@@ -36,6 +38,7 @@ class Perceptron(ModeloClasificacion):
         self.entrenado = False
 
     def entrenar(self, X, y):
+        self.entrenado = False
         if not X:
             raise ErrorSemantico("El perceptrón no recibió filas para entrenar.")
         self.clases = self._resolver_clases(y)
@@ -56,20 +59,31 @@ class Perceptron(ModeloClasificacion):
                 )
 
         dimension = len(X[0])
+        if not dimension or len(X) != len(y):
+            raise ErrorSemantico("El perceptrón necesita columnas de entrada y "
+                                 "una etiqueta por cada fila.")
         if any(len(fila) != dimension for fila in X):
             raise ErrorSemantico("Las filas de entrenamiento tienen dimensiones distintas.")
         self.pesos = [0.0 for _ in range(dimension)]
         self.sesgo = 0.0
+        self.historial = []
+        X = [[exigir_numero_finito(v, "entrada de perceptrón") for v in fila] for fila in X]
 
         for epoca in range(1, self.epocas + 1):
             errores = 0
             for fila, valor in zip(X, y):
                 esperado = etiquetas[valor]
                 puntaje = self._producto_punto(self.pesos, fila) + self.sesgo
+                if not es_finito(puntaje):
+                    raise ErrorSemantico("El perceptrón produjo un puntaje no finito; "
+                                         "reducí la tasa o la escala de los datos.")
                 if esperado * puntaje <= 0:
                     for j in range(dimension):
                         self.pesos[j] += self.tasa * esperado * fila[j]
                     self.sesgo += self.tasa * esperado
+                    if not es_finito(self.sesgo) or any(not es_finito(v) for v in self.pesos):
+                        raise ErrorSemantico("El entrenamiento del perceptrón excedió "
+                                             "el rango decimal; reducí la tasa.")
                     errores += 1
             self.historial.append(errores)
             self.epocas_reales = epoca
@@ -88,7 +102,11 @@ class Perceptron(ModeloClasificacion):
                     len(vector), len(self.pesos)
                 )
             )
+        vector = [exigir_numero_finito(v, "entrada de predicción") for v in vector]
         puntaje = self._producto_punto(self.pesos, vector) + self.sesgo
+        if not es_finito(puntaje):
+            raise ErrorSemantico("El puntaje de predicción no es finito; revisá "
+                                 "la tasa de entrenamiento y la escala de los datos.")
         return self.clases[0] if puntaje >= 0 else self.clases[1]
 
     def resumen(self):

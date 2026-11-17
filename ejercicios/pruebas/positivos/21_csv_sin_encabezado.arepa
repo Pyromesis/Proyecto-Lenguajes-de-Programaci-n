@@ -1,0 +1,4 @@
+# Ejemplo verificado; resultados en ../esperados.json
+quihubo
+t = monte "ejercicios/pruebas/datos/sin_encabezado.csv" con encabezado falso, separador ";"
+chao

@@ -1,0 +1,10 @@
+# Ejemplo verificable: 08_estadisticas
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [grupo, valor] con [["A", 1], ["A", 3], ["A", nada], ["B", 2], ["B", 4]]
+r = t |> junte por [grupo] |> resuma filas = cuente(), validos = cuente(valor), total = sume(valor), media = promedie(valor), mitad = mediana(valor), menor = minimo(valor), mayor = maximo(valor), desv = desviacion(valor)
+mediana_par = mediana([1, 2, 3, 4])
+mediana_impar = mediana([9, 1, 3])
+vacia = arme [valor]
+sin_datos = vacia |> resuma cantidad = cuente(), total = sume(valor), media = promedie(valor)
+chao

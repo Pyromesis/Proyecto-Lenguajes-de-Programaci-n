@@ -1,0 +1,11 @@
+# F17_modulo_reparto - Reparto con sobrantes
+# Enunciado: Hallar cuántos elementos sobran al repartir 29 entre 6.
+# Esperado: {"resultado":5}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F17_modulo_reparto.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = 29 % 6
+cuenteme resultado
+
+chao

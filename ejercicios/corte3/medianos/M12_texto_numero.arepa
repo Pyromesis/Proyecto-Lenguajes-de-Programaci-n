@@ -1,0 +1,19 @@
+# M12_texto_numero - Textos a números
+# Enunciado: Convertir edades almacenadas como texto antes de graficar.
+# Esperado: {"r":{"columnas":["edad"],"filas":[[18],[20],[20],[30]]}}
+# PNG esperados: salidas/c3_M12_texto_numero.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M12_texto_numero.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [edad] con [["18"], ["20"], ["20"], ["30"]]
+r = t |> convierta edad -> numero
+cuenteme r
+
+pinte histograma r
+titulo "Textos a números"
+ejey edad
+leyenda "Serie observada"
+guardela "salidas/c3_M12_texto_numero.png"
+
+chao

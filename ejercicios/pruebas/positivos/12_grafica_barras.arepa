@@ -1,0 +1,12 @@
+# Ejemplo verificable: 12_grafica_barras
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, valor] con [[1, 2], [1, 4], [2, 3], [2, 5], [3, 6], [3, 8]]
+t = t |> cree doble = valor * 2
+pinte barras t
+titulo "Prueba barras"
+ejex x
+ejey valor
+leyenda "Valores"
+guardela "salidas/barras.png"
+chao

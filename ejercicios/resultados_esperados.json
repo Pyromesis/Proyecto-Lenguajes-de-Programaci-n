@@ -1,0 +1,5032 @@
+[
+  {
+    "archivo": "ejercicios/corte1/faciles/F12_potencia_cuadrado.arepa",
+    "desde_raiz": true,
+    "titulo": "Cuadrado de un número",
+    "enunciado": "Elevar 7 al cuadrado y mostrar 49.",
+    "variables": {
+      "resultado": 49
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F13_potencia_cubo.arepa",
+    "desde_raiz": true,
+    "titulo": "Volumen de un cubo",
+    "enunciado": "Calcular el volumen de un cubo de lado 4.",
+    "variables": {
+      "resultado": 64
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F14_promedio_notas.arepa",
+    "desde_raiz": true,
+    "titulo": "Promedio de notas",
+    "enunciado": "Promediar 3, 4 y 5 respetando los paréntesis.",
+    "variables": {
+      "resultado": 4
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F15_conversion_temperatura.arepa",
+    "desde_raiz": true,
+    "titulo": "Conversión de temperatura",
+    "enunciado": "Convertir 25 grados Celsius a Fahrenheit.",
+    "variables": {
+      "resultado": 77
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F16_porcentaje_descuento.arepa",
+    "desde_raiz": true,
+    "titulo": "Descuento comercial",
+    "enunciado": "Aplicar 15 por ciento de descuento a 200.",
+    "variables": {
+      "resultado": 170
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F17_modulo_reparto.arepa",
+    "desde_raiz": true,
+    "titulo": "Reparto con sobrantes",
+    "enunciado": "Hallar cuántos elementos sobran al repartir 29 entre 6.",
+    "variables": {
+      "resultado": 5
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F18_comparacion_edad.arepa",
+    "desde_raiz": true,
+    "titulo": "Mayoría de edad",
+    "enunciado": "Determinar si una persona de 18 años es mayor de edad.",
+    "variables": {
+      "resultado": true
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F19_intervalo_cerrado.arepa",
+    "desde_raiz": true,
+    "titulo": "Pertenencia a intervalo",
+    "enunciado": "Comprobar que 5 pertenece al intervalo cerrado de 1 a 10.",
+    "variables": {
+      "resultado": true
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F20_identificador_unicode.arepa",
+    "desde_raiz": true,
+    "titulo": "Identificadores Unicode",
+    "enunciado": "Calcular los meses de dos años con una variable que contiene ñ.",
+    "variables": {
+      "resultado": 24
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F21_texto_escapes.arepa",
+    "desde_raiz": true,
+    "titulo": "Texto y longitud",
+    "enunciado": "Contar los caracteres de la palabra Bogotá.",
+    "variables": {
+      "resultado": 6
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F22_exponente_negativo.arepa",
+    "desde_raiz": true,
+    "titulo": "Exponente negativo",
+    "enunciado": "Calcular el inverso de ocho usando una potencia.",
+    "variables": {
+      "resultado": 0.125
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F23_raiz_por_potencia.arepa",
+    "desde_raiz": true,
+    "titulo": "Raíz mediante potencia",
+    "enunciado": "Calcular la raíz cuadrada de 81.",
+    "variables": {
+      "resultado": 9
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F24_parentesis_descuento.arepa",
+    "desde_raiz": true,
+    "titulo": "Paréntesis y prioridad",
+    "enunciado": "Calcular el total de tres productos de 10 y un envío de 5.",
+    "variables": {
+      "resultado": 35
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/faciles/F25_reasignacion_saldo.arepa",
+    "desde_raiz": true,
+    "titulo": "Actualización de saldo",
+    "enunciado": "Partir de 100, retirar 25 y depositar 40.",
+    "variables": {
+      "resultado": 115
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M11_potencia_asociativa.arepa",
+    "desde_raiz": true,
+    "titulo": "Asociatividad de potencia",
+    "enunciado": "Comparar 2 elevado a 3 elevado a 2 con la variante entre paréntesis.",
+    "variables": {
+      "a": 512,
+      "b": 64
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M12_unario_potencia.arepa",
+    "desde_raiz": true,
+    "titulo": "Signo y potencia",
+    "enunciado": "Comparar -3 al cuadrado con (-3) al cuadrado.",
+    "variables": {
+      "a": -9,
+      "b": 9
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M13_condicional_tarifa.arepa",
+    "desde_raiz": true,
+    "titulo": "Tarifa según edad",
+    "enunciado": "Cobrar 5 a un niño de 10 años y 10 al resto.",
+    "variables": {
+      "tarifa": 5
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M14_comparaciones_seis.arepa",
+    "desde_raiz": true,
+    "titulo": "Seis relaciones",
+    "enunciado": "Evaluar las seis comparaciones numéricas con valores conocidos.",
+    "variables": {
+      "r": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M15_filtro_doble.arepa",
+    "desde_raiz": true,
+    "titulo": "Filtro de inventario",
+    "enunciado": "Conservar artículos con existencias positivas y precio menor que 20.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "producto",
+          "stock",
+          "precio"
+        ],
+        "filas": [
+          [
+            "A",
+            2,
+            10
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M16_seleccion_orden_columnas.arepa",
+    "desde_raiz": true,
+    "titulo": "Orden de selección",
+    "enunciado": "Reorganizar una tabla para mostrar precio antes de producto.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "precio",
+          "producto"
+        ],
+        "filas": [
+          [
+            10,
+            "A"
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M17_tabla_calculada.arepa",
+    "desde_raiz": true,
+    "titulo": "Importe por fila",
+    "enunciado": "Multiplicar unidades por precio en dos filas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "unidades",
+          "precio",
+          "importe"
+        ],
+        "filas": [
+          [
+            2,
+            10,
+            20
+          ],
+          [
+            3,
+            4,
+            12
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M18_renombrar_columna.arepa",
+    "desde_raiz": true,
+    "titulo": "Renombre de una variable tabular",
+    "enunciado": "Renombrar precio como valor sin perder filas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "producto",
+          "valor"
+        ],
+        "filas": [
+          [
+            "A",
+            10
+          ],
+          [
+            "B",
+            20
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M19_nada_en_filtro.arepa",
+    "desde_raiz": true,
+    "titulo": "Faltantes en filtros",
+    "enunciado": "Conservar solo los valores mayores que 1 y descartar nada.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "valor"
+        ],
+        "filas": [
+          [
+            3
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M20_logica_acceso.arepa",
+    "desde_raiz": true,
+    "titulo": "Regla de acceso",
+    "enunciado": "Autorizar a un usuario activo que sea administrador o propietario.",
+    "variables": {
+      "permitido": true
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M21_funcion_area.arepa",
+    "desde_raiz": true,
+    "titulo": "Área reutilizable",
+    "enunciado": "Definir una función de área y usarla con dos rectángulos.",
+    "variables": {
+      "a": 12,
+      "b": 10
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M22_orden_texto.arepa",
+    "desde_raiz": true,
+    "titulo": "Orden alfabético",
+    "enunciado": "Ordenar tres ciudades alfabéticamente.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad"
+        ],
+        "filas": [
+          [
+            "Armenia"
+          ],
+          [
+            "Bogotá"
+          ],
+          [
+            "Cali"
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M23_resumen_sencillo.arepa",
+    "desde_raiz": true,
+    "titulo": "Resumen de notas",
+    "enunciado": "Contar y promediar tres notas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "n",
+          "media"
+        ],
+        "filas": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M24_conversion_numerica.arepa",
+    "desde_raiz": true,
+    "titulo": "Conversión de textos numéricos",
+    "enunciado": "Convertir textos 10 y 20 a números y sumarlos.",
+    "variables": {
+      "total": 30
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/medianos/M25_pipeline_inmutable.arepa",
+    "desde_raiz": true,
+    "titulo": "Inmutabilidad de un pipeline",
+    "enunciado": "Crear una columna sin cambiar el número de columnas del origen.",
+    "variables": {
+      "original": 1,
+      "transformada": 2,
+      "r": {
+        "columnas": [
+          "x",
+          "cuadrado"
+        ],
+        "filas": [
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            9
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D12_identidades_potencia.arepa",
+    "desde_raiz": true,
+    "titulo": "Identidades y signo",
+    "enunciado": "Comprobar exponentes cero, uno, negativos y potencias encadenadas.",
+    "variables": {
+      "r": [
+        1,
+        5,
+        0.25,
+        -16,
+        -8
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D13_condicional_anidado.arepa",
+    "desde_raiz": true,
+    "titulo": "Clasificar una nota",
+    "enunciado": "Clasificar 4.5 como excelente usando decisiones anidadas.",
+    "variables": {
+      "nivel": "excelente"
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D14_comparacion_nada.arepa",
+    "desde_raiz": true,
+    "titulo": "Lógica con faltantes",
+    "enunciado": "Mostrar que comparar nada no equivale a verdadero ni falso.",
+    "variables": {
+      "a": null,
+      "b": null,
+      "c": null
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D15_division_extremos.arepa",
+    "desde_raiz": true,
+    "titulo": "Divisiones especiales",
+    "enunciado": "Contrastar infinito positivo, negativo y cero dividido entre cero.",
+    "variables": {
+      "a": "infinito",
+      "b": "-infinito",
+      "c": null
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D16_agrupacion_doble.arepa",
+    "desde_raiz": true,
+    "titulo": "Agrupar por dos claves",
+    "enunciado": "Sumar ventas por ciudad y categoría.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad",
+          "categoria",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            "X",
+            5
+          ],
+          [
+            "A",
+            "Y",
+            4
+          ],
+          [
+            "B",
+            "X",
+            1
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D17_orden_empates.arepa",
+    "desde_raiz": true,
+    "titulo": "Orden estable",
+    "enunciado": "Ordenar por puntuación sin invertir las filas empatadas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "id",
+          "puntos"
+        ],
+        "filas": [
+          [
+            "B",
+            1
+          ],
+          [
+            "A",
+            2
+          ],
+          [
+            "C",
+            2
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D18_renombre_reservada.arepa",
+    "desde_raiz": true,
+    "titulo": "Columna con nombre reservado",
+    "enunciado": "Leer una columna llamada numero y renombrarla.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "codigo",
+          "valor"
+        ],
+        "filas": [
+          [
+            1,
+            10
+          ],
+          [
+            2,
+            20
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D19_funcion_en_columna.arepa",
+    "desde_raiz": true,
+    "titulo": "Función como transformación",
+    "enunciado": "Crear una columna con una función de impuesto.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "precio",
+          "final"
+        ],
+        "filas": [
+          [
+            100,
+            119
+          ],
+          [
+            200,
+            238
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D20_filtro_demorgan.arepa",
+    "desde_raiz": true,
+    "titulo": "Lógica equivalente",
+    "enunciado": "Comparar dos filtros equivalentes por De Morgan.",
+    "variables": {
+      "a": {
+        "columnas": [
+          "x"
+        ],
+        "filas": [
+          [
+            0
+          ],
+          [
+            5
+          ]
+        ]
+      },
+      "b": {
+        "columnas": [
+          "x"
+        ],
+        "filas": [
+          [
+            0
+          ],
+          [
+            5
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D21_csv_multilinea.arepa",
+    "desde_raiz": true,
+    "titulo": "CSV con campos multilínea",
+    "enunciado": "Leer comillas y saltos de línea dentro de campos CSV.",
+    "variables": {
+      "filas": 2,
+      "nota": "línea 1\nlínea 2"
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D22_estadisticas_sin_datos.arepa",
+    "desde_raiz": true,
+    "titulo": "Agregación vacía",
+    "enunciado": "Filtrar todas las filas y calcular conteo, suma y mediana.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "n",
+          "total",
+          "mitad"
+        ],
+        "filas": [
+          [
+            0,
+            null,
+            null
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D23_closure_actualizada.arepa",
+    "desde_raiz": true,
+    "titulo": "Captura del entorno",
+    "enunciado": "Definir una función y comprobar que ve la reasignación de base.",
+    "variables": {
+      "a": 7,
+      "b": 12
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D24_recursion_suma.arepa",
+    "desde_raiz": true,
+    "titulo": "Suma recursiva",
+    "enunciado": "Sumar los enteros de 1 a 10 con caso base.",
+    "variables": {
+      "r": 55
+    }
+  },
+  {
+    "archivo": "ejercicios/corte1/dificiles/D25_normalizacion_pipeline.arepa",
+    "desde_raiz": true,
+    "titulo": "Limpieza y resumen",
+    "enunciado": "Quitar duplicados, eliminar vacíos, convertir y resumir.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            2
+          ],
+          [
+            "B",
+            3
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F27_lista_agregar_sacar.arepa",
+    "desde_raiz": true,
+    "titulo": "Modificar una lista",
+    "enunciado": "Añadir 4 y retirar el primer elemento de una lista.",
+    "variables": {
+      "numeros": [
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F28_registro_actualizar.arepa",
+    "desde_raiz": true,
+    "titulo": "Actualizar un registro",
+    "enunciado": "Cumplir un año y conservar el nombre de una persona.",
+    "variables": {
+      "persona": {
+        "nombre": "Ana",
+        "edad": 21
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F29_tabla_insertar.arepa",
+    "desde_raiz": true,
+    "titulo": "Insertar filas",
+    "enunciado": "Armar una tabla y agregar una fila mediante un registro.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "producto",
+          "stock"
+        ],
+        "filas": [
+          [
+            "A",
+            2
+          ],
+          [
+            "B",
+            3
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F30_tabla_celda.arepa",
+    "desde_raiz": true,
+    "titulo": "Actualizar una celda",
+    "enunciado": "Cambiar el stock del primer producto de 2 a 5.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "producto",
+          "stock"
+        ],
+        "filas": [
+          [
+            "A",
+            5
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F31_lista_estadisticas.arepa",
+    "desde_raiz": true,
+    "titulo": "Estadísticas de lista",
+    "enunciado": "Calcular suma y media de 2, 4 y 6.",
+    "variables": {
+      "total": 12,
+      "media": 4
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F32_contar_validos.arepa",
+    "desde_raiz": true,
+    "titulo": "Contar faltantes",
+    "enunciado": "Distinguir número de filas y valores presentes.",
+    "variables": {
+      "filas": 3,
+      "validos": 2
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F33_recorrido_lista.arepa",
+    "desde_raiz": true,
+    "titulo": "Recorrer una lista",
+    "enunciado": "Sumar los cuadrados de 1, 2 y 3.",
+    "variables": {
+      "total": 14
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F34_columna_extraer.arepa",
+    "desde_raiz": true,
+    "titulo": "Extraer una columna",
+    "enunciado": "Obtener las edades como lista y sumar sus valores.",
+    "variables": {
+      "edades": [
+        20,
+        30
+      ],
+      "total": 50
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F35_funcion_por_fila.arepa",
+    "desde_raiz": true,
+    "titulo": "Aplicar una función",
+    "enunciado": "Aplicar el doble a una columna de dos filas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "x",
+          "doble_x"
+        ],
+        "filas": [
+          [
+            2,
+            4
+          ],
+          [
+            5,
+            10
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/faciles/F36_ciclo_factorial.arepa",
+    "desde_raiz": true,
+    "titulo": "Factorial iterativo",
+    "enunciado": "Calcular 5 factorial multiplicando en un rango.",
+    "variables": {
+      "resultado": 120
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M26_actualizar_filas.arepa",
+    "desde_raiz": true,
+    "titulo": "Reemplazo completo de filas",
+    "enunciado": "Actualizar una fila con lista y otra con registro.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "nombre",
+          "edad"
+        ],
+        "filas": [
+          [
+            "Ana",
+            21
+          ],
+          [
+            "Luis",
+            31
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M27_recorra_mutacion.arepa",
+    "desde_raiz": true,
+    "titulo": "Mutar durante un recorrido",
+    "enunciado": "Duplicar cada elemento recorrido y comprobar el snapshot.",
+    "variables": {
+      "numeros": [
+        1,
+        2,
+        3,
+        2,
+        4,
+        6
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M28_conversion_logicos.arepa",
+    "desde_raiz": true,
+    "titulo": "Conversión a lógico",
+    "enunciado": "Convertir textos obvio y falso a valores lógicos y filtrar.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "nombre",
+          "activo"
+        ],
+        "filas": [
+          [
+            "A",
+            true
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M29_fecha_valida.arepa",
+    "desde_raiz": true,
+    "titulo": "Calendario de años bisiestos",
+    "enunciado": "Convertir dos fechas válidas que incluyen el 29 de febrero de 2000.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "dia"
+        ],
+        "filas": [
+          [
+            "2000-02-29"
+          ],
+          [
+            "2024-02-29"
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M30_agrupar_faltante.arepa",
+    "desde_raiz": true,
+    "titulo": "Agrupación con clave faltante",
+    "enunciado": "Agrupar las dos filas cuya categoría es nada.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "total",
+          "n"
+        ],
+        "filas": [
+          [
+            null,
+            7,
+            2
+          ],
+          [
+            "A",
+            3,
+            1
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M31_condicion_en_funcion.arepa",
+    "desde_raiz": true,
+    "titulo": "Etiquetar filas",
+    "enunciado": "Clasificar como aprueba las notas desde 3.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "nota",
+          "estado_nota"
+        ],
+        "filas": [
+          [
+            2,
+            "pierde"
+          ],
+          [
+            3,
+            "aprueba"
+          ],
+          [
+            5,
+            "aprueba"
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M32_mediana_por_grupo.arepa",
+    "desde_raiz": true,
+    "titulo": "Medianas por categoría",
+    "enunciado": "Comparar una categoría con cantidad par y otra impar.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "mitad"
+        ],
+        "filas": [
+          [
+            "A",
+            5
+          ],
+          [
+            "B",
+            3
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M33_desviacion_conocida.arepa",
+    "desde_raiz": true,
+    "titulo": "Desviación poblacional",
+    "enunciado": "Calcular la desviación de 2, 4, 4, 4, 5, 5, 7 y 9.",
+    "variables": {
+      "media": 5,
+      "desv": 2
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M34_busqueda_lineal.arepa",
+    "desde_raiz": true,
+    "titulo": "Buscar un elemento",
+    "enunciado": "Encontrar la primera posición del 8 en una lista usando pare.",
+    "variables": {
+      "posicion": 2
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/medianos/M35_filtro_funcion_parametro.arepa",
+    "desde_raiz": true,
+    "titulo": "Filtro reutilizable",
+    "enunciado": "Comparar cada precio con un umbral guardado en el entorno.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "precio"
+        ],
+        "filas": [
+          [
+            20
+          ],
+          [
+            30
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D27_inventario_movimientos.arepa",
+    "desde_raiz": true,
+    "titulo": "Inventario con movimientos",
+    "enunciado": "Aplicar entradas y salidas a un registro de inventario.",
+    "variables": {
+      "inventario": {
+        "A": 9,
+        "B": 9
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D28_matriz_transpuesta.arepa",
+    "desde_raiz": true,
+    "titulo": "Transponer una matriz",
+    "enunciado": "Construir la transpuesta de una matriz de dos por tres.",
+    "variables": {
+      "transpuesta": [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D29_maximo_manual.arepa",
+    "desde_raiz": true,
+    "titulo": "Máximo sin builtin",
+    "enunciado": "Hallar el máximo de una lista que contiene solo negativos.",
+    "variables": {
+      "mayor": -2
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D30_primos_hasta_20.arepa",
+    "desde_raiz": true,
+    "titulo": "Números primos",
+    "enunciado": "Listar los primos entre 2 y 20 con ciclos y condición.",
+    "variables": {
+      "primos": [
+        2,
+        3,
+        5,
+        7,
+        11,
+        13,
+        17,
+        19
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D31_fibonacci_iterativo.arepa",
+    "desde_raiz": true,
+    "titulo": "Fibonacci sin recursión",
+    "enunciado": "Calcular los diez primeros términos desde cero.",
+    "variables": {
+      "serie": [
+        0,
+        1,
+        1,
+        2,
+        3,
+        5,
+        8,
+        13,
+        21,
+        34
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D32_normalizar_estandar.arepa",
+    "desde_raiz": true,
+    "titulo": "Estandarización manual",
+    "enunciado": "Normalizar 2, 4 y 6 restando su media y dividiendo por su desviación.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "x",
+          "z"
+        ],
+        "filas": [
+          [
+            2,
+            -1.224744871391589
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            6,
+            1.224744871391589
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D33_agrupacion_multietapa.arepa",
+    "desde_raiz": true,
+    "titulo": "Resumen de resúmenes",
+    "enunciado": "Resumir por ciudad y categoría y después obtener el total por ciudad.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            5
+          ],
+          [
+            "B",
+            4
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D34_deduplicacion_estable.arepa",
+    "desde_raiz": true,
+    "titulo": "Duplicados y prioridad",
+    "enunciado": "Quitar duplicados exactos y comprobar qué filas permanecen.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "id",
+          "valor"
+        ],
+        "filas": [
+          [
+            1,
+            10
+          ],
+          [
+            2,
+            20
+          ],
+          [
+            1,
+            15
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D35_ordenamiento_burbuja.arepa",
+    "desde_raiz": true,
+    "titulo": "Ordenamiento manual",
+    "enunciado": "Ordenar una lista con intercambio adyacente y compararla con el orden conocido.",
+    "variables": {
+      "valores": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte2/dificiles/D36_retorno_y_ciclos.arepa",
+    "desde_raiz": true,
+    "titulo": "Retorno temprano desde ciclos",
+    "enunciado": "Encontrar el primer múltiplo de 7 mayor que 20 y devolver nada si no existe.",
+    "variables": {
+      "a": 21,
+      "b": null
+    }
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F01_ventas_dia.arepa",
+    "desde_raiz": true,
+    "titulo": "Ventas por día",
+    "enunciado": "Comparar las ventas de lunes, martes y miércoles.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "dia",
+          "ventas"
+        ],
+        "filas": [
+          [
+            "Lunes",
+            12
+          ],
+          [
+            "Martes",
+            18
+          ],
+          [
+            "Miércoles",
+            15
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F01_ventas_dia.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F02_gastos_categoria.arepa",
+    "desde_raiz": true,
+    "titulo": "Gastos por categoría",
+    "enunciado": "Comparar gastos de alimentación, transporte y vivienda.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "categoria",
+          "gasto"
+        ],
+        "filas": [
+          [
+            "Alimentación",
+            200
+          ],
+          [
+            "Transporte",
+            80
+          ],
+          [
+            "Vivienda",
+            500
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F02_gastos_categoria.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F03_alumnos_curso.arepa",
+    "desde_raiz": true,
+    "titulo": "Estudiantes por curso",
+    "enunciado": "Comparar la matrícula de tres cursos.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "curso",
+          "alumnos"
+        ],
+        "filas": [
+          [
+            "A",
+            25
+          ],
+          [
+            "B",
+            30
+          ],
+          [
+            "C",
+            20
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F03_alumnos_curso.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F04_stock_producto.arepa",
+    "desde_raiz": true,
+    "titulo": "Existencias por producto",
+    "enunciado": "Mostrar las existencias de arroz, leche y café.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "producto",
+          "stock"
+        ],
+        "filas": [
+          [
+            "Arroz",
+            40
+          ],
+          [
+            "Leche",
+            25
+          ],
+          [
+            "Café",
+            12
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F04_stock_producto.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F05_votos_opcion.arepa",
+    "desde_raiz": true,
+    "titulo": "Votos por opción",
+    "enunciado": "Comparar el número de votos de tres opciones.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "opcion",
+          "votos"
+        ],
+        "filas": [
+          [
+            "A",
+            120
+          ],
+          [
+            "B",
+            95
+          ],
+          [
+            "C",
+            85
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F05_votos_opcion.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F06_temperatura_dia.arepa",
+    "desde_raiz": true,
+    "titulo": "Temperatura diaria",
+    "enunciado": "Representar la evolución de temperatura durante cuatro días.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "dia",
+          "temperatura"
+        ],
+        "filas": [
+          [
+            1,
+            18
+          ],
+          [
+            2,
+            20
+          ],
+          [
+            3,
+            19
+          ],
+          [
+            4,
+            22
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F06_temperatura_dia.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F07_ahorro_mes.arepa",
+    "desde_raiz": true,
+    "titulo": "Ahorro mensual",
+    "enunciado": "Representar el saldo acumulado durante cuatro meses.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "mes",
+          "saldo"
+        ],
+        "filas": [
+          [
+            1,
+            50
+          ],
+          [
+            2,
+            120
+          ],
+          [
+            3,
+            180
+          ],
+          [
+            4,
+            260
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F07_ahorro_mes.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F08_visitas_semana.arepa",
+    "desde_raiz": true,
+    "titulo": "Visitas semanales",
+    "enunciado": "Representar las visitas de una web durante cuatro semanas.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "semana",
+          "visitas"
+        ],
+        "filas": [
+          [
+            1,
+            100
+          ],
+          [
+            2,
+            150
+          ],
+          [
+            3,
+            130
+          ],
+          [
+            4,
+            180
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F08_visitas_semana.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F09_poblacion_anio.arepa",
+    "desde_raiz": true,
+    "titulo": "Población anual",
+    "enunciado": "Mostrar el crecimiento de una población durante cuatro años.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "anio",
+          "habitantes"
+        ],
+        "filas": [
+          [
+            2023,
+            1000
+          ],
+          [
+            2024,
+            1050
+          ],
+          [
+            2025,
+            1120
+          ],
+          [
+            2026,
+            1200
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F09_poblacion_anio.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F10_distancia_tiempo.arepa",
+    "desde_raiz": true,
+    "titulo": "Distancia y tiempo",
+    "enunciado": "Representar la distancia recorrida por un móvil a velocidad constante.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "tiempo",
+          "distancia"
+        ],
+        "filas": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            3,
+            15
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F10_distancia_tiempo.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F11_notas.arepa",
+    "desde_raiz": true,
+    "titulo": "Distribución de notas",
+    "enunciado": "Observar cómo se distribuyen diez calificaciones.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "nota"
+        ],
+        "filas": [
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            4
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ],
+          [
+            5
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F11_notas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F12_edades.arepa",
+    "desde_raiz": true,
+    "titulo": "Distribución de edades",
+    "enunciado": "Observar la distribución de edades de ocho personas.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "edad"
+        ],
+        "filas": [
+          [
+            18
+          ],
+          [
+            20
+          ],
+          [
+            20
+          ],
+          [
+            25
+          ],
+          [
+            30
+          ],
+          [
+            35
+          ],
+          [
+            40
+          ],
+          [
+            60
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F12_edades.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F13_tiempos.arepa",
+    "desde_raiz": true,
+    "titulo": "Tiempos de atención",
+    "enunciado": "Representar la distribución de ocho tiempos de atención.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "minutos"
+        ],
+        "filas": [
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ],
+          [
+            5
+          ],
+          [
+            7
+          ],
+          [
+            10
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F13_tiempos.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F14_importes.arepa",
+    "desde_raiz": true,
+    "titulo": "Importes de compras",
+    "enunciado": "Representar la distribución de importes de ocho compras.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "importe"
+        ],
+        "filas": [
+          [
+            10
+          ],
+          [
+            15
+          ],
+          [
+            20
+          ],
+          [
+            20
+          ],
+          [
+            25
+          ],
+          [
+            30
+          ],
+          [
+            50
+          ],
+          [
+            80
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F14_importes.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F15_estaturas.arepa",
+    "desde_raiz": true,
+    "titulo": "Estaturas de una muestra",
+    "enunciado": "Representar la distribución de ocho estaturas en centímetros.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "estatura"
+        ],
+        "filas": [
+          [
+            150
+          ],
+          [
+            155
+          ],
+          [
+            160
+          ],
+          [
+            165
+          ],
+          [
+            165
+          ],
+          [
+            170
+          ],
+          [
+            175
+          ],
+          [
+            180
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F15_estaturas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F16_publicidad_ventas.arepa",
+    "desde_raiz": true,
+    "titulo": "Publicidad y ventas",
+    "enunciado": "Explorar la relación entre inversión publicitaria y ventas.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "inversion",
+          "ventas"
+        ],
+        "filas": [
+          [
+            10,
+            30
+          ],
+          [
+            20,
+            45
+          ],
+          [
+            30,
+            65
+          ],
+          [
+            40,
+            80
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F16_publicidad_ventas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F17_estudio_nota.arepa",
+    "desde_raiz": true,
+    "titulo": "Estudio y nota",
+    "enunciado": "Explorar la relación entre horas de estudio y nota obtenida.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "horas",
+          "nota"
+        ],
+        "filas": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F17_estudio_nota.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F18_area_precio.arepa",
+    "desde_raiz": true,
+    "titulo": "Área y precio",
+    "enunciado": "Comparar áreas y precios de cuatro viviendas.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "area",
+          "precio"
+        ],
+        "filas": [
+          [
+            40,
+            100
+          ],
+          [
+            60,
+            150
+          ],
+          [
+            80,
+            190
+          ],
+          [
+            100,
+            260
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F18_area_precio.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F19_horas_consumo.arepa",
+    "desde_raiz": true,
+    "titulo": "Horas y consumo",
+    "enunciado": "Relacionar horas de uso con consumo eléctrico.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "horas",
+          "consumo"
+        ],
+        "filas": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            4,
+            9
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F19_horas_consumo.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F20_altura_peso.arepa",
+    "desde_raiz": true,
+    "titulo": "Altura y peso",
+    "enunciado": "Explorar la relación entre altura y peso en cuatro observaciones.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "altura",
+          "peso"
+        ],
+        "filas": [
+          [
+            150,
+            48
+          ],
+          [
+            160,
+            57
+          ],
+          [
+            170,
+            68
+          ],
+          [
+            180,
+            80
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F20_altura_peso.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F21_salarios_area.arepa",
+    "desde_raiz": true,
+    "titulo": "Salarios por área",
+    "enunciado": "Comparar dispersión salarial entre dos áreas.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "area",
+          "salario"
+        ],
+        "filas": [
+          [
+            "A",
+            100
+          ],
+          [
+            "A",
+            120
+          ],
+          [
+            "A",
+            150
+          ],
+          [
+            "B",
+            90
+          ],
+          [
+            "B",
+            110
+          ],
+          [
+            "B",
+            180
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F21_salarios_area.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F22_notas_curso.arepa",
+    "desde_raiz": true,
+    "titulo": "Notas por curso",
+    "enunciado": "Comparar medianas y variación de notas en dos cursos.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "curso",
+          "nota"
+        ],
+        "filas": [
+          [
+            "A",
+            2
+          ],
+          [
+            "A",
+            3
+          ],
+          [
+            "A",
+            5
+          ],
+          [
+            "B",
+            3
+          ],
+          [
+            "B",
+            4
+          ],
+          [
+            "B",
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F22_notas_curso.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F23_tiempo_servicio.arepa",
+    "desde_raiz": true,
+    "titulo": "Atención por servicio",
+    "enunciado": "Comparar tiempos de dos servicios con tres observaciones cada uno.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "servicio",
+          "minutos"
+        ],
+        "filas": [
+          [
+            "Caja",
+            2
+          ],
+          [
+            "Caja",
+            3
+          ],
+          [
+            "Caja",
+            4
+          ],
+          [
+            "Consulta",
+            5
+          ],
+          [
+            "Consulta",
+            8
+          ],
+          [
+            "Consulta",
+            12
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F23_tiempo_servicio.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F24_precio_tienda.arepa",
+    "desde_raiz": true,
+    "titulo": "Precios por tienda",
+    "enunciado": "Comparar la distribución de precios de dos tiendas.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "tienda",
+          "precio"
+        ],
+        "filas": [
+          [
+            "Norte",
+            10
+          ],
+          [
+            "Norte",
+            12
+          ],
+          [
+            "Norte",
+            15
+          ],
+          [
+            "Sur",
+            8
+          ],
+          [
+            "Sur",
+            14
+          ],
+          [
+            "Sur",
+            20
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F24_precio_tienda.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/faciles/F25_lluvia_estacion.arepa",
+    "desde_raiz": true,
+    "titulo": "Lluvia por estación",
+    "enunciado": "Comparar mediciones de lluvia en dos estaciones.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "estacion",
+          "lluvia"
+        ],
+        "filas": [
+          [
+            "A",
+            5
+          ],
+          [
+            "A",
+            10
+          ],
+          [
+            "A",
+            20
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "B",
+            8
+          ],
+          [
+            "B",
+            30
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_F25_lluvia_estacion.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M01_ventas_agrupadas.arepa",
+    "desde_raiz": true,
+    "titulo": "Ingreso por ciudad",
+    "enunciado": "Agrupar ventas repetidas por ciudad y mostrar el ingreso total.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            15
+          ],
+          [
+            "B",
+            20
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M01_ventas_agrupadas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M02_stock_filtrado.arepa",
+    "desde_raiz": true,
+    "titulo": "Stock disponible",
+    "enunciado": "Eliminar productos sin stock antes de graficar.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "producto",
+          "stock"
+        ],
+        "filas": [
+          [
+            "A",
+            2
+          ],
+          [
+            "C",
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M02_stock_filtrado.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M03_total_calculado.arepa",
+    "desde_raiz": true,
+    "titulo": "Importe de líneas",
+    "enunciado": "Calcular unidades por precio y mostrar el importe de cada producto.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "producto",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            20
+          ],
+          [
+            "B",
+            12
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M03_total_calculado.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M04_categorias_ordenadas.arepa",
+    "desde_raiz": true,
+    "titulo": "Orden por ingreso",
+    "enunciado": "Ordenar categorías por importe descendente antes de graficar.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "categoria",
+          "total"
+        ],
+        "filas": [
+          [
+            "B",
+            30
+          ],
+          [
+            "C",
+            20
+          ],
+          [
+            "A",
+            10
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M04_categorias_ordenadas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M05_duplicados.arepa",
+    "desde_raiz": true,
+    "titulo": "Conteo sin duplicados",
+    "enunciado": "Eliminar filas duplicadas antes de contar personas por ciudad.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad",
+          "personas"
+        ],
+        "filas": [
+          [
+            "A",
+            1
+          ],
+          [
+            "B",
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M05_duplicados.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M06_dos_series.arepa",
+    "desde_raiz": true,
+    "titulo": "Dos series temporales",
+    "enunciado": "Representar ingresos y egresos durante tres meses.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "mes",
+          "ingresos",
+          "egresos"
+        ],
+        "filas": [
+          [
+            1,
+            100,
+            80
+          ],
+          [
+            2,
+            120,
+            90
+          ],
+          [
+            3,
+            150,
+            110
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M06_dos_series.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M07_orden_temporal.arepa",
+    "desde_raiz": true,
+    "titulo": "Ordenar el tiempo",
+    "enunciado": "Ordenar días desordenados antes de unir los puntos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "dia",
+          "valor"
+        ],
+        "filas": [
+          [
+            1,
+            10
+          ],
+          [
+            2,
+            20
+          ],
+          [
+            3,
+            30
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M07_orden_temporal.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M08_saldo_neto.arepa",
+    "desde_raiz": true,
+    "titulo": "Saldo neto",
+    "enunciado": "Crear una serie de ingreso menos gasto por mes.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "mes",
+          "neto"
+        ],
+        "filas": [
+          [
+            1,
+            20
+          ],
+          [
+            2,
+            30
+          ],
+          [
+            3,
+            40
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M08_saldo_neto.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M09_fechas_convertidas.arepa",
+    "desde_raiz": true,
+    "titulo": "Fechas como eje",
+    "enunciado": "Convertir fechas válidas y representar su serie.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "dia",
+          "valor"
+        ],
+        "filas": [
+          [
+            "2026-01-01",
+            10
+          ],
+          [
+            "2026-02-01",
+            20
+          ],
+          [
+            "2026-03-01",
+            15
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M09_fechas_convertidas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M10_relleno_vacios.arepa",
+    "desde_raiz": true,
+    "titulo": "Rellenar una serie",
+    "enunciado": "Reemplazar una observación faltante por cero antes de graficar.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "dia",
+          "valor"
+        ],
+        "filas": [
+          [
+            1,
+            10
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            30
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M10_relleno_vacios.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M11_notas_validas.arepa",
+    "desde_raiz": true,
+    "titulo": "Notas válidas",
+    "enunciado": "Descartar notas fuera del intervalo entre cero y cinco.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "nota"
+        ],
+        "filas": [
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M11_notas_validas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M12_texto_numero.arepa",
+    "desde_raiz": true,
+    "titulo": "Textos a números",
+    "enunciado": "Convertir edades almacenadas como texto antes de graficar.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "edad"
+        ],
+        "filas": [
+          [
+            18
+          ],
+          [
+            20
+          ],
+          [
+            20
+          ],
+          [
+            30
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M12_texto_numero.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M13_cuadrados.arepa",
+    "desde_raiz": true,
+    "titulo": "Distribución de cuadrados",
+    "enunciado": "Crear una columna cuadrado y mostrar su distribución.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "cuadrado"
+        ],
+        "filas": [
+          [
+            1
+          ],
+          [
+            4
+          ],
+          [
+            9
+          ],
+          [
+            16
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M13_cuadrados.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M14_sin_faltantes.arepa",
+    "desde_raiz": true,
+    "titulo": "Muestra sin faltantes",
+    "enunciado": "Eliminar valores nada antes de representar tiempos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "tiempo"
+        ],
+        "filas": [
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M14_sin_faltantes.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M15_importes_descontados.arepa",
+    "desde_raiz": true,
+    "titulo": "Importes con descuento",
+    "enunciado": "Aplicar diez por ciento de descuento antes del histograma.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "neto"
+        ],
+        "filas": [
+          [
+            9
+          ],
+          [
+            18
+          ],
+          [
+            27
+          ],
+          [
+            36
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M15_importes_descontados.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M16_precio_importe.arepa",
+    "desde_raiz": true,
+    "titulo": "Precio frente a importe",
+    "enunciado": "Calcular importe y relacionarlo con precio.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "unidades",
+          "precio",
+          "total"
+        ],
+        "filas": [
+          [
+            2,
+            10,
+            20
+          ],
+          [
+            3,
+            20,
+            60
+          ],
+          [
+            4,
+            30,
+            120
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M16_precio_importe.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M17_solo_aprobados.arepa",
+    "desde_raiz": true,
+    "titulo": "Estudio de aprobados",
+    "enunciado": "Filtrar estudiantes aprobados antes de relacionar horas y nota.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "horas",
+          "nota"
+        ],
+        "filas": [
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M17_solo_aprobados.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M18_renombre_ejes.arepa",
+    "desde_raiz": true,
+    "titulo": "Renombrar ejes",
+    "enunciado": "Cambiar x e y por nombres de dominio y utilizarlos como ejes.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "horas",
+          "consumo"
+        ],
+        "filas": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            6
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M18_renombre_ejes.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M19_seleccionar_ejes.arepa",
+    "desde_raiz": true,
+    "titulo": "Selección de variables",
+    "enunciado": "Quitar una columna auxiliar antes de representar área y precio.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "area",
+          "precio"
+        ],
+        "filas": [
+          [
+            40,
+            100
+          ],
+          [
+            60,
+            150
+          ],
+          [
+            80,
+            200
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M19_seleccionar_ejes.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M20_funcion_cuadratica.arepa",
+    "desde_raiz": true,
+    "titulo": "Función cuadrática",
+    "enunciado": "Usar una función para calcular los puntos de una parábola.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "x",
+          "valor"
+        ],
+        "filas": [
+          [
+            -2,
+            4
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M20_funcion_cuadratica.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M21_salarios_limpios.arepa",
+    "desde_raiz": true,
+    "titulo": "Salarios válidos",
+    "enunciado": "Excluir salarios negativos y conservar las dos áreas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "area",
+          "salario"
+        ],
+        "filas": [
+          [
+            "A",
+            100
+          ],
+          [
+            "A",
+            120
+          ],
+          [
+            "B",
+            80
+          ],
+          [
+            "B",
+            140
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M21_salarios_limpios.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M22_conversion_notas.arepa",
+    "desde_raiz": true,
+    "titulo": "Notas convertidas",
+    "enunciado": "Convertir notas textuales para comparar dos cursos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "curso",
+          "nota"
+        ],
+        "filas": [
+          [
+            "A",
+            2
+          ],
+          [
+            "A",
+            4
+          ],
+          [
+            "B",
+            3
+          ],
+          [
+            "B",
+            5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M22_conversion_notas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M23_sin_duplicados.arepa",
+    "desde_raiz": true,
+    "titulo": "Muestra depurada",
+    "enunciado": "Eliminar duplicados exactos antes de comparar distribuciones.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "valor"
+        ],
+        "filas": [
+          [
+            "A",
+            1
+          ],
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "B",
+            4
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M23_sin_duplicados.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M24_grupo_numerico.arepa",
+    "desde_raiz": true,
+    "titulo": "Cajas con clave numérica",
+    "enunciado": "Comparar observaciones de dos grupos identificados por números.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "valor"
+        ],
+        "filas": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            9
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M24_grupo_numerico.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/medianos/M25_sin_eje_x.arepa",
+    "desde_raiz": true,
+    "titulo": "Cajas de dos series",
+    "enunciado": "Comparar dos columnas numéricas sin columna de agrupación x.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "antes",
+          "despues"
+        ],
+        "filas": [
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            8
+          ],
+          [
+            8,
+            10
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_M25_sin_eje_x.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D01_balance_financiero.arepa",
+    "desde_raiz": true,
+    "titulo": "Balance financiero",
+    "enunciado": "Calcular ingresos y gastos por mes y representar ambas series y su balance.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "mes",
+          "ingresos",
+          "gastos",
+          "balance"
+        ],
+        "filas": [
+          [
+            1,
+            150,
+            100,
+            50
+          ],
+          [
+            2,
+            240,
+            140,
+            100
+          ]
+        ]
+      },
+      "total_balance": 150
+    },
+    "png": [
+      "salidas/c3_D01_balance_financiero.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D02_regresion_predicciones.arepa",
+    "desde_raiz": true,
+    "titulo": "Regresión y contraste",
+    "enunciado": "Aprender una recta y comparar valores reales y predichos sobre datos nuevos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "x",
+          "respuesta",
+          "estimado"
+        ],
+        "filas": [
+          [
+            6,
+            15,
+            15
+          ],
+          [
+            7,
+            17,
+            17
+          ],
+          [
+            8,
+            19,
+            19
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D02_regresion_predicciones.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D03_perceptron_conteos.arepa",
+    "desde_raiz": true,
+    "titulo": "Clasificación binaria y distribución",
+    "enunciado": "Entrenar un perceptrón y representar el conteo de predicciones sobre datos separados.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "predicha",
+          "cantidad"
+        ],
+        "filas": [
+          [
+            "no",
+            1
+          ],
+          [
+            "si",
+            2
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D03_perceptron_conteos.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D04_arbol_multiclase.arepa",
+    "desde_raiz": true,
+    "titulo": "Árbol con tres clases",
+    "enunciado": "Clasificar tres rangos y resumir las predicciones de observaciones nuevas.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "predicha",
+          "cantidad"
+        ],
+        "filas": [
+          [
+            "bajo",
+            1
+          ],
+          [
+            "medio",
+            1
+          ],
+          [
+            "alto",
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D04_arbol_multiclase.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D05_acumulados.arepa",
+    "desde_raiz": true,
+    "titulo": "Serie acumulada",
+    "enunciado": "Construir ventas acumuladas mediante recorrido y comparar con las ventas diarias.",
+    "variables": {
+      "total": 25,
+      "r": {
+        "columnas": [
+          "dia",
+          "venta",
+          "acumulado"
+        ],
+        "filas": [
+          [
+            1,
+            5,
+            5
+          ],
+          [
+            2,
+            8,
+            13
+          ],
+          [
+            3,
+            2,
+            15
+          ],
+          [
+            4,
+            10,
+            25
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D05_acumulados.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D06_media_movil.arepa",
+    "desde_raiz": true,
+    "titulo": "Media móvil de tres días",
+    "enunciado": "Suavizar una serie con ventanas completas de tres observaciones.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "dia",
+          "observado",
+          "media"
+        ],
+        "filas": [
+          [
+            3,
+            6,
+            4
+          ],
+          [
+            4,
+            8,
+            6
+          ],
+          [
+            5,
+            10,
+            8
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D06_media_movil.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D07_estandarizacion.arepa",
+    "desde_raiz": true,
+    "titulo": "Estandarización estadística",
+    "enunciado": "Calcular puntuaciones z y verificar media cero y desviación uno.",
+    "variables": {
+      "media_z": 0,
+      "desv_z": 1,
+      "r": {
+        "columnas": [
+          "x",
+          "z"
+        ],
+        "filas": [
+          [
+            2,
+            -1.224744871391589
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            6,
+            1.224744871391589
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D07_estandarizacion.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D08_escala_minmax.arepa",
+    "desde_raiz": true,
+    "titulo": "Escala entre cero y uno",
+    "enunciado": "Normalizar con mínimo y máximo y comprobar los extremos de la escala.",
+    "variables": {
+      "minimo_final": 0,
+      "maximo_final": 1,
+      "r": {
+        "columnas": [
+          "x",
+          "normalizado"
+        ],
+        "filas": [
+          [
+            10,
+            0
+          ],
+          [
+            20,
+            0.25
+          ],
+          [
+            30,
+            0.5
+          ],
+          [
+            50,
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D08_escala_minmax.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D09_tasas_por_grupo.arepa",
+    "desde_raiz": true,
+    "titulo": "Tasas de aprobación",
+    "enunciado": "Calcular porcentaje de aprobados por curso mediante una función indicadora.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "curso",
+          "tasa",
+          "porcentaje"
+        ],
+        "filas": [
+          [
+            "A",
+            0.5,
+            50
+          ],
+          [
+            "B",
+            1,
+            100
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D09_tasas_por_grupo.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D10_crecimiento_relativo.arepa",
+    "desde_raiz": true,
+    "titulo": "Crecimiento porcentual",
+    "enunciado": "Calcular la variación porcentual entre periodos sucesivos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "periodo",
+          "crecimiento"
+        ],
+        "filas": [
+          [
+            2,
+            20
+          ],
+          [
+            3,
+            25
+          ],
+          [
+            4,
+            20
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D10_crecimiento_relativo.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D11_interes_compuesto.arepa",
+    "desde_raiz": true,
+    "titulo": "Interés compuesto",
+    "enunciado": "Simular tres años al diez por ciento y contrastar con una fórmula de potencia.",
+    "variables": {
+      "final": 133.1,
+      "r": {
+        "columnas": [
+          "anio",
+          "saldo"
+        ],
+        "filas": [
+          [
+            0,
+            100
+          ],
+          [
+            1,
+            110
+          ],
+          [
+            2,
+            121
+          ],
+          [
+            3,
+            133.1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D11_interes_compuesto.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D12_amortizacion.arepa",
+    "desde_raiz": true,
+    "titulo": "Amortización de una deuda",
+    "enunciado": "Simular pagos de 40 con interés de diez por ciento hasta cancelar la deuda.",
+    "variables": {
+      "periodo": 4,
+      "saldo": 0,
+      "r": {
+        "columnas": [
+          "periodo",
+          "saldo"
+        ],
+        "filas": [
+          [
+            1,
+            70
+          ],
+          [
+            2,
+            37
+          ],
+          [
+            3,
+            0.7
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D12_amortizacion.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D13_tarifa_por_tramos.arepa",
+    "desde_raiz": true,
+    "titulo": "Tarifa escalonada",
+    "enunciado": "Calcular facturas con primeros diez consumos a dos y el resto a tres.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "consumo",
+          "cobro"
+        ],
+        "filas": [
+          [
+            0,
+            0
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            15,
+            35
+          ],
+          [
+            20,
+            50
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D13_tarifa_por_tramos.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D14_factorial_vs_cuadrado.arepa",
+    "desde_raiz": true,
+    "titulo": "Comparar órdenes de crecimiento",
+    "enunciado": "Generar factorial y cuadrado para los enteros de uno a cinco.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "n",
+          "factorial_n",
+          "cuadrado"
+        ],
+        "filas": [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            4
+          ],
+          [
+            3,
+            6,
+            9
+          ],
+          [
+            4,
+            24,
+            16
+          ],
+          [
+            5,
+            120,
+            25
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D14_factorial_vs_cuadrado.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D15_fibonacci_razones.arepa",
+    "desde_raiz": true,
+    "titulo": "Razones de Fibonacci",
+    "enunciado": "Construir términos consecutivos y representar sus cocientes.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "n",
+          "razon"
+        ],
+        "filas": [
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            1.5
+          ],
+          [
+            5,
+            1.6666666666666667
+          ],
+          [
+            6,
+            1.6
+          ],
+          [
+            7,
+            1.625
+          ],
+          [
+            8,
+            1.6153846153846154
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D15_fibonacci_razones.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D16_atipicos_mediana.arepa",
+    "desde_raiz": true,
+    "titulo": "Media frente a mediana",
+    "enunciado": "Comparar el efecto de un valor extremo en dos grupos antes de dibujar cajas.",
+    "variables": {
+      "estadisticas": {
+        "columnas": [
+          "grupo",
+          "media",
+          "mitad"
+        ],
+        "filas": [
+          [
+            "Base",
+            2.5,
+            2.5
+          ],
+          [
+            "Extremo",
+            26.5,
+            2.5
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D16_atipicos_mediana.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D17_residuos_modelo.arepa",
+    "desde_raiz": true,
+    "titulo": "Residuos y error cuadrático",
+    "enunciado": "Calcular residuos de una recta propuesta y su error cuadrático medio.",
+    "variables": {
+      "ecm": 0.5,
+      "r": {
+        "columnas": [
+          "x",
+          "real",
+          "estimado",
+          "residuo",
+          "error2"
+        ],
+        "filas": [
+          [
+            1,
+            3,
+            3,
+            0,
+            0
+          ],
+          [
+            2,
+            6,
+            5,
+            1,
+            1
+          ],
+          [
+            3,
+            6,
+            7,
+            -1,
+            1
+          ],
+          [
+            4,
+            9,
+            9,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D17_residuos_modelo.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D18_participacion_porcentual.arepa",
+    "desde_raiz": true,
+    "titulo": "Participación del ingreso",
+    "enunciado": "Agrupar categorías y calcular qué porcentaje del total representa cada una.",
+    "variables": {
+      "suma_porcentajes": 100,
+      "r": {
+        "columnas": [
+          "categoria",
+          "subtotal",
+          "porcentaje"
+        ],
+        "filas": [
+          [
+            "A",
+            25,
+            25
+          ],
+          [
+            "B",
+            25,
+            25
+          ],
+          [
+            "C",
+            50,
+            50
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D18_participacion_porcentual.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D19_tres_series_transformadas.arepa",
+    "desde_raiz": true,
+    "titulo": "Tres transformaciones",
+    "enunciado": "Comparar funciones lineal, cuadrática y cúbica para entradas con negativos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "x",
+          "lineal",
+          "cuadrado",
+          "cubo"
+        ],
+        "filas": [
+          [
+            -2,
+            -2,
+            4,
+            -8
+          ],
+          [
+            -1,
+            -1,
+            1,
+            -1
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            4,
+            8
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D19_tres_series_transformadas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D20_exportar_releer.arepa",
+    "desde_raiz": true,
+    "titulo": "Exportar y volver a graficar",
+    "enunciado": "Exportar un resumen y generar una gráfica desde el CSV releído.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad",
+          "ingreso"
+        ],
+        "filas": [
+          [
+            "Bogotá",
+            30
+          ],
+          [
+            "Cali",
+            15
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D20_exportar_releer.png"
+    ],
+    "csv": {
+      "salidas/c3_D20.csv": [
+        [
+          "ciudad",
+          "ingreso"
+        ],
+        [
+          "Bogotá",
+          "30"
+        ],
+        [
+          "Cali",
+          "15"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D21_resumen_doble.arepa",
+    "desde_raiz": true,
+    "titulo": "Agrupación en dos niveles",
+    "enunciado": "Obtener subtotales por región y producto antes de resumir por región.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "region",
+          "total",
+          "productos"
+        ],
+        "filas": [
+          [
+            "Norte",
+            9,
+            2
+          ],
+          [
+            "Sur",
+            6,
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D21_resumen_doble.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D22_seleccion_closure.arepa",
+    "desde_raiz": true,
+    "titulo": "Filtro con entorno capturado",
+    "enunciado": "Definir un filtro por umbral, cambiarlo y comprobar las dos selecciones.",
+    "variables": {
+      "antes": {
+        "columnas": [
+          "x",
+          "valor"
+        ],
+        "filas": [
+          [
+            2,
+            7
+          ],
+          [
+            3,
+            10
+          ]
+        ]
+      },
+      "r": {
+        "columnas": [
+          "x",
+          "valor"
+        ],
+        "filas": [
+          [
+            3,
+            10
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D22_seleccion_closure.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D23_intervalos_estadisticos.arepa",
+    "desde_raiz": true,
+    "titulo": "Comparar estadísticos de grupos",
+    "enunciado": "Mostrar media, mediana y desviación calculadas sobre cada grupo.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "media",
+          "mitad",
+          "desv"
+        ],
+        "filas": [
+          [
+            "A",
+            2,
+            2,
+            1
+          ],
+          [
+            "B",
+            4,
+            4,
+            2
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D23_intervalos_estadisticos.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D24_tiempo_continuo.arepa",
+    "desde_raiz": true,
+    "titulo": "Índice temporal continuo",
+    "enunciado": "Convertir año y mes a un eje continuo y agrupar meses repetidos.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "periodo",
+          "total"
+        ],
+        "filas": [
+          [
+            24311,
+            10
+          ],
+          [
+            24312,
+            20
+          ],
+          [
+            24313,
+            15
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D24_tiempo_continuo.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte3/dificiles/D25_cinco_vistas.arepa",
+    "desde_raiz": true,
+    "titulo": "Cinco vistas de un análisis",
+    "enunciado": "Crear un resumen y las cinco visualizaciones del mismo conjunto de datos.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "grupo",
+          "total",
+          "media"
+        ],
+        "filas": [
+          [
+            "A",
+            12,
+            4
+          ],
+          [
+            "B",
+            17,
+            5.666666666666667
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/c3_D25_barras.png",
+      "salidas/c3_D25_lineas.png",
+      "salidas/c3_D25_histograma.png",
+      "salidas/c3_D25_dispersion.png",
+      "salidas/c3_D25_cajas.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I01_ventas_reales.arepa",
+    "desde_raiz": true,
+    "titulo": "Ventas reales de principio a fin",
+    "enunciado": "Cargar el CSV de ventas, calcular ingreso por ciudad, exportar y graficar.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "ciudad",
+          "ingreso"
+        ],
+        "filas": [
+          [
+            "Bogotá",
+            206550
+          ],
+          [
+            "Cali",
+            187100
+          ],
+          [
+            "Medellín",
+            170250
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I01_ventas_reales.png"
+    ],
+    "csv": {
+      "salidas/completo_I01_ventas_reales.csv": [
+        [
+          "ciudad",
+          "ingreso"
+        ],
+        [
+          "Bogotá",
+          "206550"
+        ],
+        [
+          "Cali",
+          "187100"
+        ],
+        [
+          "Medellín",
+          "170250"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I02_encuesta_limpieza.arepa",
+    "desde_raiz": true,
+    "titulo": "Encuesta con faltantes",
+    "enunciado": "Cargar encuesta con separador punto y coma, descartar ingresos vacíos y obtener el conteo por ciudad.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "ciudad",
+          "personas"
+        ],
+        "filas": [
+          [
+            "Bogotá",
+            3
+          ],
+          [
+            "Cali",
+            2
+          ],
+          [
+            "Medellín",
+            2
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I02_encuesta_limpieza.png"
+    ],
+    "csv": {
+      "salidas/completo_I02_encuesta_limpieza.csv": [
+        [
+          "ciudad",
+          "personas"
+        ],
+        [
+          "Bogotá",
+          "3"
+        ],
+        [
+          "Cali",
+          "2"
+        ],
+        [
+          "Medellín",
+          "2"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I03_inventario.arepa",
+    "desde_raiz": true,
+    "titulo": "Inventario y reposición",
+    "enunciado": "Actualizar existencias con movimientos, marcar necesidades y exportar las cantidades finales.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "producto",
+          "stock"
+        ],
+        "filas": [
+          [
+            "A",
+            7
+          ],
+          [
+            "B",
+            9
+          ],
+          [
+            "C",
+            1
+          ]
+        ]
+      },
+      "alertas": {
+        "columnas": [
+          "producto",
+          "stock"
+        ],
+        "filas": [
+          [
+            "C",
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I03_inventario.png"
+    ],
+    "csv": {
+      "salidas/completo_I03_inventario.csv": [
+        [
+          "producto",
+          "stock"
+        ],
+        [
+          "A",
+          "7"
+        ],
+        [
+          "B",
+          "9"
+        ],
+        [
+          "C",
+          "1"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I04_notas_academicas.arepa",
+    "desde_raiz": true,
+    "titulo": "Informe académico",
+    "enunciado": "Limpiar notas, clasificar aprobados y calcular estadísticas por curso.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "curso",
+          "media",
+          "mitad",
+          "aprobados",
+          "estudiantes"
+        ],
+        "filas": [
+          [
+            "A",
+            3,
+            3,
+            1,
+            2
+          ],
+          [
+            "B",
+            4,
+            4,
+            2,
+            2
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I04_notas_academicas.png"
+    ],
+    "csv": {
+      "salidas/completo_I04_notas_academicas.csv": [
+        [
+          "curso",
+          "media",
+          "mitad",
+          "aprobados",
+          "estudiantes"
+        ],
+        [
+          "A",
+          "3",
+          "3",
+          "1",
+          "2"
+        ],
+        [
+          "B",
+          "4",
+          "4",
+          "2",
+          "2"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I05_regresion_vivienda.arepa",
+    "desde_raiz": true,
+    "titulo": "Predicción de precio",
+    "enunciado": "Entrenar con cinco viviendas y evaluar tres áreas nuevas sin usarlas en el ajuste.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "area",
+          "precio",
+          "estimado"
+        ],
+        "filas": [
+          [
+            30,
+            70,
+            70
+          ],
+          [
+            70,
+            150,
+            150
+          ],
+          [
+            110,
+            230,
+            230
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I05_regresion_vivienda.png"
+    ],
+    "csv": {
+      "salidas/completo_I05_regresion_vivienda.csv": [
+        [
+          "area",
+          "precio"
+        ],
+        [
+          "30",
+          "70"
+        ],
+        [
+          "70",
+          "150"
+        ],
+        [
+          "110",
+          "230"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I06_clasificacion_estudiantes.arepa",
+    "desde_raiz": true,
+    "titulo": "Clasificación de estudiantes",
+    "enunciado": "Aprender dos clases y exportar predicciones de estudiantes nuevos con métricas.",
+    "variables": {
+      "p": {
+        "columnas": [
+          "horas",
+          "asistencia",
+          "clase",
+          "predicha"
+        ],
+        "filas": [
+          [
+            1.5,
+            55,
+            "no",
+            "no"
+          ],
+          [
+            8.5,
+            92,
+            "si",
+            "si"
+          ]
+        ]
+      },
+      "resumen": {
+        "columnas": [
+          "predicha",
+          "cantidad"
+        ],
+        "filas": [
+          [
+            "no",
+            1
+          ],
+          [
+            "si",
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I06_clasificacion_estudiantes.png"
+    ],
+    "csv": {
+      "salidas/completo_I06_clasificacion_estudiantes.csv": [
+        [
+          "predicha",
+          "cantidad"
+        ],
+        [
+          "no",
+          "1"
+        ],
+        [
+          "si",
+          "1"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I07_arbol_riesgo.arepa",
+    "desde_raiz": true,
+    "titulo": "Riesgo con tres clases",
+    "enunciado": "Aprender tres niveles de riesgo con un árbol y resumir las clases de datos nuevos.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "predicha",
+          "personas"
+        ],
+        "filas": [
+          [
+            "bajo",
+            1
+          ],
+          [
+            "medio",
+            1
+          ],
+          [
+            "alto",
+            1
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I07_arbol_riesgo.png"
+    ],
+    "csv": {
+      "salidas/completo_I07_arbol_riesgo.csv": [
+        [
+          "predicha",
+          "personas"
+        ],
+        [
+          "bajo",
+          "1"
+        ],
+        [
+          "medio",
+          "1"
+        ],
+        [
+          "alto",
+          "1"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I08_simulacion_ahorro.arepa",
+    "desde_raiz": true,
+    "titulo": "Plan de ahorro",
+    "enunciado": "Simular un saldo inicial de cien con depósitos de veinte en cuatro meses.",
+    "variables": {
+      "saldo": 180,
+      "meses_meta": 2,
+      "resumen": {
+        "columnas": [
+          "mes",
+          "saldo"
+        ],
+        "filas": [
+          [
+            1,
+            120
+          ],
+          [
+            2,
+            140
+          ],
+          [
+            3,
+            160
+          ],
+          [
+            4,
+            180
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I08_simulacion_ahorro.png"
+    ],
+    "csv": {
+      "salidas/completo_I08_simulacion_ahorro.csv": [
+        [
+          "mes",
+          "saldo"
+        ],
+        [
+          "1",
+          "120"
+        ],
+        [
+          "2",
+          "140"
+        ],
+        [
+          "3",
+          "160"
+        ],
+        [
+          "4",
+          "180"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I09_control_calidad.arepa",
+    "desde_raiz": true,
+    "titulo": "Control de calidad",
+    "enunciado": "Clasificar mediciones dentro de tolerancia y calcular el porcentaje aceptado por lote.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "lote",
+          "aceptadas",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            2,
+            3
+          ],
+          [
+            "B",
+            2,
+            3
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I09_control_calidad.png"
+    ],
+    "csv": {
+      "salidas/completo_I09_control_calidad.csv": [
+        [
+          "lote",
+          "aceptadas",
+          "total"
+        ],
+        [
+          "A",
+          "2",
+          "3"
+        ],
+        [
+          "B",
+          "2",
+          "3"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I10_ventas_funciones.arepa",
+    "desde_raiz": true,
+    "titulo": "Funciones y descuentos",
+    "enunciado": "Aplicar descuento por volumen a cada línea y resumir el ingreso por producto.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "producto",
+          "ingreso"
+        ],
+        "filas": [
+          [
+            "A",
+            22
+          ],
+          [
+            "B",
+            15
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I10_ventas_funciones.png"
+    ],
+    "csv": {
+      "salidas/completo_I10_ventas_funciones.csv": [
+        [
+          "producto",
+          "ingreso"
+        ],
+        [
+          "A",
+          "22"
+        ],
+        [
+          "B",
+          "15"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I11_estadisticas_robustas.arepa",
+    "desde_raiz": true,
+    "titulo": "Media y mediana ante extremos",
+    "enunciado": "Contrastar media, mediana y rango de dos muestras, una con dato extremo.",
+    "variables": {
+      "resumen": {
+        "columnas": [
+          "grupo",
+          "media",
+          "mitad",
+          "menor",
+          "mayor",
+          "rango"
+        ],
+        "filas": [
+          [
+            "A",
+            2.5,
+            2.5,
+            1,
+            4,
+            3
+          ],
+          [
+            "B",
+            26.5,
+            2.5,
+            1,
+            100,
+            99
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I11_estadisticas_robustas.png"
+    ],
+    "csv": {
+      "salidas/completo_I11_estadisticas_robustas.csv": [
+        [
+          "grupo",
+          "media",
+          "mitad",
+          "menor",
+          "mayor",
+          "rango"
+        ],
+        [
+          "A",
+          "2.5",
+          "2.5",
+          "1",
+          "4",
+          "3"
+        ],
+        [
+          "B",
+          "26.5",
+          "2.5",
+          "1",
+          "100",
+          "99"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/integradores/I12_pasajeros_publicos.arepa",
+    "desde_raiz": true,
+    "titulo": "Caso público de pasajeros",
+    "enunciado": "Analizar las 144 observaciones públicas y exportar un resumen anual más cinco gráficas.",
+    "variables": {
+      "filas": 144,
+      "resumen": {
+        "columnas": [
+          "anio",
+          "total"
+        ],
+        "filas": [
+          [
+            1949,
+            1520
+          ],
+          [
+            1950,
+            1676
+          ],
+          [
+            1951,
+            2042
+          ],
+          [
+            1952,
+            2364
+          ],
+          [
+            1953,
+            2700
+          ],
+          [
+            1954,
+            2867
+          ],
+          [
+            1955,
+            3408
+          ],
+          [
+            1956,
+            3939
+          ],
+          [
+            1957,
+            4421
+          ],
+          [
+            1958,
+            4572
+          ],
+          [
+            1959,
+            5140
+          ],
+          [
+            1960,
+            5714
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/completo_I12_barras.png",
+      "salidas/completo_I12_lineas.png",
+      "salidas/completo_I12_histograma.png",
+      "salidas/completo_I12_dispersion.png",
+      "salidas/completo_I12_cajas.png"
+    ],
+    "csv": {
+      "salidas/completo_I12.csv": [
+        [
+          "anio",
+          "total"
+        ],
+        [
+          "1949",
+          "1520"
+        ],
+        [
+          "1950",
+          "1676"
+        ],
+        [
+          "1951",
+          "2042"
+        ],
+        [
+          "1952",
+          "2364"
+        ],
+        [
+          "1953",
+          "2700"
+        ],
+        [
+          "1954",
+          "2867"
+        ],
+        [
+          "1955",
+          "3408"
+        ],
+        [
+          "1956",
+          "3939"
+        ],
+        [
+          "1957",
+          "4421"
+        ],
+        [
+          "1958",
+          "4572"
+        ],
+        [
+          "1959",
+          "5140"
+        ],
+        [
+          "1960",
+          "5714"
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S01_precedencia.arepa",
+    "desde_raiz": true,
+    "titulo": "Prioridad de operadores",
+    "enunciado": "¿Por qué 2 + 3 * 4 da 14 y (2 + 3) * 4 da 20?",
+    "respuesta": "El producto tiene mayor prioridad que la suma; los paréntesis cambian el árbol de análisis.",
+    "variables": {
+      "a": 14,
+      "b": 20
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S02_potencia_unario.arepa",
+    "desde_raiz": true,
+    "titulo": "Potencia y menos unario",
+    "enunciado": "¿Cuánto dan -2 ^ 2, (-2) ^ 2 y 2 ^ 3 ^ 2?",
+    "respuesta": "La potencia precede al menos unario y se asocia hacia la derecha.",
+    "variables": {
+      "a": -4,
+      "b": 4,
+      "c": 512
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S03_lexico_unicode.arepa",
+    "desde_raiz": true,
+    "titulo": "Reconocimiento léxico",
+    "enunciado": "¿Se admiten identificadores con ñ y tildes y cómo se ve su token?",
+    "respuesta": "Los identificadores admiten Unicode; ejecutar también con --tokens para observar ID y literales.",
+    "variables": {
+      "r": 2029
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S04_sintaxis_bloques.arepa",
+    "desde_raiz": true,
+    "titulo": "Delimitadores y sentencias",
+    "enunciado": "¿Cómo separa AREPA las sentencias y delimita un bloque?",
+    "respuesta": "Los saltos separan sentencias; quihubo y chao delimitan el programa y las llaves delimitan bloques.",
+    "variables": {
+      "x": 5
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S05_nada_logica.arepa",
+    "desde_raiz": true,
+    "titulo": "Faltantes y comparaciones",
+    "enunciado": "¿Por qué nada == nada produce nada y el filtro descarta esa fila?",
+    "respuesta": "Las comparaciones propagan nada; el filtro conserva únicamente resultados obvio.",
+    "variables": {
+      "a": null,
+      "r": {
+        "columnas": [
+          "valor"
+        ],
+        "filas": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S06_division_cero.arepa",
+    "desde_raiz": true,
+    "titulo": "División por cero",
+    "enunciado": "¿Se detiene el programa al dividir entre cero?",
+    "respuesta": "1/0 y -1/0 son infinitos; 0/0 y el módulo por cero producen nada.",
+    "variables": {
+      "a": "infinito",
+      "b": "-infinito",
+      "c": null,
+      "d": null
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S07_declaracion_variable.arepa",
+    "desde_raiz": true,
+    "titulo": "Variables y diagnóstico",
+    "enunciado": "¿Cómo se evita una variable no declarada?",
+    "respuesta": "Se asigna antes de consultar; negativos/01_variable.arepa demuestra el rechazo de una referencia ausente.",
+    "variables": {
+      "r": 12
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S08_columna_vs_variable.arepa",
+    "desde_raiz": true,
+    "titulo": "Resolución de nombres",
+    "enunciado": "Si hay una columna x y una variable x, ¿cuál usa un pipeline?",
+    "respuesta": "En una expresión por fila se busca primero la columna; fuera del pipeline se usa la variable.",
+    "variables": {
+      "x": 100,
+      "fuera": 200,
+      "r": {
+        "columnas": [
+          "x",
+          "doble"
+        ],
+        "filas": [
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            6
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S09_pipeline_no_muta.arepa",
+    "desde_raiz": true,
+    "titulo": "Transformación sin mutación",
+    "enunciado": "¿Un pipeline cambia la tabla original?",
+    "respuesta": "Cada etapa produce una tabla nueva; las asignaciones indexadas sí son mutación explícita.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "x"
+        ],
+        "filas": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      "r": {
+        "columnas": [
+          "x",
+          "doble"
+        ],
+        "filas": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      },
+      "columnas_original": 1,
+      "columnas_nueva": 2
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S10_closure_referencia.arepa",
+    "desde_raiz": true,
+    "titulo": "Entorno capturado",
+    "enunciado": "¿Una función captura una copia del valor global o el entorno?",
+    "respuesta": "Captura el entorno por referencia y ve las reasignaciones posteriores de una variable existente.",
+    "variables": {
+      "a": 7,
+      "b": 12
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S11_parametros_ambito.arepa",
+    "desde_raiz": true,
+    "titulo": "Parámetros y alcance",
+    "enunciado": "¿Un parámetro con el mismo nombre cambia la variable global?",
+    "respuesta": "El parámetro vive en el ámbito local de la llamada y oculta la variable global homónima.",
+    "variables": {
+      "valor": 100,
+      "r": 6
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S12_recursion_base.arepa",
+    "desde_raiz": true,
+    "titulo": "Recursión con caso base",
+    "enunciado": "¿Qué garantiza que factorial termina y qué devuelve para cero?",
+    "respuesta": "El caso base n menor o igual que uno devuelve uno; cada llamada reduce n.",
+    "variables": {
+      "a": 1,
+      "b": 120
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S13_pare_devuelva.arepa",
+    "desde_raiz": true,
+    "titulo": "Salir del ciclo o de la función",
+    "enunciado": "¿Qué diferencia hay entre pare y devuelva dentro de un ciclo?",
+    "respuesta": "pare termina el ciclo actual; devuelva termina la función y entrega un valor.",
+    "variables": {
+      "contador": 2,
+      "r": 3
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S14_siga_acumulacion.arepa",
+    "desde_raiz": true,
+    "titulo": "Continuar con la siguiente vuelta",
+    "enunciado": "¿Cómo se suman solo impares usando siga?",
+    "respuesta": "siga omite el resto de la vuelta actual; no termina el ciclo.",
+    "variables": {
+      "total": 9
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S15_snapshot_recorrido.arepa",
+    "desde_raiz": true,
+    "titulo": "Mutación durante recorrido",
+    "enunciado": "¿Agregar elementos durante recorra provoca un ciclo infinito?",
+    "respuesta": "El recorrido usa una instantánea de los elementos iniciales; las inserciones no añaden vueltas.",
+    "variables": {
+      "vueltas": 3,
+      "valores": [
+        1,
+        2,
+        3,
+        10,
+        20,
+        30
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S16_indices_desde_uno.arepa",
+    "desde_raiz": true,
+    "titulo": "Acceso a listas y tablas",
+    "enunciado": "¿Cuál es el primer índice y cómo se accede a una celda?",
+    "respuesta": "El primer índice es uno; una celda se consulta con fila y nombre de columna.",
+    "variables": {
+      "a": 10,
+      "b": 20
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S17_mutacion_fila.arepa",
+    "desde_raiz": true,
+    "titulo": "Actualización explícita de filas",
+    "enunciado": "¿Cómo se sustituye una fila sin perder la correspondencia entre columnas?",
+    "respuesta": "Una lista respeta el orden de columnas; un registro se asigna por nombres de clave.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "nombre",
+          "edad"
+        ],
+        "filas": [
+          [
+            "Ana",
+            21
+          ],
+          [
+            "Luis",
+            31
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S18_csv_comillas.arepa",
+    "desde_raiz": true,
+    "titulo": "Separadores dentro de campos",
+    "enunciado": "¿Cómo se conserva una coma y una comilla dentro de un campo CSV?",
+    "respuesta": "El escritor entrecomilla el campo y duplica comillas internas; el lector reconstruye el texto.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "nombre",
+          "nota"
+        ],
+        "filas": [
+          [
+            "Ana, Pérez",
+            "dijo \"hola\""
+          ]
+        ]
+      }
+    },
+    "csv": {
+      "salidas/sustentacion_S18.csv": [
+        [
+          "nombre",
+          "nota"
+        ],
+        [
+          "Ana, Pérez",
+          "dijo \"hola\""
+        ]
+      ]
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S19_cuente_y_nada.arepa",
+    "desde_raiz": true,
+    "titulo": "Contar filas o datos presentes",
+    "enunciado": "¿Por qué cuente() y cuente(columna) pueden dar resultados diferentes?",
+    "respuesta": "El primero cuenta filas y el segundo valores presentes; las demás agregaciones ignoran nada.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "filas",
+          "presentes",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            3,
+            2,
+            4
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S20_desviacion_poblacional.arepa",
+    "desde_raiz": true,
+    "titulo": "Desviación estándar",
+    "enunciado": "¿La desviación divide entre n o entre n menos uno?",
+    "respuesta": "AREPA calcula la desviación poblacional: divide entre n; para 1 y 3 devuelve uno.",
+    "variables": {
+      "media": 2,
+      "desv": 1,
+      "manual": 1
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S21_promedios_ponderados.arepa",
+    "desde_raiz": true,
+    "titulo": "Promedio de promedios",
+    "enunciado": "¿Se puede promediar la media de grupos de distinto tamaño?",
+    "respuesta": "Solo con ponderación por cantidad se obtiene la media global; el promedio simple puede sesgar el resultado.",
+    "variables": {
+      "simple": 20,
+      "ponderada": 15,
+      "global_media": 15
+    }
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S22_barras_agrupacion.arepa",
+    "desde_raiz": true,
+    "titulo": "Barras y categorías repetidas",
+    "enunciado": "¿Cómo se hace explícita la suma de observaciones con igual categoría?",
+    "respuesta": "Agrupar y resumir produce una fila por categoría y hace verificable la altura esperada de cada barra.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "ciudad",
+          "total"
+        ],
+        "filas": [
+          [
+            "A",
+            5
+          ],
+          [
+            "B",
+            4
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/sustentacion_S22.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S23_cajas_y_atipicos.arepa",
+    "desde_raiz": true,
+    "titulo": "Elegir una gráfica de cajas",
+    "enunciado": "¿Por qué usar cajas para comparar grupos con valores extremos?",
+    "respuesta": "Permiten comparar medianas y dispersión; la media cambia mucho con un extremo y la mediana puede mantenerse.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "grupo",
+          "media",
+          "mitad"
+        ],
+        "filas": [
+          [
+            "A",
+            2,
+            2
+          ],
+          [
+            "B",
+            34.333333333333336,
+            2
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/sustentacion_S23.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S24_png_reproducible.arepa",
+    "desde_raiz": true,
+    "titulo": "Exportación reproducible",
+    "enunciado": "¿Cómo se demuestra que pinte genera un PNG válido y reproducible?",
+    "respuesta": "Exportar con guardela y ejecutar las pruebas que verifican CRC, descompresión, tamaño y repetición byte a byte.",
+    "variables": {
+      "t": {
+        "columnas": [
+          "x",
+          "valor"
+        ],
+        "filas": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      }
+    },
+    "png": [
+      "salidas/sustentacion_S24.png"
+    ]
+  },
+  {
+    "archivo": "ejercicios/corte_completo/sustentacion/S25_separar_entrenamiento.arepa",
+    "desde_raiz": true,
+    "titulo": "Evaluación de modelos",
+    "enunciado": "¿Por qué evaluar con observaciones separadas de entrenamiento?",
+    "respuesta": "Evaluar sobre entradas nuevas evita confundir memorización con generalización; este ejemplo mantiene ambos conjuntos separados.",
+    "variables": {
+      "r": {
+        "columnas": [
+          "x",
+          "clase",
+          "predicha"
+        ],
+        "filas": [
+          [
+            1.5,
+            "A",
+            "A"
+          ],
+          [
+            8.5,
+            "B",
+            "B"
+          ]
+        ]
+      }
+    }
+  }
+]

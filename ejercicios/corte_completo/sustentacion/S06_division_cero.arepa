@@ -1,0 +1,15 @@
+# S06_division_cero - División por cero
+# Enunciado: ¿Se detiene el programa al dividir entre cero?
+# Sustentación: 1/0 y -1/0 son infinitos; 0/0 y el módulo por cero producen nada.
+# Esperado: {"a":"infinito","b":"-infinito","c":null,"d":null}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S06_division_cero.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = 1 / 0
+b = -1 / 0
+c = 0 / 0
+d = 5 % 0
+cuenteme a, b, c, d
+
+chao

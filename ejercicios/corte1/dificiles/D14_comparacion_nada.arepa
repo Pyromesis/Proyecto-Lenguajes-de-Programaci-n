@@ -1,0 +1,13 @@
+# D14_comparacion_nada - Lógica con faltantes
+# Enunciado: Mostrar que comparar nada no equivale a verdadero ni falso.
+# Esperado: {"a":null,"b":null,"c":null}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D14_comparacion_nada.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = nada == nada
+b = no nada
+c = obvio y nada
+cuenteme a, b, c
+
+chao

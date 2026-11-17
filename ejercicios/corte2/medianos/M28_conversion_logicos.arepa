@@ -1,0 +1,12 @@
+# M28_conversion_logicos - Conversión a lógico
+# Enunciado: Convertir textos obvio y falso a valores lógicos y filtrar.
+# Esperado: {"r":{"columnas":["nombre","activo"],"filas":[["A",true]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M28_conversion_logicos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nombre, activo] con [["A", "obvio"], ["B", "falso"]]
+r = t |> convierta activo -> logico |> deje donde activo
+cuenteme r
+
+chao

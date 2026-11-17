@@ -1,0 +1,12 @@
+# M12_unario_potencia - Signo y potencia
+# Enunciado: Comparar -3 al cuadrado con (-3) al cuadrado.
+# Esperado: {"a":-9,"b":9}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M12_unario_potencia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = -3 ^ 2
+b = (-3) ^ 2
+cuenteme a, b
+
+chao

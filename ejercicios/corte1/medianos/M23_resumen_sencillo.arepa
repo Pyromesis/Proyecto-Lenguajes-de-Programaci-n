@@ -1,0 +1,12 @@
+# M23_resumen_sencillo - Resumen de notas
+# Enunciado: Contar y promediar tres notas.
+# Esperado: {"r":{"columnas":["n","media"],"filas":[[3,4]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M23_resumen_sencillo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nota] con [[3], [4], [5]]
+r = t |> resuma n = cuente(), media = promedie(nota)
+cuenteme r
+
+chao

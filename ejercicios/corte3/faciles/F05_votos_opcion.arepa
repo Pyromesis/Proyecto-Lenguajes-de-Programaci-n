@@ -1,0 +1,19 @@
+# F05_votos_opcion - Votos por opción
+# Enunciado: Comparar el número de votos de tres opciones.
+# Esperado: {"t":{"columnas":["opcion","votos"],"filas":[["A",120],["B",95],["C",85]]}}
+# PNG esperados: salidas/c3_F05_votos_opcion.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F05_votos_opcion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [opcion, votos] con [["A", 120], ["B", 95], ["C", 85]]
+cuenteme t
+
+pinte barras t
+titulo "Votos por opción"
+ejex opcion
+ejey votos
+leyenda "Serie observada"
+guardela "salidas/c3_F05_votos_opcion.png"
+
+chao

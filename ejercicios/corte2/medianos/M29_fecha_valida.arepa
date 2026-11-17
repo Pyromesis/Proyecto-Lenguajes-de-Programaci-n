@@ -1,0 +1,12 @@
+# M29_fecha_valida - Calendario de años bisiestos
+# Enunciado: Convertir dos fechas válidas que incluyen el 29 de febrero de 2000.
+# Esperado: {"r":{"columnas":["dia"],"filas":[["2000-02-29"],["2024-02-29"]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M29_fecha_valida.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia] con [["2000-02-29"], ["2024-02-29"]]
+r = t |> convierta dia -> fecha
+cuenteme r
+
+chao

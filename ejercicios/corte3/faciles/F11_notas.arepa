@@ -1,0 +1,18 @@
+# F11_notas - Distribución de notas
+# Enunciado: Observar cómo se distribuyen diez calificaciones.
+# Esperado: {"t":{"columnas":["nota"],"filas":[[2],[3],[3],[4],[4],[4],[5],[5],[2],[3]]}}
+# PNG esperados: salidas/c3_F11_notas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F11_notas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nota] con [[2], [3], [3], [4], [4], [4], [5], [5], [2], [3]]
+cuenteme t
+
+pinte histograma t
+titulo "Distribución de notas"
+ejey nota
+leyenda "Serie observada"
+guardela "salidas/c3_F11_notas.png"
+
+chao

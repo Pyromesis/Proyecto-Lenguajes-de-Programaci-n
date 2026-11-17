@@ -23,7 +23,7 @@ import sys
 from datos.lista import Lista
 from datos.registro import Registro
 from datos.tabla import Tabla
-from datos.tipos import es_infinito, es_nada, es_logico, formatear_numero
+from datos.tipos import es_infinito, es_nada, es_logico, es_numero, formatear_numero
 from ml.modelo import ModeloML
 from runtime.simbolos import TablaSimbolos
 
@@ -44,8 +44,8 @@ def a_texto(valor):
         return _texto_registro(valor)
     if es_infinito(valor):
         return formatear_numero(valor)
-    if isinstance(valor, float) and valor.is_integer():
-        return str(int(valor))
+    if es_numero(valor):
+        return formatear_numero(valor)
     if isinstance(valor, str):
         return valor
     return str(valor)
@@ -96,6 +96,8 @@ class ContextoEjecucion:
         self.salida = []
         self.errores = []
         self.archivos_generados = []
+        self.advertencias = []
+        self._avisos_por_ubicacion = {}
 
     def imprimir(self, *valores):
         """Registra (y muestra) los valores separados por espacio."""
@@ -107,6 +109,21 @@ class ContextoEjecucion:
     def registrar_error(self, problema):
         """Archiva un error propio ocurrido durante la ejecución."""
         self.errores.append(problema)
+
+    def advertir(self, codigo, mensaje, linea, columna, ayuda, contexto=""):
+        """Registra avisos sin alterar cuenteme ni convertirlos en errores.
+
+        Una operación en un ciclo o columna puede repetirse miles de veces:
+        se conserva un aviso por causa y ubicación, con el número de veces.
+        """
+        clave = (codigo, linea, columna, mensaje)
+        if clave in self._avisos_por_ubicacion:
+            self._avisos_por_ubicacion[clave]["veces"] += 1
+            return
+        aviso = dict(codigo=codigo, mensaje=mensaje, linea=linea,
+                     columna=columna, ayuda=ayuda, contexto=contexto, veces=1)
+        self._avisos_por_ubicacion[clave] = aviso
+        self.advertencias.append(aviso)
 
     def registrar_archivo(self, ruta, tipo, bytes_escritos):
         """Archiva un archivo producido por el programa (csv o png).

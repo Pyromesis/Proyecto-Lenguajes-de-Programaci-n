@@ -1,0 +1,17 @@
+# D28_matriz_transpuesta - Transponer una matriz
+# Enunciado: Construir la transpuesta de una matriz de dos por tres.
+# Esperado: {"transpuesta":[[1,4],[2,5],[3,6]]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D28_matriz_transpuesta.arepa --ejecutar --sin-ventana
+
+quihubo
+
+matriz = [[1, 2, 3], [4, 5, 6]]
+transpuesta = []
+repita j desde 1 hasta 3 {
+ fila_nueva = []
+ repita i desde 1 hasta 2 { agregue matriz[i][j] en fila_nueva }
+ agregue fila_nueva en transpuesta
+}
+cuenteme transpuesta
+
+chao

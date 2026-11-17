@@ -1,0 +1,15 @@
+# S04_sintaxis_bloques - Delimitadores y sentencias
+# Enunciado: ¿Cómo separa AREPA las sentencias y delimita un bloque?
+# Sustentación: Los saltos separan sentencias; quihubo y chao delimitan el programa y las llaves delimitan bloques.
+# Esperado: {"x":5}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S04_sintaxis_bloques.arepa --ejecutar --sin-ventana
+
+quihubo
+
+x = 2
+fijese_si (x > 0) {
+ x = x + 3
+}
+cuenteme x
+
+chao

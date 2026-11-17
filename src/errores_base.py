@@ -9,9 +9,8 @@ Cada error carga:
   * linea / columna: ubicación en el programa .arepa cuando se conoce;
   * contexto: fragmento del programa o de datos que ayudó a detectarlo.
 
-Limitación conocida: la línea y columna son aproximadas cuando el error
-se descubre en tiempo de ejecución sobre datos (ANTLR no siempre conserva
-la posición del nodo implicado).
+La ubicación conserva el nodo más específico disponible: operador, acceso
+o instrucción. En CSV se distingue la línea de datos de la del programa.
 """
 
 
@@ -24,6 +23,8 @@ class ErrorArepa(Exception):
         self.linea = linea
         self.columna = columna
         self.contexto = contexto
+        self.archivo_datos = ""
+        self.llamadas = []
 
     def __str__(self):
         ubicacion = ""
@@ -119,3 +120,13 @@ class SeguirCiclo(Exception):
         super().__init__("seguir en ciclo")
         self.linea = linea
         self.columna = columna
+
+
+def completar_ubicacion(problema, nodo):
+    """Conserva la ubicación más interna; completa solo la desconocida."""
+    # CommonToken.start es un índice de caracteres, no otro token.
+    token = nodo if hasattr(nodo, "line") else getattr(nodo, "start", None)
+    if problema.linea < 1 and token is not None:
+        problema.linea = getattr(token, "line", -1)
+        problema.columna = getattr(token, "column", -1)
+    return problema

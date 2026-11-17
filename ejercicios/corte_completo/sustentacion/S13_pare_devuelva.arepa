@@ -1,0 +1,23 @@
+# S13_pare_devuelva - Salir del ciclo o de la función
+# Enunciado: ¿Qué diferencia hay entre pare y devuelva dentro de un ciclo?
+# Sustentación: pare termina el ciclo actual; devuelva termina la función y entrega un valor.
+# Esperado: {"contador":2,"r":3}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S13_pare_devuelva.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente buscar() {
+ repita n desde 1 hasta 10 {
+  fijese_si (n == 3) { devuelva n }
+ }
+ devuelva 0
+}
+contador = 0
+repita n desde 1 hasta 10 {
+ fijese_si (n == 3) { pare }
+ contador = contador + 1
+}
+r = buscar()
+cuenteme contador, r
+
+chao

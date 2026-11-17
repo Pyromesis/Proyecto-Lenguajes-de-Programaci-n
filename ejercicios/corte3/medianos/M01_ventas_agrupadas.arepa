@@ -1,0 +1,20 @@
+# M01_ventas_agrupadas - Ingreso por ciudad
+# Enunciado: Agrupar ventas repetidas por ciudad y mostrar el ingreso total.
+# Esperado: {"r":{"columnas":["ciudad","total"],"filas":[["A",15],["B",20]]}}
+# PNG esperados: salidas/c3_M01_ventas_agrupadas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M01_ventas_agrupadas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [ciudad, valor] con [["A", 10], ["B", 20], ["A", 5]]
+r = t |> junte por [ciudad] |> resuma total = sume(valor)
+cuenteme r
+
+pinte barras r
+titulo "Ingreso por ciudad"
+ejex ciudad
+ejey total
+leyenda "Serie observada"
+guardela "salidas/c3_M01_ventas_agrupadas.png"
+
+chao

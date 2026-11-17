@@ -1,0 +1,19 @@
+# F04_stock_producto - Existencias por producto
+# Enunciado: Mostrar las existencias de arroz, leche y café.
+# Esperado: {"t":{"columnas":["producto","stock"],"filas":[["Arroz",40],["Leche",25],["Café",12]]}}
+# PNG esperados: salidas/c3_F04_stock_producto.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F04_stock_producto.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, stock] con [["Arroz", 40], ["Leche", 25], ["Café", 12]]
+cuenteme t
+
+pinte barras t
+titulo "Existencias por producto"
+ejex producto
+ejey stock
+leyenda "Serie observada"
+guardela "salidas/c3_F04_stock_producto.png"
+
+chao

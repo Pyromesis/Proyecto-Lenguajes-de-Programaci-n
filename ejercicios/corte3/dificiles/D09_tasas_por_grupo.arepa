@@ -1,0 +1,25 @@
+# D09_tasas_por_grupo - Tasas de aprobación
+# Enunciado: Calcular porcentaje de aprobados por curso mediante una función indicadora.
+# Esperado: {"r":{"columnas":["curso","tasa","porcentaje"],"filas":[["A",0.5,50],["B",1,100]]}}
+# PNG esperados: salidas/c3_D09_tasas_por_grupo.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D09_tasas_por_grupo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente indicador(nota) {
+ fijese_si (nota >= 3) { devuelva 1 }
+ devuelva 0
+}
+t = arme [curso, nota] con [["A", 2], ["A", 4], ["B", 3], ["B", 5]]
+r = t |> cree aprobado = indicador(nota) |> junte por [curso] |> resuma tasa = promedie(aprobado) |> cree porcentaje = tasa * 100
+
+cuenteme r
+
+pinte barras r
+titulo "Tasas de aprobación"
+ejex curso
+ejey porcentaje
+leyenda "Serie observada"
+guardela "salidas/c3_D09_tasas_por_grupo.png"
+
+chao

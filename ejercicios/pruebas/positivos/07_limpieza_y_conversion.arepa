@@ -1,0 +1,10 @@
+# Ejemplo verificable: 07_limpieza_y_conversion
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+sucia = arme [nombre, valor] con [["A", "10"], ["A", "10"], ["B", nada], ["C", "30"]]
+limpia = sucia |> limpie duplicados |> limpie vacios con "0" |> convierta valor -> numero
+sin_vacios = sucia |> limpie vacios
+fechas = arme [dia] con [["2024-02-29"], ["2026-11-17"]]
+fechas = fechas |> convierta dia -> fecha
+textos = limpia |> convierta valor -> texto
+chao

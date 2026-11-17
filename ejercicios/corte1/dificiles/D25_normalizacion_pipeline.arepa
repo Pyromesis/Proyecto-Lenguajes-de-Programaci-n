@@ -1,0 +1,12 @@
+# D25_normalizacion_pipeline - Limpieza y resumen
+# Enunciado: Quitar duplicados, eliminar vacíos, convertir y resumir.
+# Esperado: {"r":{"columnas":["grupo","total"],"filas":[["A",2],["B",3]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D25_normalizacion_pipeline.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", "2"], ["A", "2"], ["A", nada], ["B", "3"]]
+r = t |> limpie duplicados |> limpie vacios |> convierta valor -> numero |> junte por [grupo] |> resuma total = sume(valor)
+cuenteme r
+
+chao

@@ -1,0 +1,11 @@
+# F24_parentesis_descuento - Paréntesis y prioridad
+# Enunciado: Calcular el total de tres productos de 10 y un envío de 5.
+# Esperado: {"resultado":35}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F24_parentesis_descuento.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = 3 * 10 + 5
+cuenteme resultado
+
+chao

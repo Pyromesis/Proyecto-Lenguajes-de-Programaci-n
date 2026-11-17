@@ -49,6 +49,9 @@ for _ruta in (_RAIZ_SRC, os.path.join(_RAIZ_PROYECTO, "generado")):
     if _abs not in sys.path:
         sys.path.insert(0, _abs)
 
+from cli.diagnosticos import ayuda_error, ayuda_sintaxis
+from errores_base import ErrorArchivo
+
 try:
     from lenguaje.analizador import analizar
 except Exception:  # sin front-end no se puede validar, pero sí completar
@@ -66,10 +69,10 @@ _FALLBACK = (
     "obvio falso nada y o no"
 ).split()
 
-if os.path.isfile(_DICT):
+try:
     with open(_DICT, "r", encoding="utf-8") as fh:
         PALABRAS = [l.strip() for l in fh if l.strip() and not l.startswith("#")]
-else:
+except (OSError, UnicodeError):
     PALABRAS = list(_FALLBACK)
 
 COMANDOS = [":ayuda", ":ver", ":validar", ":ejemplo", ":plantilla",
@@ -471,8 +474,14 @@ def main(argv=None):
                     ", ".join(sorted(_EJEMPLOS))))
             else:
                 ruta = os.path.join(_RAIZ_PROYECTO, "ejemplos", _EJEMPLOS[nombre])
-                with open(ruta, "r", encoding="utf-8") as fh:
-                    buffer = [l.rstrip("\n") for l in fh]
+                try:
+                    with open(ruta, "r", encoding="utf-8-sig") as fh:
+                        buffer = [l.rstrip("\n") for l in fh]
+                except (OSError, UnicodeError, ValueError) as problema:
+                    error = ErrorArchivo("No pude leer el ejemplo '{0}': {1}.".format(ruta, problema))
+                    print("Error de archivo: {0}".format(error))
+                    print("Cómo corregir: {0}".format(ayuda_error(error)))
+                    continue
                 print("Ejemplo '{0}' cargado ({1} líneas). :ver para verlo.".format(
                     nombre, len(buffer)))
             continue
@@ -491,8 +500,14 @@ def main(argv=None):
             if len(partes) < 2:
                 print("Uso: :guardar <archivo.arepa>")
             else:
-                with open(partes[1], "w", encoding="utf-8") as fh:
-                    fh.write(_envolver(buffer))
+                try:
+                    with open(partes[1], "w", encoding="utf-8") as fh:
+                        fh.write(_envolver(buffer))
+                except (OSError, UnicodeError, ValueError) as problema:
+                    error = ErrorArchivo("No pude guardar '{0}': {1}.".format(partes[1], problema))
+                    print("Error de archivo: {0}".format(error))
+                    print("Cómo corregir: {0}".format(ayuda_error(error)))
+                    continue
                 print("Guardado en {0}.".format(partes[1]))
             continue
         if cmd.startswith(":"):
@@ -515,12 +530,20 @@ def _validar(buffer):
     if not buffer:
         print("(vacío, nada que validar)")
         return
-    _, _, errores = analizar(_envolver(buffer))
+    fuente = _envolver(buffer)
+    try:
+        _, _, errores = analizar(fuente)
+    except Exception as problema:
+        print("Error interno del front-end: {0}. Conservá el programa para revisar el intérprete.".format(problema))
+        return
     if errores:
         print("Encontré {0} problema(s):".format(len(errores)))
         for e in errores:
             print("  [{0}] Línea {1}, Columna {2}: {3}".format(
                 e["tipo"], e["linea"], e["columna"], e["mensaje"]))
+            from cli.main import _mostrar_contexto
+            _mostrar_contexto(fuente, e["linea"], e["columna"])
+            print("  Cómo corregir: {0}".format(ayuda_sintaxis(e)))
     else:
         print("¡Quihubo pues! Programa bien escrito.")
 

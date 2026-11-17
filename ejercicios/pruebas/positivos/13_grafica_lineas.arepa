@@ -1,0 +1,12 @@
+# Ejemplo verificable: 13_grafica_lineas
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, valor] con [[1, 2], [1, 4], [2, 3], [2, 5], [3, 6], [3, 8]]
+t = t |> cree doble = valor * 2
+pinte lineas t
+titulo "Prueba lineas"
+ejex x
+ejey [valor, doble]
+leyenda "Valores"
+guardela "salidas/lineas.png"
+chao

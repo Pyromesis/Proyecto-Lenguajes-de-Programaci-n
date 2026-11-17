@@ -1,0 +1,11 @@
+# Ejemplo verificable: 14_grafica_histograma
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = arme [x, valor] con [[1, 2], [1, 4], [2, 3], [2, 5], [3, 6], [3, 8]]
+t = t |> cree doble = valor * 2
+pinte histograma t
+titulo "Prueba histograma"
+ejey valor
+leyenda "Valores"
+guardela "salidas/histograma.png"
+chao

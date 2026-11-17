@@ -1,0 +1,13 @@
+# D33_agrupacion_multietapa - Resumen de resúmenes
+# Enunciado: Resumir por ciudad y categoría y después obtener el total por ciudad.
+# Esperado: {"r":{"columnas":["ciudad","total"],"filas":[["A",5],["B",4]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D33_agrupacion_multietapa.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [ciudad, categoria, valor] con [["A", "X", 2], ["A", "Y", 3], ["B", "X", 4]]
+parcial = t |> junte por [ciudad, categoria] |> resuma subtotal = sume(valor)
+r = parcial |> junte por [ciudad] |> resuma total = sume(subtotal)
+cuenteme r
+
+chao

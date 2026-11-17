@@ -1,0 +1,15 @@
+# D13_condicional_anidado - Clasificar una nota
+# Enunciado: Clasificar 4.5 como excelente usando decisiones anidadas.
+# Esperado: {"nivel":"excelente"}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D13_condicional_anidado.arepa --ejecutar --sin-ventana
+
+quihubo
+
+nota = 4.5
+nivel = "pendiente"
+fijese_si (nota >= 3) {
+ fijese_si (nota >= 4.5) { nivel = "excelente" } sino { nivel = "aprobado" }
+} sino { nivel = "reprobado" }
+cuenteme nivel
+
+chao

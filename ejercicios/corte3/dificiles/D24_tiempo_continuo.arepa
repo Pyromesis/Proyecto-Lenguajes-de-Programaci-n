@@ -1,0 +1,21 @@
+# D24_tiempo_continuo - Índice temporal continuo
+# Enunciado: Convertir año y mes a un eje continuo y agrupar meses repetidos.
+# Esperado: {"r":{"columnas":["periodo","total"],"filas":[[24311,10],[24312,20],[24313,15]]}}
+# PNG esperados: salidas/c3_D24_tiempo_continuo.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D24_tiempo_continuo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [anio, mes, valor] con [[2025, 12, 10], [2026, 1, 12], [2026, 1, 8], [2026, 2, 15]]
+r = t |> cree periodo = anio * 12 + mes - 1 |> junte por [periodo] |> resuma total = sume(valor) |> acomode por [periodo]
+
+cuenteme r
+
+pinte lineas r
+titulo "Índice temporal continuo"
+ejex periodo
+ejey total
+leyenda "Serie observada"
+guardela "salidas/c3_D24_tiempo_continuo.png"
+
+chao

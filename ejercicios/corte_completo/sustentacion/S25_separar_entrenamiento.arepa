@@ -1,0 +1,19 @@
+# S25_separar_entrenamiento - Evaluación de modelos
+# Enunciado: ¿Por qué evaluar con observaciones separadas de entrenamiento?
+# Sustentación: Evaluar sobre entradas nuevas evita confundir memorización con generalización; este ejemplo mantiene ambos conjuntos separados.
+# Esperado: {"r":{"columnas":["x","clase","predicha"],"filas":[[1.5,"A","A"],[8.5,"B","B"]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S25_separar_entrenamiento.arepa --ejecutar --sin-ventana
+
+quihubo
+
+entrenamiento = arme [x, clase] con [[1, "A"], [2, "A"], [8, "B"], [9, "B"]]
+entrene modelo = perceptron con entrenamiento
+columnas [x]
+objetivo clase
+epocas 100
+prueba = arme [x, clase] con [[1.5, "A"], [8.5, "B"]]
+r = prueba |> clasifique con modelo como predicha
+evalua modelo con prueba
+cuenteme r
+
+chao

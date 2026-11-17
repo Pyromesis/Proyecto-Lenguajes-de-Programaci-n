@@ -1,0 +1,12 @@
+# F19_intervalo_cerrado - Pertenencia a intervalo
+# Enunciado: Comprobar que 5 pertenece al intervalo cerrado de 1 a 10.
+# Esperado: {"resultado":true}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F19_intervalo_cerrado.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valor = 5
+resultado = valor >= 1 y valor <= 10
+cuenteme resultado
+
+chao

@@ -1,0 +1,29 @@
+# D04_arbol_multiclase - Árbol con tres clases
+# Enunciado: Clasificar tres rangos y resumir las predicciones de observaciones nuevas.
+# Esperado: {"r":{"columnas":["predicha","cantidad"],"filas":[["bajo",1],["medio",1],["alto",1]]}}
+# PNG esperados: salidas/c3_D04_arbol_multiclase.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D04_arbol_multiclase.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x, clase] con [[1, "bajo"], [2, "bajo"], [5, "medio"], [6, "medio"], [9, "alto"], [10, "alto"]]
+entrene modelo = arbol con t
+columnas [x]
+objetivo clase
+profundidad 4
+min_hojas 1
+prueba = arme [x, clase] con [[1.5, "bajo"], [5.5, "medio"], [9.5, "alto"]]
+p = prueba |> clasifique con modelo como predicha
+r = p |> junte por [predicha] |> resuma cantidad = cuente()
+evalua modelo con prueba
+
+cuenteme r
+
+pinte barras r
+titulo "Árbol con tres clases"
+ejex predicha
+ejey cantidad
+leyenda "Serie observada"
+guardela "salidas/c3_D04_arbol_multiclase.png"
+
+chao

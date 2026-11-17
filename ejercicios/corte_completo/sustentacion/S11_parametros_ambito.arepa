@@ -1,0 +1,17 @@
+# S11_parametros_ambito - Parámetros y alcance
+# Enunciado: ¿Un parámetro con el mismo nombre cambia la variable global?
+# Sustentación: El parámetro vive en el ámbito local de la llamada y oculta la variable global homónima.
+# Esperado: {"valor":100,"r":6}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S11_parametros_ambito.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valor = 100
+invente aumentar(valor) {
+ valor = valor + 1
+ devuelva valor
+}
+r = aumentar(5)
+cuenteme valor, r
+
+chao

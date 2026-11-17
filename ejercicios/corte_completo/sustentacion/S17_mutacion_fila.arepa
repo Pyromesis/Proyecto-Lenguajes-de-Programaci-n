@@ -1,0 +1,14 @@
+# S17_mutacion_fila - Actualización explícita de filas
+# Enunciado: ¿Cómo se sustituye una fila sin perder la correspondencia entre columnas?
+# Sustentación: Una lista respeta el orden de columnas; un registro se asigna por nombres de clave.
+# Esperado: {"t":{"columnas":["nombre","edad"],"filas":[["Ana",21],["Luis",31]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S17_mutacion_fila.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nombre, edad] con [["Ana", 20], ["Luis", 30]]
+t[1] = ["Ana", 21]
+t[2] = {edad: 31, nombre: "Luis"}
+cuenteme t
+
+chao

@@ -28,9 +28,9 @@ argumentos) se delegan al ejecutor mediante el callback
 'evaluar_expresion'; así 'cuenteme t |> escoja [a]' y los literales
 pueden contener pipelines completos.
 
-Limitaciones:
-  * la ubicacion (linea/columna) de un error de tipos es aproximada:
-    se reporta la posicion donde inicia la expresion.
+Los errores conservan la posición del operador o nodo más interno conocido.
+Los resultados aritméticos especiales se registran como avisos mediante un
+callback opcional, sin modificar sus valores ni imprimir desde el evaluador.
 """
 
 
@@ -38,10 +38,14 @@ from datos import acceso
 from datos.lista import Lista
 from datos.registro import Registro
 from datos.tabla import Tabla
-from datos.tipos import NADA
-from errores_base import ErrorArepa, ErrorSemantico, ErrorTipos, ErrorVariable
+from datos.tipos import NADA, es_nada, es_numero, es_infinito, formatear_numero, nombre_tipo
+from errores_base import (
+    ErrorArepa, ErrorOperacion, ErrorSemantico, ErrorTipos, ErrorVariable,
+    completar_ubicacion,
+)
 from expresiones import operadores as ops
 from utiles.texto import es_identificador
+from utiles.enteros import texto_a_entero
 
 from ArepaVisitor import ArepaVisitor
 
@@ -80,11 +84,12 @@ FUNCIONES_CON_NOMBRE_DE_COLUMNA = ("columna",)
 class EvaluadorExpresiones(ArepaVisitor):
     """Calcula el valor de las expresiones del DSL sobre su arbol."""
 
-    def __init__(self, simbolos, invocar=None, evaluar_expresion=None):
+    def __init__(self, simbolos, invocar=None, evaluar_expresion=None, advertir=None):
         super().__init__()
         self.simbolos = simbolos
         self.invocar = invocar
         self.evaluar_expresion = evaluar_expresion
+        self.advertir = advertir
         self._fila = None
         self._tabla = None
         self.modo_columna = False
@@ -93,6 +98,13 @@ class EvaluadorExpresiones(ArepaVisitor):
     # ---------------------------------------------------------------- #
     # Punto de entrada
     # ---------------------------------------------------------------- #
+
+    def visit(self, ctx):
+        try:
+            return super().visit(ctx)
+        except ErrorArepa as problema:
+            completar_ubicacion(problema, ctx)
+            raise
 
     def evaluar(self, ctx, fila=None, tabla=None):
         """Evalua un nodo de expresion con una fila opcional en contexto.
@@ -108,6 +120,12 @@ class EvaluadorExpresiones(ArepaVisitor):
             if problema.linea == -1 and ctx.start is not None:
                 problema.linea = ctx.start.line
                 problema.columna = ctx.start.column
+            if fila is not None and tabla is not None and not problema.contexto:
+                problema.contexto = "Tabla '{0}', valores de la fila: {1}".format(
+                    tabla.nombre, ", ".join(
+                        "{0}={1!r}".format(n, v)
+                        for n, v in zip(tabla.nombres_columnas, fila.valores)
+                    )[:400])
             raise
         finally:
             self._fila, self._tabla = fila_previa, tabla_previa
@@ -145,13 +163,15 @@ class EvaluadorExpresiones(ArepaVisitor):
     def visitExpresion_logica(self, ctx):
         valor = self.visit(ctx.conjuncion(0))
         for i in range(1, len(ctx.conjuncion())):
-            valor = ops.disyuncion(valor, self.visit(ctx.conjuncion(i)))
+            valor = self._operar("o", ops.disyuncion, valor,
+                                 self.visit(ctx.conjuncion(i)), ctx.getChild(2 * i - 1).symbol)
         return valor
 
     def visitConjuncion(self, ctx):
         valor = self.visit(ctx.negacion(0))
         for i in range(1, len(ctx.negacion())):
-            valor = ops.conjuncion(valor, self.visit(ctx.negacion(i)))
+            valor = self._operar("y", ops.conjuncion, valor,
+                                 self.visit(ctx.negacion(i)), ctx.getChild(2 * i - 1).symbol)
         return valor
 
     def visitNegacion(self, ctx):
@@ -169,7 +189,8 @@ class EvaluadorExpresiones(ArepaVisitor):
         if relacional is None:
             return izquierda
         operacion = OPERADORES_RELACIONALES[relacional.getText()]
-        return operacion(izquierda, self.visit(ctx.aritmetica(1)))
+        return self._operar(relacional.getText(), operacion, izquierda,
+                            self.visit(ctx.aritmetica(1)), relacional.start)
 
     # ---------------------------------------------------------------- #
     # Aritmetica: +- < */% < ^ (asociativa a derecha) < - unario
@@ -179,14 +200,18 @@ class EvaluadorExpresiones(ArepaVisitor):
         valor = self.visit(ctx.termino(0))
         for i in range(1, len(ctx.termino())):
             operador = ctx.getChild(2 * i - 1).getText()
-            valor = OPERADORES_ARITMETICOS[operador](valor, self.visit(ctx.termino(i)))
+            valor = self._operar(operador, OPERADORES_ARITMETICOS[operador],
+                                 valor, self.visit(ctx.termino(i)),
+                                 ctx.getChild(2 * i - 1).symbol)
         return valor
 
     def visitTermino(self, ctx):
         valor = self.visit(ctx.unario(0))
         for i in range(1, len(ctx.unario())):
             operador = ctx.getChild(2 * i - 1).getText()
-            valor = OPERADORES_ARITMETICOS[operador](valor, self.visit(ctx.unario(i)))
+            valor = self._operar(operador, OPERADORES_ARITMETICOS[operador],
+                                 valor, self.visit(ctx.unario(i)),
+                                 ctx.getChild(2 * i - 1).symbol)
         return valor
 
     def visitUnario(self, ctx):
@@ -197,8 +222,67 @@ class EvaluadorExpresiones(ArepaVisitor):
     def visitPotencia(self, ctx):
         base = self.visit(ctx.acceso())
         if ctx.POTENCIA() is not None:
-            return ops.potenciar(base, self.visit(ctx.unario()))
+            return self._operar("^", ops.potenciar, base, self.visit(ctx.unario()),
+                                 ctx.POTENCIA().symbol)
         return base
+
+    def _operar(self, signo, operacion, izquierda, derecha, token):
+        """Calcula primero: solo avisa si la operación realmente se ejecutó."""
+        try:
+            resultado = operacion(izquierda, derecha)
+        except ErrorArepa as problema:
+            completar_ubicacion(problema, token)
+            raise
+        except OverflowError:
+            raise ErrorOperacion(
+                "La operación '{0}' excede el rango numérico admitido al "
+                "combinar estos valores; no se obtuvo un resultado.".format(signo),
+                linea=token.line, columna=token.column) from None
+        except TypeError:
+            raise ErrorTipos(
+                "El operador '{0}' no admite esta combinación de valores "
+                "de tipos {1} y {2}.".format(
+                    signo, nombre_tipo(izquierda), nombre_tipo(derecha)),
+                linea=token.line, columna=token.column) from None
+        if self.advertir is None or not (es_numero(izquierda) and es_numero(derecha)):
+            return resultado
+        codigo = mensaje = ayuda = ""
+        if signo in ("/", "%") and derecha == 0:
+            if signo == "%":
+                codigo = "modulo_por_cero"
+                mensaje = "El módulo por cero no tiene resto definido; AREPA devuelve nada."
+            elif izquierda == 0:
+                codigo = "division_indefinida"
+                mensaje = "0 / 0 es indeterminado; AREPA devuelve nada."
+            else:
+                codigo = "division_por_cero"
+                mensaje = ("El divisor es cero: la división no está definida en los "
+                           "números reales. Por regla de AREPA, el resultado es {0}.".format(
+                               formatear_numero(resultado)))
+            ayuda = "Comprobá que el divisor sea distinto de cero antes de usar '/' o '%'."
+        elif signo == "^" and izquierda == 0 and derecha < 0:
+            codigo = "potencia_cero_negativa"
+            mensaje = ("Elevar cero a un exponente negativo implica dividir por cero; "
+                       "por regla de AREPA, el resultado es infinito.")
+            ayuda = "Usá una base distinta de cero o un exponente no negativo."
+        elif es_nada(resultado):
+            codigo = "resultado_indefinido"
+            mensaje = "La operación '{0}' entre valores numéricos es indeterminada; AREPA devuelve nada.".format(signo)
+            ayuda = "Revisá el origen de los infinitos y evitá combinaciones como infinito - infinito."
+        elif es_infinito(resultado) and not (es_infinito(izquierda) or es_infinito(derecha)):
+            codigo = "desbordamiento_numerico"
+            mensaje = "El resultado de '{0}' supera el rango decimal representable; AREPA lo representa como {1}.".format(signo, formatear_numero(resultado))
+            ayuda = "Reducí la magnitud de los valores o cambiá la escala del cálculo."
+        if codigo:
+            contexto = ""
+            if self._fila is not None and self._tabla is not None:
+                contexto = "Tabla '{0}', ejemplo de fila afectada: {1}".format(
+                    self._tabla.nombre, ", ".join(
+                        "{0}={1!r}".format(n, v)
+                        for n, v in zip(self._tabla.nombres_columnas, self._fila.valores)
+                    )[:400])
+            self.advertir(codigo, mensaje, token.line, token.column, ayuda, contexto)
+        return resultado
 
     def visitAcceso(self, ctx):
         valor = self.visit(ctx.atomo())
@@ -215,7 +299,7 @@ class EvaluadorExpresiones(ArepaVisitor):
 
     def visitAtomo(self, ctx):
         if ctx.ENTERO() is not None:
-            return int(ctx.getText())
+            return texto_a_entero(ctx.getText())
         if ctx.DECIMAL() is not None:
             return float(ctx.getText())
         if ctx.cadena() is not None:

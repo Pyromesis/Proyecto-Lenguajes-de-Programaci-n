@@ -574,3 +574,62 @@ Opciones del CLI:
 
 Cuando se ejecuta con `--ejecutar`, al final se imprime la lista
 `Archivos generados:` con la ruta, el tipo y el tamaño de cada archivo.
+
+## Diagnósticos de consola
+
+Un error real muestra su categoría, causa, archivo fuente, línea y columna,
+la instrucción con un indicador `^` y una ayuda **Cómo corregir**. En una
+conversión se identifica la fila; en CSV se distingue la línea del programa
+de la línea del archivo de datos. Un error dentro de una función conserva
+la ubicación de origen y hasta cinco llamadas para localizar su uso.
+
+Las líneas empiezan en 1 y las columnas en 0. La ejecución se detiene al
+primer error de ejecución; las instrucciones posteriores no se ejecutan.
+El análisis léxico y sintáctico puede informar varios problemas antes de
+que empiece la ejecución.
+
+### Resultados especiales que no interrumpen el programa
+
+| Operación | Resultado de AREPA | Diagnóstico |
+|---|---|---|
+| `1 / 0` | `infinito` | Aviso: dividir por cero no está definido en los reales |
+| `-1 / 0` | `-infinito` | El mismo aviso, conservando el signo del resultado |
+| `0 / 0` | `nada` | Aviso: operación indeterminada |
+| `5 % 0` | `nada` | Aviso: no existe un resto definido con divisor cero |
+| `0 ^ -1` | `infinito` | Aviso: un exponente negativo implica dividir por cero |
+| `(-1) ^ 0.5` | Sin resultado real admitido | Error: AREPA no representa números complejos |
+| `nada + 1`, `nada / 0` | `nada` | Propagación normal de faltantes, sin aviso |
+
+Los avisos se muestran por separado de `cuenteme`, incluyen la ubicación de
+la operación y no cambian el resultado. Se agrupan las repeticiones de una
+misma causa, ubicación y resultado para no inundar la consola; se muestran
+hasta ocho grupos y se informa si quedan más. Las expresiones que no se
+ejecutan no generan avisos. Validar sin `--ejecutar` tampoco ejecuta cálculos.
+
+Los códigos de salida son 0 para programas válidos (también con avisos),
+1 para errores de análisis o ejecución y 2 para problemas de argumentos o
+lectura del programa. En la consola interactiva, `:validar` muestra las
+ayudas y un fallo al guardar no cierra la sesión ni borra el contenido.
+
+Para probar los diagnósticos y los casos que deben continuar sin error:
+
+```bash
+python ejercicios/pruebas/test_diagnosticos.py
+python ejercicios/pruebas/ejecutar.py --completo
+```
+
+## Conservación de datos y límites numéricos
+
+En CSV, las comillas conservan un campo como texto exacto. Así, `" Ana "`,
+`""`, `"001"` y `"obvio"` no pierden espacios ni cambian de tipo al releerse.
+Para calcular con un número citado se usa `convierta columna -> numero`.
+Sin comillas se infieren números y lógicos, y un campo vacío o `nada`
+representa un faltante. `guarde` aplica estas reglas automáticamente.
+Un encabezado o una tabla con nombres de columna repetidos se rechaza.
+
+Se pueden calcular y mostrar enteros de más de 4.300 dígitos sin configurar
+Python. Los modelos y métricas requieren números decimales finitos y tienen
+el rango propio de esa representación. La regresión rechaza la divergencia
+con una explicación para reducir la tasa o la escala; no informa métricas
+NaN como si fueran un resultado exitoso. Pocas épocas de entrenamiento no
+son un error si los resultados siguen siendo finitos.

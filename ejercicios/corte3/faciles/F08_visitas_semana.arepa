@@ -1,0 +1,19 @@
+# F08_visitas_semana - Visitas semanales
+# Enunciado: Representar las visitas de una web durante cuatro semanas.
+# Esperado: {"t":{"columnas":["semana","visitas"],"filas":[[1,100],[2,150],[3,130],[4,180]]}}
+# PNG esperados: salidas/c3_F08_visitas_semana.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F08_visitas_semana.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [semana, visitas] con [[1, 100], [2, 150], [3, 130], [4, 180]]
+cuenteme t
+
+pinte lineas t
+titulo "Visitas semanales"
+ejex semana
+ejey visitas
+leyenda "Serie observada"
+guardela "salidas/c3_F08_visitas_semana.png"
+
+chao

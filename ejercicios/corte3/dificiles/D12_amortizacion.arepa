@@ -1,0 +1,28 @@
+# D12_amortizacion - Amortización de una deuda
+# Enunciado: Simular pagos de 40 con interés de diez por ciento hasta cancelar la deuda.
+# Esperado: {"periodo":4,"saldo":0,"r":{"columnas":["periodo","saldo"],"filas":[[1,70],[2,37],[3,0.7],[4,0]]}}
+# PNG esperados: salidas/c3_D12_amortizacion.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D12_amortizacion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+saldo = 100
+periodo = 0
+r = arme [periodo, saldo]
+mientras (saldo > 0 y periodo < 10) {
+ periodo = periodo + 1
+ saldo = saldo * 1.1 - 40
+ fijese_si (saldo < 0) { saldo = 0 }
+ agregue [periodo, saldo] en r
+}
+
+cuenteme r
+
+pinte lineas r
+titulo "Amortización de una deuda"
+ejex periodo
+ejey saldo
+leyenda "Serie observada"
+guardela "salidas/c3_D12_amortizacion.png"
+
+chao

@@ -1,0 +1,24 @@
+# I01_ventas_reales - Ventas reales de principio a fin
+# Enunciado: Cargar el CSV de ventas, calcular ingreso por ciudad, exportar y graficar.
+# Esperado: {"resumen":{"columnas":["ciudad","ingreso"],"filas":[["Bogotá",206550],["Cali",187100],["Medellín",170250]]}}
+# PNG esperados: salidas/completo_I01_ventas_reales.png
+# CSV esperados: salidas/completo_I01_ventas_reales.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I01_ventas_reales.arepa --ejecutar --sin-ventana
+
+quihubo
+
+ventas = monte "datos/ventas.csv" con encabezado
+resumen = ventas |> deje donde unidades > 0 y precio > 0 |> cree importe = unidades * precio |> junte por [ciudad] |> resuma ingreso = sume(importe) |> acomode por [ciudad]
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I01_ventas_reales.csv"
+
+pinte barras resumen
+titulo "Ventas reales de principio a fin"
+ejex ciudad
+ejey ingreso
+leyenda "Serie observada"
+guardela "salidas/completo_I01_ventas_reales.png"
+
+chao

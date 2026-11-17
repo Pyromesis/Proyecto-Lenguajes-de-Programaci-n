@@ -1,0 +1,12 @@
+# F21_texto_escapes - Texto y longitud
+# Enunciado: Contar los caracteres de la palabra Bogotá.
+# Esperado: {"resultado":6}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F21_texto_escapes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+ciudad = "Bogotá"
+resultado = largo(ciudad)
+cuenteme resultado
+
+chao

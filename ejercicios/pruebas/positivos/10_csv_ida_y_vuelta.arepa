@@ -1,0 +1,7 @@
+# Ejemplo verificable: 10_csv_ida_y_vuelta
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+t = monte "ejercicios/pruebas/datos/comillas.csv" con encabezado
+guarde t como "salidas/comillas.csv"
+releida = monte "salidas/comillas.csv" con encabezado
+chao

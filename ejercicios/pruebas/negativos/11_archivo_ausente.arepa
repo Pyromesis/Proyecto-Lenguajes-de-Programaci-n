@@ -1,0 +1,4 @@
+# Debe rechazarse: ErrorArchivo
+quihubo
+t = monte "no_existe.csv" con encabezado
+chao

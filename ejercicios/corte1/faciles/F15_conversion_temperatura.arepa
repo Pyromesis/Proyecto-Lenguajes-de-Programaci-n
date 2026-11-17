@@ -1,0 +1,12 @@
+# F15_conversion_temperatura - Conversión de temperatura
+# Enunciado: Convertir 25 grados Celsius a Fahrenheit.
+# Esperado: {"resultado":77}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F15_conversion_temperatura.arepa --ejecutar --sin-ventana
+
+quihubo
+
+celsius = 25
+resultado = celsius * 9 / 5 + 32
+cuenteme resultado
+
+chao

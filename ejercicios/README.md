@@ -1,95 +1,75 @@
 # Ejercicios y problemas AREPA
 
-**164 programas** `.arepa` de práctica, organizados por corte. Todos validan
-(`python3 src/cli/main.py <archivo>`) y ejecutan
-(`--ejecutar`) desde la raíz del proyecto. Las rutas `datos/...` y
-`caso_estudio/...` se resuelven desde ahí.
+**349 programas resueltos**, organizados por corte, dificultad e integración.
+Los cortes 1, 2 y 3 tienen **al menos 25 ejercicios fáciles, 25 medianos y
+25 difíciles cada uno**. Se conservan los 75 ejercicios de funciones y los
+12 ejercicios gráficos anteriores.
+
+| Carpeta | Fáciles | Medianos | Difíciles | Adicionales | Total |
+|---|---:|---:|---:|---:|---:|
+| [Corte 1](corte1/README.md) | 25 | 25 | 25 | — | 75 |
+| [Corte 2](corte2/README.md) | 25 | 25 | 25 | 75 de funciones | 150 |
+| [Corte 3](corte3/README.md) | 25 | 25 | 25 | 12 gráficas | 87 |
+| [Corte completo](corte_completo/README.md) | — | — | — | 12 integradores y 25 de sustentación | 37 |
+
+Los **185 ejercicios añadidos** contienen enunciado, solución completa,
+resultados esperados y el comando para ejecutarlos. El [catálogo](CATALOGO.md)
+explica la cobertura. Los programas de sustentación incluyen además una
+respuesta razonada: son propuestas de práctica, no preguntas oficiales.
+
+El [reporte de verificación](REPORTE_AMPLIACION.md) registra la ejecución completa.
+
+## Ejecutar un ejercicio
+
+Desde la raíz del proyecto:
 
 ```bash
-# Un ejercicio del Corte 1
-python3 src/cli/main.py ejercicios/corte1/faciles/F01_programa_minimo.arepa --ejecutar
-
-# Un ejercicio del Corte 3 (sin abrir ventana)
-python3 src/cli/main.py ejercicios/corte3/graficas/G01_barras_ciudad.arepa --ejecutar --sin-ventana
+python src/cli/main.py ejercicios/corte1/faciles/F12_potencia_cuadrado.arepa --ejecutar
+python src/cli/main.py ejercicios/corte3/medianos/M20_funcion_cuadratica.arepa --ejecutar --sin-ventana
+python src/cli/main.py ejercicios/corte_completo/integradores/I12_pasajeros_publicos.arepa --ejecutar --sin-ventana
 ```
 
-## Estructura
+Los que usan `guarde` o `guardela` escriben en `salidas/`. Las rutas de
+`datos/`, `ejercicios/datos/` y `caso_estudio/datos/` se resuelven desde la raíz.
+Solo se necesita la dependencia ANTLR de `requirements.txt`.
 
-```text
-ejercicios/
-├── README.md                 este índice
-├── datos/                    CSV compartidos por los ejercicios
-├── corte1/                   32 ejercicios: front-end, expresiones y pipeline
-│   ├── faciles/              F01-F11
-│   ├── medianos/             M01-M10
-│   └── dificiles/            D01-D11
-├── corte2/                   120 ejercicios: semántica, datos y funciones
-│   ├── faciles/              F12-F26
-│   ├── medianos/             M11-M25
-│   ├── dificiles/            D12-D26
-│   └── funciones/            75 ejercicios (F01-F25, M01-M25, D01-D25)
-└── corte3/                   12 ejercicios: visualización y PNG
-    └── graficas/             G01-G12
-```
+## Contenido
 
-Convenciones de nombre: `F` fácil, `M` mediano, `D` difícil y `G` gráficas.
-Cada archivo indica en sus primeras líneas el concepto que ejercita. Los que
-usan `guarde` o `guardela` escriben en `salidas/` (temporal, ignorado por git).
+- Corte 1: sintaxis, literales, operadores, potencia, precedencia, lógica,
+  selección, filtros y primeros pipelines.
+- Corte 2: símbolos, funciones, recursión, ciclos, listas, registros, tablas,
+  mutación, limpieza, conversión, agrupación, estadísticas y CSV.
+- Corte 3: 25 ejercicios por nivel con barras, líneas, histogramas, dispersión,
+  cajas, ejes, títulos, leyendas, series, exportación, modelos y análisis.
+- Corte completo: ventas y encuestas con datos del proyecto, inventario,
+  informe académico, simulaciones, regresión, clasificación, calidad,
+  estadísticas robustas y el caso público de pasajeros con cinco gráficas.
+- Sustentación: 25 preguntas resueltas sobre decisiones del lenguaje,
+  diferencias entre construcciones y explicación de resultados.
 
-## Corte 1 — front-end y fundamentos (32)
-
-| Carpeta | Contenido |
-|---|---|
-| `corte1/faciles/F01-F11` | programa mínimo, asignaciones, literales, comentarios, operadores, lógicos, `cuenteme`/`describa`, `monte`, `escoja`, condicional, división |
-| `corte1/medianos/M01-M10` | precedencia, pipeline+filtro, `acomode`, `limpie`, `cree`+`renombre`, `convierta`, `invente`, `sino`, `resuma`, `pinte` |
-| `corte1/dificiles/D01-D11` | potencia/unarios, Unicode, `nada`, closures, estadísticas, merge sort, bisiestos, CSV con comillas, `guarde`, flujo completo, bordes |
-
-## Corte 2 — semántica, datos y funciones (120)
-
-| Carpeta | Contenido |
-|---|---|
-| `corte2/faciles/F12-F26` | filtro, columna calculada, orden, renombre, conversión, duplicados, vacíos, `guarde`, agregaciones, `describa`, ciclos |
-| `corte2/medianos/M11-M25` | pipelines, filtros compuestos, doble clave, fechas, juntes, agregaciones, rangos, `pare`, `sino`, closures, `pinte` |
-| `corte2/dificiles/D12-D26` | `resuma` sin junte, `nada`, tabla vacía, medianas, desviación, `pare`/`siga`, factorial, flujos con `guarde`, anidados, retorno temprano |
-| `corte2/funciones/faciles` | funciones de 0–2 parámetros, aritmética y lógica |
-| `corte2/funciones/medianos` | condicionales, composición, closures y uso en pipeline |
-| `corte2/funciones/dificiles` | recursión (factorial, Fibonacci, MCD, Collatz) y cadenas de llamadas |
-
-## Corte 3 — visualización y producto final (12)
-
-| Ejercicio | Qué ejercita |
-|---|---|
-| `G01_barras_ciudad` | barras con agrupación y suma |
-| `G02_lineas_dos_series` | `ejey [col1, col2]` y leyenda |
-| `G03_histograma_unidades` | histograma de una columna |
-| `G04_dispersion_precio` | dispersión con `ejex`/`ejey` numéricos |
-| `G05_cajas_ciudad` | cajas agrupadas por categoría repetida |
-| `G06_estetica_completa` | título, ejes y leyenda en una gráfica |
-| `G07_muestrela` | salida automática en `salidas/` y `--sin-ventana` |
-| `G08_pipeline_grafica` | filtro, columna calculada, junte, `resuma` y PNG |
-| `G09_serie_temporal` | eje x continuo a partir de año y mes |
-| `G10_cajas_decadas` | cajas agrupadas por x numérica repetida |
-| `G11_histograma_ingresos` | histograma de una columna calculada |
-| `G12_cinco_graficas` | las cinco gráficas en un solo programa |
-
-## Datos compartidos
-
-`ejercicios/datos/` contiene los casos borde del lector CSV propio:
-
-| Archivo | Uso |
-|---|---|
-| `vacia.csv` | tabla sin filas |
-| `comillas.csv` | comillas, comas y saltos dentro de campos |
-
-Los conjuntos generales están en `datos/` (`ventas.csv`, `empleados.csv`,
-`encuesta.csv`) y el caso de estudio en `caso_estudio/datos/pasajeros.csv`.
-
-## Regresión
+## Pruebas y regresión
 
 ```bash
+# 110 casos: base, diagnósticos, auditoría y entrega
+python ejercicios/pruebas/ejecutar.py
+
+# 295 casos: los anteriores y resultados de los 185 ejercicios nuevos
+python ejercicios/pruebas/ejecutar.py --ejercicios
+
+# Todo: 349 ejercicios, nueve ejemplos, caso de estudio y suites internas
+python ejercicios/pruebas/ejecutar.py --completo
+
+# Alternativa Bash: 358 programas correctos por CLI
 bash herramientas/regresion_programas.sh
 ```
 
-Ejecuta los 164 ejercicios y los 6 ejemplos (170 programas) con
-`--ejecutar --sin-ventana` desde la raíz y falla si alguno no termina con
-código 0. Reglas semánticas aplicadas: `docs/09_reglas_semanticas.md`.
+El corredor compara tablas y valores con `resultados_esperados.json`, lee los
+CSV exportados y verifica PNG válidos y reproducibles en carpetas temporales.
+Los [ejemplos de prueba](pruebas/README.md) también incluyen 29 programas que
+**deben fallar**; el script Bash los excluye de la regresión positiva.
+
+Para verificar enlaces, conteos y el mínimo por nivel:
+
+```bash
+python herramientas/chequeo_documentacion.py
+```

@@ -1,0 +1,12 @@
+# F29_tabla_insertar - Insertar filas
+# Enunciado: Armar una tabla y agregar una fila mediante un registro.
+# Esperado: {"t":{"columnas":["producto","stock"],"filas":[["A",2],["B",3]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F29_tabla_insertar.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [producto, stock] con [["A", 2]]
+agregue {producto: "B", stock: 3} en t
+cuenteme t
+
+chao

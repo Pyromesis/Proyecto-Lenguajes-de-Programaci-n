@@ -1,0 +1,14 @@
+# M20_logica_acceso - Regla de acceso
+# Enunciado: Autorizar a un usuario activo que sea administrador o propietario.
+# Esperado: {"permitido":true}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M20_logica_acceso.arepa --ejecutar --sin-ventana
+
+quihubo
+
+activo = obvio
+administrador = falso
+propietario = obvio
+permitido = activo y (administrador o propietario)
+cuenteme permitido
+
+chao

@@ -1,0 +1,12 @@
+# M27_recorra_mutacion - Mutar durante un recorrido
+# Enunciado: Duplicar cada elemento recorrido y comprobar el snapshot.
+# Esperado: {"numeros":[1,2,3,2,4,6]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M27_recorra_mutacion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+numeros = [1, 2, 3]
+recorra n en numeros { agregue n * 2 en numeros }
+cuenteme numeros
+
+chao

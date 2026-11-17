@@ -1,0 +1,20 @@
+# M21_salarios_limpios - Salarios válidos
+# Enunciado: Excluir salarios negativos y conservar las dos áreas.
+# Esperado: {"r":{"columnas":["area","salario"],"filas":[["A",100],["A",120],["B",80],["B",140]]}}
+# PNG esperados: salidas/c3_M21_salarios_limpios.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M21_salarios_limpios.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [area, salario] con [["A", -10], ["A", 100], ["A", 120], ["B", 80], ["B", 140]]
+r = t |> deje donde salario > 0
+cuenteme r
+
+pinte cajas r
+titulo "Salarios válidos"
+ejex area
+ejey salario
+leyenda "Serie observada"
+guardela "salidas/c3_M21_salarios_limpios.png"
+
+chao

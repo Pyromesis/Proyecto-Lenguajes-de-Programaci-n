@@ -1,0 +1,15 @@
+# S05_nada_logica - Faltantes y comparaciones
+# Enunciado: ¿Por qué nada == nada produce nada y el filtro descarta esa fila?
+# Sustentación: Las comparaciones propagan nada; el filtro conserva únicamente resultados obvio.
+# Esperado: {"a":null,"r":{"columnas":["valor"],"filas":[[1],[2]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S05_nada_logica.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = nada == nada
+t = arme [valor] con [[nada], [1], [2]]
+r = t |> deje donde valor >= 1
+cuenteme a
+cuenteme r
+
+chao

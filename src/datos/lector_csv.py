@@ -60,6 +60,10 @@ class LectorCSV:
             raise ErrorArchivo(
                 "El archivo '{0}' no está en UTF-8; guardalo con esa codificación.".format(ruta)
             )
+        except ValueError:
+            raise ErrorArchivo(
+                "La ruta CSV '{0}' no es válida; revisá sus caracteres.".format(ruta)
+            ) from None
         return self.leer_texto(contenido, nombre_tabla, ruta)
 
     def leer_texto(self, contenido, nombre_tabla="tabla", origen=""):
@@ -72,9 +76,13 @@ class LectorCSV:
             encabezado = self._partir_campos(lineas[0][1], lineas[0][0])
             nombres = [c if c != "" else "columna_{0}".format(i + 1)
                        for i, c in enumerate(encabezado)]
-            crudas = [(n, self._partir_campos(l, n)) for n, l in lineas[1:]]
+            if len(set(nombres)) != len(nombres):
+                raise ErrorCSV("El encabezado CSV tiene nombres de columna repetidos; "
+                               "cada columna debe tener un nombre único.",
+                               linea_archivo=lineas[0][0])
+            crudas = [(n, self._partir_campos(l, n, con_marcas=True)) for n, l in lineas[1:]]
         else:
-            todas = [self._partir_campos(l, n) for n, l in lineas]
+            todas = [self._partir_campos(l, n, con_marcas=True) for n, l in lineas]
             ancho = max(len(f) for f in todas)
             nombres = ["columna_{0}".format(i + 1) for i in range(ancho)]
             crudas = list(zip([n for n, _ in lineas], todas))
@@ -88,7 +96,10 @@ class LectorCSV:
                     ),
                     linea_archivo=numero_linea,
                 )
-            valores = [texto_a_valor(campo) for campo in cruda]
+            # Las comillas son una declaración explícita de texto, no solo
+            # protección del separador. Esto hace reversible el escritor.
+            valores = [campo if citado else (NADA if campo.strip() == "nada"
+                       else texto_a_valor(campo)) for campo, citado in cruda]
             while len(valores) < len(nombres):
                 valores.append(NADA)
             filas.append(Fila(valores))
@@ -99,26 +110,54 @@ class LectorCSV:
     # Separación de líneas
     # ---------------------------------------------------------------- #
 
-    @staticmethod
-    def _partir_lineas(contenido):
-        """Divide en líneas numeradas, descartando las vacías.
+    def _partir_lineas(self, contenido):
+        """Separa registros conservando saltos dentro de campos entre comillas.
 
-        Acepta finales de línea \\n y \\r\\n. Una línea solo con espacios
-        se considera vacía y se ignora.
+        Cada registro conserva el número de su primera línea física para los
+        diagnósticos. Las reglas de apertura y escape coinciden con las de
+        _partir_campos; una comilla en medio de texto no abre un campo.
         """
         lineas = []
-        for numero, cruda in enumerate(contenido.split("\n"), 1):
-            limpia = cruda.rstrip("\r")
-            if limpia.strip() == "":
-                continue
-            lineas.append((numero, limpia))
+        inicio = 0
+        numero = primera = 1
+        dentro = False
+        inicio_campo = True
+        i = 0
+        while i < len(contenido):
+            caracter = contenido[i]
+            if dentro:
+                if caracter == '"':
+                    if i + 1 < len(contenido) and contenido[i + 1] == '"':
+                        i += 2
+                        continue
+                    dentro = False
+            elif caracter == "\n":
+                registro = contenido[inicio:i].rstrip("\r")
+                if registro.strip():
+                    lineas.append((primera, registro))
+                inicio = i + 1
+                primera = numero + 1
+                inicio_campo = True
+            elif caracter == self.separador:
+                inicio_campo = True
+            elif caracter == '"' and inicio_campo:
+                dentro = True
+                inicio_campo = False
+            else:
+                inicio_campo = False
+            if caracter == "\n":
+                numero += 1
+            i += 1
+        registro = contenido[inicio:].rstrip("\r")
+        if registro.strip():
+            lineas.append((primera, registro))
         return lineas
 
     # ---------------------------------------------------------------- #
     # Separación de campos: máquina de estados carácter a carácter
     # ---------------------------------------------------------------- #
 
-    def _partir_campos(self, linea, numero_linea):
+    def _partir_campos(self, linea, numero_linea, con_marcas=False):
         """Separa una línea en campos aplicando las reglas de comillas.
 
         Estados: FUERA (texto normal) y DENTRO (entre comillas dobles).
@@ -128,6 +167,7 @@ class LectorCSV:
         campos = []
         actual = []
         dentro = False
+        citado = cerrado = False
         i = 0
         while i < len(linea):
             caracter = linea[i]
@@ -138,14 +178,23 @@ class LectorCSV:
                         i += 1
                     else:
                         dentro = False
+                        cerrado = True
                 else:
                     actual.append(caracter)
             else:
-                if caracter == '"' and not actual:
+                if cerrado and caracter != self.separador:
+                    if caracter not in (" ", "\t"):
+                        raise ErrorCSV("Hay texto después del cierre de comillas "
+                                       "en la línea {0} del CSV; falta un separador.".format(numero_linea),
+                                       linea_archivo=numero_linea, contexto=linea[:60])
+                elif caracter == '"' and not actual:
                     dentro = True
+                    citado = True
                 elif caracter == self.separador:
-                    campos.append("".join(actual))
+                    valor = "".join(actual)
+                    campos.append((valor, citado) if con_marcas else valor)
                     actual = []
+                    citado = cerrado = False
                 else:
                     actual.append(caracter)
             i += 1
@@ -157,5 +206,6 @@ class LectorCSV:
                 linea_archivo=numero_linea,
                 contexto=linea[:60],
             )
-        campos.append("".join(actual))
+        valor = "".join(actual)
+        campos.append((valor, citado) if con_marcas else valor)
         return campos

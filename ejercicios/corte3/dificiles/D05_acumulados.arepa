@@ -1,0 +1,26 @@
+# D05_acumulados - Serie acumulada
+# Enunciado: Construir ventas acumuladas mediante recorrido y comparar con las ventas diarias.
+# Esperado: {"total":25,"r":{"columnas":["dia","venta","acumulado"],"filas":[[1,5,5],[2,8,13],[3,2,15],[4,10,25]]}}
+# PNG esperados: salidas/c3_D05_acumulados.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D05_acumulados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia, venta] con [[1, 5], [2, 8], [3, 2], [4, 10]]
+r = arme [dia, venta, acumulado]
+total = 0
+recorra fila en t {
+ total = total + fila["venta"]
+ agregue [fila["dia"], fila["venta"], total] en r
+}
+
+cuenteme r
+
+pinte lineas r
+titulo "Serie acumulada"
+ejex dia
+ejey [venta, acumulado]
+leyenda "Serie observada"
+guardela "salidas/c3_D05_acumulados.png"
+
+chao

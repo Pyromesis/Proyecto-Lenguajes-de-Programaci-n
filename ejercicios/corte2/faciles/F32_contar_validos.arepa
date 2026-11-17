@@ -1,0 +1,13 @@
+# F32_contar_validos - Contar faltantes
+# Enunciado: Distinguir número de filas y valores presentes.
+# Esperado: {"filas":3,"validos":2}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F32_contar_validos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [valor] con [[1], [nada], [3]]
+filas = cuente(t)
+validos = cuente(t, valor)
+cuenteme filas, validos
+
+chao

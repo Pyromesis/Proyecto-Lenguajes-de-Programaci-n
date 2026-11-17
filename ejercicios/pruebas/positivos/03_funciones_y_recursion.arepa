@@ -1,0 +1,25 @@
+# Ejemplo verificable: 03_funciones_y_recursion
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+base = 10
+invente elevar(n, exponente) {
+    devuelva n ^ exponente
+}
+invente factorial(n) {
+    fijese_si (n <= 1) {
+        devuelva 1
+    } sino {
+        devuelva n * factorial(n - 1)
+    }
+}
+invente sumar_base(n) {
+    devuelva n + base
+}
+potencia = elevar(3, 4)
+factorial_cero = factorial(0)
+factorial_seis = factorial(6)
+antes = sumar_base(2)
+base = 20
+despues = sumar_base(2)
+cuenteme potencia, factorial_cero, factorial_seis, antes, despues
+chao

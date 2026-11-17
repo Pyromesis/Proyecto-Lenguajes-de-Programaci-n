@@ -1,0 +1,7 @@
+# Debe rechazarse: ErrorGrafica
+quihubo
+t = arme [x, z] con [[1, 2]]
+pinte histograma t
+ejey [x, z]
+guardela "salidas/no.png"
+chao

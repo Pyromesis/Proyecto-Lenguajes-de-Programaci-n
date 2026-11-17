@@ -1,0 +1,19 @@
+# F21_salarios_area - Salarios por área
+# Enunciado: Comparar dispersión salarial entre dos áreas.
+# Esperado: {"t":{"columnas":["area","salario"],"filas":[["A",100],["A",120],["A",150],["B",90],["B",110],["B",180]]}}
+# PNG esperados: salidas/c3_F21_salarios_area.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F21_salarios_area.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [area, salario] con [["A", 100], ["A", 120], ["A", 150], ["B", 90], ["B", 110], ["B", 180]]
+cuenteme t
+
+pinte cajas t
+titulo "Salarios por área"
+ejex area
+ejey salario
+leyenda "Serie observada"
+guardela "salidas/c3_F21_salarios_area.png"
+
+chao

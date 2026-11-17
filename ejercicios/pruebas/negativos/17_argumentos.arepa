@@ -1,0 +1,5 @@
+# Debe rechazarse: ErrorSemantico
+quihubo
+invente doble(n) { devuelva n * 2 }
+x = doble()
+chao

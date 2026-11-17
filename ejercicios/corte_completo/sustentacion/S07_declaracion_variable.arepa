@@ -1,0 +1,13 @@
+# S07_declaracion_variable - Variables y diagnóstico
+# Enunciado: ¿Cómo se evita una variable no declarada?
+# Sustentación: Se asigna antes de consultar; negativos/01_variable.arepa demuestra el rechazo de una referencia ausente.
+# Esperado: {"r":12}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S07_declaracion_variable.arepa --ejecutar --sin-ventana
+
+quihubo
+
+base = 10
+r = base + 2
+cuenteme r
+
+chao

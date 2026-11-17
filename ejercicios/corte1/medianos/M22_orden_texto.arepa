@@ -1,0 +1,12 @@
+# M22_orden_texto - Orden alfabético
+# Enunciado: Ordenar tres ciudades alfabéticamente.
+# Esperado: {"r":{"columnas":["ciudad"],"filas":[["Armenia"],["Bogotá"],["Cali"]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M22_orden_texto.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [ciudad] con [["Cali"], ["Bogotá"], ["Armenia"]]
+r = t |> acomode por [ciudad]
+cuenteme r
+
+chao

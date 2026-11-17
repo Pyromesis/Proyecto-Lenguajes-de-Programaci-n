@@ -1,0 +1,20 @@
+# M09_fechas_convertidas - Fechas como eje
+# Enunciado: Convertir fechas válidas y representar su serie.
+# Esperado: {"r":{"columnas":["dia","valor"],"filas":[["2026-01-01",10],["2026-02-01",20],["2026-03-01",15]]}}
+# PNG esperados: salidas/c3_M09_fechas_convertidas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M09_fechas_convertidas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [dia, valor] con [["2026-01-01", 10], ["2026-02-01", 20], ["2026-03-01", 15]]
+r = t |> convierta dia -> fecha
+cuenteme r
+
+pinte lineas r
+titulo "Fechas como eje"
+ejex dia
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_M09_fechas_convertidas.png"
+
+chao

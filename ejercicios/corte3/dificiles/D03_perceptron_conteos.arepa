@@ -1,0 +1,28 @@
+# D03_perceptron_conteos - Clasificación binaria y distribución
+# Enunciado: Entrenar un perceptrón y representar el conteo de predicciones sobre datos separados.
+# Esperado: {"r":{"columnas":["predicha","cantidad"],"filas":[["no",1],["si",2]]}}
+# PNG esperados: salidas/c3_D03_perceptron_conteos.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D03_perceptron_conteos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [horas, clase] con [[1, "no"], [2, "no"], [8, "si"], [9, "si"]]
+entrene modelo = perceptron con t
+columnas [horas]
+objetivo clase
+epocas 100
+prueba = arme [horas, clase] con [[1.5, "no"], [8.5, "si"], [9.5, "si"]]
+p = prueba |> clasifique con modelo como predicha
+r = p |> junte por [predicha] |> resuma cantidad = cuente()
+evalua modelo con prueba
+
+cuenteme r
+
+pinte barras r
+titulo "Clasificación binaria y distribución"
+ejex predicha
+ejey cantidad
+leyenda "Serie observada"
+guardela "salidas/c3_D03_perceptron_conteos.png"
+
+chao

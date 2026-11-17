@@ -1,0 +1,12 @@
+# F18_comparacion_edad - Mayoría de edad
+# Enunciado: Determinar si una persona de 18 años es mayor de edad.
+# Esperado: {"resultado":true}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F18_comparacion_edad.arepa --ejecutar --sin-ventana
+
+quihubo
+
+edad = 18
+resultado = edad >= 18
+cuenteme resultado
+
+chao

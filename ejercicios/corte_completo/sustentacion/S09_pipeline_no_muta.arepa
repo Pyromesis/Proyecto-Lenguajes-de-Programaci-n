@@ -1,0 +1,16 @@
+# S09_pipeline_no_muta - Transformación sin mutación
+# Enunciado: ¿Un pipeline cambia la tabla original?
+# Sustentación: Cada etapa produce una tabla nueva; las asignaciones indexadas sí son mutación explícita.
+# Esperado: {"t":{"columnas":["x"],"filas":[[1],[2]]},"r":{"columnas":["x","doble"],"filas":[[1,2],[2,4]]},"columnas_original":1,"columnas_nueva":2}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S09_pipeline_no_muta.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[1], [2]]
+r = t |> cree doble = x * 2
+columnas_original = largo(columnas(t))
+columnas_nueva = largo(columnas(r))
+cuenteme t
+cuenteme r
+
+chao

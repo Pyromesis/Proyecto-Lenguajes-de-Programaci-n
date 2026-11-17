@@ -1,0 +1,14 @@
+# S03_lexico_unicode - Reconocimiento léxico
+# Enunciado: ¿Se admiten identificadores con ñ y tildes y cómo se ve su token?
+# Sustentación: Los identificadores admiten Unicode; ejecutar también con --tokens para observar ID y literales.
+# Esperado: {"r":2029}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S03_lexico_unicode.arepa --ejecutar --sin-ventana
+
+quihubo
+
+año = 2026
+piña = 3
+r = año + piña
+cuenteme r
+
+chao

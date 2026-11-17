@@ -1,0 +1,13 @@
+# D22_estadisticas_sin_datos - Agregación vacía
+# Enunciado: Filtrar todas las filas y calcular conteo, suma y mediana.
+# Esperado: {"r":{"columnas":["n","total","mitad"],"filas":[[0,null,null]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D22_estadisticas_sin_datos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[1], [2]]
+vacia = t |> deje donde x > 10
+r = vacia |> resuma n = cuente(), total = sume(x), mitad = mediana(x)
+cuenteme r
+
+chao

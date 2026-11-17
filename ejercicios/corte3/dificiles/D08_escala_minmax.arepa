@@ -1,0 +1,25 @@
+# D08_escala_minmax - Escala entre cero y uno
+# Enunciado: Normalizar con mínimo y máximo y comprobar los extremos de la escala.
+# Esperado: {"minimo_final":0,"maximo_final":1,"r":{"columnas":["x","normalizado"],"filas":[[10,0],[20,0.25],[30,0.5],[50,1]]}}
+# PNG esperados: salidas/c3_D08_escala_minmax.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D08_escala_minmax.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[10], [20], [30], [50]]
+menor = minimo(t, x)
+mayor = maximo(t, x)
+r = t |> cree normalizado = (x - menor) / (mayor - menor)
+minimo_final = minimo(r, normalizado)
+maximo_final = maximo(r, normalizado)
+
+cuenteme r
+
+pinte dispersion r
+titulo "Escala entre cero y uno"
+ejex x
+ejey normalizado
+leyenda "Serie observada"
+guardela "salidas/c3_D08_escala_minmax.png"
+
+chao

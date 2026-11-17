@@ -1,0 +1,19 @@
+# M15_importes_descontados - Importes con descuento
+# Enunciado: Aplicar diez por ciento de descuento antes del histograma.
+# Esperado: {"r":{"columnas":["neto"],"filas":[[9],[18],[27],[36]]}}
+# PNG esperados: salidas/c3_M15_importes_descontados.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M15_importes_descontados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [precio] con [[10], [20], [30], [40]]
+r = t |> cree neto = precio * 0.9 |> escoja [neto]
+cuenteme r
+
+pinte histograma r
+titulo "Importes con descuento"
+ejey neto
+leyenda "Serie observada"
+guardela "salidas/c3_M15_importes_descontados.png"
+
+chao

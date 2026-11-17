@@ -1,0 +1,20 @@
+# M04_categorias_ordenadas - Orden por ingreso
+# Enunciado: Ordenar categorías por importe descendente antes de graficar.
+# Esperado: {"r":{"columnas":["categoria","total"],"filas":[["B",30],["C",20],["A",10]]}}
+# PNG esperados: salidas/c3_M04_categorias_ordenadas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M04_categorias_ordenadas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [categoria, total] con [["A", 10], ["B", 30], ["C", 20]]
+r = t |> acomode por [total] pa_abajo
+cuenteme r
+
+pinte barras r
+titulo "Orden por ingreso"
+ejex categoria
+ejey total
+leyenda "Serie observada"
+guardela "salidas/c3_M04_categorias_ordenadas.png"
+
+chao

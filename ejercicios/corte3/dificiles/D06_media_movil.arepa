@@ -1,0 +1,25 @@
+# D06_media_movil - Media móvil de tres días
+# Enunciado: Suavizar una serie con ventanas completas de tres observaciones.
+# Esperado: {"r":{"columnas":["dia","observado","media"],"filas":[[3,6,4],[4,8,6],[5,10,8]]}}
+# PNG esperados: salidas/c3_D06_media_movil.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D06_media_movil.arepa --ejecutar --sin-ventana
+
+quihubo
+
+serie = [2, 4, 6, 8, 10]
+r = arme [dia, observado, media]
+repita i desde 3 hasta largo(serie) {
+ media = (serie[i - 2] + serie[i - 1] + serie[i]) / 3
+ agregue [i, serie[i], media] en r
+}
+
+cuenteme r
+
+pinte lineas r
+titulo "Media móvil de tres días"
+ejex dia
+ejey [observado, media]
+leyenda "Serie observada"
+guardela "salidas/c3_D06_media_movil.png"
+
+chao

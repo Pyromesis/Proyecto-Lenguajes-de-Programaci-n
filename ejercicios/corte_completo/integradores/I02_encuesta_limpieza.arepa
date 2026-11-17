@@ -1,0 +1,25 @@
+# I02_encuesta_limpieza - Encuesta con faltantes
+# Enunciado: Cargar encuesta con separador punto y coma, descartar ingresos vacíos y obtener el conteo por ciudad.
+# Esperado: {"resumen":{"columnas":["ciudad","personas"],"filas":[["Bogotá",3],["Cali",2],["Medellín",2]]}}
+# PNG esperados: salidas/completo_I02_encuesta_limpieza.png
+# CSV esperados: salidas/completo_I02_encuesta_limpieza.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I02_encuesta_limpieza.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = monte "datos/encuesta.csv" con encabezado, separador ";"
+limpia = t |> escoja [ciudad, ingreso] |> limpie vacios |> convierta ingreso -> numero
+resumen = limpia |> junte por [ciudad] |> resuma personas = cuente() |> acomode por [ciudad]
+
+describa resumen
+cuenteme resumen
+guarde resumen como "salidas/completo_I02_encuesta_limpieza.csv"
+
+pinte barras resumen
+titulo "Encuesta con faltantes"
+ejex ciudad
+ejey personas
+leyenda "Serie observada"
+guardela "salidas/completo_I02_encuesta_limpieza.png"
+
+chao

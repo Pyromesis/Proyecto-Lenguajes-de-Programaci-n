@@ -1,0 +1,14 @@
+# S02_potencia_unario - Potencia y menos unario
+# Enunciado: ¿Cuánto dan -2 ^ 2, (-2) ^ 2 y 2 ^ 3 ^ 2?
+# Sustentación: La potencia precede al menos unario y se asocia hacia la derecha.
+# Esperado: {"a":-4,"b":4,"c":512}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S02_potencia_unario.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = -2 ^ 2
+b = (-2) ^ 2
+c = 2 ^ 3 ^ 2
+cuenteme a, b, c
+
+chao

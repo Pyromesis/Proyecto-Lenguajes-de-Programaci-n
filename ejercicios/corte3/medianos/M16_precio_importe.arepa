@@ -1,0 +1,20 @@
+# M16_precio_importe - Precio frente a importe
+# Enunciado: Calcular importe y relacionarlo con precio.
+# Esperado: {"r":{"columnas":["unidades","precio","total"],"filas":[[2,10,20],[3,20,60],[4,30,120]]}}
+# PNG esperados: salidas/c3_M16_precio_importe.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M16_precio_importe.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [unidades, precio] con [[2, 10], [3, 20], [4, 30]]
+r = t |> cree total = unidades * precio
+cuenteme r
+
+pinte dispersion r
+titulo "Precio frente a importe"
+ejex precio
+ejey total
+leyenda "Serie observada"
+guardela "salidas/c3_M16_precio_importe.png"
+
+chao

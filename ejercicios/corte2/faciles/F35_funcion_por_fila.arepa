@@ -1,0 +1,13 @@
+# F35_funcion_por_fila - Aplicar una función
+# Enunciado: Aplicar el doble a una columna de dos filas.
+# Esperado: {"r":{"columnas":["x","doble_x"],"filas":[[2,4],[5,10]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F35_funcion_por_fila.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente doble(n) { devuelva n * 2 }
+t = arme [x] con [[2], [5]]
+r = t |> cree doble_x = doble(x)
+cuenteme r
+
+chao

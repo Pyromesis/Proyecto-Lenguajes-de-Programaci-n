@@ -1,0 +1,22 @@
+# D01_balance_financiero - Balance financiero
+# Enunciado: Calcular ingresos y gastos por mes y representar ambas series y su balance.
+# Esperado: {"r":{"columnas":["mes","ingresos","gastos","balance"],"filas":[[1,150,100,50],[2,240,140,100]]},"total_balance":150}
+# PNG esperados: salidas/c3_D01_balance_financiero.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D01_balance_financiero.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [mes, ingreso, gasto] con [[1, 100, 80], [1, 50, 20], [2, 200, 130], [2, 40, 10]]
+r = t |> junte por [mes] |> resuma ingresos = sume(ingreso), gastos = sume(gasto) |> cree balance = ingresos - gastos |> acomode por [mes]
+total_balance = sume(r, balance)
+
+cuenteme r
+
+pinte lineas r
+titulo "Balance financiero"
+ejex mes
+ejey [ingresos, gastos, balance]
+leyenda "Serie observada"
+guardela "salidas/c3_D01_balance_financiero.png"
+
+chao

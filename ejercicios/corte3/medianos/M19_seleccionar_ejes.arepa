@@ -1,0 +1,20 @@
+# M19_seleccionar_ejes - Selección de variables
+# Enunciado: Quitar una columna auxiliar antes de representar área y precio.
+# Esperado: {"r":{"columnas":["area","precio"],"filas":[[40,100],[60,150],[80,200]]}}
+# PNG esperados: salidas/c3_M19_seleccionar_ejes.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M19_seleccionar_ejes.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [id, area, precio] con [[1, 40, 100], [2, 60, 150], [3, 80, 200]]
+r = t |> escoja [area, precio]
+cuenteme r
+
+pinte dispersion r
+titulo "Selección de variables"
+ejex area
+ejey precio
+leyenda "Serie observada"
+guardela "salidas/c3_M19_seleccionar_ejes.png"
+
+chao

@@ -1,0 +1,20 @@
+# M22_conversion_notas - Notas convertidas
+# Enunciado: Convertir notas textuales para comparar dos cursos.
+# Esperado: {"r":{"columnas":["curso","nota"],"filas":[["A",2],["A",4],["B",3],["B",5]]}}
+# PNG esperados: salidas/c3_M22_conversion_notas.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M22_conversion_notas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [curso, nota] con [["A", "2"], ["A", "4"], ["B", "3"], ["B", "5"]]
+r = t |> convierta nota -> numero
+cuenteme r
+
+pinte cajas r
+titulo "Notas convertidas"
+ejex curso
+ejey nota
+leyenda "Serie observada"
+guardela "salidas/c3_M22_conversion_notas.png"
+
+chao

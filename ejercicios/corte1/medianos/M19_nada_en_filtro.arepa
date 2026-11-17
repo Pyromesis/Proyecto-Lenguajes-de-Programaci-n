@@ -1,0 +1,12 @@
+# M19_nada_en_filtro - Faltantes en filtros
+# Enunciado: Conservar solo los valores mayores que 1 y descartar nada.
+# Esperado: {"r":{"columnas":["valor"],"filas":[[3]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M19_nada_en_filtro.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [valor] con [[1], [nada], [3]]
+r = t |> deje donde valor > 1
+cuenteme r
+
+chao

@@ -18,6 +18,9 @@ Clasificación:
 """
 
 from datos.tipos import formatear_numero
+from errores_base import ErrorSemantico
+from utiles.matematica import es_finito
+from ml.modelo import exigir_numero_finito
 
 
 def _validar(y, predicciones):
@@ -32,27 +35,52 @@ def _validar(y, predicciones):
 
 def error_absoluto_medio(y, predicciones):
     _validar(y, predicciones)
-    return sum(abs(a - p) for a, p in zip(y, predicciones)) / len(y)
+    y, predicciones = _numericos(y, predicciones)
+    escala = max(abs(v) for v in y + predicciones) or 1.0
+    return _resultado(sum(abs(a / escala - p / escala) / len(y)
+                          for a, p in zip(y, predicciones)) * escala)
 
 
 def error_cuadratico_medio(y, predicciones):
     _validar(y, predicciones)
-    return sum((a - p) ** 2 for a, p in zip(y, predicciones)) / len(y)
+    y, predicciones = _numericos(y, predicciones)
+    return _resultado(sum(((a - p) * (a - p)) / len(y) for a, p in zip(y, predicciones)))
 
 
 def raiz_error_cuadratico(y, predicciones):
-    return error_cuadratico_medio(y, predicciones) ** 0.5
+    _validar(y, predicciones)
+    y, predicciones = _numericos(y, predicciones)
+    escala = max(abs(v) for v in y + predicciones) or 1.0
+    normalizado = sum((a / escala - p / escala) ** 2 / len(y)
+                      for a, p in zip(y, predicciones))
+    return _resultado((normalizado ** 0.5) * escala)
 
 
 def coeficiente_determinacion(y, predicciones):
     """R² = 1 - suma(errores²) / suma((y - media)²)."""
     _validar(y, predicciones)
-    media = sum(y) / len(y)
+    y, predicciones = _numericos(y, predicciones)
+    escala = max(abs(v) for v in y + predicciones) or 1.0
+    y = [v / escala for v in y]
+    predicciones = [v / escala for v in predicciones]
+    media = sum(a / len(y) for a in y)
     total = sum((a - media) ** 2 for a in y)
     residual = sum((a - p) ** 2 for a, p in zip(y, predicciones))
     if total == 0:
         return 1.0 if residual == 0 else 0.0
-    return 1.0 - residual / total
+    return _resultado(1.0 - residual / total)
+
+
+def _numericos(y, predicciones):
+    return ([exigir_numero_finito(v, "valor real de evaluación") for v in y],
+            [exigir_numero_finito(v, "predicción de evaluación") for v in predicciones])
+
+
+def _resultado(valor):
+    if not es_finito(valor):
+        raise ErrorSemantico("La métrica excede el rango decimal; revisá la "
+                             "escala de los datos y las predicciones. No se informa NaN como resultado válido.")
+    return valor
 
 
 def exactitud(y, predicciones):

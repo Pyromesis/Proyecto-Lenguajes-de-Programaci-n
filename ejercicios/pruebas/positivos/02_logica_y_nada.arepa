@@ -1,0 +1,15 @@
+# Ejemplo verificable: 02_logica_y_nada
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+a = 1 < 2 y 2 <= 2
+b = 3 > 2 y 3 >= 3
+c = 2 == 2 y 2 != 3
+d = no falso o falso
+e = nada + 1
+f = nada == nada
+g = 1 / 0
+h = -1 / 0
+i = 0 / 0
+j = 5 % 0
+cuenteme a, b, c, d, e, f, g, h, i, j
+chao

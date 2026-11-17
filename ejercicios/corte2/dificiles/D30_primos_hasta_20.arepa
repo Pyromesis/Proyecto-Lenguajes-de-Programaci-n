@@ -1,0 +1,20 @@
+# D30_primos_hasta_20 - Números primos
+# Enunciado: Listar los primos entre 2 y 20 con ciclos y condición.
+# Esperado: {"primos":[2,3,5,7,11,13,17,19]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D30_primos_hasta_20.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente es_primo(n) {
+ fijese_si (n < 2) { devuelva falso }
+ fijese_si (n == 2) { devuelva obvio }
+ repita d desde 2 hasta n - 1 {
+  fijese_si (n % d == 0) { devuelva falso }
+ }
+ devuelva obvio
+}
+primos = []
+repita n desde 2 hasta 20 { fijese_si (es_primo(n)) { agregue n en primos } }
+cuenteme primos
+
+chao

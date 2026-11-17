@@ -1,0 +1,19 @@
+# F03_alumnos_curso - Estudiantes por curso
+# Enunciado: Comparar la matrícula de tres cursos.
+# Esperado: {"t":{"columnas":["curso","alumnos"],"filas":[["A",25],["B",30],["C",20]]}}
+# PNG esperados: salidas/c3_F03_alumnos_curso.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F03_alumnos_curso.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [curso, alumnos] con [["A", 25], ["B", 30], ["C", 20]]
+cuenteme t
+
+pinte barras t
+titulo "Estudiantes por curso"
+ejex curso
+ejey alumnos
+leyenda "Serie observada"
+guardela "salidas/c3_F03_alumnos_curso.png"
+
+chao

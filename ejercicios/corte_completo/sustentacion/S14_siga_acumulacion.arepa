@@ -1,0 +1,16 @@
+# S14_siga_acumulacion - Continuar con la siguiente vuelta
+# Enunciado: ¿Cómo se suman solo impares usando siga?
+# Sustentación: siga omite el resto de la vuelta actual; no termina el ciclo.
+# Esperado: {"total":9}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S14_siga_acumulacion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+total = 0
+repita n desde 1 hasta 5 {
+ fijese_si (n % 2 == 0) { siga }
+ total = total + n
+}
+cuenteme total
+
+chao

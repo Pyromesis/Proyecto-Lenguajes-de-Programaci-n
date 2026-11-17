@@ -1,0 +1,16 @@
+# S10_closure_referencia - Entorno capturado
+# Enunciado: ¿Una función captura una copia del valor global o el entorno?
+# Sustentación: Captura el entorno por referencia y ve las reasignaciones posteriores de una variable existente.
+# Esperado: {"a":7,"b":12}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S10_closure_referencia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+base = 5
+invente sumar(n) { devuelva n + base }
+a = sumar(2)
+base = 10
+b = sumar(2)
+cuenteme a, b
+
+chao

@@ -1,0 +1,19 @@
+# F19_horas_consumo - Horas y consumo
+# Enunciado: Relacionar horas de uso con consumo eléctrico.
+# Esperado: {"t":{"columnas":["horas","consumo"],"filas":[[1,2],[2,4],[3,7],[4,9]]}}
+# PNG esperados: salidas/c3_F19_horas_consumo.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/faciles/F19_horas_consumo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [horas, consumo] con [[1, 2], [2, 4], [3, 7], [4, 9]]
+cuenteme t
+
+pinte dispersion t
+titulo "Horas y consumo"
+ejex horas
+ejey consumo
+leyenda "Serie observada"
+guardela "salidas/c3_F19_horas_consumo.png"
+
+chao

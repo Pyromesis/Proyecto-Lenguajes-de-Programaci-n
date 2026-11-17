@@ -1,0 +1,13 @@
+# F27_lista_agregar_sacar - Modificar una lista
+# Enunciado: Añadir 4 y retirar el primer elemento de una lista.
+# Esperado: {"numeros":[2,3,4]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F27_lista_agregar_sacar.arepa --ejecutar --sin-ventana
+
+quihubo
+
+numeros = [1, 2, 3]
+agregue 4 en numeros
+saque 1 de numeros
+cuenteme numeros
+
+chao

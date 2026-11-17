@@ -1,0 +1,12 @@
+# F36_ciclo_factorial - Factorial iterativo
+# Enunciado: Calcular 5 factorial multiplicando en un rango.
+# Esperado: {"resultado":120}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/faciles/F36_ciclo_factorial.arepa --ejecutar --sin-ventana
+
+quihubo
+
+resultado = 1
+repita i desde 1 hasta 5 { resultado = resultado * i }
+cuenteme resultado
+
+chao

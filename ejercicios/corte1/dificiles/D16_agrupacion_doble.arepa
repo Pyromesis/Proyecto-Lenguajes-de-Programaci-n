@@ -1,0 +1,12 @@
+# D16_agrupacion_doble - Agrupar por dos claves
+# Enunciado: Sumar ventas por ciudad y categoría.
+# Esperado: {"r":{"columnas":["ciudad","categoria","total"],"filas":[["A","X",5],["A","Y",4],["B","X",1]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D16_agrupacion_doble.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [ciudad, categoria, valor] con [["A", "X", 2], ["A", "X", 3], ["A", "Y", 4], ["B", "X", 1]]
+r = t |> junte por [ciudad, categoria] |> resuma total = sume(valor)
+cuenteme r
+
+chao

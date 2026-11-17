@@ -517,6 +517,20 @@ Salida (extracto real):
 
 ## Pruebas
 
+Para ejecutar la verificación completa desde la raíz del proyecto:
+
+```bash
+python ejercicios/pruebas/ejecutar.py --completo
+```
+
+Incluye las 55 pruebas base, las 28 de diagnósticos y resultados esperados de 185 ejercicios nuevos,
+los 349 ejercicios del corpus, los
+nueve ejemplos, el caso de estudio y las 370 pruebas internas. Los resultados
+esperados y las instrucciones están en
+[`ejercicios/pruebas/README.md`](ejercicios/pruebas/README.md).
+
+Para ejecutar únicamente las suites internas:
+
 ```bash
 python3 pruebas/test_proyecto.py
 ```
@@ -535,10 +549,34 @@ python3 herramientas/chequeo_pruebas.py
 # Unificado: 10 suites, 370 pruebas.
 ```
 
-Además, los 173 programas de regresión (164 ejercicios + 9 ejemplos) validan
+Además, los 358 programas de regresión (349 ejercicios + 9 ejemplos) validan
 y ejecutan con `--ejecutar` sin fallos.
 
 ## Errores (ejemplos reales)
+
+La consola indica la causa, el archivo, la línea y columna disponibles,
+marca la instrucción con `^` y añade **Cómo corregir**. Si falla una operación
+sobre datos, también muestra el contexto disponible de la fila o del CSV;
+si ocurre dentro de una función, conserva la ubicación y las llamadas.
+Las líneas se cuentan desde 1 y las columnas desde 0, como en ANTLR.
+
+Dividir entre cero conserva la regla del lenguaje: `1/0` da `infinito`,
+`-1/0` da `-infinito` y `0/0` da `nada`. Ahora se explica mediante un
+**aviso**, que no detiene el programa ni cambia sus resultados. También se
+explican el módulo por cero, cero elevado a un exponente negativo y los
+resultados numéricos indeterminados o desbordados. No se avisa por una
+operación que solo aparece en comentarios o en una rama sin ejecutar.
+
+Los códigos de salida distinguen **0** (válido, posiblemente con avisos),
+**1** (error durante análisis o ejecución) y **2** (argumentos o lectura del
+programa). Los fallos internos se identifican como tales.
+
+Hay 28 pruebas específicas de diagnósticos, incluidas automáticamente en el
+corredor de ejercicios y ejecutables por separado:
+
+```bash
+python ejercicios/pruebas/test_diagnosticos.py
+```
 
 Programa con `@` y con una variable llamada `y`:
 
@@ -571,7 +609,7 @@ proyecto/
 │   └── cli/                  main.py (validar y --ejecutar) y repl.py
 ├── datos/                    CSV de ejemplo (incluye 3 para ML)
 ├── ejemplos/                 9: demo, memoria, filtros, graficas, funciones, ciclos y 3 de ML
-├── ejercicios/               164 ejercicios por corte (1: 32, 2: 120, 3: 12)
+├── ejercicios/               349 ejercicios por corte (1: 75, 2: 150, 3: 87, completo: 37)
 ├── caso_estudio/             caso reproducible: programa.arepa + datos/ + 5 PNG + CSV
 ├── salidas/                  evidencia: 7 CSV versionados y PNG temporales
 ├── pruebas/                  10 suites (370) + positivos/negativos
@@ -662,16 +700,19 @@ mínimo 104, máximo 622, 1949 = 1520, 1960 = 5714, crecimiento 275.92 % y CAGR
 
 ## Ejercicios
 
-164 programas de práctica en `ejercicios/`, separados por corte (índice
-completo en `ejercicios/README.md`):
+349 programas resueltos en `ejercicios/`, con al menos 25 por nivel (fácil,
+mediano y difícil) en cada uno de los cortes 1, 2 y 3. El corte completo añade
+12 integradores y 25 preguntas de sustentación con respuesta y demostración.
+Índices: [ejercicios](ejercicios/README.md) y [catálogo](ejercicios/CATALOGO.md).
 
 | Corte | Programas | Contenido |
 |---|---:|---|
-| 1 | 32 | front-end, expresiones y primer pipeline |
-| 2 | 120 | semántica, datos y 75 ejercicios de funciones |
-| 3 | 12 | las cinco gráficas, estética y exportación PNG |
+| 1 | 75 | front-end, expresiones y primer pipeline |
+| 2 | 150 | semántica, datos y 75 ejercicios de funciones |
+| 3 | 87 | 25 por nivel y 12 gráficas anteriores; estética y PNG |
+| Completo | 37 | 12 integradores y 25 preguntas de sustentación resueltas |
 
-Con los 9 de `ejemplos/` suman 173 programas, y todos validan y ejecutan:
+Con los 9 de `ejemplos/` suman 358 programas, y todos validan y ejecutan:
 
 ```bash
 python3 src/cli/main.py ejercicios/corte1/faciles/F01_programa_minimo.arepa --ejecutar
@@ -681,11 +722,24 @@ bash herramientas/regresion_programas.sh
 
 ## Herramientas
 
+La verificación técnica y la entrega reproducible se ejecutan así:
+
+```bash
+python herramientas/verificar_entrega.py
+python herramientas/crear_entrega.py --probar
+```
+
+El segundo comando genera `output/entregas/arepa_entrega.zip`, verifica sus
+archivos con SHA-256 y lo prueba en una carpeta y un entorno virtual nuevos.
+Incluye los archivos actuales del proyecto, también los nuevos aún no
+confirmados en Git. La automatización de GitHub está en
+`.github/workflows/verificacion.yml` para Windows y Linux con Python 3.11 y 3.13.
+
 ```bash
 python3 herramientas/chequeo_gramatica.py      # EBNF <-> .g4: 64/64 reglas, 79 reservadas
 python3 herramientas/chequeo_pruebas.py        # conteo único: 10 suites, 370 pruebas
-python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 32/120/12/9
-bash herramientas/regresion_programas.sh       # 173 programas (164 + 9 ejemplos)
+python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 75/150/87/37/9
+bash herramientas/regresion_programas.sh       # 358 programas (349 + 9 ejemplos)
 bash herramientas/demo_sustentacion.sh         # demo de sustentación paso a paso
 ```
 

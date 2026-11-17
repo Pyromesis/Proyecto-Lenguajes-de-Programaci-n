@@ -1,0 +1,25 @@
+# D07_estandarizacion - Estandarización estadística
+# Enunciado: Calcular puntuaciones z y verificar media cero y desviación uno.
+# Esperado: {"media_z":0,"desv_z":1,"r":{"columnas":["x","z"],"filas":[[2,-1.224744871391589],[4,0],[6,1.224744871391589]]}}
+# PNG esperados: salidas/c3_D07_estandarizacion.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D07_estandarizacion.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x] con [[2], [4], [6]]
+media = promedie(t, x)
+desv = desviacion(t, x)
+r = t |> cree z = (x - media) / desv
+media_z = promedie(r, z)
+desv_z = desviacion(r, z)
+
+cuenteme r
+
+pinte dispersion r
+titulo "Estandarización estadística"
+ejex x
+ejey z
+leyenda "Serie observada"
+guardela "salidas/c3_D07_estandarizacion.png"
+
+chao

@@ -45,7 +45,12 @@ src/
 ├── runtime/             BIBLIOTECA PROPIA DE EJECUCIÓN
 │   ├── simbolos.py      ámbitos encadenados + funciones 'invente'
 │   ├── contexto.py      estado global: símbolos, salida, tablas y errores
-│   └── ejecutor.py      intérprete del programa (visitor propio)
+│   ├── ejecutor.py      punto de entrada y estado del Visitor
+│   ├── ejecucion_datos.py       pipelines, estadísticas y CSV
+│   ├── ejecucion_graficas.py    cláusulas y salida PNG
+│   ├── ejecucion_control.py    ciclos y funciones
+│   ├── ejecucion_estructuras.py listas, registros y tablas
+│   └── ejecucion_modelos.py    entrenamiento y evaluación
 │
 ├── graficas/            MOTOR GRÁFICO PROPIO (Fase 3)
 │   ├── png.py           codificador PNG: chunks, CRC-32, Adler-32, DEFLATE fijo + LZ77
@@ -240,8 +245,8 @@ símbolos; si tampoco existe, `ErrorVariable` lista las columnas
 disponibles como pista. En modo columna (agregaciones) el nombre se
 devuelve tal cual, porque `sume(precio)` recibe un nombre, no un valor.
 
-**Limitaciones:** la línea/columna de un error de tipos es la del inicio
-de la expresión (aproximación); no hay coerción número↔texto.
+**Diagnósticos:** se conserva la ubicación del operador o nodo más interno
+conocido, y el contexto de fila cuando existe; no hay coerción número↔texto.
 
 ---
 
@@ -581,15 +586,15 @@ implementada, con su prueba asociada.
 | Símbolos no declarados | `runtime/simbolos.py` | `ErrorVariable` en `buscar`/`asignar` | `test_simbolos.py::consultar_inexistente_rechazado` |
 | Ámbitos (padre/hijo, sombra) | `runtime/simbolos.py` | `hijo`, `existe_local` | `test_simbolos.py::sombra_local_sobre_el_padre` |
 | Validación de identificadores | `runtime/simbolos.py` | `validar_identificador` | `test_simbolos.py::identificador_invalido_rechazado` |
-| Funciones `invente` (closures) | `runtime/simbolos.py` + `runtime/ejecutor.py` | `FuncionArepa`, `_llamar_funcion` | `test_runtime.py::invente_devuelva_y_recursion` |
+| Funciones `invente` (closures) | `runtime/simbolos.py` + `src/runtime/ejecucion_control.py` | `FuncionArepa`, `_llamar_funcion` | `test_runtime.py::invente_devuelva_y_recursion` |
 | Contexto de ejecución | `runtime/contexto.py` | `ContextoEjecucion` | `test_simbolos.py::contexto_reune_simbolos_salida_y_tablas` |
 | Registro de errores en contexto | `runtime/contexto.py` | `registrar_error` | `test_simbolos.py::contexto_registra_errores` |
 | Asignaciones | `runtime/ejecutor.py` | `visitAsignacion` | `test_runtime.py::asignaciones_y_reasignacion` |
-| Creación de columnas calculadas | `runtime/ejecutor.py` | `_aplicar_operacion` (CREE) | `test_runtime.py::pipeline_completo_con_cree` |
+| Creación de columnas calculadas | `src/runtime/ejecucion_datos.py` | `_aplicar_operacion` (CREE) | `test_runtime.py::pipeline_completo_con_cree` |
 | Conversiones básicas | `runtime/ejecutor.py` | `_aplicar_operacion` (CONVIERTA) | `test_runtime.py::convierta_tipo_de_columna` |
-| Carga CSV (`monte`) | `runtime/ejecutor.py` | `_cargar` → `LectorCSV` | `test_runtime.py::monte_carga_csv_real` |
-| Agrupamiento y agregaciones propias | `runtime/ejecutor.py` | `_ejecutar_resuma`, `_calcular_agregacion` | `test_runtime.py::junte_resuma_agregaciones` |
-| Guardado (`guarde`) | `runtime/ejecutor.py` | `visitInstruccion_guarde` → `EscritorCSV` | `test_runtime.py::guarde_escribe_csv_legible` |
+| Carga CSV (`monte`) | `src/runtime/ejecucion_datos.py` | `_cargar` → `LectorCSV` | `test_runtime.py::monte_carga_csv_real` |
+| Agrupamiento y agregaciones propias | `src/runtime/ejecucion_datos.py` | `_ejecutar_resuma`, `_calcular_agregacion` | `test_runtime.py::junte_resuma_agregaciones` |
+| Guardado (`guarde`) | `src/runtime/ejecucion_datos.py` | `visitInstruccion_guarde` → `EscritorCSV` | `test_runtime.py::guarde_escribe_csv_legible` |
 | Visualización (`pinte`) | `runtime/ejecutor.py` | `visitInstruccion_grafica` | `test_graficas.py::runtime_los_cinco_tipos_generan_png_valido`, `test_runtime.py::pinte_valida_columnas_de_la_grafica` |
 | Codificador PNG propio | `graficas/png.py` | `codificar_png`, `crc32`, `adler32`, `_comprimir_fijo`, `_BuscadorLz77` | `test_graficas.py::firma_ihdr_idat_iend_en_orden`, `::crc32_vector_conocido_y_comparacion_independiente`, `::adler32_vector_conocido`, `::roundtrip_fijo_conserva_las_scanlines` |
 | Lienzo RGB propio | `graficas/lienzo.py` | `Lienzo` (`poner`, `linea`, `rectangulo_relleno`, `circulo_relleno`, `texto`) | `test_graficas.py::lienzo_*` (7 casos) |
@@ -602,13 +607,13 @@ implementada, con su prueba asociada.
 | Árbol de análisis | `lenguaje/arbol.py` | `imprimir_arbol` | `test_front.py` (CLI `--arbol`) |
 | Errores semánticos y de ejecución | `errores_base.py` | jerarquía `ErrorArepa` | `test_simbolos.py::contexto_registra_errores` |
 | Integración DSL → árbol → biblioteca propia | `runtime/ejecutor.py` | flujo completo | `test_runtime.py` (51 casos) |
-| Ciclos `mientras`/`repita` | `runtime/ejecutor.py` | `visitCiclo_mientras`, `visitCiclo_repita`, `visitInstruccion_pare/siga` | `test_runtime.py` (19 casos de ciclos) + `09_ciclos.arepa`, `n18`, `n19`, `n20` |
+| Ciclos `mientras`/`repita` | `src/runtime/ejecucion_control.py` | `visitCiclo_mientras`, `visitCiclo_repita`, `visitInstruccion_pare/siga` | `test_runtime.py` (19 casos de ciclos) + `09_ciclos.arepa`, `n18`, `n19`, `n20` |
 | Preprocesamiento ML | `ml/preprocesamiento.py` | `Preprocesador` (media/moda, one-hot, estandarización) | `test_ml.py::preprocesador_*` |
 | Regresión lineal | `ml/regresion_lineal.py` | `RegresionLineal.entrenar`/`predecir` | `test_ml.py::regresion_*` + `ejemplos/regresion.arepa` |
 | Perceptrón binario | `ml/perceptron.py` | `Perceptron.entrenar`/`predecir` | `test_ml.py::perceptron_*` + `ejemplos/clasificacion.arepa` |
 | Árbol de decisión | `ml/arbol_decision.py` | `ArbolDecision._construir`, `_mejor_division`, `_gini` | `test_ml.py::arbol_*` + `ejemplos/arbol_decision.arepa` |
 | Métricas de ML | `ml/metricas.py` | `resumen_regresion`, `resumen_clasificacion` | `test_ml.py::metricas_*` |
-| `entrene` / `evalua` | `runtime/ejecutor.py` | `visitInstruccion_entrene`, `visitInstruccion_evalua` | `test_ml.py::dsl_*` |
+| `entrene` / `evalua` | `src/runtime/ejecucion_modelos.py` | `visitInstruccion_entrene`, `visitInstruccion_evalua` | `test_ml.py::dsl_*` |
 | `prediga` / `clasifique` | `runtime/ejecutor.py` | `_agregar_prediccion`, `_obtener_modelo` | `test_ml.py::dsl_*` |
 | Resumen de modelo | `runtime/contexto.py` + `ml/modelo.py` | `a_texto` → `ModeloML.resumen()` | `test_ml.py::a_texto_muestra_resumen_del_modelo` |
 | Lista propia | `datos/lista.py` | `Lista` (`largo`, `obtener`, `poner`, `agregar`, `quitar`) | `test_estructuras.py` (5 casos de lista) |
@@ -616,9 +621,38 @@ implementada, con su prueba asociada.
 | Acceso 1-based | `datos/acceso.py` | `obtener`, `asignar`, `valores_para_fila` | `test_estructuras.py` (acceso y asignación indexada) |
 | Tabla desde filas / celdas | `datos/tabla.py` | `desde_filas`, `fila_como_registro`, `poner_celda`, `poner_fila` | `test_estructuras.py::arme_*`, `::asignacion_*` |
 | Literales de estructuras | `expresiones/evaluador.py` | `visitLista_literal`, `visitRegistro_literal`, `visitTabla_literal` | `test_estructuras.py`, `test_arbol.py::arbol_de_tabla_literal` |
-| `agregue` / `saque` | `runtime/ejecutor.py` | `visitInstruccion_agregue`, `visitInstruccion_saque` | `test_estructuras.py` (8 casos) |
-| `recorra` | `runtime/ejecutor.py` | `visitCiclo_recorra` | `test_estructuras.py` (6 casos) + `10_estructuras.arepa` |
+| `agregue` / `saque` | `src/runtime/ejecucion_estructuras.py` | `visitInstruccion_agregue`, `visitInstruccion_saque` | `test_estructuras.py` (8 casos) |
+| `recorra` | `src/runtime/ejecucion_control.py` | `visitCiclo_recorra` | `test_estructuras.py` (6 casos) + `10_estructuras.arepa` |
 | Agregaciones fuera de `resuma` | `runtime/ejecutor.py` | `_agregacion_fuera_de_resuma`, `_calcular_sobre_valores` | `test_estructuras.py::agregaciones_*` |
-| Builtins `largo`/`columna`/`columnas` | `runtime/ejecutor.py` | `_largo`, `_columna`, `_columnas` | `test_estructuras.py::largo_*`, `::columna_*`, `::columnas_*` |
+| Builtins `largo`/`columna`/`columnas` | `src/runtime/ejecucion_estructuras.py` | `_largo`, `_columna`, `_columnas` | `test_estructuras.py::largo_*`, `::columna_*`, `::columnas_*` |
 | Callback `evaluar_expresion` | `expresiones/evaluador.py` + `runtime/ejecutor.py` | `visitExpresion` delegado | `test_estructuras.py::cuenteme_pipeline_imprime_la_tabla` |
 | Precedencia `-2 ^ 2 = -4` | gramática + `expresiones/evaluador.py` | `potencia` → `acceso` → `atomo` | `test_estructuras.py::potencias_precedencia_y_signo`, `test_arbol.py::potencia_antes_que_menos_unario` |
+
+## Organización y contratos del cierre técnico
+
+`src/runtime/ejecutor.py` conserva el estado y coordina el Visitor. Se compone
+con cinco visitantes por responsabilidad: `ejecucion_datos.py`,
+`ejecucion_graficas.py`, `ejecucion_control.py`, `ejecucion_estructuras.py` y
+`ejecucion_modelos.py`. Todos comparten el mismo contexto; no hay un segundo
+intérprete ni duplicación de algoritmos. Las definiciones de las tablas de
+trazabilidad apuntan al módulo que realmente implementa cada operación.
+
+Los nombres de columna son únicos. En CSV, los campos citados son texto
+explícito; se conservan espacios, cadenas vacías y textos numéricos como
+"001". Los campos no citados mantienen la inferencia, con `nada` para un
+faltante. El escritor cita textos ambiguos para conservar valores y tipos,
+incluso cuando una fila contiene solamente una celda vacía o faltante.
+
+Los enteros decimales se leen y escriben por bloques de nueve dígitos en
+`src/utiles/enteros.py`, sin modificar límites globales de Python. Los modelos
+y sus métricas operan con decimales finitos: rechazan NaN, infinitos,
+desbordamiento y entrenamiento divergente en vez de anunciar éxito. Media,
+desviación, MAE, RMSE y R² usan escalas de cálculo que evitan desbordamientos
+intermedios cuando el resultado es representable. Un modelo con pocas épocas
+puede seguir siendo válido sin haber alcanzado un ajuste preciso.
+
+`python herramientas/verificar_entrega.py` comprueba gramática, documentación
+y todas las pruebas. `python herramientas/crear_entrega.py --probar` empaqueta
+los archivos actuales, valida un manifiesto SHA-256 e instala y prueba la
+entrega en un entorno virtual nuevo. La ejecución automatizada está en
+`.github/workflows/verificacion.yml`.

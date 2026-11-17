@@ -1,0 +1,25 @@
+# D22_seleccion_closure - Filtro con entorno capturado
+# Enunciado: Definir un filtro por umbral, cambiarlo y comprobar las dos selecciones.
+# Esperado: {"antes":{"columnas":["x","valor"],"filas":[[2,7],[3,10]]},"r":{"columnas":["x","valor"],"filas":[[3,10]]}}
+# PNG esperados: salidas/c3_D22_seleccion_closure.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D22_seleccion_closure.arepa --ejecutar --sin-ventana
+
+quihubo
+
+umbral = 5
+invente supera(n) { devuelva n > umbral }
+t = arme [x, valor] con [[1, 4], [2, 7], [3, 10]]
+antes = t |> deje donde supera(valor)
+umbral = 8
+r = t |> deje donde supera(valor)
+
+cuenteme r
+
+pinte dispersion r
+titulo "Filtro con entorno capturado"
+ejex x
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_D22_seleccion_closure.png"
+
+chao

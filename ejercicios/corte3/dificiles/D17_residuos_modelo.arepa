@@ -1,0 +1,22 @@
+# D17_residuos_modelo - Residuos y error cuadrático
+# Enunciado: Calcular residuos de una recta propuesta y su error cuadrático medio.
+# Esperado: {"ecm":0.5,"r":{"columnas":["x","real","estimado","residuo","error2"],"filas":[[1,3,3,0,0],[2,6,5,1,1],[3,6,7,-1,1],[4,9,9,0,0]]}}
+# PNG esperados: salidas/c3_D17_residuos_modelo.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/dificiles/D17_residuos_modelo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [x, real] con [[1, 3], [2, 6], [3, 6], [4, 9]]
+r = t |> cree estimado = 2 * x + 1 |> cree residuo = real - estimado |> cree error2 = residuo ^ 2
+ecm = promedie(r, error2)
+
+cuenteme r
+
+pinte dispersion r
+titulo "Residuos y error cuadrático"
+ejex x
+ejey residuo
+leyenda "Serie observada"
+guardela "salidas/c3_D17_residuos_modelo.png"
+
+chao

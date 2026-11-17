@@ -1,0 +1,5 @@
+# Debe rechazarse: ErrorOperacion
+quihubo
+a = [1, 2]
+x = a[3]
+chao

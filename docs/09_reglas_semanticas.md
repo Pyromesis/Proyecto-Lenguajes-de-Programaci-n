@@ -39,6 +39,12 @@ Referencia de implementación: `docs/05_arquitectura.md` (§2–§6.2),
 Conversión CSV → valor (`datos/tipos.py::texto_a_valor`): entero →
 decimal → lógico (`obvio`/`falso`) → texto. Campo vacío → `nada`.
 
+Un campo entre comillas es **texto explícito**: conserva espacios, cadenas
+vacías y valores como `"001"` o `"obvio"`. Sin comillas, el literal `nada`
+representa un faltante. El escritor cita textos ambiguos y escribe los
+faltantes como `nada`, para no perder filas de una sola celda. Los nombres
+de columna deben ser únicos tanto en `arme` como en los encabezados CSV.
+
 **Impresión (`runtime/contexto.py::a_texto`).** `cuenteme` usa el formato
 propio: una lista se ve `[1, 2, 3]`, un registro `{nombre: "Ana", edad:
 20}` (los textos internos van entre comillas) y una tabla usa
@@ -54,6 +60,10 @@ propio: una lista se ve `[1, 2, 3]`, un registro `{nombre: "Ana", edad:
 * Lógicos exigen `obvio`/`falso`; `1 y obvio` → `ErrorTipos`.
 * `1/0` → `infinito`, `-1/0` → `-infinito`, `0/0` → `nada`,
   `5%0` → `nada` (no tumban el runtime).
+  La CLI muestra avisos explicativos con la ubicación de la operación;
+  el código de salida sigue siendo 0 si no ocurre ningún error real.
+  Los avisos no forman parte de `ContextoEjecucion.salida`, que conserva
+  únicamente la salida del programa, y se agrupan por causa y ubicación.
 * `^` asociativa a derecha; `(-1) ^ 0.5` → `ErrorOperacion`
   (resultado complejo). Desborde → `infinito` con signo.
 * Precedencia: `o` < `y` < `no` < comparación < `+ -` < `* / %` <
@@ -271,7 +281,7 @@ repetirse. Un tipo inválido (`pastel`) es error **sintáctico**.
   ni opciones de árbol; `perceptron` acepta `clases`, `tasa` y `epocas`, no
   opciones de árbol; `arbol` acepta `clases`, `profundidad` y `min_hojas`, no
   `tasa` ni `epocas`. Una opción incompatible → `ErrorSemantico`.
-* `tasa` debe ser un número > 0; `epocas`, `profundidad` y `min_hojas` deben
+* `tasa` debe ser un número finito > 0; `epocas`, `profundidad` y `min_hojas` deben
   ser enteros > 0. Los valores por defecto son `tasa 0.05`, `epocas 1000`,
   `profundidad 6` y `min_hojas 2`.
 * Preprocesamiento: una columna con solo números o lógicos es numérica
@@ -282,6 +292,10 @@ repetirse. Un tipo inválido (`pastel`) es error **sintáctico**.
 * `regresion`: el objetivo debe ser numérico; entrena con descenso de
   gradiente por lotes y devuelve un número en la escala original. No admite
   `clases`.
+  Entradas, objetivo y predicciones deben ser finitos y representables en
+  el rango decimal del modelo. Un entrenamiento que diverge o desborda se
+  rechaza y no deja un modelo entrenado ni métricas NaN. Agotar pocas épocas
+  con resultados finitos no es un error: puede representar un ajuste incompleto.
 * `perceptron`: es binario. Si se da `clases`, debe tener exactamente dos
   etiquetas y toda etiqueta del objetivo debe pertenecer a la lista. La
   primera clase se aprende como `+1` y la segunda como `-1`. Si no se da

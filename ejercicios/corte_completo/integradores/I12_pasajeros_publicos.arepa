@@ -1,0 +1,53 @@
+# I12_pasajeros_publicos - Caso público de pasajeros
+# Enunciado: Analizar las 144 observaciones públicas y exportar un resumen anual más cinco gráficas.
+# Esperado: {"filas":144,"resumen":{"columnas":["anio","total"],"filas":[[1949,1520],[1950,1676],[1951,2042],[1952,2364],[1953,2700],[1954,2867],[1955,3408],[1956,3939],[1957,4421],[1958,4572],[1959,5140],[1960,5714]]}}
+# PNG esperados: salidas/completo_I12_barras.png, salidas/completo_I12_lineas.png, salidas/completo_I12_histograma.png, salidas/completo_I12_dispersion.png, salidas/completo_I12_cajas.png
+# CSV esperados: salidas/completo_I12.csv
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/integradores/I12_pasajeros_publicos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = monte "caso_estudio/datos/pasajeros.csv" con encabezado
+serie = t |> cree periodo = anio * 12 + mes - 1
+resumen = t |> junte por [anio] |> resuma total = sume(pasajeros) |> acomode por [anio]
+filas = largo(t)
+cuenteme filas
+cuenteme resumen
+describa t
+guarde resumen como "salidas/completo_I12.csv"
+
+pinte barras resumen
+titulo "Pasajeros: barras"
+ejex anio
+ejey total
+leyenda "Serie observada"
+guardela "salidas/completo_I12_barras.png"
+
+pinte lineas serie
+titulo "Pasajeros: lineas"
+ejex periodo
+ejey pasajeros
+leyenda "Serie observada"
+guardela "salidas/completo_I12_lineas.png"
+
+pinte histograma t
+titulo "Pasajeros: histograma"
+ejey pasajeros
+leyenda "Serie observada"
+guardela "salidas/completo_I12_histograma.png"
+
+pinte dispersion t
+titulo "Pasajeros: dispersion"
+ejex anio
+ejey pasajeros
+leyenda "Serie observada"
+guardela "salidas/completo_I12_dispersion.png"
+
+pinte cajas t
+titulo "Pasajeros: cajas"
+ejex mes
+ejey pasajeros
+leyenda "Serie observada"
+guardela "salidas/completo_I12_cajas.png"
+
+chao

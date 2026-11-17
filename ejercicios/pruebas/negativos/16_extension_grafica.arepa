@@ -1,0 +1,7 @@
+# Debe rechazarse: ErrorGrafica
+quihubo
+t = arme [x] con [[1]]
+pinte barras t
+ejey x
+guardela "salidas/no.jpg"
+chao

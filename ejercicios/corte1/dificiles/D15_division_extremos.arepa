@@ -1,0 +1,13 @@
+# D15_division_extremos - Divisiones especiales
+# Enunciado: Contrastar infinito positivo, negativo y cero dividido entre cero.
+# Esperado: {"a":"infinito","b":"-infinito","c":null}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D15_division_extremos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = 3 / 0
+b = -3 / 0
+c = 0 / 0
+cuenteme a, b, c
+
+chao

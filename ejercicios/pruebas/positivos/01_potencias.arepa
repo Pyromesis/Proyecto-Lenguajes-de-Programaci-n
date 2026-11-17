@@ -1,0 +1,13 @@
+# Ejemplo verificable: 01_potencias
+# Resultados exactos en ../esperados.json; ejecutar con ejecutar.py.
+quihubo
+a = 2 ^ 3 ^ 2
+b = -2 ^ 2
+c = (-2) ^ 2
+d = 2 ^ -3
+e = 9 ^ 0.5
+f = 15 % 4
+g = 2 + 3 * 4
+h = (2 + 3) * 4
+cuenteme a, b, c, d, e, f, g, h
+chao

@@ -1,0 +1,20 @@
+# M23_sin_duplicados - Muestra depurada
+# Enunciado: Eliminar duplicados exactos antes de comparar distribuciones.
+# Esperado: {"r":{"columnas":["grupo","valor"],"filas":[["A",1],["A",3],["B",2],["B",4]]}}
+# PNG esperados: salidas/c3_M23_sin_duplicados.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M23_sin_duplicados.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [grupo, valor] con [["A", 1], ["A", 1], ["A", 3], ["B", 2], ["B", 4]]
+r = t |> limpie duplicados
+cuenteme r
+
+pinte cajas r
+titulo "Muestra depurada"
+ejex grupo
+ejey valor
+leyenda "Serie observada"
+guardela "salidas/c3_M23_sin_duplicados.png"
+
+chao

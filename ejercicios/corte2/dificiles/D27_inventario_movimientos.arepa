@@ -1,0 +1,16 @@
+# D27_inventario_movimientos - Inventario con movimientos
+# Enunciado: Aplicar entradas y salidas a un registro de inventario.
+# Esperado: {"inventario":{"A":9,"B":9}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D27_inventario_movimientos.arepa --ejecutar --sin-ventana
+
+quihubo
+
+inventario = {A: 10, B: 5}
+movimientos = arme [producto, cantidad] con [["A", -3], ["B", 4], ["A", 2]]
+recorra fila en movimientos {
+ clave = fila["producto"]
+ inventario[clave] = inventario[clave] + fila["cantidad"]
+}
+cuenteme inventario
+
+chao

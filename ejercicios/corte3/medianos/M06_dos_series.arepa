@@ -1,0 +1,19 @@
+# M06_dos_series - Dos series temporales
+# Enunciado: Representar ingresos y egresos durante tres meses.
+# Esperado: {"r":{"columnas":["mes","ingresos","egresos"],"filas":[[1,100,80],[2,120,90],[3,150,110]]}}
+# PNG esperados: salidas/c3_M06_dos_series.png
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte3/medianos/M06_dos_series.arepa --ejecutar --sin-ventana
+
+quihubo
+
+r = arme [mes, ingresos, egresos] con [[1, 100, 80], [2, 120, 90], [3, 150, 110]]
+cuenteme r
+
+pinte lineas r
+titulo "Dos series temporales"
+ejex mes
+ejey [ingresos, egresos]
+leyenda "Serie observada"
+guardela "salidas/c3_M06_dos_series.png"
+
+chao

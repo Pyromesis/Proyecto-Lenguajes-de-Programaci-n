@@ -1,0 +1,13 @@
+# S01_precedencia - Prioridad de operadores
+# Enunciado: ¿Por qué 2 + 3 * 4 da 14 y (2 + 3) * 4 da 20?
+# Sustentación: El producto tiene mayor prioridad que la suma; los paréntesis cambian el árbol de análisis.
+# Esperado: {"a":14,"b":20}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte_completo/sustentacion/S01_precedencia.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = 2 + 3 * 4
+b = (2 + 3) * 4
+cuenteme a, b
+
+chao

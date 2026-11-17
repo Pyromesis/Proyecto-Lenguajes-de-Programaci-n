@@ -1,0 +1,12 @@
+# M11_potencia_asociativa - Asociatividad de potencia
+# Enunciado: Comparar 2 elevado a 3 elevado a 2 con la variante entre paréntesis.
+# Esperado: {"a":512,"b":64}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/medianos/M11_potencia_asociativa.arepa --ejecutar --sin-ventana
+
+quihubo
+
+a = 2 ^ 3 ^ 2
+b = (2 ^ 3) ^ 2
+cuenteme a, b
+
+chao

@@ -1,0 +1,13 @@
+# M33_desviacion_conocida - Desviación poblacional
+# Enunciado: Calcular la desviación de 2, 4, 4, 4, 5, 5, 7 y 9.
+# Esperado: {"media":5,"desv":2}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M33_desviacion_conocida.arepa --ejecutar --sin-ventana
+
+quihubo
+
+datos = [2, 4, 4, 4, 5, 5, 7, 9]
+media = promedie(datos)
+desv = desviacion(datos)
+cuenteme media, desv
+
+chao

@@ -1,0 +1,12 @@
+# F20_identificador_unicode - Identificadores Unicode
+# Enunciado: Calcular los meses de dos años con una variable que contiene ñ.
+# Esperado: {"resultado":24}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F20_identificador_unicode.arepa --ejecutar --sin-ventana
+
+quihubo
+
+años = 2
+resultado = años * 12
+cuenteme resultado
+
+chao

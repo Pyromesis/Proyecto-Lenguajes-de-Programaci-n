@@ -1,0 +1,18 @@
+# M34_busqueda_lineal - Buscar un elemento
+# Enunciado: Encontrar la primera posición del 8 en una lista usando pare.
+# Esperado: {"posicion":2}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M34_busqueda_lineal.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valores = [3, 8, 8, 2]
+posicion = 0
+indice = 0
+recorra n en valores {
+ indice = indice + 1
+ fijese_si (n == 8) { posicion = indice
+ pare }
+}
+cuenteme posicion
+
+chao

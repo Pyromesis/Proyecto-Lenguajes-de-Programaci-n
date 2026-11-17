@@ -1,0 +1,12 @@
+# F13_potencia_cubo - Volumen de un cubo
+# Enunciado: Calcular el volumen de un cubo de lado 4.
+# Esperado: {"resultado":64}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/faciles/F13_potencia_cubo.arepa --ejecutar --sin-ventana
+
+quihubo
+
+lado = 4
+resultado = lado ^ 3
+cuenteme resultado
+
+chao

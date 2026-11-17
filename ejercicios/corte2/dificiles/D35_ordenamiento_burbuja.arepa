@@ -1,0 +1,20 @@
+# D35_ordenamiento_burbuja - Ordenamiento manual
+# Enunciado: Ordenar una lista con intercambio adyacente y compararla con el orden conocido.
+# Esperado: {"valores":[1,2,3,4,5]}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/dificiles/D35_ordenamiento_burbuja.arepa --ejecutar --sin-ventana
+
+quihubo
+
+valores = [5, 1, 4, 2, 3]
+repita vuelta desde 1 hasta 4 {
+ repita j desde 1 hasta 5 - vuelta {
+  fijese_si (valores[j] > valores[j + 1]) {
+   auxiliar = valores[j]
+   valores[j] = valores[j + 1]
+   valores[j + 1] = auxiliar
+  }
+ }
+}
+cuenteme valores
+
+chao

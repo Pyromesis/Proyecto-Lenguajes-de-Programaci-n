@@ -1,0 +1,13 @@
+# M26_actualizar_filas - Reemplazo completo de filas
+# Enunciado: Actualizar una fila con lista y otra con registro.
+# Esperado: {"t":{"columnas":["nombre","edad"],"filas":[["Ana",21],["Luis",31]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte2/medianos/M26_actualizar_filas.arepa --ejecutar --sin-ventana
+
+quihubo
+
+t = arme [nombre, edad] con [["Ana", 20], ["Luis", 30]]
+t[1] = ["Ana", 21]
+t[2] = {nombre: "Luis", edad: 31}
+cuenteme t
+
+chao

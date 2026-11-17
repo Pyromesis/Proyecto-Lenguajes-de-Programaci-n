@@ -1,0 +1,4 @@
+# Debe fallar con ErrorCSV
+quihubo
+t = monte "ejercicios/pruebas/datos/vacio.csv" con encabezado
+chao

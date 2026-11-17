@@ -1,0 +1,13 @@
+# D19_funcion_en_columna - Función como transformación
+# Enunciado: Crear una columna con una función de impuesto.
+# Esperado: {"r":{"columnas":["precio","final"],"filas":[[100,119],[200,238]]}}
+# Ejecutar desde la raíz con python src/cli/main.py ejercicios/corte1/dificiles/D19_funcion_en_columna.arepa --ejecutar --sin-ventana
+
+quihubo
+
+invente con_iva(valor) { devuelva valor * 1.19 }
+t = arme [precio] con [[100], [200]]
+r = t |> cree final = con_iva(precio)
+cuenteme r
+
+chao
