@@ -1,11 +1,19 @@
 # AREPA
 
+## Integrantes
+
+- Camilo Bernal
+- Diego Moreno
+- Yeisson Rincon
+
+## Descripción
+
 AREPA (*Análisis Reproducible de datos Escrito con Palabras Autóctonas*) es
 un lenguaje de dominio específico para preparar datos, calcular estadísticas,
 generar gráficas y entrenar modelos mediante instrucciones en español.
 
 Proyecto de Lenguajes de Programación y Transducción de la Universidad Sergio
-Arboleda, 2026-2. Integrantes: Camilo Bernal, Diego Moreno y Yeisson Rincon.
+Arboleda, 2026-2.
 
 El front-end utiliza ANTLR4. El equipo implementa las estructuras de datos,
 el procesamiento CSV, la evaluación, el motor PNG y los modelos de aprendizaje
