@@ -1,4 +1,4 @@
-# Ejemplos oficiales AREPA (Linux)
+# Programas de ejemplo
 
 Los 9 programas de referencia del lenguaje. Todos validan y ejecutan
 desde la raíz del proyecto:
@@ -26,5 +26,5 @@ python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
 (además intenta abrirla; sin entorno gráfico o con `--sin-ventana` solo
 informa por consola). Los 7 CSV de los ejemplos están versionados como
 evidencia de datos, estructuras y machine learning; los PNG son temporales e
-ignorados por git (ver `salidas/README.md`). Más práctica (164 ejercicios por
+ignorados por git (ver `salidas/README.md`). Más práctica (349 ejercicios por
 corte) en `ejercicios/README.md`.

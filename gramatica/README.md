@@ -1,4 +1,4 @@
-# Gramática AREPA (fuente única, Linux)
+# Gramática de AREPA
 
 `Arepa.g4` es la **fuente única** del lenguaje: gramática combinada
 lexer+parser para ANTLR 4.13.2 (Fases 1–3). La especificación formal
@@ -11,19 +11,17 @@ python3 herramientas/chequeo_gramatica.py
 
 Contenido por bloques:
 
-| Líneas | Bloque |
-|---|---|
-| 38–47 | `programa` + `sentencias`: `quihubo` … `chao` con saltos obligatorios |
-| 48–104 | `sentencia` y variantes simples: asignación, `guarde`, `devuelva`, `cuenteme`, `describa`, llamada |
-| 105–136 | machine learning: `entrene`, opciones y `evalua` |
-| 137–151 | estructuras propias: `agregue`/`saque`/`recorra` |
-| 152–200 | funciones (`invente`), `fijese_si`/`sino`, `mientras`, `repita`, `pare`/`siga`, `bloque` |
-| 201–275 | pipeline `\|>`, operaciones de datos (incluye `prediga`/`clasifique`), `monte`, columnas, etiquetas, `resuma`, tipos |
-| 276–303 | visualización `pinte` + cláusulas + `guardela`/`muestrela` |
-| 304–438 | expresiones con precedencia (sin `factor`) y `nombre_columna` (acepta reservadas, D5) |
-| 440–599 | lexer: 79 reservadas, literales, 23 símbolos, `NL`, comentarios `#`, `ID` Unicode |
+- `programa` y `sentencias`: estructura `quihubo` … `chao`.
+- `sentencia`: asignación, exportación, retorno, impresión y llamadas.
+- Aprendizaje automático: `entrene`, opciones y `evalua`.
+- Estructuras: `agregue`, `saque` y `recorra`.
+- Funciones, condicionales, ciclos y bloques.
+- Pipelines `|>`: carga, operaciones de datos, predicción y clasificación.
+- Visualización: `pinte`, sus cláusulas, `guardela` y `muestrela`.
+- Expresiones con precedencia y nombres de columna.
+- Lexer: reservadas, literales, símbolos, saltos de línea, comentarios e identificadores Unicode.
 
 Convenciones: reservadas en minúscula sin tildes; `NL` separa
 sentencias (con continuación tras `|>`, `,` y operadores); `#`
 comenta hasta fin de línea. El código generado vive en `generado/`
-(ver su `README.md`) y no se edita a mano.
+(consulte la [guía de regeneración](../generado/README.md)) y no se edita a mano.

@@ -9,19 +9,15 @@ Todos los programas tienen solución completa y se ejecutan desde la raíz del p
 | `medianos/` | 25 |
 | `dificiles/` | 25 |
 
-## Ejecutar y verificar
+## Verificación
 
-```bash
-python ejercicios/pruebas/ejecutar.py --completo
-```
+Consulte la [guía de pruebas](../pruebas/README.md) para ejecutar y
+contrastar los resultados. Los programas se ejecutan desde la raíz;
+los archivos que exportan se guardan en `salidas/`.
 
-Los ejercicios nuevos se contrastan con resultados independientes en
-`../resultados_esperados.json`: valores, filas, exportaciones CSV e integridad de PNG.
-Cada archivo incluye su enunciado, los resultados esperados y el comando para ejecutarlo.
+## Ejercicios con resultados esperados
 
-## Ejercicios añadidos con resultados comprobables
-
-### faciles
+### Fáciles
 
 | Ejercicio | Enunciado |
 |---|---|
@@ -40,7 +36,7 @@ Cada archivo incluye su enunciado, los resultados esperados y el comando para ej
 | [F24_parentesis_descuento](faciles/F24_parentesis_descuento.arepa) | Calcular el total de tres productos de 10 y un envío de 5. |
 | [F25_reasignacion_saldo](faciles/F25_reasignacion_saldo.arepa) | Partir de 100, retirar 25 y depositar 40. |
 
-### medianos
+### Medianos
 
 | Ejercicio | Enunciado |
 |---|---|
@@ -60,7 +56,7 @@ Cada archivo incluye su enunciado, los resultados esperados y el comando para ej
 | [M24_conversion_numerica](medianos/M24_conversion_numerica.arepa) | Convertir textos 10 y 20 a números y sumarlos. |
 | [M25_pipeline_inmutable](medianos/M25_pipeline_inmutable.arepa) | Crear una columna sin cambiar el número de columnas del origen. |
 
-### dificiles
+### Difíciles
 
 | Ejercicio | Enunciado |
 |---|---|

@@ -94,7 +94,7 @@ sin convertir el DSL en una copia de Python (no hay `for` estilo C).
 
 | Requisito | Estado |
 |---|---|
-| ANTLR4 para lexer y parser | `antlr4-python3-runtime==4.13.2`; regeneración con `generar_gramatica.sh` (Linux, verificado con JDK 17) |
+| ANTLR4 para lexer y parser | `antlr4-python3-runtime==4.13.2`; regeneración con `generar_gramatica.sh` (verificado con JDK 17) |
 | Python 3.11+ | probado con 3.12/3.13 |
 | Patrón Visitor | `EjecutorArepa` y `EvaluadorExpresiones` extienden `ArepaVisitor` |
 | Bibliotecas sugeridas (pandas, NumPy, Matplotlib) | **no se usan**: toda la lógica es propia (`docs/05_arquitectura.md`); el motor de gráficas del Corte 3 también se implementó desde cero (`docs/11_informe_fase3.md`) |
@@ -111,8 +111,8 @@ resumen correctamente exportada (p. ej. `salidas/resumen_ciudades.csv` con
 
 ## 6. Verificación automática adicional (reproducibilidad)
 
-| Herramienta | Qué garantiza | Cómo correrla |
+| Herramienta | Comprobación | Cómo ejecutarla |
 |---|---|---|
-| `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 64/64 reglas y 79 reservadas en ambas direcciones (hace real el "chequeo" citado en `docs/06` R10/R23) | `python herramientas/chequeo_gramatica.py` |
-| `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, ayuda/versión, negativo con línea/columna, ejecución + CSV, ciclos, estructuras en memoria, caso de estudio con 5 PNG, suite completa 9/9); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
-| Tubería cerrada | `arepa demo.arepa --arbol \| head` sale limpio (código 0, sin volcado) en Linux | `test_front.py` CLI: "tubería cerrada sale limpio sin traceback" |
+| `herramientas/chequeo_gramatica.py` | EBNF ↔ `.g4`: 64/64 reglas y 79 reservadas en ambas direcciones | `python herramientas/chequeo_gramatica.py` |
+| `herramientas/demo_sustentacion.sh` | evidencia de sustentación paso a paso (versiones, sincronía, demo, tokens/árbol, ayuda/versión, negativo con línea/columna, ejecución + CSV, ciclos, estructuras en memoria, caso de estudio con 5 PNG, suite completa 10/10); falla si algo no da lo esperado | `bash herramientas/demo_sustentacion.sh` |
+| Tubería cerrada | `arepa demo.arepa --arbol \| head` sale limpio (código 0, sin volcado) | `test_front.py` CLI: "tubería cerrada sale limpio sin traceback" |

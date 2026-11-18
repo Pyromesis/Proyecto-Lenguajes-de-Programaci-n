@@ -1,7 +1,7 @@
-# AREPA — Reglas semánticas (Cortes 2 y 3 + ML, Linux)
+# AREPA — Reglas semánticas
 
 Documento dedicado del entregable "documentación de reglas semánticas".
-Todo se verifica en Linux con:
+Todo se verifica con:
 
 ```bash
 python3 pruebas/test_proyecto.py
@@ -71,7 +71,7 @@ propio: una lista se ve `[1, 2, 3]`, un registro `{nombre: "Ana", edad:
   orden. Por eso `-2 ^ 2` es `-(2 ^ 2) = -4` y `a[1] + 1` indexa antes
   de sumar. La cadena del `.g4` es `expresion_logica → conjuncion →
   negacion → comparacion → aritmetica → termino → unario → potencia →
-  acceso → atomo`; `factor` ya no existe.
+  acceso → atomo`.
 
 ## 3. Nombres: variables vs columnas (`expresiones/evaluador.py`)
 

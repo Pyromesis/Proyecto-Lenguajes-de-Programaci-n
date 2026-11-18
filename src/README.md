@@ -1,11 +1,7 @@
-# Biblioteca propia AREPA (`src/`, Linux)
+# Código fuente de AREPA
 
-Todo el DSL es código propio del equipo **excepto** el lexer/parser
-generados por ANTLR4 (ver `generado/README.md`). Sin pandas, NumPy,
-Matplotlib ni equivalentes. Capas de abajo hacia arriba:
-`errores_base` → `datos` → `graficas` → `expresiones` → `runtime` → `cli`;
-`lenguaje/` orquesta el lexer y el parser; `expresiones/` y `runtime/`
-recorren el árbol heredando del Visitor generado por ANTLR4.
+Implementación del intérprete y sus bibliotecas. El lexer, el parser y
+la base del Visitor proceden de ANTLR; consulte [el código generado](../generado/README.md).
 
 | Módulo | Archivo | Responsabilidad |
 |---|---|---|
@@ -19,13 +15,16 @@ recorren el árbol heredando del Visitor generado por ANTLR4.
 | `datos/` | `tipos.py` | valores (`nada`, infinitos), conversiones y calendario propio |
 | `datos/` | `lista.py` / `registro.py` | `Lista` y `Registro` propios de `arme` (sin `dict`/`OrderedDict`) |
 | `datos/` | `acceso.py` | acceso indexado 1-based compartido por evaluador y ejecutor |
-| `graficas/` | `png.py` | escritor PNG propio (DEFLATE, CRC-32 y Adler-32 caseros) |
+| `graficas/` | `png.py` | escritor PNG propio (DEFLATE, CRC-32 y Adler-32) |
 | `graficas/` | `lienzo.py` | búfer RGB propio con píxel, línea, rectángulo, círculo y texto |
 | `graficas/` | `fuente.py` | fuente bitmap 5x7 propia (sin fuentes del sistema) |
-| `graficas/` | `escalas.py` | `EscalaLineal`/`EscalaBanda` y ticks "bonitos" |
+| `graficas/` | `escalas.py` | `EscalaLineal`/`EscalaBanda` y marcas de ejes con pasos 1, 2 o 5 por potencias de diez |
 | `graficas/` | `tipos_grafica.py` | motor de las 5 gráficas (`barras`, `lineas`, `histograma`, `dispersion`, `cajas`) |
 | `expresiones/` | `operadores.py` | aritméticos, relacionales y lógicos con validación de tipos |
 | `expresiones/` | `evaluador.py` | recorre el árbol y calcula (sin `eval`/`exec`) |
+| `ml/` | `preprocesamiento.py`, `modelo.py` | preparación de datos e interfaz de modelos |
+| `ml/` | `regresion_lineal.py`, `perceptron.py`, `arbol_decision.py` | modelos supervisados |
+| `ml/` | `metricas.py` | métricas de regresión y clasificación |
 | `runtime/` | `simbolos.py` | ámbitos encadenados + closures `invente` |
 | `runtime/` | `contexto.py` | símbolos raíz, salida de `cuenteme`, registro de errores y archivos |
 | `runtime/` | `ejecutor.py` | entrada del Visitor: contexto, símbolos y coordinación de expresiones |
@@ -43,7 +42,5 @@ recorren el árbol heredando del Visitor generado por ANTLR4.
 | `cli/` | `main.py` | CLI: validar, `--arbol`, `--tokens`, `--ejecutar` (códigos 0/1/2); analizador de argumentos propio (sin `argparse`) |
 | `cli/` | `repl.py` | consola interactiva con Tab (usa `herramientas/consola/`) |
 
-Detalle de algoritmos, decisiones y matriz
-funcionalidad → archivo → función → prueba:
-`docs/05_arquitectura.md`. Reglas semánticas:
-`docs/09_reglas_semanticas.md`.
+El detalle de algoritmos y trazabilidad está en la [arquitectura](../docs/05_arquitectura.md).
+El [manual técnico](../docs/manuales/tecnico.md) explica cómo ampliar el intérprete.

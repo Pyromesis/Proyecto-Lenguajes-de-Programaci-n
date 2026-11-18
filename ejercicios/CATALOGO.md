@@ -1,16 +1,7 @@
 # Catálogo de ejercicios resueltos
 
-La ampliación añade **185 ejercicios** con enunciado, solución y resultados esperados.
-El corpus de práctica contiene **349 programas** sin contar las pruebas positivas y negativas.
-
-La ejecución final está documentada en el [reporte de verificación](REPORTE_AMPLIACION.md).
-
-| Carpeta | Fáciles | Medianos | Difíciles | Adicionales | Total |
-|---|---:|---:|---:|---:|---:|
-| Corte 1 | 25 | 25 | 25 | 0 | 75 |
-| Corte 2 | 25 | 25 | 25 | 75 de funciones | 150 |
-| Corte 3 | 25 | 25 | 25 | 12 gráficas anteriores | 87 |
-| Corte completo | — | — | — | 12 integradores y 25 sustentación | 37 |
+El [índice general](README.md) contiene el inventario de los 349 programas
+por corte y dificultad. Este catálogo organiza su cobertura temática.
 
 ## Cobertura
 
@@ -33,19 +24,11 @@ La ejecución final está documentada en el [reporte de verificación](REPORTE_A
 - [Corte completo y sustentación](corte_completo/README.md)
 - [Pruebas](pruebas/README.md)
 
-## Verificar
+## Verificación
 
-```bash
-python ejercicios/pruebas/ejecutar.py --ejercicios
-python ejercicios/pruebas/ejecutar.py --completo
-```
-
-`--ejercicios` valida los 185 ejercicios añadidos, los 55 casos base y las
-28 pruebas de diagnósticos, 23 de auditoría y cuatro de entrega reproducible.
-`--completo` agrega los programas anteriores, los nueve ejemplos, el caso de estudio
-y las diez suites internas. Los archivos se generan en carpetas temporales limpias.
-
-Para conservar las salidas de una demostración, ejecutar un archivo individual:
+Los modos de ejecución y las comprobaciones de resultados están en la
+[guía de pruebas](pruebas/README.md). Para ejecutar un integrador y
+conservar sus salidas:
 
 ```bash
 python src/cli/main.py ejercicios/corte_completo/integradores/I12_pasajeros_publicos.arepa --ejecutar --sin-ventana

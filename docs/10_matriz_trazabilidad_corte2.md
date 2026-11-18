@@ -1,6 +1,6 @@
-# AREPA — Matriz de trazabilidad del Corte 2 (Linux)
+# AREPA — Matriz de trazabilidad del corte 2
 
-Verificación en Linux:
+Verificación:
 
 ```bash
 python3 pruebas/test_proyecto.py

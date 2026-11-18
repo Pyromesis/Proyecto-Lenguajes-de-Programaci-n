@@ -1,548 +1,130 @@
 # AREPA — Manual técnico
 
-Documento de referencia para quien mantiene o extiende el intérprete. Explica
-cómo está organizado el código, cómo funciona la cadena completa (gramática →
-árbol → Visitor → datos → machine learning → gráficas) y cómo añadir una
-instrucción o un tipo de gráfica. Las referencias `archivo:línea` corresponden
-al estado actual del repositorio (la entrega que contiene este manual) y se
-comprueban con `python3 herramientas/chequeo_documentacion.py`.
+Guía para mantener y ampliar el intérprete. La
+[arquitectura](../05_arquitectura.md) describe los algoritmos y su trazabilidad;
+las [reglas semánticas](../09_reglas_semanticas.md) definen el comportamiento
+del lenguaje. El [manual de usuario](usuario.md) explica la ejecución.
 
-* Versión: `AREPA v0.4 (Fase 3 - visualizacion y producto final)` con la
-  ampliación de machine learning.
-* Cifras canónicas de esta versión: **64 reglas**, **79 palabras reservadas**,
-  **10 suites**, **370 pruebas** y **358 programas** ejecutables.
-* Documentos relacionados: `docs/05_arquitectura.md` (algoritmos y matriz de
-  trazabilidad), `docs/09_reglas_semanticas.md` (semántica),
-  `docs/11_guia_machine_learning.md` (ML), `docs/11_informe_fase3.md`
-  (informe histórico del motor gráfico) y `usuario.md` (uso).
+## Módulos y responsabilidades
 
----
-
-## 1. Arquitectura por capas
-
-El proyecto separa gramática, código generado, front-end, biblioteca propia,
-interfaz, pruebas, ejemplos y documentación.
-
-```text
-gramatica/Arepa.g4        fuente única (lexer + parser ANTLR4)
-generado/                 código ANTLR (no editar a mano)
-src/
-├── lenguaje/             FRONT-END (ANTLR autorizado + lógica propia)
-│   ├── analizador.py     analizar() -> (parser, árbol, errores)
-│   ├── errores.py        listener propio: traduce diagnósticos a español
-│   └── arbol.py          impresión jerárquica del árbol
-├── datos/                BIBLIOTECA PROPIA DE DATOS
-│   ├── tipos.py          valores, conversiones y calendario propio
-│   ├── fila.py, columna.py
-│   ├── lista.py, registro.py, acceso.py        (estructuras y acceso 1-based)
-│   ├── tabla.py          estructura central y sus operaciones
-│   ├── lector_csv.py     máquina de estados CSV propia
-│   └── escritor_csv.py   escritura CSV propia
-├── expresiones/
-│   ├── operadores.py     aritméticos, relacionales y lógicos con tipos
-│   └── evaluador.py      EvaluadorExpresiones(ArepaVisitor)
-├── ml/                   BIBLIOTECA PROPIA DE MACHINE LEARNING
-│   ├── preprocesamiento.py  imputación, one-hot y estandarización
-│   ├── modelo.py         interfaz ModeloML y validación de hiperparámetros
-│   ├── regresion_lineal.py  descenso de gradiente por lotes
-│   ├── perceptron.py     clasificador lineal binario
-│   ├── arbol_decision.py CART/Gini multiclase
-│   └── metricas.py       MAE, MSE, RMSE, R², exactitud, F1 y matriz
-├── runtime/
-│   ├── simbolos.py       TablaSimbolos, FuncionArepa
-│   ├── contexto.py       ContextoEjecucion (salida, tablas, errores, archivos)
-│   ├── ejecutor.py       punto de entrada del Visitor
-│   ├── ejecucion_datos.py       datos, agregaciones y CSV
-│   ├── ejecucion_graficas.py    visualización
-│   ├── ejecucion_control.py    funciones y ciclos
-│   ├── ejecucion_estructuras.py estructuras y builtins
-│   └── ejecucion_modelos.py    modelos y métricas
-├── graficas/             MOTOR GRÁFICO PROPIO (Fase 3)
-│   ├── png.py            PNG: chunks, CRC-32, Adler-32, DEFLATE fijo + LZ77
-│   ├── fuente.py         fuente bitmap 5x7 propia
-│   ├── lienzo.py         búfer RGB y primitivas rasterizadas a mano
-│   ├── escalas.py        EscalaLineal, EscalaBanda, ticks "bonitos"
-│   └── tipos_grafica.py  Serie, Grafica, los cinco dibujos y la estadística
-├── errores_base.py       jerarquía propia de errores
-└── cli/main.py           interfaz de línea de comandos
-```
-
-**Dependencias entre capas** (de abajo hacia arriba):
-`errores_base` → `datos` → `expresiones` → `ml` → `runtime` → `cli`. El motor
-gráfico depende solo de `errores_base` (y de la biblioteca estándar);
-`runtime` usa tanto `ml` como `graficas` desde el ejecutor. Solo `lenguaje/`
-toca el runtime de ANTLR4. Ni `datos`, ni `expresiones`, ni `ml`, ni
-`graficas` importan bibliotecas externas.
-
-### 1.1 Dos procesos: generación y ejecución
-
-La gramática no se interpreta en tiempo de ejecución: ANTLR la convierte
-**antes** en clases Python. Por eso el diagrama separa el proceso de
-desarrollo (generar el front-end) del proceso de ejecución (correr un
-programa). Mezclarlos hacía parecer que `analizador.py` leía el `.g4` en cada
-corrida, y no es así.
-
-**a) Generación del front-end (solo al cambiar la gramática)**
-
-```mermaid
-flowchart LR
-  G4["gramatica/Arepa.g4"] --> ANTLR["ANTLR 4.13.2"]
-  ANTLR --> LEX["generado/ArepaLexer.py"]
-  ANTLR --> PAR["generado/ArepaParser.py"]
-  ANTLR --> VIS["generado/ArepaVisitor.py"]
-```
-
-**b) Ejecución de un programa**
-
-```mermaid
-flowchart TB
-  P["programa.arepa"] --> CLI["src/cli/main.py"]
-  CLI --> ANA["src/lenguaje/analizador.py"]
-  LEX -.->|import| ANA
-  PAR -.->|import| ANA
-  ANA --> ARB["árbol de análisis"]
-  ARB --> EJ["src/runtime/ejecutor.py<br/>EjecutorArepa"]
-  EJ --> EXP["src/expresiones/"]
-  EJ --> DAT["src/datos/"]
-  EJ --> SIM["src/runtime/simbolos.py<br/>TablaSimbolos"]
-  EJ --> ML["src/ml/"]
-  EJ --> GRA["src/graficas/"]
-  EJ --> CONS["cuenteme → consola"]
-  DAT --> CSV["guarde → CSV"]
-  ML --> CSV
-  GRA --> PNG["pinte + guardela/muestrela → PNG"]
-```
-
-Las salidas no se mezclan: `guarde` es la única operación que escribe CSV;
-`pinte` construye la gráfica en memoria y `guardela` o `muestrela` deciden su
-destino PNG. `muestrela` escribe en `salidas/` e intenta abrir el archivo,
-mientras que `guardela` respeta la ruta indicada.
-
-### 1.2 Secuencia general de una ejecución
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant U as Usuario
-  participant CLI as CLI
-  participant A as analizador.py
-  participant E as EjecutorArepa
-  participant S as TablaSimbolos
-  participant D as Tabla / CSV
-  participant M as src/ml
-  participant G as src/graficas
-  U->>CLI: programa.arepa --ejecutar
-  CLI->>A: leer y analizar el texto
-  A-->>CLI: árbol + errores
-  CLI->>E: ejecutar(árbol)
-  E->>S: declarar variables y funciones
-  E->>D: monte, escoja, filtre, junte, resuma
-  E->>M: entrene, prediga, clasifique, evalua
-  M-->>E: modelo, predicciones y métricas
-  E->>G: pinte y guardela / muestrela
-  G-->>E: PNG escrito
-  E-->>U: consola + CSV + PNG
-```
-
-### 1.3 Flujo histórico en una sola imagen
-
-El esquema anterior reemplaza al diagrama que mezclaba la generación de
-ANTLR con la ejecución y terminaba en `PNG / CSV`. Para una vista compacta:
-
-```text
-DESARROLLO:  Arepa.g4 ──ANTLR──▶ generado/*.py
-EJECUCIÓN:   programa.arepa ──▶ CLI ──▶ analizador ──▶ árbol ──▶ EjecutorArepa
-                                                                    ├─▶ datos/ ──▶ guarde ──▶ CSV
-                                                                    ├─▶ ml/ ────▶ evalua / prediga
-                                                                    └─▶ graficas/ ─▶ pinte ─▶ guardela | muestrela ─▶ PNG
-```
-
-
----
-
-## 2. Gramática y regeneración
-
-* Fuente única: `gramatica/Arepa.g4` (599 líneas), gramática **combinada**
-  lexer + parser para ANTLR 4.13.2.
-* Especificación formal equivalente: `docs/03_gramatica_ebnf.md`.
-* Regla inicial: `programa : NL* QUIHUBO NL+ sentencias? NL* CHAO NL* EOF`
-  (`Arepa.g4:38`).
-* El vocabulario tiene **64 reglas** y **79 palabras reservadas**.
-
-Sincronía verificable:
-
-```bash
-python3 herramientas/chequeo_gramatica.py
-# Sincronizado: 64/64 producciones equivalentes y 79 reservadas.
-```
-
-El verificador ya no compara solo nombres: traduce cada producción del `.g4`
-y de la EBNF a un árbol canónico y exige que coincidan las alternativas, su
-orden, las secuencias, los opcionales, las repeticiones y los terminales.
-También comprueba la lista ordenada de la sección 10 y expande
-`PALABRA_RESERVADA` para comparar `nombre_columna`.
-
-Regeneración (requiere **Java 11+** y el jar de ANTLR 4.13.2):
-
-```bash
-chmod +x generar_gramatica.sh
-./generar_gramatica.sh
-# o directamente:
-antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
-```
-
-El código generado vive en `generado/` (`ArepaLexer.py`, `ArepaParser.py`,
-`ArepaVisitor.py`, tablas `.tokens`/`.interp`) y **no se edita a mano**. La
-versión del runtime debe coincidir (`antlr4-python3-runtime==4.13.2` en
-`requirements.txt`).
-
----
-
-## 3. Front-end y Visitor
-
-* `src/lenguaje/analizador.py::analizar` (línea 30) crea el lexer y el parser
-  de ANTLR, les instala el listener propio (`src/lenguaje/errores.py`,
-  `ErroresArepa`, línea 17) y devuelve `(parser, árbol, errores)` sin detenerse
-  ante errores.
-* `src/lenguaje/errores.py::_traducir` (línea 222) convierte los mensajes
-  técnicos de ANTLR a español: traduce nombres de tokens
-  (`_traducir_token`, línea 160), recorta el conjunto de opciones a seis
-  (`_traducir_conjunto`, línea 191) y añade una pista cuando se usa una palabra
-  reservada como variable (`_pista_reservada`, línea 208).
-* `src/lenguaje/arbol.py::imprimir_arbol` (línea 46) recorre el árbol con ramas
-  ASCII y oculta los saltos de línea.
-
-El intérprete es un **Visitor**:
-
-* `src/runtime/ejecutor.py::EjecutorArepa` recorre el
-  programa.
-* `src/expresiones/evaluador.py::EvaluadorExpresiones`
-  calcula expresiones. El evaluador **no** usa `eval()`/`exec()`: la
-  precedencia ya está codificada en la forma del árbol por la gramática. Para
-  las expresiones que pueden ser un pipeline completo, delega en el callback
-  `evaluar_expresion` que le pasa el ejecutor.
-
----
-
-## 4. Tabla de símbolos y contexto
-
-* `src/runtime/simbolos.py::TablaSimbolos` (línea 52): ámbitos encadenados
-  hijo → padre; `declarar` escribe en el ámbito actual y `buscar`/`asignar`
-  suben por la cadena. `x = valor` declara si no existe en ningún ámbito visible
-  y asigna si existe.
-* `src/runtime/simbolos.py::FuncionArepa` (línea 112): guarda el cuerpo de una
-  función `invente` y el ámbito donde se definió (closure), lo que permite
-  recursión.
-* `src/runtime/simbolos.py::validar_identificador` (línea 29): letra Unicode
-  (ñ, tildes) o `_` al inicio.
-* `src/runtime/contexto.py::ContextoEjecucion` (línea 86): estado global —
-  símbolos raíz, salida de `cuenteme`, tablas y registro de errores y de
-  archivos generados. El formato de valores y tablas en texto es propio
-  (`a_texto`, línea 31), reemplazando a `tabulate`.
-
-Solo las funciones crean ámbito; `fijese_si`, los ciclos y `recorra` no.
-
----
-
-## 5. Datos propios
-
-* `src/datos/tabla.py::Tabla` (línea 35): lista de `Columna` + lista de `Fila`
-  con operaciones propias (`seleccionar`, `filtrar`, `ordenar` con merge sort
-  propio y estable, `crear_columna`, `quitar_duplicados`, `rellenar_vacios`,
-  `agrupar`, `desde_filas`, `fila_como_registro`, `poner_celda`, `poner_fila`).
-* `src/datos/lista.py` / `registro.py`: estructuras propias (sin `dict` ni
-  `collections`); `acceso.py` centraliza la lectura/escritura **1-based**
-  (`obtener`, `asignar`, `valores_para_fila`).
-* `src/datos/lector_csv.py::LectorCSV` (línea 30): máquina de estados con
-  comillas, escape `""`, separador configurable y BOM tolerado
-  (`utf-8-sig`). `src/datos/escritor_csv.py::EscritorCSV` (línea 24): escritura
-  CSV UTF-8 sin BOM.
-* `src/datos/tipos.py`: valores del DSL (`nada`, `infinito`), conversiones y
-  calendario gregoriano propio (año bisiesto con regla 100/400).
-
-Detalle de algoritmos y limitaciones: `docs/05_arquitectura.md` §2–§4.
-
----
-
-## 6. Motor gráfico propio
-
-El motor vive en `src/graficas/` y se apoya solo en la biblioteca estándar
-(`math`, `os`, `struct`, `unicodedata`).
-
-### 6.1 Formato PNG (`png.py`)
-
-| Elemento | Función (línea) |
+| Ruta | Responsabilidad |
 |---|---|
-| Firma + chunks IHDR/IDAT/IEND | `codificar_png` (523), `_chunk` (456) |
-| CRC-32 con tabla propia | `crc32` (78), `_construir_tabla_crc` (61) |
-| Adler-32 (zlib) | `adler32` (94) |
-| Envoltura del flujo comprimido | `_envolver_deflate` (447) |
-| Filtro 0 por fila | `_armar_scanlines` (507) |
-| DEFLATE fijo (Huffman BTYPE=01) | `_comprimir_fijo` (392) |
-| DEFLATE guardado (BTYPE=00) | `_comprimir_guardado` (418) |
-| LZ77 voraz + hash de 3 bytes | `_BuscadorLz77` (322) |
-| Escritura y lectura de cabecera | `escribir_png` (561), `leer_cabecera` (577) |
+| `gramatica/Arepa.g4` | Gramática combinada de lexer y parser |
+| `generado/` | Artefactos de ANTLR; se regeneran, no se editan manualmente |
+| `src/lenguaje/` | Análisis, traducción de diagnósticos e impresión del árbol |
+| `src/datos/` | Tipos, tablas, listas, registros y lectura/escritura CSV |
+| `src/expresiones/` | Operadores y evaluación de expresiones |
+| `src/runtime/` | Visitor, ámbitos y contexto de ejecución |
+| `src/ml/` | Preprocesamiento, modelos y métricas |
+| `src/graficas/` | Escalas, dibujos y codificación PNG |
+| `src/utiles/` | Conversión de enteros extensos y SHA-256 |
+| `src/cli/` | Línea de comandos y consola interactiva |
 
-Constantes: profundidad 8, color RGB (tipo 2), compresión 0, filtro 0,
-entrelazado 0 (`_PROFUNDIDAD`…`_INTERLACE_NINGUNO`, líneas 44-48). El modo por
-defecto es Huffman fijo; el modo guardado existe como alternativa verificable.
-No se implementan los filtros 1-4 ni los bloques dinámicos (BTYPE=10).
+La dependencia externa de ejecución es `antlr4-python3-runtime==4.13.2`.
+La lógica de datos, modelos y gráficas se implementa en el repositorio.
 
-### 6.2 Lienzo (`lienzo.py`)
+## Generación y ejecución
 
-`Lienzo` (línea 100) es un `bytearray` RGB. Primitivas: `poner` (149), `linea`
-(Bresenham con grosor por sello, 160), `rectangulo` (191), `rectangulo_relleno`
-(202), `circulo_relleno` (por filas con `math.isqrt`, sin coma flotante, 209) y
-`texto` (255). Todo trazo se recorta contra los bordes; no hay antialiasing.
-`pixeles` (287) entrega `bytes` y `guardar` (297) codifica a PNG.
+La generación transforma `Arepa.g4` en los artefactos de `generado/`. Requiere
+Java 11 o posterior y ANTLR 4.13.2. La ejecución usa esos artefactos con el
+runtime de Python y no requiere Java.
 
-### 6.3 Fuente (`fuente.py`)
-
-Fuente bitmap 5x7: `ANCHO = 5`, `ALTO = 7`, `SEPARACION = 1` (líneas 39-41).
-`GLIFOS` (línea 184) tiene un glifo por carácter ASCII imprimible;
-`normalizar_texto` (220) quita tildes y diéresis con NFD y un mapa propio
-`_ESPECIALES`; el glifo de reemplazo es `?`. `filas` (269), `ancho_texto`
-(287) y `alto_texto` (303) los consume el lienzo y el motor.
-
-### 6.4 Escalas (`escalas.py`)
-
-* `EscalaLineal` (154): mapeo afín dominio → rango, inverso y `ticks` con pasos
-  "bonitos" (`paso_bonito`, 92). Dominio degenerado se expande.
-* `EscalaBanda` (226): categorías en bandas iguales, centro de banda para
-  barras y cajas.
-* `formatear` (119): número a etiqueta legible.
-
-### 6.5 Tipos de gráfica (`tipos_grafica.py`)
-
-`TIPOS = ("barras", "lineas", "histograma", "dispersion", "cajas")` (línea 54),
-paleta propia (`PALETA`, 56) y márgenes fijos (67-70). Las clases `Serie` (274)
-y `Grafica` (400) construyen el marco (título, ejes, rejilla, leyenda) y los
-cinco dibujos: `_dibujar_barras` (679), `_dibujar_lineas` (752),
-`_dibujar_histograma` (794), `_dibujar_dispersion` (862), `_dibujar_cajas`
-(898). `cuartiles` (326) y `cubetas_histograma` (355) exponen la estadística
-para las pruebas. La función de entrada es `dibujar(tipo, series, **opciones)`
-(1058).
-
-### 6.6 Integración con el runtime
-
-`EjecutorArepa.visitInstruccion_grafica` (`src/runtime/ejecucion_graficas.py`) hace
-toda la orquestación: valida la tabla y las columnas, aplica los valores por
-defecto, construye las `Serie`, llama a `dibujar(..., ancho=800, alto=480)` y
-cierra con `guardela` o `muestrela`. Auxiliares clave: `_columnas_de_clausula`
-(797), `_indice_columna` (808), `_primera_columna_categorica` (822),
-`_es_numerica` (830), `_columnas_numericas` (864), `_validar_eje_x` (873),
-`_guardar_png` (895) y `_abrir_grafica` (911). Los fallos propios del dibujo y de la
-escritura lanzan `ErrorGrafica` (`src/errores_base.py:83`); una variable
-inexistente sigue siendo `ErrorVariable` y una columna inexistente,
-`ErrorColumna`.
-
-### 6.7 Motor de machine learning (`src/ml/`)
-
-El runtime trata un modelo como **un valor más del lenguaje**: `entrene`
-construye y entrena el modelo, lo guarda en la `TablaSimbolos` y desde ese
-momento se pasa por nombre a `prediga`, `clasifique` o `evalua`.
-
-```mermaid
-flowchart LR
-  A["monte ... CSV"] --> B["Tabla de entrenamiento"]
-  B --> C["Preprocesador<br/>(aprende medias, modas y categorías)"]
-  C --> D["X e y"]
-  D --> E{"algoritmo_ml"}
-  E -->|regresion| F["RegresionLineal"]
-  E -->|perceptron| G["Perceptron"]
-  E -->|arbol| H["ArbolDecision"]
-  F --> I["Modelo entrenado"]
-  G --> I
-  H --> I
-  I --> J["TablaSimbolos<br/>(variable del programa)"]
-  J --> K["prediga / clasifique<br/>copia la tabla y agrega columna"]
-  J --> L["evalua<br/>modelo.evaluar(tabla)"]
-  L --> M["reales + predicciones"]
-  M --> N["metricas.resumen_regresion / resumen_clasificacion"]
-```
-
-* `src/ml/preprocesamiento.py`: imputación por media o moda, one-hot encoding
-  y estandarización. Aprende **solo** con la tabla de entrenamiento y reaplica
-  la misma codificación a las filas nuevas.
-* `src/ml/modelo.py`: interfaz `ModeloML`, jerarquía regresión/clasificación y
-  validación de hiperparámetros. `evaluar(tabla)` devuelve `(reales,
-  predicciones)`.
-* `src/ml/regresion_lineal.py`, `perceptron.py` y `arbol_decision.py`: los tres
-  algoritmos, sin numpy ni scikit-learn.
-* `src/ml/metricas.py`: MAE, MSE, RMSE, R², exactitud, matriz de confusión,
-  precisión, recall y F1.
-
-La selección de algoritmo ocurre en el ejecutor: `entrene` lee
-`algoritmo_ml` y construye **un solo** modelo. Las métricas no las calcula el
-modelo: el ejecutor obtiene los valores reales y las predicciones con
-`modelo.evaluar(tabla)` y llama a `metricas.resumen_regresion` o
-`metricas.resumen_clasificacion`.
-
-**Limitación metodológica:** `evalua` mide sobre la tabla que recibe. Si esa
-tabla es la misma del entrenamiento, el resultado es una métrica de
-entrenamiento y no una estimación de generalización. La guía de ML explica
-cómo generar una partición reproducible con
-`herramientas/partir_datos.py` y evaluar sobre el conjunto de prueba.
-
-
----
-
-## 7. CLI (`src/cli/main.py`)
-
-* `main` (línea 121) define los argumentos: `--ayuda/--help/-h`, `--version`,
-  `--arbol`, `--tokens`, `--ejecutar` y `--sin-ventana` (que fija
-  `AREPA_SIN_VENTANA=1`, líneas 179-180).
-* `_ejecutar` (234) corre el programa con el runtime propio.
-* `_mostrar_contexto` (74) imprime el fragmento de la línea con el caret `^`.
-* `_resumen_archivos` (105) imprime el bloque final `Archivos generados:` con
-  ruta, tipo y bytes, a partir del registro del `ContextoEjecucion`.
-* Códigos de salida: 0 (válido), 1 (con errores), 2 (archivo no encontrado).
-
----
-
-## 8. Manejo de errores
-
-Jerarquía propia en `src/errores_base.py`:
-
-```text
-ErrorArepa
-├── ErrorSemantico ── ErrorVariable, ErrorColumna, ErrorTipos, ErrorOperacion
-└── ErrorEjecucion ── ErrorArchivo ── ErrorCSV
-                   └─ ErrorGrafica
-```
-
-Cada error lleva `mensaje`, `linea`, `columna` y `contexto`. Los errores
-léxicos y sintácticos los produce el listener del front-end; los semánticos y
-de ejecución, el runtime y el motor gráfico. Se reportan **en español, con
-línea y columna**, y la CLI añade el caret. Los errores descubiertos sobre
-datos (por ejemplo, una celda que no convierte) llevan la línea exacta del
-archivo de datos, aunque la línea del programa es aproximada.
-
-Las señales internas de control de flujo (`RetornoFuncion`, `SalirCiclo`,
-`SeguirCiclo`) **no** son errores: viajan como excepciones y el ejecutor las
-convierte en error semántico solo si escapan de su contexto.
-
----
-
-## 9. Pruebas
-
-* Corredor maestro: `pruebas/test_proyecto.py` (10 suites).
-* **370 pruebas** en total; el conteo canónico está en
-  `herramientas/chequeo_pruebas.py`.
-
-| Suite | Archivo | Pruebas |
-|---|---|---:|
-| Front-end | `test_front.py` | 55 |
-| Árbol | `test_arbol.py` | 28 |
-| Datos | `test_datos.py` | 43 |
-| Estructuras | `test_estructuras.py` | 48 |
-| Expresiones | `test_expresiones.py` | 16 |
-| Símbolos | `test_simbolos.py` | 15 |
-| Runtime | `test_runtime.py` | 51 |
-| Gráficas | `test_graficas.py` | 63 |
-| Machine learning | `test_ml.py` | 31 |
+Para regenerar y comprobar la equivalencia con la EBNF:
 
 ```bash
-.venv/bin/python herramientas/chequeo_pruebas.py   # 10 suites, 370 pruebas
-python3 herramientas/chequeo_gramatica.py          # 64/64 reglas, 79 reservadas
+bash generar_gramatica.sh
+python herramientas/chequeo_gramatica.py
 ```
 
-La suite de gráficas cubre el codificador PNG (20), la fuente (3), el lienzo
-(7), las escalas (4), los cinco dibujos y regresiones de ejes (14), la
-integración con el runtime (11) y el caso de estudio (4).
+La [guía de gramática](../../gramatica/README.md) detalla la configuración.
+El verificador compara alternativas, secuencias, opcionales, repeticiones y
+terminales de las 64 reglas, además de las 79 palabras reservadas.
 
----
+## Recorrido del programa
 
-## 10. Cómo extender
+1. `analizar` crea el lexer y el parser e instala el listener de errores.
+2. La CLI comprueba los diagnósticos antes de iniciar la ejecución.
+3. `EjecutorArepa` recorre el árbol y conserva un `ContextoEjecucion`.
+4. `EvaluadorExpresiones` calcula las expresiones según la precedencia del
+   árbol y delega las operaciones que requieren el ejecutor.
+5. El contexto registra la salida, las tablas, los avisos y los archivos
+   generados; la CLI presenta esos resultados.
 
-### 10.1 Añadir una instrucción
+El Visitor distribuye las operaciones entre estos módulos:
 
-1. **Gramática**: añade la regla en `gramatica/Arepa.g4` y enlázala desde
-   `sentencia` (o desde `operacion_datos` si es una etapa de pipeline). Si
-   agrega palabras reservadas, declara sus tokens en el lexer **antes** de la
-   regla de identificadores.
-2. **Regenerar**: `./generar_gramatica.sh` (requiere Java 11+).
-3. **EBNF**: replica la producción en `docs/03_gramatica_ebnf.md` con el mismo
-   nombre de no terminal y añade la palabra reservada a `PALABRA_RESERVADA`.
-4. **Comprobar sincronía**: `python3 herramientas/chequeo_gramatica.py` debe dar
-   64/64 → ahora N/N reglas y las reservadas nuevas.
-5. **Ejecutor**: implementa `visit<Regla>` en `src/runtime/ejecutor.py`
-   (o en el evaluador si es una expresión). Usa `ContextoEjecucion` para la
-   salida y `TablaSimbolos` para los nombres.
-6. **Errores**: usa las clases de `src/errores_base.py`; nunca lances un
-   `Exception` genérico.
-7. **Catálogo y reglas semánticas**: documenta la instrucción en
-   `docs/02_catalogo_instrucciones.md` y `docs/09_reglas_semanticas.md`.
-8. **Pruebas**: añade un programa positivo/negativo en `pruebas/` y casos en la
-   suite adecuada; actualiza `ESPERADO` en `herramientas/chequeo_pruebas.py` y
-   el conteo en los documentos que lo citan.
+| Módulo en `src/runtime/` | Operaciones |
+|---|---|
+| `ejecutor.py` | Estado compartido, coordinación y entrada al Visitor |
+| `ejecucion_datos.py` | Pipelines, agregaciones y archivos CSV |
+| `ejecucion_graficas.py` | Preparación y exportación de gráficas |
+| `ejecucion_control.py` | Funciones, condicionales y ciclos |
+| `ejecucion_estructuras.py` | Listas, registros, acceso y funciones incorporadas |
+| `ejecucion_modelos.py` | Entrenamiento, predicción, clasificación y evaluación |
 
-### 10.2 Añadir un tipo de gráfica
+## Ámbitos y errores
 
-1. **Gramática**: añade el literal a `tipo_grafica` (`Arepa.g4:281`) y su token
-   en el lexer; añade la palabra a `PALABRA_RESERVADA` en la EBNF.
-2. **Motor**: añade el nombre a `TIPOS` (`tipos_grafica.py:54`) e implementa
-   `_dibujar_<tipo>` (línea aprox. junto a los otros cinco) y su rama en
-   `renderizar` (1046). Reutiliza `EscalaLineal`/`EscalaBanda`, `Lienzo` y la
-   fuente propia.
-3. **Estadística**: si necesitas cálculos nuevos, expón una función pública
-   como `cuartiles`/`cubetas_histograma` para poder probarla sin mirar píxeles.
-4. **Runtime**: normalmente no hay que tocar `visitInstruccion_grafica`; los
-   valores por defecto por tipo sí pueden requerir una rama nueva (por ejemplo,
-   el histograma fuerza una sola columna).
-5. **Pruebas**: añade un caso de dibujo (PNG válido 800x480) y otro de
-   integración desde el DSL, ambos en `pruebas/test_graficas.py`. Actualiza el
-   conteo canónico.
+`TablaSimbolos` encadena los ámbitos hijo y padre. Una asignación actualiza
+el nombre visible o lo declara si todavía no existe. Solo las funciones
+crean un ámbito; los condicionales y ciclos conservan el ámbito actual.
+`FuncionArepa` guarda el cuerpo y el entorno de definición para permitir
+closures y recursión.
 
----
+Los errores de dominio derivan de `ErrorArepa` y conservan mensaje, línea,
+columna y contexto. La CLI añade la fuente, el indicador de ubicación y una
+ayuda de corrección. Las líneas empiezan en 1 y las columnas en 0. En CSV
+se distingue la posición del programa de la línea del archivo de datos.
 
-## 11. Decisiones y limitaciones
+`RetornoFuncion`, `SalirCiclo` y `SeguirCiclo` son señales internas de
+control. Se convierten en error semántico únicamente cuando escapan de su
+contexto válido. Los avisos aritméticos se registran por separado de la
+salida de `cuenteme`.
 
-* **Sin dependencias externas para la lógica del DSL.** La única externa es
-  `antlr4-python3-runtime==4.13.2`, exigida por el curso para el lexer/parser.
-* **PNG propio** con profundidad 8, color RGB, filtro 0 y DEFLATE fijo + LZ77;
-  no hay filtros 1-4, bloques dinámicos, transparencias ni entrelazado.
-* **800x480 fijo**; las gráficas no tienen tamaño configurable ni subtítulos,
-  eje secundario o gráficas apiladas.
-* **Sin antialiasing** y **tildes simplificadas** en la fuente 5x7 (los
-  descendentes g, p, q, y, j se dibujan dentro de la caja).
-* **Sin escalas logarítmicas ni de fechas**: las fechas se grafican como texto
-  o como índice continuo.
-* **Sin partición automática dentro del DSL**: `evalua` mide sobre la tabla
-  que recibe. Para una métrica de generalización hay que generar una partición
-  reproducible con `herramientas/partir_datos.py` y pasar la tabla de prueba a
-  `evalua`; la guía de ML lo documenta paso a paso.
-* Determinismo: LZ77 voraz + Huffman fijo y fuente sin aleatoriedad hacen que
-  dos ejecuciones produzcan el mismo PNG (verificable con `sha256sum`).
+La CLI devuelve 0 si el programa es válido, incluso con avisos; 1 ante
+errores del programa y 2 ante problemas de argumentos o lectura de la fuente.
 
-El detalle ampliado de cada limitación está en `docs/11_informe_fase3.md` §4 y
-en `docs/05_arquitectura.md`.
+## Ampliar el lenguaje
 
-## Organización y contratos del cierre técnico
+Para añadir una instrucción:
 
-`src/runtime/ejecutor.py` conserva el estado y coordina el Visitor. Se compone
-con cinco visitantes por responsabilidad: `ejecucion_datos.py`,
-`ejecucion_graficas.py`, `ejecucion_control.py`, `ejecucion_estructuras.py` y
-`ejecucion_modelos.py`. Todos comparten el mismo contexto; no hay un segundo
-intérprete ni duplicación de algoritmos. Las definiciones de las tablas de
-trazabilidad apuntan al módulo que realmente implementa cada operación.
+1. Modifique `gramatica/Arepa.g4` y enlace la regla desde `sentencia` o
+   `operacion_datos`. Declare los tokens reservados antes de los identificadores.
+2. Actualice la producción equivalente y las palabras reservadas de
+   [la EBNF](../03_gramatica_ebnf.md), regenere y compruebe la sincronización.
+3. Implemente `visit<Regla>` en el módulo de ejecución correspondiente, o
+   en el evaluador si se trata de una expresión.
+4. Utilice el contexto para la salida, la tabla de símbolos para los nombres
+   y las clases de error del dominio para los diagnósticos.
+5. Añada casos positivos, negativos y de límites en la suite correspondiente.
+   Actualice los conteos esperados del verificador cuando cambie la cobertura.
+6. Documente la instrucción en el catálogo y las reglas semánticas.
 
-Los nombres de columna son únicos. En CSV, los campos citados son texto
-explícito; se conservan espacios, cadenas vacías y textos numéricos como
-"001". Los campos no citados mantienen la inferencia, con `nada` para un
-faltante. El escritor cita textos ambiguos para conservar valores y tipos,
-incluso cuando una fila contiene solamente una celda vacía o faltante.
+Para añadir una gráfica, amplíe `tipo_grafica` y los tokens, registre el tipo
+en `src/graficas/tipos_grafica.py` e implemente su dibujo y selección en
+`renderizar`. Reutilice el lienzo, las escalas y la fuente. Exponga los
+cálculos estadísticos como funciones comprobables y añada pruebas del PNG y
+de integración desde el DSL. Revise los valores predeterminados del Visitor.
 
-Los enteros decimales se leen y escriben por bloques de nueve dígitos en
-`src/utiles/enteros.py`, sin modificar límites globales de Python. Los modelos
-y sus métricas operan con decimales finitos: rechazan NaN, infinitos,
-desbordamiento y entrenamiento divergente en vez de anunciar éxito. Media,
-desviación, MAE, RMSE y R² usan escalas de cálculo que evitan desbordamientos
-intermedios cuando el resultado es representable. Un modelo con pocas épocas
-puede seguir siendo válido sin haber alcanzado un ajuste preciso.
+## Verificación y entrega
 
-`python herramientas/verificar_entrega.py` comprueba gramática, documentación
-y todas las pruebas. `python herramientas/crear_entrega.py --probar` empaqueta
-los archivos actuales, valida un manifiesto SHA-256 e instala y prueba la
-entrega en un entorno virtual nuevo. La ejecución automatizada está en
-`.github/workflows/verificacion.yml`.
+```bash
+python herramientas/verificar_entrega.py
+python herramientas/crear_entrega.py --probar
+```
+
+La [guía de pruebas](../../ejercicios/pruebas/README.md) explica los modos y
+los resultados contrastados. El [informe técnico](../13_cierre_tecnico.md)
+conserva las evidencias registradas. Las [herramientas](../../herramientas/README.md)
+permiten comprobar documentación, gramática e integridad del paquete.
+
+## Límites de implementación
+
+Las gráficas tienen tamaño fijo de 800 × 480 y salida PNG RGB de 8 bits,
+sin transparencia, entrelazado ni antialiasing. El codificador utiliza filtro
+0 y DEFLATE con Huffman fijo y LZ77. La fuente de 5 × 7 simplifica las tildes.
+No se ofrecen escalas logarítmicas, ejes secundarios ni gráficas apiladas.
+
+Los nombres de columna deben ser únicos. Los contratos de CSV y los límites
+numéricos se explican en el [manual de usuario](usuario.md#conservación-de-datos-y-límites-numéricos).
+La [guía de modelos](../11_guia_machine_learning.md) describe la separación de
+entrenamiento y prueba: `evalua` utiliza la tabla recibida, sin crear una
+partición automática.

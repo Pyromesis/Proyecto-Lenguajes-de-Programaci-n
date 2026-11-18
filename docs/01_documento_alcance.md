@@ -1,4 +1,4 @@
-# AREPA — Documento de alcance (Fases 1–3, acumulativa, Linux)
+# AREPA — Documento de alcance
 
 **AREPA**: *Análisis Reproducible de datos Escrito con Palabras Autóctonas*
 Lenguaje de dominio específico (DSL) para ciencia de datos y visualización.
@@ -121,7 +121,7 @@ mensajes vive en `docs/05_arquitectura.md`.
 | Gramática implementada en ANTLR4 (lexer + parser Python) | lista, en `gramatica/Arepa.g4` y `generado/` |
 | Pruebas léxicas y sintácticas positivas y negativas | 55 de 55 pasan (`pruebas/test_front.py`: 10 positivos, 22 negativos, 10 de diagnóstico y 13 de CLI) |
 | Pruebas de la biblioteca propia (árbol, datos, estructuras, expresiones, símbolos, runtime, gráficas, ML) | 295 de 295 pasan (las 8 suites propias; `pruebas/test_proyecto.py`: 350 en total) |
-| Reporte de errores comprensibles con línea y columna | listo, en `src/lenguaje/errores.py` y `src/errores_base.py` |
+| Reporte de errores comprensibles con línea y columna | Implementado en `src/lenguaje/errores.py` y `src/errores_base.py` |
 | Interfaz de línea de comandos | lista, en `src/cli/main.py` |
 
 ### 7.1 Ampliación verificada de machine learning

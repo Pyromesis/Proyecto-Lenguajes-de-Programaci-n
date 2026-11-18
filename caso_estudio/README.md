@@ -37,63 +37,12 @@ El programa completo está en [`programa.arepa`](programa.arepa). Se ejecuta
 desde la raíz del repositorio con:
 
 ```bash
-AREPA_SIN_VENTANA=1 .venv/bin/python src/cli/main.py caso_estudio/programa.arepa --ejecutar
+python src/cli/main.py caso_estudio/programa.arepa --ejecutar --sin-ventana
 ```
 
-Extracto del flujo (las cinco gráficas se detallan en la sección 6):
-
-```text
-quihubo
-
-# Etiqueta legible de la década: "1940s", "1950s" o "1960s".
-# El sufijo evita que la etiqueta se confunda con un valor numérico.
-invente rotulo_decada(decada) {
-    fijese_si (decada < 1950) {
-        devuelva "1940s"
-    }
-    fijese_si (decada < 1960) {
-        devuelva "1950s"
-    }
-    devuelva "1960s"
-}
-
-pasajeros = monte "caso_estudio/datos/pasajeros.csv" con encabezado, separador ","
-
-preparada = pasajeros
-|> escoja [anio, mes, pasajeros]
-|> deje donde pasajeros > 0
-|> cree periodo = anio + (mes - 1) / 12
-|> cree decada = anio - (anio % 10)
-|> cree decada_etiqueta = rotulo_decada(decada)
-|> convierta decada -> texto
-|> escoja [anio, mes, pasajeros, periodo, decada_etiqueta]
-|> renombre decada_etiqueta -> decada
-
-resumen = preparada
-|> junte por [anio]
-|> resuma total = sume(pasajeros),
-   promedio = promedie(pasajeros),
-   maximo_mes = maximo(pasajeros),
-   registros = cuente()
-
-p_1949 = preparada
-|> deje donde anio == 1949
-
-p_1960 = preparada
-|> deje donde anio == 1960
-
-cuenteme "Registros limpios:", cuente(preparada)
-cuenteme "Total pasajeros:", sume(preparada, pasajeros)
-cuenteme "Promedio mensual:", promedie(preparada, pasajeros)
-cuenteme "Mediana mensual:", mediana(preparada, pasajeros)
-cuenteme "Minimo mensual:", minimo(preparada, pasajeros)
-cuenteme "Maximo mensual:", maximo(preparada, pasajeros)
-cuenteme "Total 1949:", sume(p_1949, pasajeros)
-cuenteme "Total 1960:", sume(p_1960, pasajeros)
-cuenteme "Crecimiento 1949-1960 (%):", (sume(p_1960, pasajeros) - sume(p_1949, pasajeros)) / sume(p_1949, pasajeros) * 100
-
-guarde resumen como "caso_estudio/salidas/pasajeros_por_anio.csv"
-```
+El archivo contiene la preparación de los datos, los indicadores y las
+cinco visualizaciones. Las secciones siguientes explican las transformaciones
+y los resultados sin reproducir el programa completo.
 
 ## 4. Limpieza y transformación
 
@@ -220,7 +169,7 @@ distribución sin escribir código de análisis a mano.
 Desde la raíz del repositorio:
 
 ```bash
-AREPA_SIN_VENTANA=1 .venv/bin/python src/cli/main.py caso_estudio/programa.arepa --ejecutar
+python src/cli/main.py caso_estudio/programa.arepa --ejecutar --sin-ventana
 ```
 
 Salida esperada (código de salida 0):

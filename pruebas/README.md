@@ -1,7 +1,6 @@
-# Pruebas AREPA (Linux, 370 en 10 suites)
+# Pruebas internas de AREPA
 
-Corredor maestro más 10 suites independientes. Todo propio, sin
-bibliotecas externas para lo que se prueba.
+El corredor maestro reúne diez suites unitarias y de integración.
 
 ```bash
 python3 pruebas/test_proyecto.py           # las 10 suites (usa .venv si existe)
@@ -27,7 +26,8 @@ automáticamente si existe; para correr una suite suelta, active el entorno
 | Utilidades | `test_utiles.py` | 20 | `src/utiles/`: matemática, texto, bytes y SHA-256 propios (reemplazan a `math`, `re`, `unicodedata`, `struct` y `hashlib`) y verificación de que `src/` no importa módulos reemplazados |
 | Gráficas | `test_graficas.py` | 63 | motor gráfico propio: PNG (20), fuente (3), lienzo (7), escalas (4), cinco dibujos (14), integración con `pinte` (11) y caso de estudio (4) |
 
-Total: 55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 + 20 = 370.
+**Total: 370 pruebas.** Los ejercicios, diagnósticos adicionales y el
+empaquetado se describen en la [guía de pruebas](../ejercicios/pruebas/README.md).
 
 Carpetas de apoyo:
 
@@ -37,7 +37,7 @@ Carpetas de apoyo:
 | `negativos/` | 22 programas que deben rechazarse (`n01`–`n22` con diagnóstico) |
 | `datos/` | `duro.csv`, `columnas_raras.csv`, `vacia.csv` (casos borde del lector) |
 
-Códigos del CLI verificados: 0 válido, 1 con errores, 2 no encontrado.
+Códigos del CLI verificados: 0 válido, 1 con errores, 2 problemas de argumentos o lectura de la fuente.
 Trazabilidad requisito → prueba: `docs/06_matriz_trazabilidad_corte1.md`,
 `docs/10_matriz_trazabilidad_corte2.md` y
 `docs/12_matriz_trazabilidad_corte3.md`.

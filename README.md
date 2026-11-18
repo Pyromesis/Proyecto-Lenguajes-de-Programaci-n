@@ -1,46 +1,48 @@
 # AREPA
 
-## Integrantes
+AREPA (*Análisis Reproducible de datos Escrito con Palabras Autóctonas*) es
+un lenguaje de dominio específico para preparar datos, calcular estadísticas,
+generar gráficas y entrenar modelos mediante instrucciones en español.
 
-* Camilo Bernal
-* Diego Moreno
-* Yeisson Rincon
+Proyecto de Lenguajes de Programación y Transducción de la Universidad Sergio
+Arboleda, 2026-2. Integrantes: Camilo Bernal, Diego Moreno y Yeisson Rincon.
 
-## Qué es AREPA
+El front-end utiliza ANTLR4. El equipo implementa las estructuras de datos,
+el procesamiento CSV, la evaluación, el motor PNG y los modelos de aprendizaje
+automático. El alcance académico está en el [enunciado](docs/Proyecto_LP.pdf).
 
-AREPA significa **A**nálisis **R**eproducible de datos **E**scrito con
-**P**alabras **A**utóctonas: un lenguaje de dominio específico (DSL) cuyo
-vocabulario sale del español hablado en Colombia, para describir flujos de
-ciencia de datos (cargar CSV, filtrar, calcular, agrupar, resumir, graficar,
-**entrenar modelos, clasificar, predecir y exportar**) en un solo programa
-legible.
+## Instalación
 
-Proyecto de la materia *Lenguajes de Programación y Transducción*
-(Universidad Sergio Arboleda, 2026-2). El front-end se genera con **ANTLR4**
-(herramienta exigida por el curso) y la biblioteca del lenguaje —incluidos
-el preprocesamiento, la regresión lineal, el perceptrón, el árbol de decisión
-y las métricas— está implementada desde cero por el equipo.
+Se requiere Python 3.11 o posterior. Desde la raíz del repositorio:
 
-## Qué problema resuelve
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
 
-Un analista que no programa en Python tiene que escribir scripts completos
-para hacer el mismo flujo una y otra vez: leer un CSV, limpiarlo, calcular
-columnas, resumir y graficar. AREPA describe ese flujo como una receta
-declarativa:
+El lexer y el parser generados están incluidos. Java 11 o posterior solo es
+necesario para [regenerarlos](gramatica/README.md).
+
+## Ejecutar un programa
+
+```bash
+python src/cli/main.py ejemplos/demo.arepa --ejecutar --sin-ventana
+```
+
+El siguiente programa carga ventas, calcula ingresos por ciudad y exporta
+una tabla y una gráfica:
 
 ```text
 quihubo
 ventas = monte "datos/ventas.csv" con encabezado, separador ","
-
-limpias = ventas
-|> escoja [fecha, ciudad, unidades, precio]
+resumen = ventas
 |> deje donde unidades > 0 y precio > 0
 |> cree total = unidades * precio
-
-resumen = limpias
 |> junte por [ciudad]
 |> resuma ingreso = sume(total), registros = cuente()
 
+cuenteme resumen
 pinte barras resumen
 titulo "Ingresos por ciudad"
 ejex ciudad
@@ -51,715 +53,88 @@ guarde resumen como "salidas/resumen_ciudades.csv"
 chao
 ```
 
-Es `ejemplos/demo.arepa` (completo con `cuenteme`, `fijese_si` e `invente`).
-
-Además del pipeline sobre CSV, AREPA puede construir estructuras propias
-en memoria (listas, registros y tablas), recorrerlas y agregarlas sin
-llamar a ninguna biblioteca externa:
-
-```text
-quihubo
-gastos = arme [mes, categoria, valor] con [
-    ["Enero", "Mercado", 120000],
-    ["Enero", "Transporte", 45000],
-    ["Febrero", "Mercado", 135000]
-]
-
-total = sume(gastos, valor)          # agregación fuera de 'resuma'
-recorra fila en gastos {             # recorrido con registro de fila
-    cuenteme fila["mes"], fila["valor"]
-}
-
-resumen = gastos
-|> junte por [categoria]
-|> resuma total = sume(valor), registros = cuente()
-
-guarde resumen como "salidas/memoria_resumen.csv"
-chao
-```
-
-Es `ejemplos/memoria.arepa` (completo con listas, registros, acceso
-1-based, `agregue`, `saque`, `largo`, `columna` y `columnas`).
-
-## Fases del proyecto
-
-El curso plantea tres cortes acumulativos. Los tres están entregados: el
-tercero (gráficas y exportación PNG) se completó en la versión
-`AREPA v0.4 (Fase 3 - visualizacion y producto final)`.
-
-| Corte | Fase | Alcance de la versión | Entregables |
-|---|---|---|---|
-| Primero | Especificación y front-end | Asignaciones y expresiones, carga de CSV, selección de columnas, filtros sencillos y reconocimiento de `pinte` aunque todavía no genere la gráfica | Documento de alcance, catálogo de instrucciones, gramática BNF/EBNF y archivo `.g4`, lexer y parser generados, pruebas léxicas y sintácticas |
-| Segundo | Semántica y procesamiento de datos | Visitor, contexto y tabla de símbolos; selección, filtrado, columnas calculadas, agrupamiento, agregaciones y escritura de resultados en CSV | Reglas semánticas documentadas, tres programas completos y pruebas unitarias y de integración |
-| Tercero | Visualización y producto final | Cinco tipos de gráficas configurables desde el DSL, exportación a PNG con motor propio, CLI estable (`--sin-ventana`, `--ayuda`, `--version`) y caso de estudio con datos reales | Intérprete completo, manual de usuario y técnico, pruebas de regresión y caso de estudio reproducible |
-
-El enunciado completo está en [`Proyecto_LP.pdf`](docs/Proyecto_LP.pdf), sección 5.
-
-Sobre el Corte 2 se agregó una ampliación **A4**: listas, registros y
-tablas en memoria (`arme`), acceso 1-based encadenado, asignación
-indexada, `agregue`/`saque`, `recorra` y agregaciones fuera de `resuma`.
-Se valida con la suite `test_estructuras.py` (48 pruebas) y con
-`ejemplos/memoria.arepa`.
-
-El Corte 3 agregó el **motor gráfico propio** (`src/graficas/`): cinco tipos
-de gráfica (`barras`, `lineas`, `histograma`, `dispersion`, `cajas`) y
-exportación a PNG RGB 800x480 **sin matplotlib ni PIL** (DEFLATE fijo + LZ77,
-CRC-32 y Adler-32 propios). Se valida con la suite `test_graficas.py`
-(63 pruebas), con `ejemplos/graficas.arepa` (que ahora genera cinco PNG
-reales en `salidas/`) y con el caso de estudio de `caso_estudio/`.
-
-El mismo lenguaje también entrena modelos y usa sus predicciones dentro del
-pipeline:
-
-```text
-quihubo
-casas = monte "datos/casas_ml.csv" con encabezado
-
-entrene precio_casas = regresion con casas
-  columnas [area, habitaciones, antiguedad, ciudad]
-  objetivo precio
-  tasa 0.08
-  epocas 2000
-
-estimadas = casas
-|> prediga con precio_casas como precio_estimado
-
-evalua precio_casas con casas
-guarde estimadas como "salidas/regresion_casas.csv"
-chao
-```
-
-Es `ejemplos/regresion.arepa`; los equivalentes de clasificación están en
-`ejemplos/clasificacion.arepa` (perceptrón) y
-`ejemplos/arbol_decision.arepa` (árbol multiclase).
-
-**Ampliación verificada — Machine learning (todo propio):**
-
-* `src/ml/` implementa desde cero preprocesamiento (imputación por media/moda,
-  one-hot encoding y estandarización), regresión lineal por descenso de
-  gradiente, perceptrón binario, árbol de decisión CART/Gini y métricas
-  (MAE, MSE, RMSE, R², exactitud, matriz de confusión, precisión, recall y F1);
-* nuevas instrucciones `entrene`, `prediga`, `clasifique` y `evalua`, con
-  validación semántica de hiperparámetros y de tipos de modelo;
-* 3 conjuntos de datos (`casas_ml.csv`, `estudiantes_ml.csv`,
-  `riesgo_ml.csv`), 3 ejemplos ejecutables y 3 CSV de evidencia en `salidas/`;
-* partición reproducible entrenamiento/prueba con
-  `herramientas/partir_datos.py` y evaluación honesta sobre datos no usados en
-  el ajuste (ver `docs/11_guia_machine_learning.md` §2.4);
-* guía dedicada: `docs/11_guia_machine_learning.md`.
-
-## Cómo funciona AREPA
-
-### 1. Arquitectura general
-
-```mermaid
-flowchart TB
-  subgraph Desarrollo["Desarrollo: generar el front-end (solo al cambiar la gramática)"]
-    G4["gramatica/Arepa.g4"] --> ANTLR["ANTLR 4.13.2"]
-    ANTLR --> GEN["generado/<br/>ArepaLexer · ArepaParser · ArepaVisitor"]
-  end
-  subgraph Ejecucion["Ejecución: correr un programa"]
-    A["Programa .arepa"] --> B["CLI"]
-    B --> C["analizador.py"]
-    GEN -.->|import| C
-    C --> D["Árbol de análisis"]
-    D --> E["Visitor / Ejecutor"]
-    E --> F["Tabla de símbolos"]
-    E --> G["Evaluador de expresiones"]
-    E --> H["Operaciones de datos"]
-    E --> I["Motor de machine learning"]
-    E --> I2["Motor de gráficas"]
-    H --> J["Tabla · Fila · Columna"]
-    H --> K["Lector y escritor CSV"]
-    I --> L["Preprocesamiento"]
-    I --> M["Regresión · Perceptrón · Árbol"]
-    I --> N["Métricas"]
-    I2 --> R["Lienzo · PNG · escalas"]
-    E --> O["cuenteme → consola"]
-    H --> P["guarde → CSV"]
-    I --> P
-    I2 --> Q["pinte → gráfica en memoria"]
-    Q --> Q1["guardela → PNG en la ruta"]
-    Q --> Q2["muestrela → PNG en salidas/"]
-  end
-```
-
-La generación con ANTLR ocurre **antes** de ejecutar: `analizador.py` importa
-`ArepaLexer` y `ArepaParser` ya generados, no lee el `.g4` en cada corrida. En
-ejecución, el programa entra como texto, se produce el árbol y el Visitor
-propio lo recorre. Todo el estado vive en estructuras del equipo: `Tabla` para
-los datos, `TablaSimbolos` para variables y funciones, `ContextoEjecucion` para
-la salida, el motor `src/ml/` para los modelos y `src/graficas/` para los PNG.
-Las salidas están separadas: `guarde` escribe CSV; `pinte` construye la
-gráfica y `guardela` o `muestrela` deciden su destino PNG.
-
-### 2. Recorrido de una instrucción
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant U as Usuario
-  participant CLI as CLI
-  participant A as Lexer + Parser
-  participant V as Visitor
-  participant S as Símbolos y contexto
-  participant T as Tabla propia
-  participant M as Modelo ML
-  U->>CLI: programa.arepa --ejecutar
-  CLI->>A: texto fuente
-  A-->>CLI: árbol de análisis o errores
-  CLI->>V: visitar(árbol)
-  V->>S: declarar variables y funciones
-  V->>T: cargar, filtrar, agrupar
-  V->>M: entrenar, predecir, evaluar
-  M-->>V: predicciones y métricas
-  V-->>U: consola + CSV
-```
-
-El CLI solo orquesta: el lexer/parser generan el árbol, el Visitor ejecuta y
-delega los datos en `Tabla`, el estado en `TablaSimbolos` y los modelos en
-`src/ml/`. Los errores se acumulan en el contexto y se reportan con línea y
-columna.
-
-### 3. Ciclo de vida de machine learning
-
-```mermaid
-flowchart LR
-  A["monte ... CSV"] --> B["columnas + objetivo"]
-  B --> C["Preprocesador"]
-  C --> C1["Imputar media / moda"]
-  C --> C2["One-hot encoding"]
-  C --> C3["Estandarizar"]
-  C1 --> D["Entrenamiento"]
-  C2 --> D
-  C3 --> D
-  D --> E{"algoritmo_ml"}
-  E -->|regresion| F["Descenso de gradiente"]
-  E -->|perceptron| G["Regla del perceptrón"]
-  E -->|arbol| H["CART / Gini"]
-  F --> I["Modelo entrenado"]
-  G --> I
-  H --> I
-  I --> S["Tabla de símbolos<br/>(el modelo es una variable)"]
-  I --> K["prediga / clasifique"]
-  K --> L["CSV de salida"]
-  I --> EV["evalua: modelo.evaluar(tabla)"]
-  EV --> MET["métricas: reales + predicciones"]
-```
-
-El modelo se entrena una vez y se reutiliza: el preprocesador aprende la
-codificación con la tabla de entrenamiento, los tres algoritmos comparten la
-interfaz `ModeloML` y `evalua` o `prediga` aplican exactamente la misma
-transformación a las filas nuevas. El ejecutor es quien calcula las métricas:
-obtiene los valores reales y las predicciones y llama a `metricas`. Si `evalua`
-recibe la misma tabla del entrenamiento, el resultado es una métrica de
-entrenamiento; la guía de ML explica cómo evaluar sobre una partición de prueba
-reproducible.
-
-### 4. Jerarquía de modelos
-
-```mermaid
-classDiagram
-  class ModeloML {
-    +objetivo
-    +preprocesador
-    +entrenar(X, y)
-    +predecir(vector)
-    +predecir_fila(fila, tabla)
-    +evaluar(tabla)
-  }
-  class ModeloRegresion
-  class ModeloClasificacion
-  class RegresionLineal {
-    +pesos
-    +sesgo
-    +tasa
-    +epocas
-  }
-  class Perceptron {
-    +pesos
-    +sesgo
-    +clases
-  }
-  class ArbolDecision {
-    +raiz
-    +profundidad
-    +min_hojas
-  }
-  class Preprocesador {
-    +transformar_fila()
-    +datos()
-  }
-  ModeloML <|-- ModeloRegresion
-  ModeloML <|-- ModeloClasificacion
-  ModeloRegresion <|-- RegresionLineal
-  ModeloClasificacion <|-- Perceptron
-  ModeloClasificacion <|-- ArbolDecision
-  ModeloML --> Preprocesador
-```
-
-`ModeloML` define el contrato; `ModeloRegresion` y `ModeloClasificacion`
-separan las tareas, y cada algoritmo implementa `entrenar`, `predecir` y
-`resumen`. El preprocesador es el mismo para todos.
-
-### 5. Cómo decide un árbol
-
-```mermaid
-flowchart TD
-  A["Conjunto de filas"] --> B{"¿Nodo puro o<br/>límite alcanzado?"}
-  B -->|sí| C["Hoja: clase mayoritaria"]
-  B -->|no| D["Probar columnas y umbrales"]
-  D --> E["Calcular Gini ponderado"]
-  E --> F["Escoger la mayor ganancia"]
-  F --> G["Repartir las filas"]
-  G --> H["Rama izquierda"]
-  G --> I["Rama derecha"]
-  H --> A
-  I --> A
-```
-
-El árbol prueba cortes `columna <= umbral`, calcula la ganancia de Gini y se
-detiene por pureza, `profundidad`, `min_hojas`, ganancia cero o división
-vacía. Cada hoja devuelve la clase mayoritaria.
-
-### 6. Qué modelo escoger
-
-```mermaid
-flowchart TD
-  A["¿Qué querés predecir?"] --> B{"¿Un número continuo?"}
-  B -->|sí| C["regresion"]
-  B -->|no| D{"¿Cuántas clases?"}
-  D -->|2| E["perceptron"]
-  D -->|"3 o más"| F["arbol"]
-  C --> H["prediga"]
-  E --> G["clasifique"]
-  F --> G
-```
-
-Regla práctica: un número continuo pide `regresion`; dos etiquetas, `perceptron`;
-tres o más, `arbol`. `prediga` produce números y `clasifique` produce etiquetas.
-
-## Requisitos
-
-Entorno oficial del proyecto (Linux-only):
-
-* **Linux** (distribución con terminal Bash)
-* **Python 3.11 o superior** (probado con 3.13)
-* **Java 11 o superior** (solo para regenerar el lexer/parser con ANTLR)
-* **Git**
-* **ANTLR 4.13.2** (`antlr-4.13.2-complete.jar` para regenerar;
-  `antlr4-python3-runtime==4.13.2` para ejecutar, instalado vía
-  `requirements.txt`)
-
-## Instalación
-
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/Pyromesis/Proyecto-Lenguajes-de-Programaci-n.git
-cd Proyecto-Lenguajes-de-Programaci-n
-
-# 2. Comprobar versiones
-python3 --version   # 3.11+
-java -version       # 11+
-
-# 3. Crear y activar el entorno virtual
-python3 -m venv .venv
-source .venv/bin/activate
-
-# 4. Instalar el único runtime necesario
-python3 -m pip install --upgrade pip
-python3 -m pip install -r requirements.txt
-```
-
-## Dependencias
-
-| Dependencia | Versión | Uso |
-|---|---|---|
-| Python | 3.11+ (probado 3.13) | lenguaje anfitrión |
-| `antlr4-python3-runtime` | 4.13.2 | ejecutar el lexer/parser generados (única externa) |
-
-Sin pandas, NumPy, Matplotlib, scikit-learn ni equivalentes: los algoritmos
-de machine learning también son código propio.
-
-La biblioteca (`src/`) tampoco importa módulos auxiliares de la biblioteca
-estándar de Python: lo que antes hacían `math`, `re`, `unicodedata`,
-`struct`, `hashlib`, `csv`, `argparse`, `glob` y `codecs` está reimplementado
-en `src/utiles/` (matemática, texto, empaquetado binario y SHA-256 propios),
-en el lector/escritor CSV propio y en el analizador de argumentos del CLI.
-Solo quedan `os`, `sys`, `shutil` y `subprocess` (y `readline`/`termios` en
-la consola interactiva), que no son algoritmos sino la puerta al sistema
-operativo: abrir archivos, leer la terminal y lanzar el visor de imágenes.
-La prueba `test_utiles.py::la_biblioteca_no_importa_modulos_reemplazados`
-falla si alguien vuelve a importar uno de esos módulos en `src/`. Las suites
-de `pruebas/` sí usan `zlib`, `hashlib` o `math`, pero únicamente como
-oráculo independiente para comprobar que el código propio da el resultado
-correcto.
-
-## Ejecución
-
-```bash
-# Validar un programa (front-end: léxico + sintáctico)
-python3 src/cli/main.py ejemplos/demo.arepa
-
-# Ejecutarlo con la biblioteca propia
-python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
-
-# Ejecutar y exportar gráficas sin abrir ventanas (útil en CI)
-python3 src/cli/main.py ejemplos/graficas.arepa --ejecutar --sin-ventana
-
-# Ver el árbol de análisis
-python3 src/cli/main.py ejemplos/demo.arepa --arbol
-
-# Ver la tabla de tokens
-python3 src/cli/main.py ejemplos/demo.arepa --tokens
-
-# Ayuda y versión
-python3 src/cli/main.py --ayuda
-python3 src/cli/main.py --version
-# AREPA v0.4 (Fase 3 - visualizacion y producto final)
-
-# Códigos de salida: 0 = válido, 1 = con errores, 2 = archivo no encontrado
-```
-
-Consola interactiva (REPL con autocompletado por Tab):
-
-```bash
-python3 src/cli/repl.py            # con fantasma (terminal Linux)
-python3 src/cli/repl.py --simple   # modo clásico
-```
-
-## Tokens importantes
-
-* **Estructura**: `quihubo` abre el programa, `chao` lo cierra; el salto de
-  línea separa sentencias.
-* **Datos**: `monte` (cargar CSV), `guarde ... como ...` (exportar),
-  `escoja [...]`, `deje donde`, `cree`, `acomode`, `limpie`, `convierta`,
-  `junte por`, `resuma`.
-* **Estructuras propias**: listas `[1, 2]`, registros `{nombre: "Ana"}`,
-  tablas `arme [cols] con [[...]]` (o vacías), acceso 1-based encadenado
-  (`t[1]["col"]`), asignación indexada, `agregue ... en ...`,
-  `saque ... de ...`, `recorra ... en ... { }`, builtins `largo`,
-  `columna`, `columnas` y agregaciones fuera de `resuma`
-  (`sume(tabla, col)`, `sume(lista)`, `cuente(tabla[, col])`, …).
-* **Visualización**: `pinte barras|lineas|histograma|dispersion|cajas`,
-  cláusulas `titulo`, `ejex`, `ejey`, `leyenda` y cierre `guardela` /
-  `muestrela`.
-* **Control**: `fijese_si` / `sino`, `mientras (cond)`, `repita N veces`,
-  `repita i desde A hasta B (paso P)`, `pare` (rompe), `siga` (sigue).
-* **Machine learning**: `entrene modelo = regresion|perceptron|arbol con tabla`
-  con opciones `columnas [...]`, `objetivo col`, `clases [...]`, `tasa`,
-  `epocas`, `profundidad` y `min_hojas`; etapas `prediga con modelo como col`
-  y `clasifique con modelo como col`; medición con `evalua modelo con tabla`.
-* **Operadores**: `+ - * / % ^`, comparaciones `== != < <= > >=`, lógicos
-  `y`, `o`, `no`, pipeline `|>`, flecha `->`, asignación `=`.
-* **Literales**: enteros (`42`), decimales (`3.14`), cadenas con escapes
-  (`"dice \"hola\""`), booleanos (`obvio`/`falso`) y faltante (`nada`).
-* **Comentarios**: `#` hasta fin de línea, permitidos en cualquier posición.
-
-Lista completa: `docs/02_catalogo_instrucciones.md` (79 reservadas y 23
-símbolos) y tabla de tokens con `--tokens`.
-
-## Gramática
-
-La fuente única es `gramatica/Arepa.g4` (gramática combinada lexer+parser).
-La especificación formal equivalente está en `docs/03_gramatica_ebnf.md`.
-
-### ANTLR en Linux
-
-Descargue el jar de ANTLR 4.13.2 y defina `ANTLR_JAR`:
-
-```bash
-mkdir -p "$HOME/antlr"
-# Descargue antlr-4.13.2-complete.jar desde https://www.antlr.org/download.html
-# y guárdelo en $HOME/antlr/, luego:
-export ANTLR_JAR="$HOME/antlr/antlr-4.13.2-complete.jar"
-```
-
-### Regenerar el lexer/parser
-
-```bash
-chmod +x generar_gramatica.sh
-./generar_gramatica.sh
-```
-
-El script comprueba Java 11+, el jar de ANTLR, la existencia de
-`gramatica/Arepa.g4`, crea `generado/` si hace falta y verifica que se
-generen `ArepaLexer.py`, `ArepaParser.py` y `ArepaVisitor.py`.
-
-Alternativa con `antlr4-tools` (requiere Java 11+):
-
-```bash
-antlr4 -Dlanguage=Python3 -visitor -no-listener -o generado gramatica/Arepa.g4
-```
-
-El código generado vive en `generado/` y no se edita a mano.
-
-## Árbol de análisis
-
-```bash
-python3 src/cli/main.py ejemplos/demo.arepa --arbol
-```
-
-Salida (extracto real):
-
-```text
-Árbol de análisis:
-`-- programa
-    |-- 'quihubo'
-    |-- sentencias
-    |   |-- sentencia
-    |   |   `-- asignacion
-    |   |       |-- identificador
-    |   |       |   `-- 'ventas'
-    |   |       |-- '='
-    |   |       `-- expresion
-```
-
-## Pruebas
-
-Para ejecutar la verificación completa desde la raíz del proyecto:
+Las rutas de datos y salidas se resuelven desde el directorio de ejecución.
+Para empezar, consulte el [manual de usuario](docs/manuales/usuario.md).
+
+## Opciones de consola
+
+| Opción | Resultado |
+|---|---|
+| Sin opciones | Comprueba el análisis léxico y sintáctico del archivo |
+| `--ejecutar` | Ejecuta el programa |
+| `--sin-ventana` | Genera las gráficas sin abrir un visor |
+| `--tokens` | Muestra los tokens |
+| `--arbol` | Muestra el árbol de análisis |
+| `--help`, `--ayuda` | Muestra la ayuda |
+| `--version` | Muestra la versión |
+
+Los diagnósticos indican la causa y la ubicación del problema. Algunas
+operaciones, como dividir entre cero, producen un aviso y un valor especial
+según las [reglas semánticas](docs/09_reglas_semanticas.md).
+
+## Ejercicios y pruebas
+
+Hay **349 ejercicios resueltos**: 75 del corte 1, 150 del corte 2,
+87 del corte 3 y 37 integradores y propuestas de sustentación. Cada corte
+incluye al menos 25 ejercicios por nivel de dificultad. El
+[catálogo](ejercicios/CATALOGO.md) organiza su cobertura.
+
+Para verificar los ejercicios, los nueve ejemplos, el caso de estudio y las
+diez suites internas:
 
 ```bash
 python ejercicios/pruebas/ejecutar.py --completo
 ```
 
-Incluye las 55 pruebas base, las 28 de diagnósticos y resultados esperados de 185 ejercicios nuevos,
-los 349 ejercicios del corpus, los
-nueve ejemplos, el caso de estudio y las 370 pruebas internas. Los resultados
-esperados y las instrucciones están en
-[`ejercicios/pruebas/README.md`](ejercicios/pruebas/README.md).
+Este modo reúne **469 pruebas del corredor y 370 pruebas internas**.
+La [guía de pruebas](ejercicios/pruebas/README.md) explica los modos de
+ejecución y las comprobaciones de resultados, errores, CSV y PNG.
 
-Para ejecutar únicamente las suites internas:
-
-```bash
-python3 pruebas/test_proyecto.py
-```
-
-Ejecuta las 10 suites (370 pruebas): front-end (55: 10 positivos, 22
-negativos, 10 de diagnóstico, 13 de CLI), estructura del árbol (28), datos
-(43), estructuras propias (48), expresiones (16), símbolos y contexto (15),
-runtime (51), gráficas (63), machine learning (31) y utilidades propias (20). Cada suite también
-corre sola con el entorno activado, por ejemplo
-`python3 pruebas/test_estructuras.py` o `python3 pruebas/test_ml.py`.
-
-El conteo es único y verificable (fuente de verdad):
-
-```bash
-python3 herramientas/chequeo_pruebas.py
-# Unificado: 10 suites, 370 pruebas.
-```
-
-Además, los 358 programas de regresión (349 ejercicios + 9 ejemplos) validan
-y ejecutan con `--ejecutar` sin fallos.
-
-## Errores (ejemplos reales)
-
-La consola indica la causa, el archivo, la línea y columna disponibles,
-marca la instrucción con `^` y añade **Cómo corregir**. Si falla una operación
-sobre datos, también muestra el contexto disponible de la fila o del CSV;
-si ocurre dentro de una función, conserva la ubicación y las llamadas.
-Las líneas se cuentan desde 1 y las columnas desde 0, como en ANTLR.
-
-Dividir entre cero conserva la regla del lenguaje: `1/0` da `infinito`,
-`-1/0` da `-infinito` y `0/0` da `nada`. Ahora se explica mediante un
-**aviso**, que no detiene el programa ni cambia sus resultados. También se
-explican el módulo por cero, cero elevado a un exponente negativo y los
-resultados numéricos indeterminados o desbordados. No se avisa por una
-operación que solo aparece en comentarios o en una rama sin ejecutar.
-
-Los códigos de salida distinguen **0** (válido, posiblemente con avisos),
-**1** (error durante análisis o ejecución) y **2** (argumentos o lectura del
-programa). Los fallos internos se identifican como tales.
-
-Hay 28 pruebas específicas de diagnósticos, incluidas automáticamente en el
-corredor de ejercicios y ejecutables por separado:
-
-```bash
-python ejercicios/pruebas/test_diagnosticos.py
-```
-
-Programa con `@` y con una variable llamada `y`:
-
-```text
-Encontré 2 problema(s), revisá esto:
-  [léxico] Línea 2, Columna 6: Hay un símbolo '@' que no hace parte del lenguaje AREPA
-  [sintáctico] Línea 2, Columna 0: No esperaba 'y' por ahí; revisá si sobra. En esa posición se esperaba 'chao', 'guarde', 'entrene', 'evalua', 'pinte', 'invente', entre otras opciones. Ojo: el operador lógico 'y' (conjunción) es una palabra reservada, no puede usarse como nombre de variable; escogé otro nombre.
-```
-
-Programa con un tipo de gráfica inválido:
-
-```text
-  [sintáctico] Línea 5, Columna 6: Hace falta 'barras', 'lineas', 'histograma', 'dispersion', 'cajas' cerca de 'pastel'
-```
-
-## Estructura del repositorio
-
-```text
-proyecto/
-├── gramatica/Arepa.g4        gramática ANTLR4 (fuente única)
-├── generado/                 lexer, parser y Visitor generados (no editar)
-├── src/
-│   ├── lenguaje/             analizador, árbol y diagnóstico del front-end
-│   ├── datos/                propia: Tabla, Lista, Registro, Columna, Fila, acceso, CSV, tipos
-│   ├── expresiones/          propia: operadores y evaluador
-│   ├── runtime/              propia: símbolos, contexto y ejecutor
-│   ├── graficas/             propia: motor de gráficas (png, lienzo, fuente, escalas, tipos)
-│   ├── ml/                   propia: preprocesamiento, modelos y métricas
-│   ├── errores_base.py       jerarquía propia de errores
-│   └── cli/                  main.py (validar y --ejecutar) y repl.py
-├── datos/                    CSV de ejemplo (incluye 3 para ML)
-├── ejemplos/                 9: demo, memoria, filtros, graficas, funciones, ciclos y 3 de ML
-├── ejercicios/               349 ejercicios por corte (1: 75, 2: 150, 3: 87, completo: 37)
-├── caso_estudio/             caso reproducible: programa.arepa + datos/ + 5 PNG + CSV
-├── salidas/                  evidencia: 7 CSV versionados y PNG temporales
-├── pruebas/                  10 suites (370) + positivos/negativos
-├── herramientas/             chequeos, demo de sustentación y consola
-├── docs/                     índice (README.md), alcance, catálogo, EBNF,
-│                             informes, arquitectura, reglas, manuales, guía de ML y PDF
-├── generar_gramatica.sh      regeneración en Linux
-└── requirements.txt          antlr4-python3-runtime==4.13.2
-```
-
-Cada carpeta trae su `README.md` con el detalle
-(`datos/`, `docs/`, `ejemplos/`, `generado/`, `gramatica/`, `herramientas/`,
-`pruebas/`, `salidas/`, `src/`, `ejercicios/`).
-
-## Implementaciones desarrolladas desde cero
-
-Detalle completo en `docs/05_arquitectura.md` (incluye matriz de
-trazabilidad funcionalidad → archivo → función → prueba):
-
-* estructura de datos `Tabla` con `Columna` y `Fila` (selección, filtrado,
-  ordenamiento por mezcla propio, inserción/eliminación, duplicados,
-  vacíos, conversiones, agrupamiento, formato legible);
-* estructuras propias `Lista` y `Registro`, más `datos/acceso.py` para el
-  acceso y la asignación 1-based; `Tabla.desde_filas`,
-  `fila_como_registro`, `poner_celda` y `poner_fila` para las tablas en
-  memoria;
-* builtins propios `largo`, `columna` y `columnas`, y agregaciones en
-  memoria fuera de `resuma` (`sume(tabla, col)`, `sume(lista)`, …);
-* lector CSV propio (máquina de estados: comillas, escape `""`,
-  separador configurable, errores con línea del archivo);
-* escritor CSV propio;
-* sistema de tipos propio (conversiones y calendario de fechas propio);
-* evaluador de expresiones propio (precedencia, paréntesis, `nada`);
-* operadores propios con validación de tipos;
-* tabla de símbolos propia (ámbitos, closures con recursión);
-* contexto de ejecución propio (salida formateada, registro de errores);
-* sistema de errores propio (léxicos, sintácticos, semánticos, de datos);
-* agregaciones propias (`cuente`, `sume`, `promedie`, `mediana`, `minimo`,
-  `maximo`, `desviacion`) ejecutadas por `junte`/`resuma` y `describa`;
-* motor de gráficas propio (`src/graficas/`): codificador PNG (chunks,
-  CRC-32 y Adler-32 propios, DEFLATE fijo + LZ77), lienzo RGB con primitivas
-  rasterizadas a mano, fuente bitmap 5x7 y escalas lineales y de banda. Sin
-  matplotlib, PIL ni zlib;
-* preprocesamiento propio para ML: imputación por media/moda, one-hot
-  encoding, estandarización y transformación consistente de tablas nuevas;
-* regresión lineal múltiple propia con descenso de gradiente por lotes;
-* perceptrón binario propio con la regla clásica de actualización;
-* árbol de decisión propio CART/Gini con `profundidad` y `min_hojas`;
-* métricas propias de regresión (MAE, MSE, RMSE, R²) y de clasificación
-  (exactitud, matriz de confusión, precisión, recall, F1 y soporte).
-
-## Ejemplos
-
-| Ejemplo | Qué demuestra | Exportación |
-|---|---|---|
-| `ejemplos/demo.arepa` | flujo completo del lenguaje | `salidas/resumen_ciudades.csv` |
-| `ejemplos/memoria.arepa` | listas, registros, `arme`, acceso 1-based, `recorra` y agregaciones en memoria | `salidas/memoria_resumen.csv` |
-| `ejemplos/filtros.arepa` | carga, selección, filtros, limpieza y orden | `salidas/filtros_listos.csv` |
-| `ejemplos/graficas.arepa` | los cinco tipos de visualización | 5 PNG en `salidas/` |
-| `ejemplos/funciones.arepa` | `invente`, condicionales y `cuenteme` | — |
-| `ejemplos/ciclos.arepa` | `mientras`, `repita`, `pare`/`siga` + flujo de datos | `salidas/resumen_ciclos.csv` |
-| `ejemplos/regresion.arepa` | regresión lineal, `prediga` y `evalua` | `salidas/regresion_casas.csv` |
-| `ejemplos/clasificacion.arepa` | perceptrón binario y `clasifique` | `salidas/clasificacion_estudiantes.csv` |
-| `ejemplos/arbol_decision.arepa` | árbol multiclase CART/Gini | `salidas/arbol_riesgo.csv` |
-
-Todos validan con `python3 src/cli/main.py ejemplos/<nombre>.arepa` y corren
-con `--ejecutar`. Los 7 CSV de `salidas/` están versionados como evidencia
-(exceptuados en `.gitignore`); los PNG de `salidas/` son temporales.
-`graficas.arepa` genera cinco PNG reales (`salidas/barras.png`,
-`ventas_lineas.png`, `histograma.png`, `dispersion.png`, `cajas.png`);
-conviene correrlo con `--sin-ventana`. Los PNG del caso de estudio sí se
-versionan en `caso_estudio/salidas/`.
-
-## Caso de estudio
-
-`caso_estudio/` cierra el recorrido con datos públicos: la serie mensual de
-pasajeros internacionales (AirPassengers, 1949-1960, 144 filas). El programa
-`caso_estudio/programa.arepa` carga el CSV, lo limpia, calcula el resumen anual
-y genera cinco PNG más un CSV de evidencia:
-
-```bash
-AREPA_SIN_VENTANA=1 python3 src/cli/main.py caso_estudio/programa.arepa --ejecutar
-```
-
-Indicadores verificados: total 40363, promedio 280.2986, mediana 265.5,
-mínimo 104, máximo 622, 1949 = 1520, 1960 = 5714, crecimiento 275.92 % y CAGR
-12.79 %. El análisis completo está en `caso_estudio/README.md`.
-
-## Ejercicios
-
-349 programas resueltos en `ejercicios/`, con al menos 25 por nivel (fácil,
-mediano y difícil) en cada uno de los cortes 1, 2 y 3. El corte completo añade
-12 integradores y 25 preguntas de sustentación con respuesta y demostración.
-Índices: [ejercicios](ejercicios/README.md) y [catálogo](ejercicios/CATALOGO.md).
-
-| Corte | Programas | Contenido |
-|---|---:|---|
-| 1 | 75 | front-end, expresiones y primer pipeline |
-| 2 | 150 | semántica, datos y 75 ejercicios de funciones |
-| 3 | 87 | 25 por nivel y 12 gráficas anteriores; estética y PNG |
-| Completo | 37 | 12 integradores y 25 preguntas de sustentación resueltas |
-
-Con los 9 de `ejemplos/` suman 358 programas, y todos validan y ejecutan:
-
-```bash
-python3 src/cli/main.py ejercicios/corte1/faciles/F01_programa_minimo.arepa --ejecutar
-python3 src/cli/main.py ejercicios/corte3/graficas/G01_barras_ciudad.arepa --ejecutar --sin-ventana
-bash herramientas/regresion_programas.sh
-```
-
-## Herramientas
-
-La verificación técnica y la entrega reproducible se ejecutan así:
+Para incluir también la sincronización de gramática y la documentación:
 
 ```bash
 python herramientas/verificar_entrega.py
-python herramientas/crear_entrega.py --probar
 ```
 
-El segundo comando genera `output/entregas/arepa_entrega.zip`, verifica sus
-archivos con SHA-256 y lo prueba en una carpeta y un entorno virtual nuevos.
-Incluye los archivos actuales del proyecto, también los nuevos aún no
-confirmados en Git. La automatización de GitHub está en
-`.github/workflows/verificacion.yml` para Windows y Linux con Python 3.11 y 3.13.
-
-```bash
-python3 herramientas/chequeo_gramatica.py      # EBNF <-> .g4: 64/64 reglas, 79 reservadas
-python3 herramientas/chequeo_pruebas.py        # conteo único: 10 suites, 370 pruebas
-python3 herramientas/chequeo_documentacion.py  # enlaces, referencias y conteos 75/150/87/37/9
-bash herramientas/regresion_programas.sh       # 358 programas (349 + 9 ejemplos)
-bash herramientas/demo_sustentacion.sh         # demo de sustentación paso a paso
-```
-
-Autocompletado por Tab (Vim, REPL y Bash): `herramientas/consola/README.md`.
+Los resultados registrados y las correcciones verificadas se recogen en el
+[informe de verificación técnica](docs/13_cierre_tecnico.md).
 
 ## Documentación
 
-* [Índice completo de documentación](docs/README.md)
-* [Documento de alcance](docs/01_documento_alcance.md)
-* [Catálogo de instrucciones y decisiones de diseño](docs/02_catalogo_instrucciones.md)
-* [Gramática BNF/EBNF](docs/03_gramatica_ebnf.md)
-* [Informe de la Fase 1](docs/04_informe_fase1.md)
-* [Arquitectura e implementaciones propias](docs/05_arquitectura.md)
-* [Informe de la Fase 2 (Semántica y Corte 2)](docs/08_informe_fase2.md)
-* [Informe de la Fase 3 (Visualización y Corte 3)](docs/11_informe_fase3.md)
-* [Reglas semánticas](docs/09_reglas_semanticas.md)
-* [Matriz de trazabilidad del Corte 2](docs/10_matriz_trazabilidad_corte2.md)
-* [Guía de machine learning](docs/11_guia_machine_learning.md)
-* [Matriz de trazabilidad del Corte 3](docs/12_matriz_trazabilidad_corte3.md)
-* [Manual de usuario](docs/manuales/usuario.md)
-* [Manual técnico](docs/manuales/tecnico.md)
-* [Guía de sustentación](docs/07_guia_sustentacion.md)
-* [Matriz de trazabilidad del Primer Corte](docs/06_matriz_trazabilidad_corte1.md)
+| Recurso | Contenido |
+|---|---|
+| [Índice de documentación](docs/README.md) | Especificación, informes y matrices por corte |
+| [Manual de usuario](docs/manuales/usuario.md) | Instalación, sintaxis, gráficas y diagnóstico de errores |
+| [Manual técnico](docs/manuales/tecnico.md) | Mantenimiento, regeneración y ampliación del intérprete |
+| [Arquitectura](docs/05_arquitectura.md) | Algoritmos, módulos y trazabilidad con las pruebas |
+| [Catálogo del lenguaje](docs/02_catalogo_instrucciones.md) | Instrucciones y palabras reservadas |
+| [Guía de aprendizaje automático](docs/11_guia_machine_learning.md) | Preparación, modelos, métricas y evaluación |
+| [Caso de estudio](caso_estudio/README.md) | Análisis reproducible de AirPassengers |
+| [Ejercicios](ejercicios/README.md) | Programas resueltos por corte y dificultad |
+
+## Organización
+
+| Carpeta | Responsabilidad |
+|---|---|
+| `gramatica/`, `generado/` | Gramática y artefactos de ANTLR |
+| `src/` | Intérprete, datos, modelos, gráficas y CLI |
+| `datos/`, `ejemplos/` | Datos y programas de referencia |
+| `ejercicios/`, `pruebas/` | Material de práctica y verificación |
+| `caso_estudio/` | Análisis de un conjunto público |
+| `docs/` | Documentación y enunciado |
+| `herramientas/` | Chequeos, demostración y empaquetado |
+| `salidas/` | Resultados CSV y PNG de los programas |
+
+## Paquete de entrega
+
+```bash
+python herramientas/crear_entrega.py --probar
+```
+
+Genera un ZIP reproducible con manifiesto SHA-256 en `output/entregas/`,
+instala sus dependencias en un entorno virtual nuevo y ejecuta la verificación.
+Para comprobar un paquete existente:
+
+```bash
+python herramientas/crear_entrega.py --verificar output/entregas/arepa_entrega.zip
+```

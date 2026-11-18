@@ -17,7 +17,7 @@ resultados esperados y el comando para ejecutarlos. El [catálogo](CATALOGO.md)
 explica la cobertura. Los programas de sustentación incluyen además una
 respuesta razonada: son propuestas de práctica, no preguntas oficiales.
 
-El [reporte de verificación](REPORTE_AMPLIACION.md) registra la ejecución completa.
+El [reporte de verificación](../docs/13_cierre_tecnico.md) registra la ejecución completa.
 
 ## Ejecutar un ejercicio
 

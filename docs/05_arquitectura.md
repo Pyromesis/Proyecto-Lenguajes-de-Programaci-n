@@ -56,7 +56,7 @@ src/
 │   ├── png.py           codificador PNG: chunks, CRC-32, Adler-32, DEFLATE fijo + LZ77
 │   ├── fuente.py        fuente bitmap 5x7 propia
 │   ├── lienzo.py        búfer RGB y primitivas rasterizadas a mano
-│   ├── escalas.py       EscalaLineal, EscalaBanda y ticks "bonitos"
+│   ├── escalas.py       EscalaLineal, EscalaBanda y marcas de ejes legibles
 │   └── tipos_grafica.py Serie, Grafica y los cinco dibujos
 │
 ├── errores_base.py      jerarquía propia de errores de todo el runtime
@@ -170,12 +170,19 @@ Python; `convierta` solo acepta el formato AAAA-MM-DD.
 
 ## 3. Lector CSV propio (`lector_csv.py`)
 
+Los campos citados son texto explícito: conservan espacios, cadenas
+vacías y textos numéricos. Los campos sin comillas infieren tipos; un
+campo vacío o `nada` representa un faltante. El escritor cita textos
+ambiguos para conservar valores y tipos. Los encabezados duplicados
+se rechazan, al igual que las columnas duplicadas en tablas y selecciones.
+
 **Qué hace:** lee archivos (o texto en memoria, para las pruebas) y
 produce una `Tabla` propia. Reemplaza a `csv.DictReader` y
 `pandas.read_csv`.
 
-**Cómo funciona:** una máquina de estados que recorre la línea carácter
-a carácter con dos estados:
+**Cómo funciona:** primero separa registros lógicos, conservando los saltos
+LF/CRLF dentro de campos citados y la primera línea física de cada registro.
+Después separa los campos mediante una máquina de estados:
 
 1. **FUERA**: una comilla al inicio de campo activa el modo DENTRO; el
    separador corta el campo; cualquier otro carácter se acumula.
@@ -183,8 +190,8 @@ a carácter con dos estados:
    (escape `""`); una comilla sola vuelve a FUERA; el separador dentro
    de comillas NO corta el campo.
 
-Además: las líneas vacías se descartan (conservando su número para los
-errores); los campos faltantes se rellenan con `nada`; una fila con más
+Las líneas vacías fuera de campos citados se descartan; dentro de un campo
+se conservan. Los campos faltantes se rellenan con `nada`; una fila con más
 campos que el encabezado o con comillas sin cerrar lanza `ErrorCSV` con
 el número de línea del archivo.
 
@@ -275,6 +282,12 @@ visible, recorte de filas), reemplazando a `tabulate`.
 ---
 
 ## 6. Ejecutor del DSL (`runtime/ejecutor.py`)
+
+`EjecutorArepa` coordina cinco módulos: `ejecucion_datos.py`,
+`ejecucion_graficas.py`, `ejecucion_control.py`,
+`ejecucion_estructuras.py` y `ejecucion_modelos.py`. Comparten el
+contexto y la evaluación de expresiones. El [manual técnico](manuales/tecnico.md)
+describe su mantenimiento.
 
 **Qué hace:** interpreta el programa recorriendo el árbol de ANTLR4 con
 un visitor propio.
@@ -411,7 +424,7 @@ externas. Reemplaza a matplotlib para los cinco tipos del DSL.
   texto con NFD (quita tildes), con un mapa propio para los signos que no se
   descomponen.
 * `escalas.py` traduce dominio a píxeles con `EscalaLineal` y
-  `EscalaBanda`, genera ticks con pasos "bonitos" (`paso_bonito`) y formatea
+  `EscalaBanda`, genera ticks con pasos de la forma 1, 2 o 5 por potencias de diez (`paso_bonito`) y formatea
   las etiquetas (`formatear`).
 * `tipos_grafica.py` comparte el marco (título, ejes, rejilla, leyenda) y
   dibuja los cinco tipos; expone `cuartiles` y `cubetas_histograma` como
@@ -528,6 +541,9 @@ trabajo que se prueba.
 
 ---
 
+Los casos adicionales de diagnósticos, límites numéricos y empaquetado
+se describen en la [guía de pruebas](../ejercicios/pruebas/README.md).
+
 ## 9. Dependencias
 
 | Nombre | Versión | Uso | Por qué está permitida | Qué reemplazaría si se eliminara |
@@ -627,32 +643,3 @@ implementada, con su prueba asociada.
 | Builtins `largo`/`columna`/`columnas` | `src/runtime/ejecucion_estructuras.py` | `_largo`, `_columna`, `_columnas` | `test_estructuras.py::largo_*`, `::columna_*`, `::columnas_*` |
 | Callback `evaluar_expresion` | `expresiones/evaluador.py` + `runtime/ejecutor.py` | `visitExpresion` delegado | `test_estructuras.py::cuenteme_pipeline_imprime_la_tabla` |
 | Precedencia `-2 ^ 2 = -4` | gramática + `expresiones/evaluador.py` | `potencia` → `acceso` → `atomo` | `test_estructuras.py::potencias_precedencia_y_signo`, `test_arbol.py::potencia_antes_que_menos_unario` |
-
-## Organización y contratos del cierre técnico
-
-`src/runtime/ejecutor.py` conserva el estado y coordina el Visitor. Se compone
-con cinco visitantes por responsabilidad: `ejecucion_datos.py`,
-`ejecucion_graficas.py`, `ejecucion_control.py`, `ejecucion_estructuras.py` y
-`ejecucion_modelos.py`. Todos comparten el mismo contexto; no hay un segundo
-intérprete ni duplicación de algoritmos. Las definiciones de las tablas de
-trazabilidad apuntan al módulo que realmente implementa cada operación.
-
-Los nombres de columna son únicos. En CSV, los campos citados son texto
-explícito; se conservan espacios, cadenas vacías y textos numéricos como
-"001". Los campos no citados mantienen la inferencia, con `nada` para un
-faltante. El escritor cita textos ambiguos para conservar valores y tipos,
-incluso cuando una fila contiene solamente una celda vacía o faltante.
-
-Los enteros decimales se leen y escriben por bloques de nueve dígitos en
-`src/utiles/enteros.py`, sin modificar límites globales de Python. Los modelos
-y sus métricas operan con decimales finitos: rechazan NaN, infinitos,
-desbordamiento y entrenamiento divergente en vez de anunciar éxito. Media,
-desviación, MAE, RMSE y R² usan escalas de cálculo que evitan desbordamientos
-intermedios cuando el resultado es representable. Un modelo con pocas épocas
-puede seguir siendo válido sin haber alcanzado un ajuste preciso.
-
-`python herramientas/verificar_entrega.py` comprueba gramática, documentación
-y todas las pruebas. `python herramientas/crear_entrega.py --probar` empaqueta
-los archivos actuales, valida un manifiesto SHA-256 e instala y prueba la
-entrega en un entorno virtual nuevo. La ejecución automatizada está en
-`.github/workflows/verificacion.yml`.

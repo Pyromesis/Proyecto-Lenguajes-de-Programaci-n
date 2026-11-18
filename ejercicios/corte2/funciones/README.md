@@ -1,7 +1,8 @@
 # Funciones del Corte 2
 
 75 ejercicios de `invente`/`devuelva`, organizados por dificultad. Todos se
-ejecutan desde la raíz del proyecto y no escriben archivos:
+ejecutan desde la raíz del proyecto. Algunos exportan archivos en `salidas/`.
+Ejemplo de ejecución:
 
 ```bash
 python3 src/cli/main.py ejercicios/corte2/funciones/faciles/F03_suma_dos.arepa --ejecutar
