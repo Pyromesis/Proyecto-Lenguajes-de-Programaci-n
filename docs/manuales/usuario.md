@@ -1,15 +1,11 @@
 # AREPA — Manual de usuario
 
 Este manual explica cómo instalar y usar AREPA para describir un análisis de
-datos completo —cargar un CSV, limpiarlo, resumirlo y **graficarlo**— sin
-programar en Python. Está pensado para alguien que maneja hojas de cálculo y
-algo de estadística, pero que no es programador.
+datos completo —cargar un CSV, limpiarlo, resumirlo y **graficarlo**— mediante
+instrucciones del lenguaje. Incluye ejemplos de sintaxis y corrección de errores.
 
 * Versión del intérprete: `AREPA v0.4 (Fase 3 - visualizacion y producto final)`.
-* Todo el motor (datos **y** gráficas) es propio: solo necesita Python y un
-  paquete de ANTLR para ejecutar.
-* Si buscas el detalle interno (arquitectura, algoritmos, cómo extender), mira
-  `tecnico.md`.
+* Para el mantenimiento y la ampliación del intérprete, consulte el [manual técnico](tecnico.md).
 
 Índice:
 
@@ -64,12 +60,9 @@ propia línea. El salto de línea separa las instrucciones (no hay `;`).
 
 | Requisito | Para qué |
 |---|---|
-| **Linux** con terminal | Entorno oficial del proyecto |
 | **Python 3.11 o superior** (probado con 3.13) | Ejecutar el intérprete |
 | **Git** | Descargar el repositorio |
 | **Java 11 o superior** | **Solo** si vas a regenerar el lexer/parser; no hace falta para usar AREPA normalmente |
-
-No hace falta instalar pandas, NumPy ni Matplotlib: el proyecto no las usa.
 
 ### 2.2 Pasos
 
@@ -92,11 +85,6 @@ python3 src/cli/main.py --version
 ```
 
 Si `python3 --version` da menos de 3.11, actualízalo antes de continuar.
-
-> **Nota sobre Java**: solo se necesita para regenerar el lexer y el parser a
-> partir de `gramatica/Arepa.g4` (comando `./generar_gramatica.sh`). El código
-> ya generado vive en `generado/`, así que para **usar** AREPA no hace falta
-> Java.
 
 ---
 
@@ -147,7 +135,7 @@ python3 src/cli/main.py hola.arepa --tokens   # lista de tokens (piezas del text
 
 ### 3.5 Otros programas para practicar
 
-Los `ejemplos/` traen seis programas listos:
+Selección de programas de `ejemplos/`:
 
 ```bash
 python3 src/cli/main.py ejemplos/demo.arepa --ejecutar
@@ -359,168 +347,76 @@ exactamente el mismo archivo.
 
 ## 6. Errores frecuentes
 
-AREPA explica los errores **en español, con línea y columna**, y señala el
-lugar exacto con un caret `^`. Estos son mensajes reales del intérprete.
+Un error real muestra su categoría, causa, archivo fuente, línea y columna,
+la instrucción con un indicador `^` y una ayuda **Cómo corregir**. En una
+conversión se identifica la fila; en CSV se distingue la línea del programa
+de la línea del archivo de datos. Un error dentro de una función conserva
+la ubicación de origen y hasta cinco llamadas para localizar su uso.
 
-### 6.1 Un símbolo que no existe
+Las líneas empiezan en 1 y las columnas en 0. La ejecución se detiene al
+primer error de ejecución; las instrucciones posteriores no se ejecutan.
+El análisis léxico y sintáctico puede informar varios problemas antes de
+que empiece la ejecución.
 
-```text
-Encontré 2 problema(s), revisá esto:
-  [léxico] Línea 2, Columna 6: Hay un símbolo '@' que no hace parte del lenguaje AREPA
+### 6.1 Resultados especiales y errores aritméticos
+
+| Operación | Resultado de AREPA | Diagnóstico |
+|---|---|---|
+| `1 / 0` | `infinito` | Aviso: dividir por cero no está definido en los reales |
+| `-1 / 0` | `-infinito` | El mismo aviso, conservando el signo del resultado |
+| `0 / 0` | `nada` | Aviso: operación indeterminada |
+| `5 % 0` | `nada` | Aviso: no existe un resto definido con divisor cero |
+| `0 ^ -1` | `infinito` | Aviso: un exponente negativo implica dividir por cero |
+| `(-1) ^ 0.5` | Sin resultado real admitido | Error: AREPA no representa números complejos |
+| `nada + 1`, `nada / 0` | `nada` | Propagación normal de faltantes, sin aviso |
+
+Los avisos se muestran por separado de `cuenteme`, incluyen la ubicación de
+la operación y no cambian el resultado. Se agrupan las repeticiones de una
+misma causa, ubicación y resultado para no inundar la consola; se muestran
+hasta ocho grupos y se informa si quedan más. Las expresiones que no se
+ejecutan no generan avisos. Validar sin `--ejecutar` tampoco ejecuta cálculos.
+
+Para probar los diagnósticos y los casos que deben continuar sin error:
+
+```bash
+python ejercicios/pruebas/test_diagnosticos.py
+python ejercicios/pruebas/ejecutar.py --completo
 ```
 
-**Qué hacer:** revisa la línea 2, columna 6 (empezando a contar en 1).
+### 6.2 Errores frecuentes y corrección
 
-### 6.2 Un tipo de gráfica mal escrito
+| Problema | Corrección |
+|---|---|
+| Símbolo desconocido | Revise el carácter indicado en la fuente |
+| Tipo de gráfica inválido | Use `barras`, `lineas`, `histograma`, `dispersion` o `cajas` |
+| Variable o columna inexistente | Declare el nombre antes de usarlo y compruebe el encabezado |
+| Archivo ausente | Revise la ruta desde el directorio donde ejecuta el programa |
+| Salida gráfica con extensión incorrecta | Indique una ruta terminada en `.png` |
+| Histograma con varias columnas | Seleccione una sola columna numérica mediante `ejey` |
+| Cláusula gráfica repetida | Conserve una sola declaración de cada cláusula |
+| Palabra reservada usada como variable | Elija otro identificador; `y`, por ejemplo, es un operador |
 
-```text
-  [sintáctico] Línea 3, Columna 6: Hace falta 'barras', 'lineas', 'histograma', 'dispersion', 'cajas' cerca de 'pastel'
-  Línea 3: pinte pastel ventas
-                 ^
-```
-
-**Qué hacer:** usa uno de los cinco tipos válidos.
-
-### 6.3 Columna que no existe en la gráfica
-
-```text
-Error de gráfico durante la ejecución:
-  Línea 4, Columna 0: La grafica usa la columna 'no_existe' que no existe en 'ventas'. Columnas: fecha, ciudad, categoria, unidades, precio.
-  Línea 4: ejey no_existe
-           ^
-```
-
-**Qué hacer:** revisa cómo se llaman tus columnas y escribe el nombre exacto.
-
-### 6.4 Ruta sin `.png`
-
-```text
-Error de gráfico durante la ejecución:
-  Línea 5, Columna 0: La ruta 'salidas/x.jpg' debe terminar en '.png' (extension esperada para guardar la grafica).
-```
-
-**Qué hacer:** cambia la ruta para que termine en `.png`.
-
-### 6.5 Histograma con dos columnas
-
-```text
-Error de gráfico durante la ejecución:
-  Línea 3, Columna 0: El histograma necesita exactamente una columna numerica en 'ejey' y la tabla 'ventas' tiene 2: unidades, precio. Indique una con 'ejey <columna>'.
-```
-
-**Qué hacer:** añade `ejey unidades` (o la columna que quieras).
-
-### 6.6 Clausula repetida
-
-```text
-Error de gráfico durante la ejecución:
-  Línea 5, Columna 0: La clausula 'titulo' esta repetida en la grafica; indiquela una sola vez.
-```
-
-**Qué hacer:** deja un solo `titulo` (vale para `ejey` y `leyenda` también).
-
-### 6.7 Variable o columna inexistente
-
-```text
-Error de semántico durante la ejecución:
-  Línea 2, Columna 4: El nombre 'y' no existe ni como columna ni como variable.
-  Línea 2: x = y + 1
-               ^
-```
-
-**Qué hacer:** declara la variable antes de usarla, o revisa el nombre de la
-columna.
-
-### 6.8 Archivo que no se encuentra
-
-```text
-Error de ejecución durante la ejecución:
-  No encontré el archivo 'datos/no_existe.csv'. Revisá la ruta relativa al directorio desde donde corres el programa.
-```
-
-**Qué hacer:** las rutas son **relativas a la carpeta desde la que ejecutas**.
-Corre siempre desde la raíz del proyecto o ajusta la ruta.
-
-### 6.9 Usar una palabra reservada como variable
-
-```text
-  [sintáctico] Línea 2, Columna 0: No esperaba 'y' por ahí; revisá si sobra. En esa posición se esperaba 'chao', 'guarde', 'pinte', 'invente', 'devuelva', 'fijese_si', entre otras opciones. Ojo: el operador lógico 'y' (conjunción) es una palabra reservada, no puede usarse como nombre de variable; escogé otro nombre.
-```
-
-**Qué hacer:** cambia el nombre de la variable. La lista completa de palabras
-reservadas está en `docs/02_catalogo_instrucciones.md`.
-
----
+El [catálogo de instrucciones](../02_catalogo_instrucciones.md) contiene las
+palabras reservadas y los ejemplos de sintaxis.
 
 ## 7. Caso de estudio paso a paso
 
-El caso cierra el recorrido con datos reales: la serie mensual de pasajeros
-internacionales (AirPassengers) entre 1949 y 1960, con 144 observaciones.
-
-### 7.1 Ejecutarlo
-
-Desde la raíz del proyecto:
+El caso analiza AirPassengers, una serie de 144 observaciones mensuales
+entre 1949 y 1960. Desde la raíz del proyecto:
 
 ```bash
-AREPA_SIN_VENTANA=1 python3 src/cli/main.py caso_estudio/programa.arepa --ejecutar
+python src/cli/main.py caso_estudio/programa.arepa --ejecutar --sin-ventana
 ```
 
-Salida esperada (extracto):
-
-```text
-Registros limpios: 144
-Total pasajeros: 40363
-Promedio mensual: 280.2986111111111
-Mediana mensual: 265.5
-Minimo mensual: 104
-Maximo mensual: 622
-Total 1949: 1520
-Total 1960: 5714
-Crecimiento 1949-1960 (%): 275.92105263157896
-[guarde] La tabla 'resumen' quedo escrita en 'caso_estudio/salidas/pasajeros_por_anio.csv' (12 filas).
-[pinte] Grafica de lineas guardada en 'caso_estudio/salidas/01_serie.png' (13886 bytes, 800x480).
-...
-¡De una! El programa corrió completo sin tropiezos.
-```
-
-### 7.2 Qué produce
-
-| Archivo | Qué contiene |
-|---|---|
-| `caso_estudio/salidas/pasajeros_por_anio.csv` | Resumen anual (12 filas: `anio,total,promedio,maximo_mes,registros`) |
-| `caso_estudio/salidas/01_serie.png` | Serie mensual (líneas) |
-| `caso_estudio/salidas/02_barras.png` | Total anual (barras) |
-| `caso_estudio/salidas/03_histograma.png` | Distribución de los 144 meses |
-| `caso_estudio/salidas/04_dispersion.png` | Periodo frente a pasajeros |
-| `caso_estudio/salidas/05_cajas.png` | Cajas por década (1940s, 1950s, 1960s) |
-
-### 7.3 Qué hace el programa, en palabras
-
-1. Carga `caso_estudio/datos/pasajeros.csv`.
-2. Filtra los meses con pasajeros y crea dos columnas: `periodo` (año + mes en
-   un eje continuo) y `decada` (etiqueta legible `"1940s"`, `"1950s"`,
-   `"1960s"`).
-3. Agrupa por año y resume: total, promedio, máximo del mes y número de
-   registros.
-4. Imprime los indicadores clave (total, promedio, mediana, mínimo, máximo,
-   totales de 1949 y 1960 y el crecimiento).
-5. Guarda el resumen anual en CSV y dibuja las cinco gráficas.
-
-El análisis completo, con su interpretación, está en
-`caso_estudio/README.md`.
-
----
+Genera un resumen anual CSV y cinco gráficas en `caso_estudio/salidas/`.
+El [caso de estudio](../../caso_estudio/README.md) explica las transformaciones,
+los indicadores esperados y la interpretación de cada gráfica. La
+[procedencia de los datos](../../caso_estudio/datos/FUENTE.md) documenta la
+fuente y su integridad.
 
 ## 8. Preguntas frecuentes
 
-**¿Necesito saber Python?** No. Solo copiar y pegar los comandos de
-instalación y ejecución.
-
-**¿Necesito pandas, NumPy o Matplotlib?** No. AREPA implementa todo (incluido
-el motor de gráficas) por dentro. La única dependencia externa es el runtime de
-ANTLR.
-
-**¿En qué idioma escribo los nombres?** Como quieras: las variables y las
+**¿En qué idioma escribo los nombres?** Las variables y las
 columnas admiten tildes y ñ. Las **palabras reservadas** van en minúscula y sin
 tilde (`titulo`, `lineas`, `numero`).
 
@@ -535,12 +431,6 @@ igual queda guardada.
 
 **¿Dónde quedan las imágenes de `muestrela`?** En
 `salidas/<nombre_tabla>_<tipo>.png`.
-
-**¿Cómo sé cuántas pruebas tiene el proyecto?** Con
-`python3 herramientas/chequeo_pruebas.py` (10 suites, 370 pruebas).
-
-**¿La gramática y la documentación están sincronizadas?** Con
-`python3 herramientas/chequeo_gramatica.py` (64 reglas, 79 reservadas).
 
 **¿Hay una consola interactiva?** Sí:
 
@@ -559,7 +449,7 @@ El programa de línea de comandos `src/cli/main.py` termina con:
 |---|---|
 | `0` | El programa es válido (y, con `--ejecutar`, corrió sin errores) |
 | `1` | El programa tiene errores léxicos, sintácticos o de ejecución |
-| `2` | No se pudo leer el archivo (ruta inexistente) |
+| `2` | Problemas de argumentos o lectura del programa |
 
 Opciones del CLI:
 
@@ -574,49 +464,6 @@ Opciones del CLI:
 
 Cuando se ejecuta con `--ejecutar`, al final se imprime la lista
 `Archivos generados:` con la ruta, el tipo y el tamaño de cada archivo.
-
-## Diagnósticos de consola
-
-Un error real muestra su categoría, causa, archivo fuente, línea y columna,
-la instrucción con un indicador `^` y una ayuda **Cómo corregir**. En una
-conversión se identifica la fila; en CSV se distingue la línea del programa
-de la línea del archivo de datos. Un error dentro de una función conserva
-la ubicación de origen y hasta cinco llamadas para localizar su uso.
-
-Las líneas empiezan en 1 y las columnas en 0. La ejecución se detiene al
-primer error de ejecución; las instrucciones posteriores no se ejecutan.
-El análisis léxico y sintáctico puede informar varios problemas antes de
-que empiece la ejecución.
-
-### Resultados especiales que no interrumpen el programa
-
-| Operación | Resultado de AREPA | Diagnóstico |
-|---|---|---|
-| `1 / 0` | `infinito` | Aviso: dividir por cero no está definido en los reales |
-| `-1 / 0` | `-infinito` | El mismo aviso, conservando el signo del resultado |
-| `0 / 0` | `nada` | Aviso: operación indeterminada |
-| `5 % 0` | `nada` | Aviso: no existe un resto definido con divisor cero |
-| `0 ^ -1` | `infinito` | Aviso: un exponente negativo implica dividir por cero |
-| `(-1) ^ 0.5` | Sin resultado real admitido | Error: AREPA no representa números complejos |
-| `nada + 1`, `nada / 0` | `nada` | Propagación normal de faltantes, sin aviso |
-
-Los avisos se muestran por separado de `cuenteme`, incluyen la ubicación de
-la operación y no cambian el resultado. Se agrupan las repeticiones de una
-misma causa, ubicación y resultado para no inundar la consola; se muestran
-hasta ocho grupos y se informa si quedan más. Las expresiones que no se
-ejecutan no generan avisos. Validar sin `--ejecutar` tampoco ejecuta cálculos.
-
-Los códigos de salida son 0 para programas válidos (también con avisos),
-1 para errores de análisis o ejecución y 2 para problemas de argumentos o
-lectura del programa. En la consola interactiva, `:validar` muestra las
-ayudas y un fallo al guardar no cierra la sesión ni borra el contenido.
-
-Para probar los diagnósticos y los casos que deben continuar sin error:
-
-```bash
-python ejercicios/pruebas/test_diagnosticos.py
-python ejercicios/pruebas/ejecutar.py --completo
-```
 
 ## Conservación de datos y límites numéricos
 

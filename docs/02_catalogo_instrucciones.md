@@ -1,7 +1,7 @@
-# AREPA — Catálogo de instrucciones y decisiones de diseño (Fases 1–3, Linux)
+# AREPA — Catálogo de instrucciones y decisiones de diseño
 
-Aquí está el vocabulario completo de AREPA: palabras reservadas, operadores,
-literales, sentencias y la razón de cada decisión que tomamos. La gramática
+Referencia del vocabulario de AREPA: palabras reservadas, operadores,
+literales, sentencias y decisiones de diseño. La gramática
 ejecutable correspondiente está en `gramatica/Arepa.g4`.
 
 ---
@@ -9,8 +9,8 @@ ejecutable correspondiente está en `gramatica/Arepa.g4`.
 ## 1. Filosofía del vocabulario
 
 Las palabras reservadas de AREPA salen del **español hablado en Colombia**.
-Escogimos cada palabra por ser coloquial, corta y fácil de recordar, y porque
-lo que significa en el día a día se parece a lo que hace la instrucción:
+El vocabulario relaciona expresiones cotidianas con las operaciones del
+lenguaje:
 
 | Palabra | Uso coloquial colombiano | Instrucción en AREPA |
 |---|---|---|
@@ -450,7 +450,7 @@ Usar `sume(valor)` fuera de `resuma` produce un error que recuerda la forma
 `* / %` < `-` unario < `^` < acceso `[ … ]` < átomo. Paréntesis alteran el
 orden. En la gramática la cadena es `expresion_logica → conjuncion →
 negacion → comparacion → aritmetica → termino → unario → potencia → acceso
-→ atomo`; ya no existe el no terminal `factor`.
+→ atomo`.
 
 ---
 

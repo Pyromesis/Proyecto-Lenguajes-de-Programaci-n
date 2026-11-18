@@ -1,17 +1,14 @@
-# AREPA — Guía de machine learning (implementación propia)
+# AREPA — Aprendizaje automático
 
-Esta guía explica la ampliación de machine learning de AREPA: qué se agregó
-al lenguaje, cómo se preprocesan los datos, cómo funcionan por dentro la
-regresión lineal, el perceptrón y el árbol de decisión, qué métricas se
-calculan y cómo se verifica todo. **Ningún algoritmo usa pandas, NumPy,
-scikit-learn ni otra biblioteca de machine learning**; la única dependencia
-externa del proyecto sigue siendo ANTLR4 para el lexer y el parser.
+Referencia de preprocesamiento, regresión lineal, perceptrón, árbol de
+decisión y métricas. Incluye la sintaxis y un flujo de evaluación con
+datos separados del entrenamiento. Los algoritmos se implementan en `src/ml/`.
 
-Todo lo descrito aquí se ejecuta desde la raíz del proyecto con Python 3.
+Todo lo descrito aquí se ejecuta desde la raíz del proyecto con Python 3.11 o posterior.
 
 ---
 
-## 1. Qué se agregó y dónde vive
+## 1. Módulos
 
 | Módulo | Responsabilidad |
 |---|---|
@@ -21,7 +18,7 @@ Todo lo descrito aquí se ejecuta desde la raíz del proyecto con Python 3.
 | `src/ml/perceptron.py` | perceptrón binario con la regla clásica de actualización |
 | `src/ml/arbol_decision.py` | árbol de clasificación CART con impureza de Gini |
 | `src/ml/metricas.py` | MAE, MSE, RMSE, R², exactitud, matriz de confusión, precisión, recall y F1 |
-| `src/runtime/ejecutor.py` | sentencias `entrene` y `evalua`; etapas `prediga` y `clasifique` |
+| `src/runtime/ejecucion_modelos.py` | sentencias `entrene` y `evalua`; etapas `prediga` y `clasifique` |
 | `src/runtime/contexto.py` | impresión legible del resumen de un modelo con `cuenteme` |
 | `src/datos/tipos.py` | nombre de tipo `modelo` / `regresion` / `clasificacion` para los mensajes de error |
 
@@ -33,12 +30,12 @@ flowchart TB
     C["|> prediga / clasifique"]
     D["evalua modelo con tabla"]
   end
-  subgraph Runtime["Runtime propio"]
+  subgraph Runtime["Ejecución"]
     E["Ejecutor (visitor)"]
     F["Tabla de entrenamiento"]
     S["TablaSimbolos<br/>(el modelo es una variable)"]
   end
-  subgraph ML["src/ml (todo propio)"]
+  subgraph ML["src/ml"]
     G["Preprocesador"]
     SEL{"algoritmo_ml"}
     H["RegresionLineal"]
@@ -101,7 +98,7 @@ cualquier orden y pueden repartirse en varias líneas.
 | `columnas [...]` | sí | variables de entrada | todos |
 | `objetivo COL` | sí | variable a predecir | todos |
 | `clases [...]` | no | etiquetas posibles | `perceptron` (exactamente 2), `arbol` |
-| `tasa N` | no | número > 0; por defecto `0.05` | `regresion`, `perceptron` |
+| `tasa N` | no | número finito > 0; por defecto `0.05` | `regresion`, `perceptron` |
 | `epocas N` | no | entero > 0; por defecto `1000` | `regresion`, `perceptron` |
 | `profundidad N` | no | entero > 0; por defecto `6` | `arbol` |
 | `min_hojas N` | no | entero > 0; por defecto `2` | `arbol` |
@@ -303,7 +300,7 @@ Detalles de la implementación (`src/ml/regresion_lineal.py`):
 * el historial guarda el MSE de cada época;
 * si el MSE cambia menos de `1e-14` entre épocas, el entrenamiento se detiene
   antes de agotar `epocas`;
-* `tasa` debe ser un número > 0 y `epocas` un entero > 0.
+* `tasa` debe ser un número finito > 0 y `epocas` un entero > 0.
 
 ```mermaid
 flowchart TD
@@ -628,7 +625,7 @@ Errores semánticos cubiertos:
 | `ejemplos/clasificacion.arepa` | perceptrón | `salidas/clasificacion_estudiantes.csv` |
 | `ejemplos/arbol_decision.arepa` | árbol CART/Gini | `salidas/arbol_riesgo.csv` |
 
-### 9.3 Cómo correrlos
+### 9.3 Ejecución
 
 ```bash
 python3 src/cli/main.py ejemplos/regresion.arepa --ejecutar
@@ -660,7 +657,9 @@ python3 pruebas/test_proyecto.py    # 10 suites, 370 pruebas
 python3 herramientas/chequeo_pruebas.py  # verifica el conteo canónico
 ```
 
-El conteo canónico es `55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 + 20 = 370`.
+Los casos adicionales de valores no finitos, divergencia y magnitudes
+extremas están en `ejercicios/pruebas/test_auditoria.py`; consulte la
+[guía de pruebas](../ejercicios/pruebas/README.md).
 
 ---
 
@@ -694,8 +693,12 @@ El conteo canónico es `55 + 28 + 43 + 48 + 16 + 15 + 51 + 63 + 31 + 20 = 370`.
   `min_hojas`.
 * No hay guardado/carga de modelos en disco: el modelo vive mientras corre el
   programa.
-* La regresión usa descenso de gradiente, no la solución cerrada; con tasas
-  malas puede converger lento.
+* La regresión usa descenso de gradiente. Una tasa pequeña puede requerir
+  más épocas; una tasa excesiva puede causar divergencia, que se rechaza
+  con un diagnóstico. Pocas épocas son válidas si los resultados son finitos.
+* Los modelos y las métricas exigen valores decimales finitos. La media,
+  la desviación, MAE, RMSE y R² escalan los cálculos para reducir
+  desbordamientos intermedios cuando el resultado es representable.
 
 ### Cómo agregar otro algoritmo
 

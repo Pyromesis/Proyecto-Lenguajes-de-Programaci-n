@@ -1,11 +1,7 @@
 # Documentación de AREPA
 
-El [cierre técnico de la auditoría](13_cierre_tecnico.md) reúne las correcciones,
-los criterios técnicos sin sustentación y los comandos de verificación final.
-
-Índice de la documentación del proyecto. Los documentos conservan su número
-(`docs/01`, `docs/02`, …) porque el resto de informes los cita con esa
-convención.
+El [informe de verificación técnica](13_cierre_tecnico.md) reúne
+las correcciones comprobadas y los resultados de las pruebas.
 
 ## Referencia del lenguaje
 
@@ -32,7 +28,7 @@ convención.
 | Documento | Para quién |
 |---|---|
 | [`manuales/usuario.md`](manuales/usuario.md) | instalar, escribir programas y usar la CLI y las gráficas |
-| [`manuales/tecnico.md`](manuales/tecnico.md) | arquitectura, gramática, runtime, motor PNG y cómo ampliar el lenguaje |
+| [`manuales/tecnico.md`](manuales/tecnico.md) | mantenimiento, regeneración, módulos de ejecución y ampliación del lenguaje |
 
 ## Enunciado y evidencia
 
@@ -40,8 +36,7 @@ convención.
 * [`../caso_estudio/README.md`](../caso_estudio/README.md): caso de estudio
   reproducible con AirPassengers.
 * [`../ejercicios/README.md`](../ejercicios/README.md): 349 ejercicios por corte.
-* [`../salidas/README.md`](../salidas/README.md): evidencias CSV y PNG
-  temporales.
+* [`../salidas/README.md`](../salidas/README.md): CSV de referencia y gráficas generadas.
 
 ## Verificación rápida
 

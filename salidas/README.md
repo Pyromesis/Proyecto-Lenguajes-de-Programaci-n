@@ -1,8 +1,7 @@
-# Salidas (evidencia versionada de datos, estructuras y ML, Linux)
+# Archivos de salida
 
-Solo estos 7 archivos de evidencia están versionados (además de este
-README); todo lo demás que se genere aquí es temporal e ignorado por git
-(`salidas/*`).
+Se versionan los siete CSV de referencia indicados abajo. Los demás
+resultados generados en esta carpeta se excluyen mediante `.gitignore`.
 
 ## CSV versionados
 
@@ -15,7 +14,6 @@ README); todo lo demás que se genere aquí es temporal e ignorado por git
 | `regresion_casas.csv` | `ejemplos/regresion.arepa --ejecutar` | precio real y precio estimado por casa |
 | `clasificacion_estudiantes.csv` | `ejemplos/clasificacion.arepa --ejecutar` | etiqueta real y predicción del perceptrón |
 | `arbol_riesgo.csv` | `ejemplos/arbol_decision.arepa --ejecutar` | riesgo real y riesgo estimado por cliente |
-| `.gitkeep` | — | conserva la carpeta en git |
 
 CSV en UTF-8 sin BOM, escritos por el escritor propio
 (`src/datos/escritor_csv.py`).
@@ -23,7 +21,7 @@ CSV en UTF-8 sin BOM, escritos por el escritor propio
 ## PNG temporales (no versionados)
 
 Los ejemplos de gráficas escriben PNG aquí al ejecutarse; son
-temporales e ignorados por git, pero evidencian la Fase 3:
+temporales y se excluyen del control de versiones:
 
 | Archivo | Origen | Contenido |
 |---|---|---|

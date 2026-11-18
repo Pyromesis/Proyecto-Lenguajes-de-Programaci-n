@@ -3,15 +3,14 @@
 Ruta rápida para demostrar en vivo cada punto de los tres cortes. Para cada
 punto: dónde está el código, qué prueba lo respalda y qué ejemplo mostrar.
 
-Comandos base (desde la raíz del proyecto, en una terminal Linux):
+Preparación y comandos desde la raíz del proyecto. La regeneración con
+Java y ANTLR solo es necesaria si se modifica la gramática:
 
 ```bash
 python3 --version
-java -version
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -r requirements.txt
-./generar_gramatica.sh
 python3 src/cli/main.py ejemplos/demo.arepa
 python3 src/cli/main.py ejemplos/demo.arepa --tokens
 python3 src/cli/main.py ejemplos/demo.arepa --arbol
@@ -93,7 +92,7 @@ python3 pruebas/test_proyecto.py
 
 * **Gramática:** `asignacion` (Arepa.g4:77) y la jerarquía
   `expresion_logica → conjuncion → negacion → comparacion → aritmetica →
-  termino → unario → potencia → acceso → atomo` (ya no existe `factor`),
+  termino → unario → potencia → acceso → atomo`,
   que codifica la precedencia documentada (`o < y < no < comparación < +- <
   */% < ^ derecha < - unario`). En particular, `^` pega más que el menos
   unario (`-2 ^ 2 = -4`) y asocia a la derecha (`2 ^ 3 ^ 2 = 512`).

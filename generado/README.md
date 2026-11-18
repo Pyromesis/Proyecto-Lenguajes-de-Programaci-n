@@ -1,4 +1,4 @@
-# Código generado por ANTLR (no editar a mano)
+# Código generado por ANTLR
 
 Lexer, parser y Visitor de Python generados desde la fuente única
 `gramatica/Arepa.g4` con ANTLR 4.13.2. Es la **única** parte del
@@ -12,7 +12,7 @@ proyecto que no es código propio (herramienta exigida por el curso).
 | `Arepa.tokens` / `ArepaLexer.tokens` | tablas de tokens |
 | `Arepa.interp` / `ArepaLexer.interp` | datos intermedios de ANTLR |
 
-Regenerar en Linux (requiere Java 11+ y el jar 4.13.2):
+Regenerar (requiere Java 11+ y el jar 4.13.2):
 
 ```bash
 chmod +x generar_gramatica.sh
@@ -25,4 +25,4 @@ Sincronía verificable EBNF ↔ `.g4` (64/64 reglas, 79 reservadas):
 python3 herramientas/chequeo_gramatica.py
 ```
 
-Tras regenerar, correr `python3 pruebas/test_proyecto.py` (350 pruebas).
+Tras regenerar, ejecutar `python3 pruebas/test_proyecto.py` (370 pruebas).

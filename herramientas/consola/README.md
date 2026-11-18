@@ -1,11 +1,11 @@
-# Autocompletado de AREPA en consola (Linux, sin internet ni plugins)
+# Autocompletado y consola interactiva
 
 Tres herramientas, todas con `Tab`. Palabras tomadas de `gramatica/Arepa.g4`
 (79 reservadas + `|>` `->` `==` `!=` `<=` `>=`).
 
 | Archivo | Qué es |
 |---|---|
-| `arepa.vim` | plugin de Vim: fantasma gris + `Tab`, resalta y trae `:ArepaPlantilla` |
+| `arepa.vim` | plugin de Vim: sugerencia en línea + `Tab`, resalta y trae `:ArepaPlantilla` |
 | `ftdetect-arepa.vim` | detecta `*.arepa` en Vim |
 | `palabras_arepa.txt` | diccionario (respaldo del plugin) |
 | `arepa` | lanzador del CLI (`arepa programa.arepa --ejecutar`) |
@@ -22,13 +22,7 @@ cp herramientas/consola/ftdetect-arepa.vim ~/.vim/ftdetect/arepa.vim
 vim herramientas/consola/practica.arepa
 ```
 
-Ejemplos (modo inserción):
-
-* Escribes `mon` y al fondo aparece `te` en gris → `Tab` o `Ctrl-F` deja `monte`.
-* Escribes `|` y aparece `>` en gris → `Tab` deja `|>`.
-* Escribes `pa_` y aparece `abajo` en gris (`pa_abajo` es la primera opción).
-
-| Escribes | Fantasma gris | Tab deja |
+| Escribes | Sugerencia | Tab deja |
 |---|---|---|
 | `mon` | `te` | `monte` |
 | `esc` | `oja` | `escoja` |
@@ -52,10 +46,10 @@ Plantillas (modo normal):
 
 `Ctrl-N` / `Ctrl-P` completan además con palabras del archivo abierto.
 
-## 2. REPL (fantasma mientras escribes AREPA)
+## 2. REPL (edición de programas)
 
 ```bash
-python3 src/cli/repl.py            # con fantasma (Linux en terminal)
+python3 src/cli/repl.py            # con sugerencias en línea
 python3 src/cli/repl.py --simple   # modo clásico (readline o donde no hay tty)
 ```
 
@@ -75,7 +69,7 @@ arepa> :guardar salidas/<Tab>      # Tab completa archivos .arepa y carpetas
 arepa> :salir
 ```
 
-Teclas del modo fantasma: `Tab`/`FlechaDer` acepta, `Flechas` navegan e
+Teclas de edición: `Tab`/`FlechaDer` acepta, `Flechas` navegan e
 historial (`Arriba`/`Abajo`), `Retroceso` borra, `Ctrl-U` limpia,
 `Ctrl-C` cancela la línea, `Ctrl-D` sale.
 

@@ -10,19 +10,15 @@ Todos los programas tienen solución completa y se ejecutan desde la raíz del p
 | `dificiles/` | 25 |
 | `graficas/` | 12 |
 
-## Ejecutar y verificar
+## Verificación
 
-```bash
-python ejercicios/pruebas/ejecutar.py --completo
-```
+Consulte la [guía de pruebas](../pruebas/README.md) para ejecutar y
+contrastar los resultados. Los programas se ejecutan desde la raíz;
+los archivos que exportan se guardan en `salidas/`.
 
-Los ejercicios nuevos se contrastan con resultados independientes en
-`../resultados_esperados.json`: valores, filas, exportaciones CSV e integridad de PNG.
-Cada archivo incluye su enunciado, los resultados esperados y el comando para ejecutarlo.
+## Ejercicios con resultados esperados
 
-## Ejercicios añadidos con resultados comprobables
-
-### faciles
+### Fáciles
 
 | Ejercicio | Enunciado |
 |---|---|
@@ -52,7 +48,7 @@ Cada archivo incluye su enunciado, los resultados esperados y el comando para ej
 | [F24_precio_tienda](faciles/F24_precio_tienda.arepa) | Comparar la distribución de precios de dos tiendas. |
 | [F25_lluvia_estacion](faciles/F25_lluvia_estacion.arepa) | Comparar mediciones de lluvia en dos estaciones. |
 
-### medianos
+### Medianos
 
 | Ejercicio | Enunciado |
 |---|---|
@@ -82,7 +78,7 @@ Cada archivo incluye su enunciado, los resultados esperados y el comando para ej
 | [M24_grupo_numerico](medianos/M24_grupo_numerico.arepa) | Comparar observaciones de dos grupos identificados por números. |
 | [M25_sin_eje_x](medianos/M25_sin_eje_x.arepa) | Comparar dos columnas numéricas sin columna de agrupación x. |
 
-### dificiles
+### Difíciles
 
 | Ejercicio | Enunciado |
 |---|---|

@@ -5,16 +5,11 @@
 **Fase entregada:** Corte 3 — Visualización y producto final (acumulativa sobre los Cortes 1 y 2)
 **Versión del intérprete:** `AREPA v0.4 (Fase 3 - visualizacion y producto final)`
 
-> **Vigencia de este informe.** Es una fotografía del cierre del Corte 3 en el
-> commit `9c49b63`: sus cifras son **319 pruebas**, **8 suites** y **170
-> programas**, y sus referencias de línea corresponden a ese commit. Después se
-> agregó la ampliación de machine learning (commits `2b3dba0` y `ecb316d`), que
-> dejó entonces **370 pruebas**, **10 suites** y **173 programas**.
-> La ampliación posterior contiene 349 ejercicios y 358 programas de regresión
-> (incluidos nueve ejemplos); véase `ejercicios/CATALOGO.md`.
-> Para el inventario vigente, ver `README.md`, `docs/05_arquitectura.md` §8 y
-> `docs/12_matriz_trazabilidad_corte3.md`. No uses este informe como conteo
-> actual.
+> **Informe histórico.** Describe el cierre del corte 3 en el commit
+> `9c49b63`: 319 pruebas, ocho suites y 170 programas. Sus referencias de
+> línea corresponden a esa versión. El [informe de verificación técnica](13_cierre_tecnico.md)
+> reúne los resultados posteriores; el [índice de ejercicios](../ejercicios/README.md)
+> contiene el inventario actual.
 
 ---
 
@@ -67,7 +62,7 @@ src/graficas/
 ├── png.py             codificador PNG propio (CRC-32, Adler-32, DEFLATE fijo + LZ77)
 ├── fuente.py          fuente bitmap 5x7 con un glifo por carácter ASCII imprimible
 ├── lienzo.py          búfer RGB y primitivas (píxel, línea, rectángulo, círculo, texto)
-├── escalas.py         EscalaLineal / EscalaBanda, ticks "bonitos" y formato legible
+├── escalas.py         EscalaLineal / EscalaBanda, marcas de ejes y formato legible
 └── tipos_grafica.py   Serie, Grafica y los cinco dibujos + cuartiles y cubetas
 ```
 
@@ -122,7 +117,7 @@ rompe el dibujo.
 Traducen valores del dominio a píxeles y eligen las marcas de los ejes:
 
 * `EscalaLineal` (línea 154): mapeo afín `dominio → rango`, su inverso y
-  `ticks` con pasos "bonitos" de la forma 1, 2 o 5 por una potencia de diez
+  `ticks` con pasos de la forma 1, 2 o 5 por una potencia de diez
   (`paso_bonito`, línea 92). Un dominio degenerado se expande para no dividir
   por cero.
 * `EscalaBanda` (línea 226): reparte categorías en bandas iguales y mapea cada

@@ -1,4 +1,4 @@
-# AREPA — Matriz de trazabilidad del Corte 3 (Linux)
+# AREPA — Matriz de trazabilidad del corte 3
 
 Correspondencia verificable entre cada requisito del Corte 3 del enunciado
 (`docs/Proyecto_LP.pdf`, sección 5) y su evidencia en el repositorio.
